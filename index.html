@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+         <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PROXY FF - Controller</title>
+    <title>PROXY FF </title>
     <style>
         /* ===== RESET ===== */
         * {
@@ -16,6 +16,71 @@
             background: #0a0a0a;
             color: #fff;
             padding: 0 0 80px 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* ===== CROSSHAIR OVERLAY ===== */
+        .crosshair-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            display: none;
+        }
+        .crosshair-overlay.active { display: block; }
+        .crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .crosshair-dot {
+            width: 4px;
+            height: 4px;
+            background: #ff0000;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px #ff0000;
+        }
+        .crosshair-line {
+            position: absolute;
+            background: #ff0000;
+            border-radius: 2px;
+            box-shadow: 0 0 8px rgba(255,0,0,0.5);
+        }
+        .crosshair-line.top { top: 0; left: 50%; transform: translateX(-50%); height: 20px; width: 2px; }
+        .crosshair-line.bottom { bottom: 0; left: 50%; transform: translateX(-50%); height: 20px; width: 2px; }
+        .crosshair-line.left { left: 0; top: 50%; transform: translateY(-50%); width: 20px; height: 2px; }
+        .crosshair-line.right { right: 0; top: 50%; transform: translateY(-50%); width: 20px; height: 2px; }
+        .crosshair-circle {
+            width: 40px; height: 40px; border: 2px solid #ff0000; border-radius: 50%;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            box-shadow: 0 0 15px rgba(255,0,0,0.3);
+        }
+        .crosshair-bigdot {
+            width: 10px; height: 10px; background: #ff0000; border-radius: 50%;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px rgba(255,0,0,0.5);
+        }
+        .crosshair-aimlock {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px; height: 60px;
+            border: 2px dashed rgba(255,0,0,0.3);
+            border-radius: 50%;
+            animation: aimPulse 1s infinite;
+        }
+        @keyframes aimPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
         }
 
         /* ===== HEADER ===== */
@@ -38,50 +103,17 @@
             font-size: 20px;
             color: #ff3b30;
         }
-        .header h1 span {
-            color: #fff;
-            font-weight: 300;
-        }
-        .header .badge-group {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
+        .header h1 span { color: #fff; font-weight: 300; }
+        .header .badge-group { display: flex; gap: 6px; flex-wrap: wrap; }
         .header .badge {
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 600;
+            padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 600;
         }
-        .badge.ios {
-            background: #1a3a5a;
-            color: #64b5f6;
-            border: 1px solid #64b5f6;
-        }
-        .badge.ff {
-            background: #ff3b30;
-            color: #fff;
-            border: 1px solid #ffcc00;
-        }
-        .badge.aim {
-            background: linear-gradient(135deg, #ff3b30, #ff6b00);
-            color: #fff;
-            animation: pulse 1.5s infinite;
-        }
-        .badge.lua {
-            background: #1a3a5a;
-            color: #64b5f6;
-            border: 1px solid #64b5f6;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        .header p {
-            color: #888;
-            font-size: 12px;
-            margin-top: 4px;
-        }
+        .badge.ios { background: #1a3a5a; color: #64b5f6; border: 1px solid #64b5f6; }
+        .badge.ff { background: #ff3b30; color: #fff; border: 1px solid #ffcc00; }
+        .badge.aim { background: linear-gradient(135deg, #ff3b30, #ff6b00); color: #fff; animation: pulse 1.5s infinite; }
+        .badge.run { background: #4caf50; color: #fff; border: 1px solid #4caf50; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .header p { color: #888; font-size: 12px; margin-top: 4px; }
 
         /* ===== STATUS BAR ===== */
         .status-bar {
@@ -95,690 +127,496 @@
             gap: 4px;
             font-size: 12px;
         }
-        .status-bar .left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .status-bar .left { display: flex; align-items: center; gap: 8px; }
         .status-bar .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-            background: #4caf50;
-            box-shadow: 0 0 10px #4caf50;
+            width: 10px; height: 10px; border-radius: 50%; display: inline-block;
+            background: #4caf50; box-shadow: 0 0 10px #4caf50;
         }
-        .status-bar .right {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .status-bar .right .count {
-            color: #4caf50;
-            font-weight: 600;
-        }
-        .status-bar .right .aim-rate {
-            color: #ffcc00;
-            font-weight: 700;
-        }
-        .status-bar .right .ios-ver {
-            color: #64b5f6;
-        }
-        .status-bar .right .status-ok {
-            color: #4caf50;
-        }
+        .status-bar .right { display: flex; gap: 12px; flex-wrap: wrap; }
+        .status-bar .right .count { color: #4caf50; font-weight: 600; }
+        .status-bar .right .aim-rate { color: #ffcc00; font-weight: 700; }
+        .status-bar .right .ios-ver { color: #64b5f6; }
+        .status-bar .right .status-ok { color: #4caf50; }
+        .status-bar .right .run-status { color: #4caf50; font-weight: 700; animation: pulse 1.5s infinite; }
 
         /* ===== SEARCH ===== */
-        .search-wrap {
-            padding: 10px 16px;
-            background: #0a0a0a;
-        }
+        .search-wrap { padding: 10px 16px; background: #0a0a0a; }
         .search-wrap input {
-            width: 100%;
-            padding: 10px 14px;
-            border-radius: 10px;
-            border: 1px solid #2a2a2a;
-            background: #1a1a1a;
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-            transition: 0.3s;
+            width: 100%; padding: 10px 14px; border-radius: 10px;
+            border: 1px solid #2a2a2a; background: #1a1a1a; color: #fff; font-size: 14px;
+            outline: none; transition: 0.3s;
         }
-        .search-wrap input:focus {
-            border-color: #ff3b30;
-        }
-        .search-wrap input::placeholder {
-            color: #555;
-        }
+        .search-wrap input:focus { border-color: #ff3b30; }
+        .search-wrap input::placeholder { color: #555; }
 
         /* ===== TABS ===== */
         .tabs {
-            display: flex;
-            gap: 6px;
-            padding: 0 16px 10px;
-            overflow-x: auto;
-            background: #0a0a0a;
+            display: flex; gap: 6px; padding: 0 16px 10px;
+            overflow-x: auto; background: #0a0a0a;
         }
-        .tabs::-webkit-scrollbar {
-            display: none;
-        }
+        .tabs::-webkit-scrollbar { display: none; }
         .tabs .tab {
-            padding: 5px 14px;
-            border-radius: 20px;
-            background: #1a1a1a;
-            color: #888;
-            font-size: 12px;
-            white-space: nowrap;
-            cursor: pointer;
-            border: 1px solid transparent;
-            transition: 0.3s;
+            padding: 5px 14px; border-radius: 20px; background: #1a1a1a;
+            color: #888; font-size: 12px; white-space: nowrap; cursor: pointer;
+            border: 1px solid transparent; transition: 0.3s;
         }
-        .tabs .tab.active {
-            background: #ff3b30;
-            color: #fff;
-            border-color: #ff3b30;
-        }
-        .tabs .tab:hover {
-            border-color: #ff3b30;
-        }
+        .tabs .tab.active { background: #ff3b30; color: #fff; border-color: #ff3b30; }
 
         /* ===== CONTAINER ===== */
-        .container {
-            padding: 0 16px;
-        }
+        .container { padding: 0 16px; }
 
         /* ===== CARDS ===== */
         .card {
-            background: #141414;
-            border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 10px;
-            border-left: 4px solid #2a2a2a;
-            transition: 0.3s;
+            background: #141414; border-radius: 12px; padding: 14px;
+            margin-bottom: 10px; border-left: 4px solid #2a2a2a; transition: 0.3s;
         }
-        .card.active {
-            border-left-color: #4caf50;
-            background: #1a2a1a;
-        }
+        .card.active { border-left-color: #4caf50; background: #1a2a1a; }
         .card .card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 8px;
+            display: flex; justify-content: space-between; align-items: flex-start;
+            flex-wrap: wrap; gap: 8px;
         }
-        .card .info {
-            flex: 1;
-            min-width: 140px;
-        }
+        .card .info { flex: 1; min-width: 140px; }
         .card .game-tag {
-            font-size: 10px;
-            color: #ff3b30;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 10px; color: #ff3b30; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.5px;
         }
-        .card .game-tag .package {
-            color: #888;
-            font-weight: 400;
-            font-size: 9px;
-        }
-        .card .card-name {
-            font-size: 15px;
-            font-weight: 600;
-            margin: 2px 0 3px;
-            color: #fff;
-        }
-        .card .desc {
-            color: #aaa;
-            font-size: 12px;
-        }
+        .card .game-tag .package { color: #888; font-weight: 400; font-size: 9px; }
+        .card .card-name { font-size: 15px; font-weight: 600; margin: 2px 0 3px; color: #fff; }
+        .card .desc { color: #aaa; font-size: 12px; }
         .card .meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin-top: 4px;
+            display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px;
         }
         .card .meta .tag {
-            background: #2a2a2a;
-            padding: 1px 8px;
-            border-radius: 20px;
-            font-size: 9px;
-            color: #ccc;
+            background: #2a2a2a; padding: 1px 8px; border-radius: 20px;
+            font-size: 9px; color: #ccc;
         }
-        .card .meta .tag.vip {
-            background: #ff3b30;
-            color: #fff;
-        }
-        .card .meta .tag.auto {
-            background: #1a3a2a;
-            color: #4caf50;
-        }
-        .card .meta .tag.aim80 {
-            background: #ff6b00;
-            color: #fff;
-            font-weight: 700;
-        }
-        .card .meta .tag.lua {
-            background: #1a3a5a;
-            color: #64b5f6;
-            border: 1px solid #64b5f6;
-        }
-        .card .meta .tag.ios {
-            background: #1a3a5a;
-            color: #64b5f6;
-        }
-        .card .meta .tag.ff {
-            background: #ff3b30;
-            color: #fff;
-        }
-        .card .meta .tag.weapon {
-            background: #2a2a2a;
-            color: #ffcc00;
-            border: 1px solid #ffcc00;
-        }
+        .card .meta .tag.vip { background: #ff3b30; color: #fff; }
+        .card .meta .tag.auto { background: #1a3a2a; color: #4caf50; }
+        .card .meta .tag.aim80 { background: #ff6b00; color: #fff; font-weight: 700; }
+        .card .meta .tag.run { background: #4caf50; color: #fff; font-weight: 700; }
 
         .card .right-side {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
         }
-        .card .status {
-            text-align: right;
-            min-width: 80px;
-        }
-        .card .status .status-label {
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .card .status .status-label.off {
-            color: #555;
-        }
-        .card .status .status-label.on {
-            color: #4caf50;
-        }
-        .card .status .status-detail {
-            font-size: 9px;
-            color: #666;
-            margin-top: 2px;
-        }
-        .card .status .status-detail.on {
-            color: #4caf50;
-        }
+        .card .status { text-align: right; min-width: 80px; }
+        .card .status .status-label { font-size: 12px; font-weight: 600; }
+        .card .status .status-label.off { color: #555; }
+        .card .status .status-label.on { color: #4caf50; }
+        .card .status .status-detail { font-size: 9px; color: #666; margin-top: 2px; }
+        .card .status .status-detail.on { color: #4caf50; }
 
         /* ===== TOGGLE ===== */
         .toggle {
-            position: relative;
-            width: 42px;
-            height: 24px;
-            background: #2a2a2a;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: 0.3s;
-            flex-shrink: 0;
+            position: relative; width: 42px; height: 24px;
+            background: #2a2a2a; border-radius: 50px; cursor: pointer;
+            transition: 0.3s; flex-shrink: 0;
         }
-        .toggle.active {
-            background: #4caf50;
-        }
+        .toggle.active { background: #4caf50; }
         .toggle .slider {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 20px;
-            height: 20px;
-            background: #fff;
-            border-radius: 50%;
-            transition: 0.3s;
+            position: absolute; top: 2px; left: 2px;
+            width: 20px; height: 20px; background: #fff;
+            border-radius: 50%; transition: 0.3s;
             box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
-        .toggle.active .slider {
-            left: 20px;
-        }
+        .toggle.active .slider { left: 20px; }
 
-        /* ===== AIM DATA (hiện khi bật) ===== */
+        /* ===== AIM DATA ===== */
         .aim-data {
-            margin-top: 10px;
-            padding: 10px;
-            background: #0a0a0a;
-            border-radius: 8px;
-            border: 1px solid #2a2a2a;
-            display: none;
+            margin-top: 10px; padding: 10px; background: #0a0a0a;
+            border-radius: 8px; border: 1px solid #2a2a2a; display: none;
         }
-        .aim-data.show {
-            display: block;
-        }
+        .aim-data.show { display: block; }
         .aim-data .aim-title {
-            font-size: 11px;
-            color: #888;
-            margin-bottom: 6px;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 4px;
+            font-size: 11px; color: #888; margin-bottom: 6px;
+            display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px;
         }
         .aim-data .aim-title .rate {
-            color: #ff6b00;
-            font-weight: 700;
-            font-size: 12px;
-            background: #1a1a1a;
-            padding: 1px 10px;
-            border-radius: 20px;
+            color: #ff6b00; font-weight: 700; font-size: 12px;
+            background: #1a1a1a; padding: 1px 10px; border-radius: 20px;
             border: 1px solid #ff6b00;
         }
-        .aim-data .aim-title .lua-running {
-            color: #64b5f6;
-            font-size: 10px;
-            background: #1a3a5a;
-            padding: 1px 8px;
-            border-radius: 20px;
-            border: 1px solid #64b5f6;
+        .aim-data .aim-title .run-active {
+            color: #4caf50; font-size: 10px; background: #1a2a1a;
+            padding: 1px 8px; border-radius: 20px; border: 1px solid #4caf50;
             animation: pulse 1s infinite;
         }
         .aim-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4px 12px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px;
         }
         .aim-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 3px 0;
-            border-bottom: 1px solid #1a1a1a;
-            font-size: 12px;
+            display: flex; justify-content: space-between;
+            padding: 3px 0; border-bottom: 1px solid #1a1a1a; font-size: 12px;
         }
-        .aim-item .label {
-            color: #888;
-        }
-        .aim-item .value {
-            color: #fff;
-            font-weight: 500;
-        }
-        .aim-item .value.green {
-            color: #4caf50;
-        }
-        .aim-item .value.gold {
-            color: #ffcc00;
-        }
-        .aim-item .value.orange {
-            color: #ff6b00;
-            font-weight: 700;
-        }
+        .aim-item .label { color: #888; }
+        .aim-item .value { color: #fff; font-weight: 500; }
+        .aim-item .value.green { color: #4caf50; }
+        .aim-item .value.gold { color: #ffcc00; }
+        .aim-item .value.orange { color: #ff6b00; font-weight: 700; }
+        .aim-item .value.red { color: #ff0000; font-weight: 700; }
 
         /* ===== WEAPON ===== */
-        .weapon-aim {
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px solid #1a1a1a;
-        }
-        .weapon-aim .weapon-title {
-            font-size: 10px;
-            color: #888;
-            margin-bottom: 4px;
-        }
+        .weapon-aim { margin-top: 8px; padding-top: 8px; border-top: 1px solid #1a1a1a; }
+        .weapon-aim .weapon-title { font-size: 10px; color: #888; margin-bottom: 4px; }
         .weapon-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 3px 6px;
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3px 6px;
         }
         .weapon-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 2px 5px;
-            background: #0a0a0a;
-            border-radius: 4px;
-            font-size: 9px;
+            display: flex; justify-content: space-between;
+            padding: 2px 5px; background: #0a0a0a; border-radius: 4px; font-size: 9px;
         }
-        .weapon-item .w-label {
-            color: #888;
-        }
-        .weapon-item .w-value {
-            color: #ffcc00;
-            font-weight: 600;
-        }
-        .weapon-item .w-value.green {
-            color: #4caf50;
-        }
-        .weapon-item .w-value.orange {
-            color: #ff6b00;
-        }
-        .weapon-item .w-value.gold {
-            color: #ffcc00;
-        }
-        .weapon-item .w-value.red {
-            color: #ff3b30;
-        }
-        .weapon-item .w-value.purple {
-            color: #9b59b6;
-        }
-        .weapon-item .w-value.blue {
-            color: #64b5f6;
-        }
+        .weapon-item .w-label { color: #888; }
+        .weapon-item .w-value { color: #ffcc00; font-weight: 600; }
+        .weapon-item .w-value.green { color: #4caf50; }
+        .weapon-item .w-value.orange { color: #ff6b00; }
+        .weapon-item .w-value.gold { color: #ffcc00; }
+        .weapon-item .w-value.red { color: #ff3b30; }
 
         /* ===== AIM BAR ===== */
-        .aim-bar-wrap {
-            margin-top: 6px;
-        }
+        .aim-bar-wrap { margin-top: 6px; }
         .aim-bar-wrap .bar-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 10px;
-            color: #888;
-            margin-bottom: 2px;
+            display: flex; justify-content: space-between;
+            font-size: 10px; color: #888; margin-bottom: 2px;
         }
         .aim-bar {
-            width: 100%;
-            height: 5px;
-            background: #1a1a1a;
-            border-radius: 10px;
-            overflow: hidden;
+            width: 100%; height: 5px; background: #1a1a1a;
+            border-radius: 10px; overflow: hidden;
         }
         .aim-bar .fill {
-            height: 100%;
-            border-radius: 10px;
-            transition: width 0.5s;
-            width: 0%;
+            height: 100%; border-radius: 10px; transition: width 0.5s; width: 0%;
         }
-        .aim-bar .fill.orange {
-            background: linear-gradient(90deg, #ff6b00, #ff9800);
-            animation: glowOrange 1.5s infinite;
+        .aim-bar .fill.orange { background: linear-gradient(90deg, #ff6b00, #ff9800); animation: glowOrange 1.5s infinite; }
+        .aim-bar .fill.gold { background: linear-gradient(90deg, #ffcc00, #ff9800); }
+        .aim-bar .fill.blue { background: linear-gradient(90deg, #2196f3, #64b5f6); }
+        .aim-bar .fill.green { background: linear-gradient(90deg, #4caf50, #8bc34a); }
+        @keyframes glowOrange { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
+
+        /* ===== CROSSHAIR SETTINGS ===== */
+        .crosshair-settings {
+            margin-top: 10px; padding: 10px; background: #0a0a0a;
+            border-radius: 8px; border: 1px solid #2a2a2a;
         }
-        .aim-bar .fill.gold {
-            background: linear-gradient(90deg, #ffcc00, #ff9800);
+        .crosshair-settings .setting-title {
+            font-size: 11px; color: #888; margin-bottom: 6px;
         }
-        .aim-bar .fill.blue {
-            background: linear-gradient(90deg, #2196f3, #64b5f6);
+        .crosshair-settings .setting-row {
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 4px; flex-wrap: wrap;
         }
-        @keyframes glowOrange {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+        .crosshair-settings .setting-row label {
+            font-size: 11px; color: #888; min-width: 60px;
+        }
+        .crosshair-settings .setting-row input[type="color"] {
+            width: 30px; height: 30px; border: none; border-radius: 6px;
+            cursor: pointer; background: transparent; padding: 0;
+        }
+        .crosshair-settings .setting-row input[type="range"] {
+            flex: 1; min-width: 80px; height: 4px;
+            -webkit-appearance: none; background: #2a2a2a; border-radius: 4px; outline: none;
+        }
+        .crosshair-settings .setting-row input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 14px; height: 14px;
+            border-radius: 50%; background: #ff0000; cursor: pointer;
+        }
+        .crosshair-settings .setting-row .value-text {
+            font-size: 11px; color: #fff; min-width: 30px; text-align: center;
+        }
+        .crosshair-style {
+            display: flex; gap: 6px; flex-wrap: wrap;
+        }
+        .crosshair-style .style-btn {
+            padding: 4px 12px; border-radius: 6px; border: 1px solid #2a2a2a;
+            background: #1a1a1a; color: #888; font-size: 10px;
+            cursor: pointer; transition: 0.3s;
+        }
+        .crosshair-style .style-btn.active {
+            border-color: #ff0000; color: #ff0000; background: #1a0a0a;
         }
 
-        /* ===== IOS SELECTOR ===== */
-        .ios-selector {
+        /* ===== RUN FF SECTION - NÚT KÍCH HOẠT ===== */
+        .run-ff-section {
+            background: linear-gradient(135deg, #1a2a1a, #0a1a0a);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 10px 0;
+            border: 2px solid #4caf50;
+            position: relative;
+            overflow: hidden;
+        }
+        .run-ff-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(76, 175, 80, 0.1) 0%, transparent 70%);
+            animation: runGlow 3s infinite;
+        }
+        @keyframes runGlow {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+        }
+        .run-ff-section .run-header {
             display: flex;
-            gap: 6px;
+            justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            margin: 6px 0 4px;
-            padding: 6px 10px;
+            gap: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        .run-ff-section .run-header h3 {
+            font-size: 16px;
+            color: #4caf50;
+        }
+        .run-ff-section .run-header h3 span {
+            color: #fff;
+        }
+        .run-ff-section .run-header .run-badge {
+            background: #4caf50;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #fff;
+            animation: pulse 1s infinite;
+        }
+        .run-ff-section .run-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0;
+            padding: 10px 14px;
             background: #0a0a0a;
             border-radius: 8px;
             border: 1px solid #2a2a2a;
+            position: relative;
+            z-index: 1;
         }
-        .ios-selector label {
-            font-size: 12px;
+        .run-ff-section .run-status .info {
+            flex: 1;
+        }
+        .run-ff-section .run-status .info .title {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .run-ff-section .run-status .info .sub {
+            font-size: 11px;
             color: #888;
         }
-        .ios-selector select {
-            padding: 4px 10px;
-            border-radius: 6px;
-            border: 1px solid #2a2a2a;
-            background: #1a1a1a;
+        .run-ff-section .run-status .status-text {
+            font-weight: 700;
+            font-size: 13px;
+        }
+        .run-ff-section .run-status .status-text.ready {
+            color: #4caf50;
+        }
+        .run-ff-section .run-status .status-text.running {
+            color: #ffcc00;
+            animation: pulse 1s infinite;
+        }
+        .run-ff-section .run-status .status-text.stopped {
+            color: #ff3b30;
+        }
+
+        .run-ff-section .run-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+        .run-ff-section .run-actions .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            justify-content: center;
+            min-width: 120px;
+        }
+        .run-ff-section .run-actions .btn-run {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
             color: #fff;
-            font-size: 12px;
-            outline: none;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+        }
+        .run-ff-section .run-actions .btn-run:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(76, 175, 80, 0.5);
+        }
+        .run-ff-section .run-actions .btn-run:active {
+            transform: scale(0.98);
+        }
+        .run-ff-section .run-actions .btn-run.running {
+            background: linear-gradient(135deg, #ff6b00, #ff3b30);
+            box-shadow: 0 0 20px rgba(255, 107, 0, 0.3);
+            animation: pulse 0.8s infinite;
+        }
+        .run-ff-section .run-actions .btn-stop {
+            background: #2a2a2a;
+            color: #fff;
+        }
+        .run-ff-section .run-actions .btn-stop:hover {
+            background: #3a3a3a;
+        }
+        .run-ff-section .run-actions .btn-stop:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* ===== AIM COMMAND OUTPUT ===== */
+        .aim-command-output {
+            margin-top: 12px;
+            padding: 12px;
+            background: #0a0a0a;
+            border-radius: 8px;
+            border: 1px solid #4caf50;
+            display: none;
+            position: relative;
+            z-index: 1;
+        }
+        .aim-command-output.show {
+            display: block;
+        }
+        .aim-command-output .cmd-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .aim-command-output .cmd-header span {
+            font-size: 11px;
+            color: #4caf50;
+            font-weight: 600;
+        }
+        .aim-command-output .cmd-header button {
+            background: #2a2a2a;
+            border: none;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 10px;
             cursor: pointer;
         }
-        .ios-selector select:focus {
-            border-color: #64b5f6;
+        .aim-command-output .cmd-header button:hover {
+            background: #3a3a3a;
+        }
+        .aim-command-output pre {
+            background: #0a0a0a;
+            padding: 10px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 10px;
+            font-family: 'Courier New', monospace;
+            color: #4caf50;
+            border: 1px solid #1a2a1a;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .aim-command-output pre .cmd-highlight {
+            color: #ffcc00;
+        }
+        .aim-command-output pre .cmd-green {
+            color: #4caf50;
+        }
+        .aim-command-output pre .cmd-red {
+            color: #ff3b30;
+        }
+        .aim-command-output pre .cmd-blue {
+            color: #64b5f6;
         }
 
         /* ===== CONFIG SECTION ===== */
         .config-section {
-            background: #141414;
-            border-radius: 12px;
-            padding: 14px;
-            margin: 10px 0;
-            border: 1px solid #2a2a2a;
+            background: #141414; border-radius: 12px; padding: 14px;
+            margin: 10px 0; border: 1px solid #2a2a2a;
         }
         .config-section .config-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 6px;
         }
-        .config-section .config-header h3 {
-            font-size: 14px;
-            color: #fff;
-        }
-        .config-section .config-header h3 span {
-            color: #ff3b30;
-        }
+        .config-section .config-header h3 { font-size: 14px; color: #fff; }
+        .config-section .config-header h3 span { color: #ff3b30; }
         .config-section .config-header .badge-config {
-            background: #ff3b30;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: bold;
+            background: #ff3b30; padding: 2px 10px; border-radius: 20px; font-size: 10px; font-weight: bold;
         }
         .config-section .config-status {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin: 8px 0;
-            padding: 8px 12px;
-            background: #0a0a0a;
-            border-radius: 8px;
-            border: 1px solid #2a2a2a;
-            font-size: 12px;
+            display: flex; align-items: center; gap: 6px;
+            margin: 8px 0; padding: 8px 12px; background: #0a0a0a;
+            border-radius: 8px; border: 1px solid #2a2a2a; font-size: 12px;
         }
-        .config-section .config-status .info {
-            flex: 1;
-        }
-        .config-section .config-status .info .title {
-            font-weight: 600;
-        }
-        .config-section .config-status .info .sub {
-            color: #888;
-            font-size: 11px;
-        }
-        .config-section .config-status .status-text {
-            font-weight: 600;
-            color: #4caf50;
-        }
+        .config-section .config-status .info { flex: 1; }
+        .config-section .config-status .info .title { font-weight: 600; }
+        .config-section .config-status .info .sub { color: #888; font-size: 11px; }
+        .config-section .config-status .status-text { font-weight: 600; color: #4caf50; }
 
         .config-actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 10px;
+            display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;
         }
         .config-actions .btn {
-            padding: 8px 14px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 600;
-            font-size: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex: 1;
-            justify-content: center;
-            min-width: 90px;
+            padding: 8px 14px; border-radius: 8px; border: none;
+            font-weight: 600; font-size: 12px; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; gap: 6px;
+            flex: 1; justify-content: center; min-width: 90px;
         }
-        .config-actions .btn-primary {
-            background: #ff3b30;
-            color: #fff;
-        }
-        .config-actions .btn-primary:hover {
-            background: #e0352b;
-        }
-        .config-actions .btn-success {
-            background: #4caf50;
-            color: #fff;
-        }
-        .config-actions .btn-success:hover {
-            background: #3d8b40;
-        }
-        .config-actions .btn-aim80 {
-            background: linear-gradient(135deg, #ff6b00, #ff3b30);
-            color: #fff;
-        }
-        .config-actions .btn-aim80:hover {
-            transform: scale(1.02);
-        }
-        .config-actions .btn-lua {
-            background: #1a3a5a;
-            color: #64b5f6;
-            border: 1px solid #64b5f6;
-        }
-        .config-actions .btn-lua:hover {
-            background: #1a4a6a;
-        }
-        .config-actions .btn-secondary {
-            background: #2a2a2a;
-            color: #fff;
-        }
-        .config-actions .btn-secondary:hover {
-            background: #3a3a3a;
-        }
-
-        /* ===== PREVIEW ===== */
-        .config-preview {
-            margin-top: 10px;
-            background: #0a0a0a;
-            border-radius: 8px;
-            padding: 10px;
-            border: 1px solid #2a2a2a;
-            display: none;
-        }
-        .config-preview.show {
-            display: block;
-        }
-        .config-preview .preview-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
-        .config-preview .preview-header span {
-            font-size: 11px;
-            color: #888;
-        }
-        .config-preview .preview-header button {
-            background: #2a2a2a;
-            border: none;
-            color: #fff;
-            padding: 2px 10px;
-            border-radius: 4px;
-            font-size: 10px;
-            cursor: pointer;
-        }
-        .config-preview .preview-header button:hover {
-            background: #3a3a3a;
-        }
-        .config-preview pre {
-            background: #0a0a0a;
-            padding: 8px;
-            border-radius: 6px;
-            overflow-x: auto;
-            font-size: 9px;
-            font-family: 'Courier New', monospace;
-            color: #4caf50;
-            border: 1px solid #1a1a1a;
-            white-space: pre-wrap;
-            word-break: break-all;
-            max-height: 150px;
-            overflow-y: auto;
-        }
+        .config-actions .btn-primary { background: #ff3b30; color: #fff; }
+        .config-actions .btn-primary:hover { background: #e0352b; }
+        .config-actions .btn-success { background: #4caf50; color: #fff; }
+        .config-actions .btn-success:hover { background: #3d8b40; }
+        .config-actions .btn-aim80 { background: linear-gradient(135deg, #ff6b00, #ff3b30); color: #fff; }
+        .config-actions .btn-aim80:hover { transform: scale(1.02); }
+        .config-actions .btn-secondary { background: #2a2a2a; color: #fff; }
+        .config-actions .btn-secondary:hover { background: #3a3a3a; }
 
         /* ===== COMMENT ===== */
         .comment-section {
-            background: #141414;
-            border-radius: 12px;
-            padding: 14px;
-            margin: 10px 0;
+            background: #141414; border-radius: 12px; padding: 14px; margin: 10px 0;
         }
-        .comment-section h4 {
-            font-size: 13px;
-            margin-bottom: 8px;
-        }
-        .comment-section .comment-input {
-            display: flex;
-            gap: 8px;
-        }
+        .comment-section h4 { font-size: 13px; margin-bottom: 8px; }
+        .comment-section .comment-input { display: flex; gap: 8px; }
         .comment-section .comment-input input {
-            flex: 1;
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid #2a2a2a;
-            background: #1a1a1a;
-            color: #fff;
-            outline: none;
-            font-size: 13px;
+            flex: 1; padding: 8px 12px; border-radius: 8px;
+            border: 1px solid #2a2a2a; background: #1a1a1a; color: #fff;
+            outline: none; font-size: 13px;
         }
-        .comment-section .comment-input input:focus {
-            border-color: #ff3b30;
-        }
+        .comment-section .comment-input input:focus { border-color: #ff3b30; }
         .comment-section .comment-input button {
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: none;
-            background: #ff3b30;
-            color: #fff;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 13px;
+            padding: 8px 16px; border-radius: 8px; border: none;
+            background: #ff3b30; color: #fff; font-weight: 600; cursor: pointer; font-size: 13px;
         }
-        .comment-list {
-            margin-top: 8px;
-        }
+        .comment-list { margin-top: 8px; }
         .comment-list .cmt {
-            padding: 6px 0;
-            border-bottom: 1px solid #1a1a1a;
-            font-size: 13px;
-            color: #ccc;
+            padding: 6px 0; border-bottom: 1px solid #1a1a1a;
+            font-size: 13px; color: #ccc;
         }
-        .comment-list .cmt .cmt-user {
-            color: #ff3b30;
-            font-weight: 600;
-        }
-        .comment-list .cmt .cmt-time {
-            color: #555;
-            font-size: 10px;
-            margin-left: 6px;
-        }
+        .comment-list .cmt .cmt-user { color: #ff3b30; font-weight: 600; }
+        .comment-list .cmt .cmt-time { color: #555; font-size: 10px; margin-left: 6px; }
 
         /* ===== FOOTER ===== */
         .footer {
-            text-align: center;
-            padding: 16px;
-            color: #444;
-            font-size: 11px;
-            border-top: 1px solid #1a1a1a;
-            margin-top: 10px;
+            text-align: center; padding: 16px; color: #444;
+            font-size: 11px; border-top: 1px solid #1a1a1a; margin-top: 10px;
         }
-        .footer .highlight {
-            color: #ffcc00;
-        }
-        .footer .lua-footer {
-            color: #64b5f6;
-        }
+        .footer .highlight { color: #ffcc00; }
+        .footer .run-footer { color: #4caf50; }
 
         /* ===== TOAST ===== */
         .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2a2a2a;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-size: 13px;
-            display: none;
-            z-index: 999;
-            border: 1px solid #ff3b30;
-            text-align: center;
-            max-width: 90%;
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: #2a2a2a; color: #fff; padding: 10px 20px;
+            border-radius: 10px; font-size: 13px; display: none;
+            z-index: 999; border: 1px solid #ff3b30;
+            text-align: center; max-width: 90%;
         }
-        .toast.show {
-            display: block;
-        }
+        .toast.show { display: block; }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 480px) {
@@ -787,27 +625,38 @@
             .weapon-grid { grid-template-columns: 1fr 1fr; }
             .card .right-side { width: 100%; justify-content: flex-end; }
             .config-actions .btn { min-width: 70px; font-size: 11px; padding: 6px 10px; }
-            .ios-selector { flex-direction: column; align-items: stretch; }
-        }
-        @media (max-width: 360px) {
-            .weapon-grid { grid-template-columns: 1fr 1fr; }
+            .run-ff-section .run-actions .btn { min-width: 80px; font-size: 12px; padding: 10px 16px; }
         }
     </style>
 </head>
 <body>
+
+    <!-- ===== CROSSHAIR OVERLAY ===== -->
+    <div class="crosshair-overlay" id="crosshairOverlay">
+        <div class="crosshair" id="crosshair">
+            <div class="crosshair-line top" id="chTop"></div>
+            <div class="crosshair-line bottom" id="chBottom"></div>
+            <div class="crosshair-line left" id="chLeft"></div>
+            <div class="crosshair-line right" id="chRight"></div>
+            <div class="crosshair-dot" id="chDot"></div>
+            <div class="crosshair-circle" id="chCircle" style="display:none;"></div>
+            <div class="crosshair-bigdot" id="chBigDot" style="display:none;"></div>
+            <div class="crosshair-aimlock" id="chAimLock" style="display:none;"></div>
+        </div>
+    </div>
 
     <!-- ===== HEADER ===== -->
     <div class="header">
         <div class="header-top">
             <div>
                 <h1>🎯 PROXY <span>FF</span></h1>
-                <p>iOS 16 → 20 • Free Fire Max</p>
+                <p>iOS 16 → 20 • Free Fire Max • AimLock</p>
             </div>
             <div class="badge-group">
                 <span class="badge ios">📱 iOS 16-20</span>
                 <span class="badge ff">🔥 com.dts.freefiremax</span>
                 <span class="badge aim">🎯 AIM 80%</span>
-                <span class="badge lua">📜 Lua Code</span>
+                <span class="badge run">▶️ RUN FF</span>
             </div>
         </div>
     </div>
@@ -824,54 +673,37 @@
             <span class="aim-rate">🎯 80%</span>
             <span class="ios-ver" id="iosVersionDisplay">iOS 16.6</span>
             <span class="status-ok">✅ Sẵn sàng</span>
+            <span class="run-status" id="runStatus">⏸️ FF: IDLE</span>
         </div>
     </div>
 
     <!-- ===== IOS SELECTOR ===== -->
     <div class="container">
-        <div class="ios-selector">
-            <label>📱 Chọn iOS:</label>
-            <select id="iosVersionSelect">
-                <option value="16.0">iOS 16.0</option>
-                <option value="16.1">iOS 16.1</option>
-                <option value="16.2">iOS 16.2</option>
-                <option value="16.3">iOS 16.3</option>
-                <option value="16.4">iOS 16.4</option>
-                <option value="16.5">iOS 16.5</option>
-                <option value="16.6" selected>iOS 16.6</option>
-                <option value="16.7">iOS 16.7</option>
-                <option value="17.0">iOS 17.0</option>
-                <option value="17.1">iOS 17.1</option>
-                <option value="17.2">iOS 17.2</option>
-                <option value="17.3">iOS 17.3</option>
-                <option value="17.4">iOS 17.4</option>
-                <option value="17.5">iOS 17.5</option>
-                <option value="17.6">iOS 17.6</option>
-                <option value="17.7">iOS 17.7</option>
-                <option value="18.0">iOS 18.0</option>
-                <option value="18.1">iOS 18.1</option>
-                <option value="18.2">iOS 18.2</option>
-                <option value="18.3">iOS 18.3</option>
-                <option value="18.4">iOS 18.4</option>
-                <option value="18.5">iOS 18.5</option>
-                <option value="18.6">iOS 18.6</option>
-                <option value="19.0">iOS 19.0</option>
-                <option value="19.1">iOS 19.1</option>
-                <option value="19.2">iOS 19.2</option>
-                <option value="19.3">iOS 19.3</option>
-                <option value="19.4">iOS 19.4</option>
-                <option value="19.5">iOS 19.5</option>
-                <option value="19.6">iOS 19.6</option>
-                <option value="20.0">iOS 20.0</option>
-                <option value="20.1">iOS 20.1</option>
-                <option value="20.2">iOS 20.2</option>
-                <option value="20.3">iOS 20.3</option>
-                <option value="20.4">iOS 20.4</option>
-                <option value="20.5">iOS 20.5</option>
+        <div class="ios-selector" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:6px 0 4px;padding:6px 10px;background:#0a0a0a;border-radius:8px;border:1px solid #2a2a2a;">
+            <label style="font-size:12px;color:#888;">📱 Chọn iOS:</label>
+            <select id="iosVersionSelect" style="padding:4px 10px;border-radius:6px;border:1px solid #2a2a2a;background:#1a1a1a;color:#fff;font-size:12px;outline:none;cursor:pointer;">
+                <option value="16.0">iOS 16.0</option><option value="16.1">iOS 16.1</option>
+                <option value="16.2">iOS 16.2</option><option value="16.3">iOS 16.3</option>
+                <option value="16.4">iOS 16.4</option><option value="16.5">iOS 16.5</option>
+                <option value="16.6" selected>iOS 16.6</option><option value="16.7">iOS 16.7</option>
+                <option value="17.0">iOS 17.0</option><option value="17.1">iOS 17.1</option>
+                <option value="17.2">iOS 17.2</option><option value="17.3">iOS 17.3</option>
+                <option value="17.4">iOS 17.4</option><option value="17.5">iOS 17.5</option>
+                <option value="17.6">iOS 17.6</option><option value="17.7">iOS 17.7</option>
+                <option value="18.0">iOS 18.0</option><option value="18.1">iOS 18.1</option>
+                <option value="18.2">iOS 18.2</option><option value="18.3">iOS 18.3</option>
+                <option value="18.4">iOS 18.4</option><option value="18.5">iOS 18.5</option>
+                <option value="18.6">iOS 18.6</option><option value="19.0">iOS 19.0</option>
+                <option value="19.1">iOS 19.1</option><option value="19.2">iOS 19.2</option>
+                <option value="19.3">iOS 19.3</option><option value="19.4">iOS 19.4</option>
+                <option value="19.5">iOS 19.5</option><option value="19.6">iOS 19.6</option>
+                <option value="20.0">iOS 20.0</option><option value="20.1">iOS 20.1</option>
+                <option value="20.2">iOS 20.2</option><option value="20.3">iOS 20.3</option>
+                <option value="20.4">iOS 20.4</option><option value="20.5">iOS 20.5</option>
                 <option value="20.6">iOS 20.6</option>
             </select>
             <span style="color:#ffcc00;font-size:10px;background:#1a1a1a;padding:2px 8px;border-radius:20px;border:1px solid #ffcc00;">🔥 FF Max</span>
-            <span style="color:#64b5f6;font-size:10px;background:#1a3a5a;padding:2px 8px;border-radius:20px;border:1px solid #64b5f6;">📜 Lua</span>
+            <span style="color:#4caf50;font-size:10px;background:#1a2a1a;padding:2px 8px;border-radius:20px;border:1px solid #4caf50;">▶️ RUN</span>
         </div>
     </div>
 
@@ -893,17 +725,79 @@
     <!-- ===== CARDS ===== -->
     <div class="container" id="cardContainer"></div>
 
+    <!-- ===== CROSSHAIR SETTINGS ===== -->
+    <div class="container">
+        <div class="crosshair-settings">
+            <div class="setting-title">🎯 CÀI ĐẶT TÂM ẢO</div>
+            <div class="setting-row">
+                <label>Màu sắc:</label>
+                <input type="color" id="crosshairColor" value="#ff0000">
+                <label style="min-width:40px;">Kích thước:</label>
+                <input type="range" id="crosshairSize" min="10" max="50" value="20">
+                <span class="value-text" id="sizeValue">20</span>
+            </div>
+            <div class="setting-row">
+                <label>Kiểu:</label>
+                <div class="crosshair-style">
+                    <button class="style-btn active" data-style="cross" onclick="setCrosshairStyle('cross')">✚ Dấu cộng</button>
+                    <button class="style-btn" data-style="circle" onclick="setCrosshairStyle('circle')">◯ Vòng tròn</button>
+                    <button class="style-btn" data-style="dot" onclick="setCrosshairStyle('dot')">● Chấm to</button>
+                    <button class="style-btn" data-style="aimlock" onclick="setCrosshairStyle('aimlock')">🔒 AimLock</button>
+                </div>
+            </div>
+            <div class="setting-row">
+                <button class="btn btn-primary" id="btnCrosshairToggle" onclick="toggleCrosshair()">
+                    🎯 BẬT TÂM ẢO
+                </button>
+                <button class="btn btn-secondary" onclick="resetCrosshair()">🔄 Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== RUN FF SECTION - NÚT KÍCH HOẠT ===== -->
+    <div class="container">
+        <div class="run-ff-section" id="runFFSection">
+            <div class="run-header">
+                <h3>▶️ <span>KÍCH HOẠT</span> FREE FIRE</h3>
+                <span class="run-badge" id="runBadge">⚡ READY</span>
+            </div>
+            <div class="run-status">
+                <div class="info">
+                    <div class="title">Trạng thái Free Fire</div>
+                    <div class="sub" id="runSubStatus">Sẵn sàng kích hoạt • com.dts.freefiremax</div>
+                </div>
+                <span class="status-text ready" id="runStatusText">✅ Sẵn sàng</span>
+            </div>
+            <div class="run-actions">
+                <button class="btn btn-run" id="btnRunFF" onclick="runFreeFire()">
+                    ▶️ CHẠY FREE FIRE
+                </button>
+                <button class="btn btn-stop" id="btnStopFF" onclick="stopFreeFire()" disabled>
+                    ⏹ DỪNG
+                </button>
+            </div>
+            <!-- AIM Command Output -->
+            <div class="aim-command-output" id="aimCommandOutput">
+                <div class="cmd-header">
+                    <span>🎯 AIM COMMAND - Lệnh kích hoạt</span>
+                    <button onclick="copyCommand()">📋 Copy</button>
+                </div>
+                <pre id="commandCode">Đang tạo lệnh...</pre>
+            </div>
+        </div>
+    </div>
+
     <!-- ===== CONFIG SECTION ===== -->
     <div class="container">
         <div class="config-section">
             <div class="config-header">
                 <h3>📱 <span>MobileConfig</span> - Cấu hình cài đặt</h3>
-                <span class="badge-config">FF Max + Lua</span>
+                <span class="badge-config">FF Max + Run</span>
             </div>
             <div class="config-status">
                 <div class="info">
                     <div class="title">Trạng thái</div>
-                    <div class="sub" id="configSubStatus">Sẵn sàng bật proxy • com.dts.freefiremax • Lua Code</div>
+                    <div class="sub" id="configSubStatus">Sẵn sàng bật proxy • com.dts.freefiremax</div>
                 </div>
                 <span class="status-text">✅ Sẵn sàng</span>
             </div>
@@ -911,15 +805,14 @@
                 <button class="btn btn-primary" id="btnCreateConfig">🔧 Tạo MobileConfig</button>
                 <button class="btn btn-success" id="btnActivate">🚀 Kích hoạt tất cả</button>
                 <button class="btn btn-aim80" id="btnAim80">🎯 AIM 80% MAX</button>
-                <button class="btn btn-lua" id="btnLuaExport">📜 Export All Lua</button>
                 <button class="btn btn-secondary" id="btnExportJSON">📤 Xuất JSON</button>
             </div>
-            <div class="config-preview" id="configPreview">
-                <div class="preview-header">
-                    <span>📄 MobileConfig Preview</span>
-                    <button onclick="copyConfig()">📋 Copy</button>
+            <div class="config-preview" id="configPreview" style="margin-top:10px;background:#0a0a0a;border-radius:8px;padding:10px;border:1px solid #2a2a2a;display:none;">
+                <div class="preview-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                    <span style="font-size:11px;color:#888;">📄 MobileConfig Preview</span>
+                    <button onclick="copyConfig()" style="background:#2a2a2a;border:none;color:#fff;padding:2px 10px;border-radius:4px;font-size:10px;cursor:pointer;">📋 Copy</button>
                 </div>
-                <pre id="configCode">Đang tạo cấu hình...</pre>
+                <pre id="configCode" style="background:#0a0a0a;padding:8px;border-radius:6px;overflow-x:auto;font-size:9px;font-family:'Courier New',monospace;color:#4caf50;border:1px solid #1a1a1a;white-space:pre-wrap;word-break:break-all;max-height:150px;overflow-y:auto;">Đang tạo cấu hình...</pre>
             </div>
         </div>
     </div>
@@ -933,8 +826,8 @@
                 <button onclick="addComment()">Gửi</button>
             </div>
             <div class="comment-list" id="commentList">
-                <div class="cmt"><span class="cmt-user">🔥 Admin</span>: AIM 80% + Lua ngầm quá đỉnh! <span class="cmt-time">2 giờ trước</span></div>
-                <div class="cmt"><span class="cmt-user">🎯 ProGamer</span>: Chạy ngầm mượt mà <span class="cmt-time">5 giờ trước</span></div>
+                <div class="cmt"><span class="cmt-user">🔥 Admin</span>: Kích hoạt FF quá mượt! <span class="cmt-time">2 giờ trước</span></div>
+                <div class="cmt"><span class="cmt-user">🎯 ProGamer</span>: Lệnh aim chuẩn luôn <span class="cmt-time">5 giờ trước</span></div>
             </div>
         </div>
     </div>
@@ -945,11 +838,309 @@
     <!-- ===== FOOTER ===== -->
     <div class="footer">
         <p class="highlight">🔥 Free Fire Max • com.dts.freefiremax</p>
-        <p class="lua-footer">📜 Lua Code chạy ngầm • AIM 80%</p>
-        <p>🎯 Hỗ trợ iOS 16 → 20</p>
+        <p class="run-footer">▶️ Kích hoạt FF • AIM 80% • iOS 16 → 20</p>
     </div>
 
     <script>
+        // ============================================================
+        // CROSSHAIR
+        // ============================================================
+        let crosshairActive = false;
+        let crosshairStyle = 'cross';
+        let crosshairColor = '#ff0000';
+        let crosshairSize = 20;
+
+        // ============================================================
+        // RUN FF STATE
+        // ============================================================
+        let isRunning = false;
+
+        // ============================================================
+        // CROSSHAIR FUNCTIONS
+        // ============================================================
+        function toggleCrosshair() {
+            crosshairActive = !crosshairActive;
+            const overlay = document.getElementById('crosshairOverlay');
+            const btn = document.getElementById('btnCrosshairToggle');
+
+            if (crosshairActive) {
+                overlay.classList.add('active');
+                btn.textContent = '🎯 TẮT TÂM ẢO';
+                btn.classList.add('active');
+                btn.style.background = '#00cc00';
+                showToast('🎯 Đã bật tâm ảo!');
+            } else {
+                overlay.classList.remove('active');
+                btn.textContent = '🎯 BẬT TÂM ẢO';
+                btn.classList.remove('active');
+                btn.style.background = '';
+                showToast('⛔ Đã tắt tâm ảo!');
+            }
+        }
+
+        function setCrosshairStyle(style) {
+            crosshairStyle = style;
+            document.querySelectorAll('.style-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.style === style) btn.classList.add('active');
+            });
+
+            const chDot = document.getElementById('chDot');
+            const chCircle = document.getElementById('chCircle');
+            const chBigDot = document.getElementById('chBigDot');
+            const chTop = document.getElementById('chTop');
+            const chBottom = document.getElementById('chBottom');
+            const chLeft = document.getElementById('chLeft');
+            const chRight = document.getElementById('chRight');
+            const chAimLock = document.getElementById('chAimLock');
+
+            chDot.style.display = 'none';
+            chCircle.style.display = 'none';
+            chBigDot.style.display = 'none';
+            chTop.style.display = 'none';
+            chBottom.style.display = 'none';
+            chLeft.style.display = 'none';
+            chRight.style.display = 'none';
+            chAimLock.style.display = 'none';
+
+            if (style === 'cross') {
+                chTop.style.display = 'block';
+                chBottom.style.display = 'block';
+                chLeft.style.display = 'block';
+                chRight.style.display = 'block';
+                chDot.style.display = 'block';
+            } else if (style === 'circle') {
+                chCircle.style.display = 'block';
+                chDot.style.display = 'block';
+            } else if (style === 'dot') {
+                chBigDot.style.display = 'block';
+            } else if (style === 'aimlock') {
+                chAimLock.style.display = 'block';
+                chDot.style.display = 'block';
+            }
+
+            applyCrosshairStyle();
+            showToast(`🎯 Đã chọn kiểu: ${style}`);
+        }
+
+        function applyCrosshairStyle() {
+            const color = crosshairColor;
+            const size = crosshairSize;
+
+            document.querySelectorAll('.crosshair-line').forEach(el => {
+                el.style.background = color;
+                el.style.boxShadow = `0 0 8px ${color}66`;
+            });
+            document.getElementById('chDot').style.background = color;
+            document.getElementById('chDot').style.boxShadow = `0 0 10px ${color}`;
+            document.getElementById('chCircle').style.borderColor = color;
+            document.getElementById('chCircle').style.boxShadow = `0 0 15px ${color}4D`;
+            document.getElementById('chBigDot').style.background = color;
+            document.getElementById('chBigDot').style.boxShadow = `0 0 20px ${color}80`;
+            document.getElementById('chAimLock').style.borderColor = color;
+
+            const halfSize = size / 2;
+            document.getElementById('chTop').style.height = halfSize + 'px';
+            document.getElementById('chBottom').style.height = halfSize + 'px';
+            document.getElementById('chLeft').style.width = halfSize + 'px';
+            document.getElementById('chRight').style.width = halfSize + 'px';
+            document.getElementById('chCircle').style.width = size + 'px';
+            document.getElementById('chCircle').style.height = size + 'px';
+            document.getElementById('chBigDot').style.width = Math.max(size / 2, 6) + 'px';
+            document.getElementById('chBigDot').style.height = Math.max(size / 2, 6) + 'px';
+            document.getElementById('chAimLock').style.width = (size * 3) + 'px';
+            document.getElementById('chAimLock').style.height = (size * 3) + 'px';
+        }
+
+        function resetCrosshair() {
+            crosshairColor = '#ff0000';
+            crosshairSize = 20;
+            document.getElementById('crosshairColor').value = '#ff0000';
+            document.getElementById('crosshairSize').value = 20;
+            document.getElementById('sizeValue').textContent = '20';
+            setCrosshairStyle('cross');
+            applyCrosshairStyle();
+            showToast('🔄 Đã reset tâm ảo về mặc định');
+        }
+
+        // ============================================================
+        // RUN FREE FIRE - CHỨC NĂNG CHÍNH
+        // ============================================================
+        function runFreeFire() {
+            const btn = document.getElementById('btnRunFF');
+            const btnStop = document.getElementById('btnStopFF');
+            const statusText = document.getElementById('runStatusText');
+            const subStatus = document.getElementById('runSubStatus');
+            const runBadge = document.getElementById('runBadge');
+            const runStatus = document.getElementById('runStatus');
+            const output = document.getElementById('aimCommandOutput');
+            const commandCode = document.getElementById('commandCode');
+
+            if (isRunning) {
+                showToast('⏳ FF đang chạy!');
+                return;
+            }
+
+            // Lấy proxy đang active
+            const activeProxies = proxies.filter(p => p.active);
+            if (activeProxies.length === 0) {
+                showToast('❌ Vui lòng bật ít nhất 1 proxy!');
+                return;
+            }
+
+            // Bật crosshair nếu chưa bật
+            if (!crosshairActive) {
+                toggleCrosshair();
+            }
+
+            // Cập nhật trạng thái
+            isRunning = true;
+            btn.textContent = '▶️ ĐANG CHẠY...';
+            btn.classList.add('running');
+            btn.disabled = true;
+            btnStop.disabled = false;
+            statusText.textContent = '▶️ ĐANG CHẠY';
+            statusText.className = 'status-text running';
+            subStatus.textContent = '🎯 Free Fire đang chạy • AimLock ON • ' + activeProxies.length + ' proxy';
+            runBadge.textContent = '▶️ RUNNING';
+            runBadge.style.background = '#ff6b00';
+            runStatus.textContent = '▶️ FF: RUNNING';
+            runStatus.style.color = '#ff6b00';
+
+            showToast('▶️ Đang kích hoạt Free Fire...');
+
+            // Tạo lệnh AIM
+            generateAimCommand(activeProxies);
+
+            // Hiển thị output
+            output.classList.add('show');
+
+            // Log
+            console.log('▶️ RUN FF - Kích hoạt Free Fire!');
+            console.log('📦 Package: com.dts.freefiremax');
+            console.log('🎯 Active proxies:', activeProxies.map(p => p.name).join(', '));
+
+            // Gửi lệnh qua WebSocket nếu có
+            if (typeof ws !== 'undefined' && ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({
+                    command: 'run_ff',
+                    action: 'start',
+                    proxies: activeProxies.map(p => ({ id: p.id, name: p.name, aim: p.aim })),
+                    ios: currentIOS
+                }));
+            }
+
+            // Tự động dừng sau 60s (demo)
+            setTimeout(() => {
+                if (isRunning) {
+                    stopFreeFire();
+                }
+            }, 60000);
+        }
+
+        function stopFreeFire() {
+            const btn = document.getElementById('btnRunFF');
+            const btnStop = document.getElementById('btnStopFF');
+            const statusText = document.getElementById('runStatusText');
+            const subStatus = document.getElementById('runSubStatus');
+            const runBadge = document.getElementById('runBadge');
+            const runStatus = document.getElementById('runStatus');
+            const output = document.getElementById('aimCommandOutput');
+
+            if (!isRunning) {
+                showToast('⏸️ FF đã dừng!');
+                return;
+            }
+
+            isRunning = false;
+            btn.textContent = '▶️ CHẠY FREE FIRE';
+            btn.classList.remove('running');
+            btn.disabled = false;
+            btnStop.disabled = true;
+            statusText.textContent = '⏸️ ĐÃ DỪNG';
+            statusText.className = 'status-text stopped';
+            subStatus.textContent = '⏸️ Đã dừng Free Fire • com.dts.freefiremax';
+            runBadge.textContent = '⏸️ STOPPED';
+            runBadge.style.background = '#ff3b30';
+            runStatus.textContent = '⏸️ FF: STOPPED';
+            runStatus.style.color = '#ff3b30';
+            output.classList.remove('show');
+
+            showToast('⏸️ Đã dừng Free Fire!');
+
+            console.log('⏸️ STOP FF - Đã dừng Free Fire');
+
+            if (typeof ws !== 'undefined' && ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({
+                    command: 'run_ff',
+                    action: 'stop'
+                }));
+            }
+        }
+
+        // ============================================================
+        // TẠO LỆNH AIM
+        // ============================================================
+        function generateAimCommand(activeProxies) {
+            const commandCode = document.getElementById('commandCode');
+            const now = new Date();
+            const time = now.toLocaleTimeString();
+
+            let cmd = `# ============================================\n`;
+            cmd += `# 🎯 AIM COMMAND - Kích hoạt Free Fire\n`;
+            cmd += `# 📅 Thời gian: ${time}\n`;
+            cmd += `# 📦 Package: com.dts.freefiremax\n`;
+            cmd += `# 📱 iOS: ${currentIOS}\n`;
+            cmd += `# ============================================\n\n`;
+
+            cmd += `# 🔥 Kích hoạt ${activeProxies.length} proxy\n`;
+            activeProxies.forEach((p, i) => {
+                cmd += `\n# ----- ${i+1}. ${p.name} -----\n`;
+                cmd += `aim activate --proxy ${p.id} --name "${p.name}"\n`;
+                cmd += `aim set sensitivity ${p.aim.sensitivity}\n`;
+                cmd += `aim set aimAngle ${p.aim.aimAngle}\n`;
+                cmd += `aim set headshot ${p.aim.headshotRate}%\n`;
+                cmd += `aim set region "${p.aim.aimRegion}"\n`;
+                cmd += `aim set recoil ${p.aim.recoilComp}%\n`;
+                cmd += `aim set autoLock ${p.aim.autoLock ? 'ON' : 'OFF'}\n`;
+                cmd += `aim set fov ${p.aim.fov}\n`;
+                cmd += `aim set smoothness ${p.aim.smoothness}%\n`;
+                
+                if (p.weapon) {
+                    cmd += `\n# 🔫 Weapon AIM Data\n`;
+                    Object.values(p.weapon).forEach(w => {
+                        cmd += `aim weapon "${w.name}" --headshot ${w.headshot}% --recoil ${w.recoil}% --accuracy ${w.accuracy}%\n`;
+                    });
+                }
+                cmd += `aim apply --proxy ${p.id}\n`;
+                cmd += `echo "✅ ${p.name} đã kích hoạt!"\n`;
+            });
+
+            cmd += `\n# ============================================\n`;
+            cmd += `# 🎯 Crosshair + AimLock\n`;
+            cmd += `crosshair activate --color ${crosshairColor} --size ${crosshairSize} --style ${crosshairStyle}\n`;
+            cmd += `aimlock activate --sensitivity 1.8 --headshot 80%\n`;
+            cmd += `\n# ✅ ALL SYSTEMS GO!\n`;
+            cmd += `echo "🎯 Free Fire đã sẵn sàng!"\n`;
+            cmd += `# ============================================\n`;
+
+            commandCode.textContent = cmd;
+        }
+
+        function copyCommand() {
+            const el = document.getElementById('commandCode');
+            navigator.clipboard?.writeText(el.textContent).then(() => {
+                showToast('📋 Đã copy lệnh AIM!');
+            }).catch(() => {
+                const range = document.createRange();
+                range.selectNode(el);
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+                document.execCommand('copy');
+                showToast('📋 Đã copy lệnh AIM!');
+            });
+        }
+
         // ============================================================
         // DATA - PROXY
         // ============================================================
@@ -959,8 +1150,8 @@
             name: 'Proxy Cổ V1',
             game: 'Free Fire Max',
             package: 'com.dts.freefiremax',
-            desc: 'Aim Cổ - Ít Lộ Hơn • AIM 80% • Lua ngầm',
-            tags: ['VIP', 'AUTO', 'AIM80', 'Lua'],
+            desc: 'Aim Cổ - Ít Lộ Hơn • AIM 80%',
+            tags: ['VIP', 'AUTO', 'AIM80'],
             active: false,
             aim: { type: 'Head & Neck', sensitivity: 1.6, aimAngle: 18, headshotRate: 80, aimRegion: 'Cổ', recoilComp: 70,
                 autoLock: true, fov: 125, smoothness: 88 },
@@ -978,8 +1169,8 @@
             name: 'Proxy Cổ V2',
             game: 'Free Fire Max',
             package: 'com.dts.freefiremax',
-            desc: 'Vùng Cổ Máu Đỏ To Hơn • AIM 80% • Lua ngầm',
-            tags: ['VIP', 'AIM80', 'Lua'],
+            desc: 'Vùng Cổ Máu Đỏ To Hơn • AIM 80%',
+            tags: ['VIP', 'AIM80'],
             active: false,
             aim: { type: 'Head & Neck', sensitivity: 1.8, aimAngle: 22, headshotRate: 80, aimRegion: 'Cổ rộng',
                 recoilComp: 80, autoLock: true, fov: 135, smoothness: 92 },
@@ -997,8 +1188,8 @@
             name: 'Proxy Magic',
             game: 'Free Fire Max',
             package: 'com.dts.freefiremax',
-            desc: 'Đạn Ma Thuật • AIM 80% Headshot • Lua ngầm',
-            tags: ['VIP', 'AUTO', 'AIM80', 'Lua'],
+            desc: 'Đạn Ma Thuật • AIM 80% Headshot',
+            tags: ['VIP', 'AUTO', 'AIM80'],
             active: false,
             aim: { type: 'Magic Bullet', sensitivity: 2.0, aimAngle: 30, headshotRate: 80, aimRegion: 'Toàn thân',
                 recoilComp: 90, autoLock: true, fov: 150, smoothness: 95 },
@@ -1016,8 +1207,8 @@
             name: 'Mod Skin Maro',
             game: 'Free Fire Max',
             package: 'com.dts.freefiremax',
-            desc: 'One Punch Man • AIM 80% • Lua ngầm',
-            tags: ['VIP', 'AIM80', 'Lua'],
+            desc: 'One Punch Man • AIM 80%',
+            tags: ['VIP', 'AIM80'],
             active: false,
             aim: { type: 'Skin Mod', sensitivity: 1.4, aimAngle: 12, headshotRate: 80, aimRegion: 'Đầu', recoilComp: 50,
                 autoLock: false, fov: 105, smoothness: 75 },
@@ -1035,8 +1226,8 @@
             name: 'Mod Skin Alok V1',
             game: 'Free Fire Max',
             package: 'com.dts.freefiremax',
-            desc: 'Alok Cyber • AIM 80% • Lua ngầm',
-            tags: ['VIP', 'AIM80', 'Lua'],
+            desc: 'Alok Cyber • AIM 80%',
+            tags: ['VIP', 'AIM80'],
             active: false,
             aim: { type: 'Skin Mod', sensitivity: 1.5, aimAngle: 14, headshotRate: 80, aimRegion: 'Ngực', recoilComp: 55,
                 autoLock: false, fov: 115, smoothness: 78 },
@@ -1054,8 +1245,8 @@
             name: 'Mod Skin Hayato V1',
             game: 'Free Fire Max',
             package: 'com.dts.freefiremax',
-            desc: 'Hayato Samurai • AIM 80% • Lua ngầm',
-            tags: ['AIM80', 'Lua'],
+            desc: 'Hayato Samurai • AIM 80%',
+            tags: ['AIM80'],
             active: false,
             aim: { type: 'Skin Mod', sensitivity: 1.3, aimAngle: 10, headshotRate: 80, aimRegion: 'Toàn thân',
                 recoilComp: 40, autoLock: false, fov: 95, smoothness: 70 },
@@ -1097,8 +1288,8 @@
             name: 'Mod Skin Dimitri V1',
             game: 'Free Fire Max',
             package: 'com.dts.freefiremax',
-            desc: 'Dimitri Wraith • AIM 80% • Lua ngầm',
-            tags: ['AIM80', 'Lua'],
+            desc: 'Dimitri Wraith • AIM 80%',
+            tags: ['AIM80'],
             active: false,
             aim: { type: 'Skin Mod', sensitivity: 1.4, aimAngle: 12, headshotRate: 80, aimRegion: 'Ngực', recoilComp: 48,
                 autoLock: false, fov: 108, smoothness: 74 },
@@ -1120,7 +1311,7 @@
         let currentSearch = '';
 
         // ============================================================
-        // HÀM TẠO LUA CODE (chạy ngầm)
+        // HÀM TẠO LUA CODE
         // ============================================================
         function generateLuaCode(proxy) {
             if (!proxy.weapon) return '';
@@ -1215,16 +1406,16 @@ return status`;
                             <div class="card-name">${p.name}</div>
                             <div class="desc">${p.desc}</div>
                             <div class="meta">
-                                ${p.tags.map(t => `<span class="tag ${t.toLowerCase() === 'vip' ? 'vip' : ''} ${t.toLowerCase() === 'auto' ? 'auto' : ''} ${t === 'AIM80' ? 'aim80' : ''} ${t === 'Lua' ? 'lua' : ''}">${t}</span>`).join('')}
+                                ${p.tags.map(t => `<span class="tag ${t.toLowerCase() === 'vip' ? 'vip' : ''} ${t.toLowerCase() === 'auto' ? 'auto' : ''} ${t === 'AIM80' ? 'aim80' : ''}">${t}</span>`).join('')}
                                 <span class="tag ios">📱 iOS ${currentIOS}</span>
                                 <span class="tag ff">🔥 FF Max</span>
-                                ${p.weapon ? `<span class="tag weapon">🔫 6 súng</span>` : ''}
+                                ${p.weapon ? `<span class="tag run">🔫 6 súng</span>` : ''}
                             </div>
                         </div>
                         <div class="right-side">
                             <div class="status">
                                 <div class="status-label ${p.active ? 'on' : 'off'}">${p.active ? '✅ Đang chạy' : '⛔ Đã tắt'}</div>
-                                <div class="status-detail ${p.active ? 'on' : ''}">${p.active ? '🎯 AIM 80% + Lua' : 'Nhấn bật'}</div>
+                                <div class="status-detail ${p.active ? 'on' : ''}">${p.active ? '🎯 AIM 80%' : 'Nhấn bật'}</div>
                             </div>
                             <div class="toggle ${p.active ? 'active' : ''}" onclick="toggleProxy(${p.id})">
                                 <div class="slider"></div>
@@ -1235,7 +1426,7 @@ return status`;
                         <div class="aim-title">
                             <span>🎯 AIM DATA - ${p.aim.type}</span>
                             <span class="rate">🔥 ${p.aim.headshotRate}%</span>
-                            ${p.active ? `<span class="lua-running">📜 Lua Running</span>` : ''}
+                            ${p.active ? `<span class="run-active">▶️ RUNNING</span>` : ''}
                         </div>
                         <div class="aim-grid">
                             <div class="aim-item"><span class="label">Độ nhạy</span><span class="value green">${p.aim.sensitivity}x</span></div>
@@ -1246,7 +1437,6 @@ return status`;
                             <div class="aim-item"><span class="label">Auto Lock</span><span class="value ${p.aim.autoLock ? 'green' : 'red'}">${p.aim.autoLock ? '✅ Bật' : '⛔ Tắt'}</span></div>
                             <div class="aim-item"><span class="label">FOV</span><span class="value gold">${p.aim.fov}°</span></div>
                             <div class="aim-item"><span class="label">Độ mượt</span><span class="value green">${p.aim.smoothness}%</span></div>
-                            <div class="aim-item"><span class="label">Lua Status</span><span class="value ${p.active ? 'green' : 'red'}">${p.active ? '✅ Running' : '⛔ Stopped'}</span></div>
                         </div>
                         ${p.weapon ? `
                         <div class="weapon-aim">
@@ -1280,7 +1470,7 @@ return status`;
         }
 
         // ============================================================
-        // TOGGLE PROXY - CHỨC NĂNG BẬT/TẮT
+        // TOGGLE PROXY
         // ============================================================
         function toggleProxy(id) {
             const proxy = proxies.find(p => p.id === id);
@@ -1300,10 +1490,9 @@ return status`;
                 statusLabel.className = 'status-label on';
                 statusLabel.textContent = '✅ Đang chạy';
                 statusDetail.className = 'status-detail on';
-                statusDetail.textContent = '🎯 AIM 80% + Lua';
+                statusDetail.textContent = '🎯 AIM 80%';
                 aimData.classList.add('show');
 
-                // Chạy Lua ngầm
                 const luaCode = generateLuaCode(proxy);
                 console.log('📜 [LUA] ' + proxy.name + ' đang chạy:');
                 console.log(luaCode);
@@ -1354,14 +1543,15 @@ return status`;
             const active = proxies.filter(p => p.active);
             const sub = document.getElementById('configSubStatus');
             if (active.length === 0) {
-                sub.textContent = '⏳ Chưa có proxy nào được bật • com.dts.freefiremax • Lua Code';
+                sub.textContent = '⏳ Chưa có proxy nào được bật • com.dts.freefiremax';
             } else {
-                sub.textContent = `✅ Đã bật ${active.length} proxy • 🎯 AIM 80% • iOS ${currentIOS} • FF Max • Lua ngầm`;
+                sub.textContent =
+                    `✅ Đã bật ${active.length} proxy • 🎯 AIM 80% • iOS ${currentIOS} • FF Max`;
             }
         }
 
         // ============================================================
-        // TẠO MOBILECONFIG - CHỨC NĂNG TẠO FILE
+        // TẠO MOBILECONFIG
         // ============================================================
         function createMobileConfig() {
             const active = proxies.filter(p => p.active);
@@ -1459,7 +1649,7 @@ return status`;
         }
 
         // ============================================================
-        // KÍCH HOẠT TẤT CẢ - CHỨC NĂNG
+        // KÍCH HOẠT TẤT CẢ
         // ============================================================
         function activateAll() {
             const inactive = proxies.filter(p => !p.active);
@@ -1477,7 +1667,7 @@ return status`;
                     card.querySelector('.status-label').className = 'status-label on';
                     card.querySelector('.status-label').textContent = '✅ Đang chạy';
                     card.querySelector('.status-detail').className = 'status-detail on';
-                    card.querySelector('.status-detail').textContent = '🎯 AIM 80% + Lua';
+                    card.querySelector('.status-detail').textContent = '🎯 AIM 80%';
                     document.getElementById(`aimData-${p.id}`).classList.add('show');
 
                     const luaCode = generateLuaCode(p);
@@ -1492,7 +1682,7 @@ return status`;
         }
 
         // ============================================================
-        // AIM 80% MAX - CHỨC NĂNG
+        // AIM 80% MAX
         // ============================================================
         function setAim80() {
             proxies.forEach(p => {
@@ -1512,39 +1702,7 @@ return status`;
         }
 
         // ============================================================
-        // EXPORT LUA - CHỨC NĂNG
-        // ============================================================
-        function exportLuaAll() {
-            let allLua = '-- ========================================\n';
-            allLua += '-- PROXY FF - ALL LUA CODE\n';
-            allLua += '-- Generated: ' + new Date().toISOString() + '\n';
-            allLua += '-- Package: com.dts.freefiremax\n';
-            allLua += '-- iOS: ' + currentIOS + '\n';
-            allLua += '-- ========================================\n\n';
-
-            proxies.forEach(p => {
-                if (p.weapon) {
-                    allLua += '-- ========================================\n';
-                    allLua += '-- ' + p.name + '\n';
-                    allLua += '-- ========================================\n';
-                    allLua += generateLuaCode(p) + '\n\n';
-                }
-            });
-
-            const blob = new Blob([allLua], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `proxy_ff_all_lua_${Date.now()}.lua`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showToast('📜 Đã xuất tất cả Lua Code!');
-        }
-
-        // ============================================================
-        // EXPORT JSON - CHỨC NĂNG
+        // EXPORT JSON
         // ============================================================
         function exportJSON() {
             const data = {
@@ -1553,6 +1711,13 @@ return status`;
                 aim_rate: '80%',
                 ios_version: currentIOS,
                 ios_support: '16 → 20',
+                crosshair: {
+                    active: crosshairActive,
+                    style: crosshairStyle,
+                    color: crosshairColor,
+                    size: crosshairSize
+                },
+                is_running: isRunning,
                 weapons: ['M4A1', 'AK47', 'AWM', 'M1887', 'MP40', 'UMP'],
                 proxies: proxies,
                 proxy_ip: '192.168.1.8',
@@ -1574,7 +1739,7 @@ return status`;
         }
 
         // ============================================================
-        // COMMENT - CHỨC NĂNG
+        // COMMENT
         // ============================================================
         function addComment() {
             const input = document.getElementById('commentInput');
@@ -1633,18 +1798,34 @@ return status`;
         document.getElementById('btnCreateConfig').addEventListener('click', createMobileConfig);
         document.getElementById('btnActivate').addEventListener('click', activateAll);
         document.getElementById('btnAim80').addEventListener('click', setAim80);
-        document.getElementById('btnLuaExport').addEventListener('click', exportLuaAll);
         document.getElementById('btnExportJSON').addEventListener('click', exportJSON);
+
+        // Crosshair events
+        document.getElementById('crosshairColor').addEventListener('input', function() {
+            crosshairColor = this.value;
+            applyCrosshairStyle();
+        });
+
+        document.getElementById('crosshairSize').addEventListener('input', function() {
+            crosshairSize = parseInt(this.value);
+            document.getElementById('sizeValue').textContent = crosshairSize;
+            applyCrosshairStyle();
+        });
 
         // ============================================================
         // INIT
         // ============================================================
         renderCards();
         updateConfigStatus();
-        console.log('✅ PROXY FF sẵn sàng! Bật toggle để chạy.');
+
+        // Set crosshair mặc định
+        setCrosshairStyle('cross');
+        applyCrosshairStyle();
+
+        console.log('✅ PROXY FF sẵn sàng!');
         console.log('📦 Package: com.dts.freefiremax');
         console.log('🔫 6 Weapons: M4A1, AK47, AWM, M1887, MP40, UMP');
-        console.log('📜 Lua chạy ngầm khi bật proxy');
+        console.log('▶️ Click "CHẠY FREE FIRE" để kích hoạt');
     </script>
 
 </body>
