@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Proxy FF - AIM 80%</title>
+    <title>PROXY FF - Controller</title>
     <style>
+        /* ===== RESET ===== */
         * {
             margin: 0;
             padding: 0;
@@ -17,9 +18,10 @@
             padding: 0 0 80px 0;
         }
 
+        /* ===== HEADER ===== */
         .header {
             background: linear-gradient(135deg, #1a1a2e, #16213e);
-            padding: 20px 16px 16px;
+            padding: 16px 16px 12px;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -30,30 +32,44 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
         .header h1 {
-            font-size: 22px;
+            font-size: 20px;
             color: #ff3b30;
         }
         .header h1 span {
             color: #fff;
             font-weight: 300;
         }
-        .header .aim-badge {
-            background: linear-gradient(135deg, #ff3b30, #ff6b00);
-            padding: 4px 14px;
+        .header .badge-group {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .header .badge {
+            padding: 3px 10px;
             border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .badge.ios {
+            background: #1a3a5a;
+            color: #64b5f6;
+            border: 1px solid #64b5f6;
+        }
+        .badge.ff {
+            background: #ff3b30;
+            color: #fff;
+            border: 1px solid #ffcc00;
+        }
+        .badge.aim {
+            background: linear-gradient(135deg, #ff3b30, #ff6b00);
             color: #fff;
             animation: pulse 1.5s infinite;
         }
-        .header .ios-badge {
+        .badge.lua {
             background: #1a3a5a;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
             color: #64b5f6;
             border: 1px solid #64b5f6;
         }
@@ -63,76 +79,68 @@
         }
         .header p {
             color: #888;
-            font-size: 13px;
+            font-size: 12px;
             margin-top: 4px;
         }
 
+        /* ===== STATUS BAR ===== */
         .status-bar {
             background: #1a1a1a;
-            padding: 10px 16px;
+            padding: 8px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #2a2a2a;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 4px;
+            font-size: 12px;
         }
-        .status-bar .proxy-status {
+        .status-bar .left {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 13px;
         }
-        .status-bar .proxy-status .dot {
+        .status-bar .dot {
             width: 10px;
             height: 10px;
             border-radius: 50%;
             display: inline-block;
-        }
-        .status-bar .proxy-status .dot.online {
             background: #4caf50;
             box-shadow: 0 0 10px #4caf50;
         }
-        .status-bar .proxy-status .dot.offline {
-            background: #ff3b30;
-            box-shadow: 0 0 10px #ff3b30;
+        .status-bar .right {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
         }
-        .status-bar .proxy-status .dot.checking {
-            background: #ffcc00;
-            box-shadow: 0 0 10px #ffcc00;
-            animation: blink 0.8s infinite;
-        }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-        .status-bar .active-count {
+        .status-bar .right .count {
             color: #4caf50;
             font-weight: 600;
         }
-        .status-bar .aim-rate {
+        .status-bar .right .aim-rate {
             color: #ffcc00;
             font-weight: 700;
-            font-size: 15px;
         }
-        .status-bar .ios-version {
+        .status-bar .right .ios-ver {
             color: #64b5f6;
-            font-weight: 600;
-            font-size: 13px;
+        }
+        .status-bar .right .status-ok {
+            color: #4caf50;
         }
 
+        /* ===== SEARCH ===== */
         .search-wrap {
-            padding: 12px 16px;
+            padding: 10px 16px;
             background: #0a0a0a;
         }
         .search-wrap input {
             width: 100%;
-            padding: 12px 16px;
-            border-radius: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
             border: 1px solid #2a2a2a;
             background: #1a1a1a;
             color: #fff;
-            font-size: 15px;
+            font-size: 14px;
             outline: none;
             transition: 0.3s;
         }
@@ -143,10 +151,11 @@
             color: #555;
         }
 
+        /* ===== TABS ===== */
         .tabs {
             display: flex;
-            gap: 8px;
-            padding: 0 16px 12px;
+            gap: 6px;
+            padding: 0 16px 10px;
             overflow-x: auto;
             background: #0a0a0a;
         }
@@ -154,11 +163,11 @@
             display: none;
         }
         .tabs .tab {
-            padding: 6px 16px;
+            padding: 5px 14px;
             border-radius: 20px;
             background: #1a1a1a;
             color: #888;
-            font-size: 13px;
+            font-size: 12px;
             white-space: nowrap;
             cursor: pointer;
             border: 1px solid transparent;
@@ -173,14 +182,17 @@
             border-color: #ff3b30;
         }
 
+        /* ===== CONTAINER ===== */
         .container {
             padding: 0 16px;
         }
+
+        /* ===== CARDS ===== */
         .card {
             background: #141414;
-            border-radius: 14px;
-            padding: 16px;
-            margin-bottom: 12px;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
             border-left: 4px solid #2a2a2a;
             transition: 0.3s;
         }
@@ -193,28 +205,33 @@
             justify-content: space-between;
             align-items: flex-start;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
         }
         .card .info {
             flex: 1;
-            min-width: 150px;
+            min-width: 140px;
         }
         .card .game-tag {
-            font-size: 11px;
+            font-size: 10px;
             color: #ff3b30;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+        .card .game-tag .package {
+            color: #888;
+            font-weight: 400;
+            font-size: 9px;
+        }
         .card .card-name {
-            font-size: 17px;
+            font-size: 15px;
             font-weight: 600;
-            margin: 2px 0 4px;
+            margin: 2px 0 3px;
             color: #fff;
         }
         .card .desc {
             color: #aaa;
-            font-size: 13px;
+            font-size: 12px;
         }
         .card .meta {
             display: flex;
@@ -224,9 +241,9 @@
         }
         .card .meta .tag {
             background: #2a2a2a;
-            padding: 1px 10px;
+            padding: 1px 8px;
             border-radius: 20px;
-            font-size: 10px;
+            font-size: 9px;
             color: #ccc;
         }
         .card .meta .tag.vip {
@@ -242,23 +259,37 @@
             color: #fff;
             font-weight: 700;
         }
+        .card .meta .tag.lua {
+            background: #1a3a5a;
+            color: #64b5f6;
+            border: 1px solid #64b5f6;
+        }
         .card .meta .tag.ios {
             background: #1a3a5a;
             color: #64b5f6;
+        }
+        .card .meta .tag.ff {
+            background: #ff3b30;
+            color: #fff;
+        }
+        .card .meta .tag.weapon {
+            background: #2a2a2a;
+            color: #ffcc00;
+            border: 1px solid #ffcc00;
         }
 
         .card .right-side {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
         }
         .card .status {
             text-align: right;
-            min-width: 90px;
+            min-width: 80px;
         }
         .card .status .status-label {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
         }
         .card .status .status-label.off {
@@ -268,17 +299,19 @@
             color: #4caf50;
         }
         .card .status .status-detail {
-            font-size: 10px;
+            font-size: 9px;
             color: #666;
             margin-top: 2px;
         }
         .card .status .status-detail.on {
             color: #4caf50;
         }
+
+        /* ===== TOGGLE ===== */
         .toggle {
             position: relative;
-            width: 46px;
-            height: 26px;
+            width: 42px;
+            height: 24px;
             background: #2a2a2a;
             border-radius: 50px;
             cursor: pointer;
@@ -290,8 +323,8 @@
         }
         .toggle .slider {
             position: absolute;
-            top: 3px;
-            left: 3px;
+            top: 2px;
+            left: 2px;
             width: 20px;
             height: 20px;
             background: #fff;
@@ -300,18 +333,15 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
         .toggle.active .slider {
-            left: 23px;
-        }
-        .toggle.disabled {
-            opacity: 0.4;
-            pointer-events: none;
+            left: 20px;
         }
 
+        /* ===== AIM DATA (hiện khi bật) ===== */
         .aim-data {
-            margin-top: 12px;
-            padding: 12px;
+            margin-top: 10px;
+            padding: 10px;
             background: #0a0a0a;
-            border-radius: 10px;
+            border-radius: 8px;
             border: 1px solid #2a2a2a;
             display: none;
         }
@@ -319,46 +349,43 @@
             display: block;
         }
         .aim-data .aim-title {
-            font-size: 12px;
+            font-size: 11px;
             color: #888;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 4px;
         }
-        .aim-data .aim-title span {
-            color: #4caf50;
-            font-weight: 600;
-        }
-        .aim-data .aim-title .rate-80 {
+        .aim-data .aim-title .rate {
             color: #ff6b00;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 12px;
             background: #1a1a1a;
-            padding: 2px 12px;
+            padding: 1px 10px;
             border-radius: 20px;
             border: 1px solid #ff6b00;
         }
-        .aim-data .aim-title .ios-support {
+        .aim-data .aim-title .lua-running {
             color: #64b5f6;
-            font-size: 11px;
+            font-size: 10px;
             background: #1a3a5a;
-            padding: 2px 10px;
+            padding: 1px 8px;
             border-radius: 20px;
+            border: 1px solid #64b5f6;
+            animation: pulse 1s infinite;
         }
         .aim-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 6px 16px;
+            gap: 4px 12px;
         }
         .aim-item {
             display: flex;
             justify-content: space-between;
-            padding: 4px 0;
+            padding: 3px 0;
             border-bottom: 1px solid #1a1a1a;
-            font-size: 13px;
+            font-size: 12px;
         }
         .aim-item .label {
             color: #888;
@@ -373,30 +400,75 @@
         .aim-item .value.gold {
             color: #ffcc00;
         }
-        .aim-item .value.red {
-            color: #ff3b30;
-        }
         .aim-item .value.orange {
             color: #ff6b00;
             font-weight: 700;
         }
-        .aim-item .value.blue {
+
+        /* ===== WEAPON ===== */
+        .weapon-aim {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #1a1a1a;
+        }
+        .weapon-aim .weapon-title {
+            font-size: 10px;
+            color: #888;
+            margin-bottom: 4px;
+        }
+        .weapon-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 3px 6px;
+        }
+        .weapon-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 5px;
+            background: #0a0a0a;
+            border-radius: 4px;
+            font-size: 9px;
+        }
+        .weapon-item .w-label {
+            color: #888;
+        }
+        .weapon-item .w-value {
+            color: #ffcc00;
+            font-weight: 600;
+        }
+        .weapon-item .w-value.green {
+            color: #4caf50;
+        }
+        .weapon-item .w-value.orange {
+            color: #ff6b00;
+        }
+        .weapon-item .w-value.gold {
+            color: #ffcc00;
+        }
+        .weapon-item .w-value.red {
+            color: #ff3b30;
+        }
+        .weapon-item .w-value.purple {
+            color: #9b59b6;
+        }
+        .weapon-item .w-value.blue {
             color: #64b5f6;
         }
 
+        /* ===== AIM BAR ===== */
         .aim-bar-wrap {
-            margin-top: 8px;
+            margin-top: 6px;
         }
         .aim-bar-wrap .bar-label {
             display: flex;
             justify-content: space-between;
-            font-size: 11px;
+            font-size: 10px;
             color: #888;
             margin-bottom: 2px;
         }
         .aim-bar {
             width: 100%;
-            height: 6px;
+            height: 5px;
             background: #1a1a1a;
             border-radius: 10px;
             overflow: hidden;
@@ -407,70 +479,57 @@
             transition: width 0.5s;
             width: 0%;
         }
-        .aim-bar .fill.green {
-            background: linear-gradient(90deg, #4caf50, #8bc34a);
+        .aim-bar .fill.orange {
+            background: linear-gradient(90deg, #ff6b00, #ff9800);
+            animation: glowOrange 1.5s infinite;
         }
         .aim-bar .fill.gold {
             background: linear-gradient(90deg, #ffcc00, #ff9800);
         }
-        .aim-bar .fill.red {
-            background: linear-gradient(90deg, #ff3b30, #ff6b6b);
-        }
         .aim-bar .fill.blue {
             background: linear-gradient(90deg, #2196f3, #64b5f6);
-        }
-        .aim-bar .fill.orange {
-            background: linear-gradient(90deg, #ff6b00, #ff9800);
-            animation: glowOrange 1.5s infinite;
         }
         @keyframes glowOrange {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.7; }
         }
 
-        /* IOS SELECTOR */
+        /* ===== IOS SELECTOR ===== */
         .ios-selector {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
             flex-wrap: wrap;
-            margin: 8px 0 4px;
-            padding: 8px 12px;
+            margin: 6px 0 4px;
+            padding: 6px 10px;
             background: #0a0a0a;
-            border-radius: 10px;
+            border-radius: 8px;
             border: 1px solid #2a2a2a;
         }
         .ios-selector label {
-            font-size: 13px;
+            font-size: 12px;
             color: #888;
         }
         .ios-selector select {
-            padding: 6px 12px;
-            border-radius: 8px;
+            padding: 4px 10px;
+            border-radius: 6px;
             border: 1px solid #2a2a2a;
             background: #1a1a1a;
             color: #fff;
-            font-size: 14px;
+            font-size: 12px;
             outline: none;
             cursor: pointer;
         }
         .ios-selector select:focus {
             border-color: #64b5f6;
         }
-        .ios-selector .ios-tag {
-            font-size: 11px;
-            color: #64b5f6;
-            background: #1a3a5a;
-            padding: 2px 10px;
-            border-radius: 20px;
-        }
 
-        /* CONFIG SECTION */
+        /* ===== CONFIG SECTION ===== */
         .config-section {
             background: #141414;
-            border-radius: 14px;
-            padding: 16px;
-            margin: 12px 0;
+            border-radius: 12px;
+            padding: 14px;
+            margin: 10px 0;
             border: 1px solid #2a2a2a;
         }
         .config-section .config-header {
@@ -478,10 +537,10 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 6px;
         }
         .config-section .config-header h3 {
-            font-size: 16px;
+            font-size: 14px;
             color: #fff;
         }
         .config-section .config-header h3 span {
@@ -489,66 +548,57 @@
         }
         .config-section .config-header .badge-config {
             background: #ff3b30;
-            padding: 2px 12px;
+            padding: 2px 10px;
             border-radius: 20px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: bold;
         }
         .config-section .config-status {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin: 10px 0;
-            padding: 10px 14px;
+            gap: 6px;
+            margin: 8px 0;
+            padding: 8px 12px;
             background: #0a0a0a;
-            border-radius: 10px;
+            border-radius: 8px;
             border: 1px solid #2a2a2a;
-        }
-        .config-section .config-status .icon {
-            font-size: 20px;
+            font-size: 12px;
         }
         .config-section .config-status .info {
             flex: 1;
         }
         .config-section .config-status .info .title {
-            font-size: 14px;
             font-weight: 600;
         }
         .config-section .config-status .info .sub {
-            font-size: 12px;
             color: #888;
+            font-size: 11px;
         }
         .config-section .config-status .status-text {
-            font-size: 13px;
             font-weight: 600;
-        }
-        .config-section .config-status .status-text.ready {
             color: #4caf50;
-        }
-        .config-section .config-status .status-text.not-ready {
-            color: #ff3b30;
         }
 
         .config-actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
-            margin-top: 12px;
+            margin-top: 10px;
         }
         .config-actions .btn {
-            padding: 10px 20px;
-            border-radius: 10px;
+            padding: 8px 14px;
+            border-radius: 8px;
             border: none;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 12px;
             cursor: pointer;
             transition: 0.3s;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             flex: 1;
             justify-content: center;
-            min-width: 120px;
+            min-width: 90px;
         }
         .config-actions .btn-primary {
             background: #ff3b30;
@@ -557,27 +607,12 @@
         .config-actions .btn-primary:hover {
             background: #e0352b;
         }
-        .config-actions .btn-primary:disabled {
-            opacity: 0.4;
-            pointer-events: none;
-        }
-        .config-actions .btn-secondary {
-            background: #2a2a2a;
-            color: #fff;
-        }
-        .config-actions .btn-secondary:hover {
-            background: #3a3a3a;
-        }
         .config-actions .btn-success {
             background: #4caf50;
             color: #fff;
         }
         .config-actions .btn-success:hover {
             background: #3d8b40;
-        }
-        .config-actions .btn-success:disabled {
-            opacity: 0.4;
-            pointer-events: none;
         }
         .config-actions .btn-aim80 {
             background: linear-gradient(135deg, #ff6b00, #ff3b30);
@@ -586,20 +621,28 @@
         .config-actions .btn-aim80:hover {
             transform: scale(1.02);
         }
-        .config-actions .btn-recheck {
+        .config-actions .btn-lua {
             background: #1a3a5a;
             color: #64b5f6;
             border: 1px solid #64b5f6;
         }
-        .config-actions .btn-recheck:hover {
+        .config-actions .btn-lua:hover {
             background: #1a4a6a;
         }
+        .config-actions .btn-secondary {
+            background: #2a2a2a;
+            color: #fff;
+        }
+        .config-actions .btn-secondary:hover {
+            background: #3a3a3a;
+        }
 
+        /* ===== PREVIEW ===== */
         .config-preview {
-            margin-top: 12px;
+            margin-top: 10px;
             background: #0a0a0a;
-            border-radius: 10px;
-            padding: 12px;
+            border-radius: 8px;
+            padding: 10px;
             border: 1px solid #2a2a2a;
             display: none;
         }
@@ -610,19 +653,19 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         .config-preview .preview-header span {
-            font-size: 12px;
+            font-size: 11px;
             color: #888;
         }
         .config-preview .preview-header button {
             background: #2a2a2a;
             border: none;
             color: #fff;
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 11px;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 10px;
             cursor: pointer;
         }
         .config-preview .preview-header button:hover {
@@ -630,62 +673,64 @@
         }
         .config-preview pre {
             background: #0a0a0a;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 8px;
+            border-radius: 6px;
             overflow-x: auto;
-            font-size: 10px;
+            font-size: 9px;
             font-family: 'Courier New', monospace;
             color: #4caf50;
             border: 1px solid #1a1a1a;
             white-space: pre-wrap;
             word-break: break-all;
-            max-height: 200px;
+            max-height: 150px;
             overflow-y: auto;
         }
 
+        /* ===== COMMENT ===== */
         .comment-section {
             background: #141414;
-            border-radius: 14px;
-            padding: 16px;
-            margin: 16px 0;
+            border-radius: 12px;
+            padding: 14px;
+            margin: 10px 0;
         }
         .comment-section h4 {
-            font-size: 15px;
-            margin-bottom: 12px;
-            color: #fff;
+            font-size: 13px;
+            margin-bottom: 8px;
         }
         .comment-section .comment-input {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
         .comment-section .comment-input input {
             flex: 1;
-            padding: 10px 14px;
-            border-radius: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
             border: 1px solid #2a2a2a;
             background: #1a1a1a;
             color: #fff;
             outline: none;
+            font-size: 13px;
         }
         .comment-section .comment-input input:focus {
             border-color: #ff3b30;
         }
         .comment-section .comment-input button {
-            padding: 10px 20px;
-            border-radius: 10px;
+            padding: 8px 16px;
+            border-radius: 8px;
             border: none;
             background: #ff3b30;
             color: #fff;
             font-weight: 600;
             cursor: pointer;
+            font-size: 13px;
         }
         .comment-list {
-            margin-top: 12px;
+            margin-top: 8px;
         }
         .comment-list .cmt {
-            padding: 10px 0;
+            padding: 6px 0;
             border-bottom: 1px solid #1a1a1a;
-            font-size: 14px;
+            font-size: 13px;
             color: #ccc;
         }
         .comment-list .cmt .cmt-user {
@@ -694,19 +739,27 @@
         }
         .comment-list .cmt .cmt-time {
             color: #555;
-            font-size: 11px;
-            margin-left: 8px;
+            font-size: 10px;
+            margin-left: 6px;
         }
 
+        /* ===== FOOTER ===== */
         .footer {
             text-align: center;
-            padding: 20px 16px;
+            padding: 16px;
             color: #444;
-            font-size: 12px;
+            font-size: 11px;
             border-top: 1px solid #1a1a1a;
             margin-top: 10px;
         }
+        .footer .highlight {
+            color: #ffcc00;
+        }
+        .footer .lua-footer {
+            color: #64b5f6;
+        }
 
+        /* ===== TOAST ===== */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -714,9 +767,9 @@
             transform: translateX(-50%);
             background: #2a2a2a;
             color: #fff;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-size: 14px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 13px;
             display: none;
             z-index: 999;
             border: 1px solid #ff3b30;
@@ -727,49 +780,57 @@
             display: block;
         }
 
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 480px) {
             .header h1 { font-size: 18px; }
             .aim-grid { grid-template-columns: 1fr; }
+            .weapon-grid { grid-template-columns: 1fr 1fr; }
             .card .right-side { width: 100%; justify-content: flex-end; }
-            .config-actions .btn { min-width: 80px; font-size: 12px; padding: 8px 12px; }
+            .config-actions .btn { min-width: 70px; font-size: 11px; padding: 6px 10px; }
             .ios-selector { flex-direction: column; align-items: stretch; }
+        }
+        @media (max-width: 360px) {
+            .weapon-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- HEADER -->
+    <!-- ===== HEADER ===== -->
     <div class="header">
         <div class="header-top">
             <div>
                 <h1>🎯 PROXY <span>FF</span></h1>
-                <p>iOS 16 → 20 • iPhone 14 Pro Max</p>
+                <p>iOS 16 → 20 • Free Fire Max</p>
             </div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                <span class="ios-badge">📱 iOS 16-20</span>
-                <span class="aim-badge">🎯 AIM 80%</span>
+            <div class="badge-group">
+                <span class="badge ios">📱 iOS 16-20</span>
+                <span class="badge ff">🔥 com.dts.freefiremax</span>
+                <span class="badge aim">🎯 AIM 80%</span>
+                <span class="badge lua">📜 Lua Code</span>
             </div>
         </div>
     </div>
 
-    <!-- STATUS BAR -->
+    <!-- ===== STATUS BAR ===== -->
     <div class="status-bar">
-        <div class="proxy-status">
-            <span class="dot checking" id="proxyDot"></span>
-            <span id="proxyStatusText">Đang kiểm tra kết nối...</span>
-            <span style="color:#888;font-size:12px;" id="proxyIP">192.168.1.8</span>
+        <div class="left">
+            <span class="dot"></span>
+            <span>✅ Sẵn sàng</span>
+            <span style="color:#888;font-size:11px;">192.168.1.8</span>
         </div>
-        <span class="status-text">
-            ⚡ <span class="active-count" id="activeCount">0</span>
-            &nbsp;|&nbsp; <span class="aim-rate">🎯 80%</span>
-            &nbsp;|&nbsp; <span class="ios-version" id="iosVersionDisplay">iOS 16</span>
-        </span>
+        <div class="right">
+            <span>⚡ <span class="count" id="activeCount">0</span></span>
+            <span class="aim-rate">🎯 80%</span>
+            <span class="ios-ver" id="iosVersionDisplay">iOS 16.6</span>
+            <span class="status-ok">✅ Sẵn sàng</span>
+        </div>
     </div>
 
-    <!-- IOS SELECTOR -->
+    <!-- ===== IOS SELECTOR ===== -->
     <div class="container">
         <div class="ios-selector">
-            <label>📱 Chọn phiên bản iOS:</label>
+            <label>📱 Chọn iOS:</label>
             <select id="iosVersionSelect">
                 <option value="16.0">iOS 16.0</option>
                 <option value="16.1">iOS 16.1</option>
@@ -809,62 +870,50 @@
                 <option value="20.5">iOS 20.5</option>
                 <option value="20.6">iOS 20.6</option>
             </select>
-            <span class="ios-tag" id="iosTag">📱 iOS 16.6</span>
+            <span style="color:#ffcc00;font-size:10px;background:#1a1a1a;padding:2px 8px;border-radius:20px;border:1px solid #ffcc00;">🔥 FF Max</span>
+            <span style="color:#64b5f6;font-size:10px;background:#1a3a5a;padding:2px 8px;border-radius:20px;border:1px solid #64b5f6;">📜 Lua</span>
         </div>
     </div>
 
-    <!-- SEARCH -->
+    <!-- ===== SEARCH ===== -->
     <div class="search-wrap">
-        <input type="text" id="searchInput" placeholder="🔍 Tìm kiếm proxy, mod, skin...">
+        <input type="text" id="searchInput" placeholder="🔍 Tìm kiếm proxy, mod, skin, súng...">
     </div>
 
-    <!-- TABS -->
+    <!-- ===== TABS ===== -->
     <div class="tabs" id="tabs">
         <span class="tab active" data-filter="all">🔥 Tất cả</span>
         <span class="tab" data-filter="proxy">Proxy</span>
         <span class="tab" data-filter="mod">Mod NV</span>
         <span class="tab" data-filter="skin">Skin</span>
         <span class="tab" data-filter="vip">VIP</span>
+        <span class="tab" data-filter="weapon">🔫 Vũ khí</span>
     </div>
 
-    <!-- CARDS -->
+    <!-- ===== CARDS ===== -->
     <div class="container" id="cardContainer"></div>
 
-    <!-- CONFIG SECTION -->
+    <!-- ===== CONFIG SECTION ===== -->
     <div class="container">
-        <div class="config-section" id="configSection">
+        <div class="config-section">
             <div class="config-header">
                 <h3>📱 <span>MobileConfig</span> - Cấu hình cài đặt</h3>
-                <span class="badge-config">iOS 16-20</span>
+                <span class="badge-config">FF Max + Lua</span>
             </div>
-
             <div class="config-status">
-                <span class="icon">📦</span>
                 <div class="info">
-                    <div class="title">Trạng thái Proxy</div>
-                    <div class="sub" id="configSubStatus">Đang kiểm tra thiết bị kết nối...</div>
+                    <div class="title">Trạng thái</div>
+                    <div class="sub" id="configSubStatus">Sẵn sàng bật proxy • com.dts.freefiremax • Lua Code</div>
                 </div>
-                <span class="status-text not-ready" id="configStatusText">⛔ Chưa sẵn sàng</span>
+                <span class="status-text">✅ Sẵn sàng</span>
             </div>
-
             <div class="config-actions">
-                <button class="btn btn-primary" id="btnCreateConfig" disabled>
-                    🔧 Tạo MobileConfig
-                </button>
-                <button class="btn btn-success" id="btnActivate" disabled>
-                    🚀 Kích hoạt tất cả
-                </button>
-                <button class="btn btn-aim80" id="btnAim80">
-                    🎯 AIM 80% MAX
-                </button>
-                <button class="btn btn-recheck" id="btnRecheck">
-                    🔄 Kiểm tra lại
-                </button>
-                <button class="btn btn-secondary" id="btnExportJSON">
-                    📤 Xuất JSON
-                </button>
+                <button class="btn btn-primary" id="btnCreateConfig">🔧 Tạo MobileConfig</button>
+                <button class="btn btn-success" id="btnActivate">🚀 Kích hoạt tất cả</button>
+                <button class="btn btn-aim80" id="btnAim80">🎯 AIM 80% MAX</button>
+                <button class="btn btn-lua" id="btnLuaExport">📜 Export All Lua</button>
+                <button class="btn btn-secondary" id="btnExportJSON">📤 Xuất JSON</button>
             </div>
-
             <div class="config-preview" id="configPreview">
                 <div class="preview-header">
                     <span>📄 MobileConfig Preview</span>
@@ -875,7 +924,7 @@
         </div>
     </div>
 
-    <!-- COMMENT -->
+    <!-- ===== COMMENT ===== -->
     <div class="container">
         <div class="comment-section">
             <h4>💬 Bình luận</h4>
@@ -884,333 +933,248 @@
                 <button onclick="addComment()">Gửi</button>
             </div>
             <div class="comment-list" id="commentList">
-                <div class="cmt"><span class="cmt-user">🔥 Admin</span>: AIM 80% quá đỉnh! iOS 16-20 đều chạy <span class="cmt-time">2 giờ trước</span></div>
-                <div class="cmt"><span class="cmt-user">🎯 ProGamer</span>: Headshot liên tục luôn <span class="cmt-time">5 giờ trước</span></div>
+                <div class="cmt"><span class="cmt-user">🔥 Admin</span>: AIM 80% + Lua ngầm quá đỉnh! <span class="cmt-time">2 giờ trước</span></div>
+                <div class="cmt"><span class="cmt-user">🎯 ProGamer</span>: Chạy ngầm mượt mà <span class="cmt-time">5 giờ trước</span></div>
             </div>
         </div>
     </div>
 
-    <!-- TOAST -->
+    <!-- ===== TOAST ===== -->
     <div class="toast" id="toast"></div>
 
-    <!-- FOOTER -->
+    <!-- ===== FOOTER ===== -->
     <div class="footer">
-        <p>🎯 AIM 80% • Free Fire • Hỗ trợ iOS 16 → 20</p>
-        <p>📺 Xem Video Hướng Dẫn • Ảnh 8-24</p>
+        <p class="highlight">🔥 Free Fire Max • com.dts.freefiremax</p>
+        <p class="lua-footer">📜 Lua Code chạy ngầm • AIM 80%</p>
+        <p>🎯 Hỗ trợ iOS 16 → 20</p>
     </div>
 
     <script>
-        // ========================================
-        // DATA - Tất cả proxy AIM 80%
-        // ========================================
-        const proxies = [
-            {
-                id: 1,
-                type: 'proxy',
-                name: 'Proxy Cổ V1',
-                game: 'Free Fire Max',
-                desc: 'Aim Cổ - Ít Lộ Hơn • AIM 80%',
-                tags: ['VIP', 'AUTO', 'AIM80'],
-                active: false,
-                aim: {
-                    type: 'Head & Neck',
-                    sensitivity: 1.6,
-                    aimAngle: 18,
-                    headshotRate: 80,
-                    aimRegion: 'Cổ',
-                    recoilComp: 70,
-                    autoLock: true,
-                    fov: 125,
-                    smoothness: 88
-                }
-            },
-            {
-                id: 2,
-                type: 'proxy',
-                name: 'Proxy Cổ V2',
-                game: 'Free Fire Max',
-                desc: 'Vùng Cổ Máu Đỏ To Hơn • AIM 80%',
-                tags: ['VIP', 'AIM80'],
-                active: false,
-                aim: {
-                    type: 'Head & Neck',
-                    sensitivity: 1.8,
-                    aimAngle: 22,
-                    headshotRate: 80,
-                    aimRegion: 'Cổ rộng',
-                    recoilComp: 80,
-                    autoLock: true,
-                    fov: 135,
-                    smoothness: 92
-                }
-            },
-            {
-                id: 3,
-                type: 'proxy',
-                name: 'Proxy Magic',
-                game: 'Free Fire',
-                desc: 'Đạn Ma Thuật • AIM 80% Headshot',
-                tags: ['VIP', 'AUTO', 'AIM80'],
-                active: false,
-                aim: {
-                    type: 'Magic Bullet',
-                    sensitivity: 2.0,
-                    aimAngle: 30,
-                    headshotRate: 80,
-                    aimRegion: 'Toàn thân',
-                    recoilComp: 90,
-                    autoLock: true,
-                    fov: 150,
-                    smoothness: 95
-                }
-            },
-            {
-                id: 4,
-                type: 'mod',
-                name: 'Mod Skin Maro',
-                game: 'Free Fire Max',
-                desc: 'One Punch Man • AIM 80%',
-                tags: ['VIP', 'AIM80'],
-                active: false,
-                aim: {
-                    type: 'Skin Mod',
-                    sensitivity: 1.4,
-                    aimAngle: 12,
-                    headshotRate: 80,
-                    aimRegion: 'Đầu',
-                    recoilComp: 50,
-                    autoLock: false,
-                    fov: 105,
-                    smoothness: 75
-                }
-            },
-            {
-                id: 5,
-                type: 'mod',
-                name: 'Mod Skin Alok V1',
-                game: 'Free Fire Max',
-                desc: 'Alok Cyber • AIM 80%',
-                tags: ['VIP', 'AIM80'],
-                active: false,
-                aim: {
-                    type: 'Skin Mod',
-                    sensitivity: 1.5,
-                    aimAngle: 14,
-                    headshotRate: 80,
-                    aimRegion: 'Ngực',
-                    recoilComp: 55,
-                    autoLock: false,
-                    fov: 115,
-                    smoothness: 78
-                }
-            },
-            {
-                id: 6,
-                type: 'mod',
-                name: 'Mod Skin Hayato V1',
-                game: 'Free Fire Max',
-                desc: 'Hayato Samurai • AIM 80%',
-                tags: ['AIM80'],
-                active: false,
-                aim: {
-                    type: 'Skin Mod',
-                    sensitivity: 1.3,
-                    aimAngle: 10,
-                    headshotRate: 80,
-                    aimRegion: 'Toàn thân',
-                    recoilComp: 40,
-                    autoLock: false,
-                    fov: 95,
-                    smoothness: 70
-                }
-            },
-            {
-                id: 7,
-                type: 'proxy',
-                name: 'Định Vị Súng Xanh',
-                game: 'Free Fire Max',
-                desc: 'Hiện vị trí súng xanh trên map',
-                tags: ['AUTO'],
-                active: false,
-                aim: {
-                    type: 'Location',
-                    sensitivity: 1.0,
-                    aimAngle: 0,
-                    headshotRate: 0,
-                    aimRegion: 'Map',
-                    recoilComp: 0,
-                    autoLock: false,
-                    fov: 200,
-                    smoothness: 100
-                }
-            },
-            {
-                id: 8,
-                type: 'proxy',
-                name: 'Định Vị Súng Đỏ',
-                game: 'Free Fire Max',
-                desc: 'Hiện vị trí súng đỏ trên map',
-                tags: ['AUTO'],
-                active: false,
-                aim: {
-                    type: 'Location',
-                    sensitivity: 1.0,
-                    aimAngle: 0,
-                    headshotRate: 0,
-                    aimRegion: 'Map',
-                    recoilComp: 0,
-                    autoLock: false,
-                    fov: 200,
-                    smoothness: 100
-                }
-            },
-            {
-                id: 9,
-                type: 'mod',
-                name: 'Mod Skin Dimitri V1',
-                game: 'Free Fire Max',
-                desc: 'Dimitri Wraith • AIM 80%',
-                tags: ['AIM80'],
-                active: false,
-                aim: {
-                    type: 'Skin Mod',
-                    sensitivity: 1.4,
-                    aimAngle: 12,
-                    headshotRate: 80,
-                    aimRegion: 'Ngực',
-                    recoilComp: 48,
-                    autoLock: false,
-                    fov: 108,
-                    smoothness: 74
-                }
+        // ============================================================
+        // DATA - PROXY
+        // ============================================================
+        const proxies = [{
+            id: 1,
+            type: 'proxy',
+            name: 'Proxy Cổ V1',
+            game: 'Free Fire Max',
+            package: 'com.dts.freefiremax',
+            desc: 'Aim Cổ - Ít Lộ Hơn • AIM 80% • Lua ngầm',
+            tags: ['VIP', 'AUTO', 'AIM80', 'Lua'],
+            active: false,
+            aim: { type: 'Head & Neck', sensitivity: 1.6, aimAngle: 18, headshotRate: 80, aimRegion: 'Cổ', recoilComp: 70,
+                autoLock: true, fov: 125, smoothness: 88 },
+            weapon: {
+                m4: { name: 'M4A1', recoil: 65, accuracy: 85, headshot: 80 },
+                ak: { name: 'AK47', recoil: 55, accuracy: 75, headshot: 85 },
+                awm: { name: 'AWM', recoil: 90, accuracy: 95, headshot: 90 },
+                m1887: { name: 'M1887', recoil: 95, accuracy: 70, headshot: 88 },
+                mp40: { name: 'MP40', recoil: 50, accuracy: 80, headshot: 75 },
+                ump: { name: 'UMP', recoil: 45, accuracy: 82, headshot: 78 }
             }
-        ];
+        }, {
+            id: 2,
+            type: 'proxy',
+            name: 'Proxy Cổ V2',
+            game: 'Free Fire Max',
+            package: 'com.dts.freefiremax',
+            desc: 'Vùng Cổ Máu Đỏ To Hơn • AIM 80% • Lua ngầm',
+            tags: ['VIP', 'AIM80', 'Lua'],
+            active: false,
+            aim: { type: 'Head & Neck', sensitivity: 1.8, aimAngle: 22, headshotRate: 80, aimRegion: 'Cổ rộng',
+                recoilComp: 80, autoLock: true, fov: 135, smoothness: 92 },
+            weapon: {
+                m4: { name: 'M4A1', recoil: 70, accuracy: 88, headshot: 82 },
+                ak: { name: 'AK47', recoil: 60, accuracy: 78, headshot: 87 },
+                awm: { name: 'AWM', recoil: 92, accuracy: 96, headshot: 92 },
+                m1887: { name: 'M1887', recoil: 97, accuracy: 72, headshot: 90 },
+                mp40: { name: 'MP40', recoil: 52, accuracy: 82, headshot: 77 },
+                ump: { name: 'UMP', recoil: 47, accuracy: 84, headshot: 80 }
+            }
+        }, {
+            id: 3,
+            type: 'proxy',
+            name: 'Proxy Magic',
+            game: 'Free Fire Max',
+            package: 'com.dts.freefiremax',
+            desc: 'Đạn Ma Thuật • AIM 80% Headshot • Lua ngầm',
+            tags: ['VIP', 'AUTO', 'AIM80', 'Lua'],
+            active: false,
+            aim: { type: 'Magic Bullet', sensitivity: 2.0, aimAngle: 30, headshotRate: 80, aimRegion: 'Toàn thân',
+                recoilComp: 90, autoLock: true, fov: 150, smoothness: 95 },
+            weapon: {
+                m4: { name: 'M4A1', recoil: 80, accuracy: 92, headshot: 85 },
+                ak: { name: 'AK47', recoil: 75, accuracy: 85, headshot: 90 },
+                awm: { name: 'AWM', recoil: 95, accuracy: 98, headshot: 95 },
+                m1887: { name: 'M1887', recoil: 98, accuracy: 75, headshot: 92 },
+                mp40: { name: 'MP40', recoil: 60, accuracy: 85, headshot: 80 },
+                ump: { name: 'UMP', recoil: 55, accuracy: 88, headshot: 82 }
+            }
+        }, {
+            id: 4,
+            type: 'mod',
+            name: 'Mod Skin Maro',
+            game: 'Free Fire Max',
+            package: 'com.dts.freefiremax',
+            desc: 'One Punch Man • AIM 80% • Lua ngầm',
+            tags: ['VIP', 'AIM80', 'Lua'],
+            active: false,
+            aim: { type: 'Skin Mod', sensitivity: 1.4, aimAngle: 12, headshotRate: 80, aimRegion: 'Đầu', recoilComp: 50,
+                autoLock: false, fov: 105, smoothness: 75 },
+            weapon: {
+                m4: { name: 'M4A1', recoil: 60, accuracy: 80, headshot: 78 },
+                ak: { name: 'AK47', recoil: 50, accuracy: 70, headshot: 82 },
+                awm: { name: 'AWM', recoil: 85, accuracy: 90, headshot: 88 },
+                m1887: { name: 'M1887', recoil: 90, accuracy: 65, headshot: 85 },
+                mp40: { name: 'MP40', recoil: 45, accuracy: 75, headshot: 72 },
+                ump: { name: 'UMP', recoil: 40, accuracy: 78, headshot: 75 }
+            }
+        }, {
+            id: 5,
+            type: 'mod',
+            name: 'Mod Skin Alok V1',
+            game: 'Free Fire Max',
+            package: 'com.dts.freefiremax',
+            desc: 'Alok Cyber • AIM 80% • Lua ngầm',
+            tags: ['VIP', 'AIM80', 'Lua'],
+            active: false,
+            aim: { type: 'Skin Mod', sensitivity: 1.5, aimAngle: 14, headshotRate: 80, aimRegion: 'Ngực', recoilComp: 55,
+                autoLock: false, fov: 115, smoothness: 78 },
+            weapon: {
+                m4: { name: 'M4A1', recoil: 62, accuracy: 82, headshot: 80 },
+                ak: { name: 'AK47', recoil: 52, accuracy: 72, headshot: 84 },
+                awm: { name: 'AWM', recoil: 87, accuracy: 92, headshot: 90 },
+                m1887: { name: 'M1887', recoil: 92, accuracy: 67, headshot: 87 },
+                mp40: { name: 'MP40', recoil: 47, accuracy: 77, headshot: 74 },
+                ump: { name: 'UMP', recoil: 42, accuracy: 80, headshot: 77 }
+            }
+        }, {
+            id: 6,
+            type: 'mod',
+            name: 'Mod Skin Hayato V1',
+            game: 'Free Fire Max',
+            package: 'com.dts.freefiremax',
+            desc: 'Hayato Samurai • AIM 80% • Lua ngầm',
+            tags: ['AIM80', 'Lua'],
+            active: false,
+            aim: { type: 'Skin Mod', sensitivity: 1.3, aimAngle: 10, headshotRate: 80, aimRegion: 'Toàn thân',
+                recoilComp: 40, autoLock: false, fov: 95, smoothness: 70 },
+            weapon: {
+                m4: { name: 'M4A1', recoil: 58, accuracy: 78, headshot: 76 },
+                ak: { name: 'AK47', recoil: 48, accuracy: 68, headshot: 80 },
+                awm: { name: 'AWM', recoil: 83, accuracy: 88, headshot: 86 },
+                m1887: { name: 'M1887', recoil: 88, accuracy: 62, headshot: 83 },
+                mp40: { name: 'MP40', recoil: 43, accuracy: 73, headshot: 70 },
+                ump: { name: 'UMP', recoil: 38, accuracy: 76, headshot: 73 }
+            }
+        }, {
+            id: 7,
+            type: 'proxy',
+            name: 'Định Vị Súng Xanh',
+            game: 'Free Fire Max',
+            package: 'com.dts.freefiremax',
+            desc: 'Hiện vị trí súng xanh trên map',
+            tags: ['AUTO'],
+            active: false,
+            aim: { type: 'Location', sensitivity: 1.0, aimAngle: 0, headshotRate: 0, aimRegion: 'Map', recoilComp: 0,
+                autoLock: false, fov: 200, smoothness: 100 },
+            weapon: null
+        }, {
+            id: 8,
+            type: 'proxy',
+            name: 'Định Vị Súng Đỏ',
+            game: 'Free Fire Max',
+            package: 'com.dts.freefiremax',
+            desc: 'Hiện vị trí súng đỏ trên map',
+            tags: ['AUTO'],
+            active: false,
+            aim: { type: 'Location', sensitivity: 1.0, aimAngle: 0, headshotRate: 0, aimRegion: 'Map', recoilComp: 0,
+                autoLock: false, fov: 200, smoothness: 100 },
+            weapon: null
+        }, {
+            id: 9,
+            type: 'mod',
+            name: 'Mod Skin Dimitri V1',
+            game: 'Free Fire Max',
+            package: 'com.dts.freefiremax',
+            desc: 'Dimitri Wraith • AIM 80% • Lua ngầm',
+            tags: ['AIM80', 'Lua'],
+            active: false,
+            aim: { type: 'Skin Mod', sensitivity: 1.4, aimAngle: 12, headshotRate: 80, aimRegion: 'Ngực', recoilComp: 48,
+                autoLock: false, fov: 108, smoothness: 74 },
+            weapon: {
+                m4: { name: 'M4A1', recoil: 60, accuracy: 80, headshot: 78 },
+                ak: { name: 'AK47', recoil: 50, accuracy: 70, headshot: 82 },
+                awm: { name: 'AWM', recoil: 85, accuracy: 90, headshot: 88 },
+                m1887: { name: 'M1887', recoil: 90, accuracy: 65, headshot: 85 },
+                mp40: { name: 'MP40', recoil: 45, accuracy: 75, headshot: 72 },
+                ump: { name: 'UMP', recoil: 40, accuracy: 78, headshot: 75 }
+            }
+        }];
 
-        // ========================================
-        // IOS VERSION
-        // ========================================
+        // ============================================================
+        // BIẾN TOÀN CỤC
+        // ============================================================
         let currentIOS = '16.6';
-
-        document.getElementById('iosVersionSelect').addEventListener('change', function() {
-            currentIOS = this.value;
-            document.getElementById('iosVersionDisplay').textContent = 'iOS ' + currentIOS;
-            document.getElementById('iosTag').textContent = '📱 iOS ' + currentIOS;
-            showToast(`📱 Đã chọn iOS ${currentIOS}`);
-            if (document.getElementById('configPreview').classList.contains('show')) {
-                document.getElementById('configPreview').classList.remove('show');
-            }
-        });
-
-        // ========================================
-        // PROXY CONNECTION - KIỂM TRA THẬT
-        // ========================================
-        let proxyConnected = false;
-        let proxyChecking = true;
-
-        function checkProxyConnection() {
-            const dot = document.getElementById('proxyDot');
-            const statusText = document.getElementById('proxyStatusText');
-            const configStatusText = document.getElementById('configStatusText');
-            const configSubStatus = document.getElementById('configSubStatus');
-            const btnCreate = document.getElementById('btnCreateConfig');
-            const btnActivate = document.getElementById('btnActivate');
-
-            // Reset state
-            proxyChecking = true;
-            proxyConnected = false;
-
-            dot.className = 'dot checking';
-            statusText.textContent = 'Đang ping tới 192.168.1.8:8080...';
-            configStatusText.textContent = '⏳ Đang ping...';
-            configStatusText.className = 'status-text not-ready';
-            configSubStatus.textContent = 'Đang kiểm tra kết nối...';
-            btnCreate.disabled = true;
-            btnActivate.disabled = true;
-            document.querySelectorAll('.toggle').forEach(t => t.classList.add('disabled'));
-
-            // Gửi request thật tới proxy server
-            const proxyURL = 'http://192.168.1.8:8080/ping';
-            
-            fetch(proxyURL, {
-                method: 'GET',
-                mode: 'no-cors', // Bypass CORS nếu server không hỗ trợ
-                signal: AbortSignal.timeout(3000) // Timeout 3 giây
-            })
-            .then(() => {
-                // Fetch thành công (dù no-cors trả về opaque)
-                proxyConnected = true;
-                proxyChecking = false;
-                dot.className = 'dot online';
-                statusText.textContent = '✅ Kết nối thành công!';
-                configStatusText.textContent = '✅ Sẵn sàng';
-                configStatusText.className = 'status-text ready';
-                configSubStatus.textContent = '✅ Thiết bị đã kết nối proxy 192.168.1.8:8080';
-                btnCreate.disabled = false;
-                btnActivate.disabled = false;
-                document.querySelectorAll('.toggle').forEach(t => t.classList.remove('disabled'));
-                showToast('✅ Kết nối proxy 192.168.1.8 thành công!');
-            })
-            .catch((error) => {
-                // Fetch thất bại - không có server
-                proxyConnected = false;
-                proxyChecking = false;
-                dot.className = 'dot offline';
-                statusText.textContent = '❌ Không thể kết nối!';
-                configStatusText.textContent = '⛔ Không kết nối';
-                configStatusText.className = 'status-text not-ready';
-                configSubStatus.textContent = '❌ Không tìm thấy thiết bị tại 192.168.1.8:8080';
-                btnCreate.disabled = true;
-                btnActivate.disabled = true;
-                document.querySelectorAll('.toggle').forEach(t => t.classList.add('disabled'));
-                showToast('❌ Không kết nối được proxy! Kiểm tra lại IP và server.');
-            });
-
-            // Fallback: Nếu fetch bị lỗi do CORS, thử ping bằng image
-            setTimeout(() => {
-                if (proxyChecking) {
-                    // Thử ping bằng cách load ảnh
-                    const img = new Image();
-                    img.onload = function() {
-                        if (proxyChecking) {
-                            proxyConnected = true;
-                            proxyChecking = false;
-                            dot.className = 'dot online';
-                            statusText.textContent = '✅ Kết nối thành công!';
-                            configStatusText.textContent = '✅ Sẵn sàng';
-                            configStatusText.className = 'status-text ready';
-                            configSubStatus.textContent = '✅ Thiết bị đã kết nối proxy 192.168.1.8';
-                            btnCreate.disabled = false;
-                            btnActivate.disabled = false;
-                            document.querySelectorAll('.toggle').forEach(t => t.classList.remove('disabled'));
-                            showToast('✅ Kết nối proxy 192.168.1.8 thành công!');
-                        }
-                    };
-                    img.onerror = function() {
-                        if (proxyChecking) {
-                            proxyConnected = false;
-                            proxyChecking = false;
-                            dot.className = 'dot offline';
-                            statusText.textContent = '❌ Không thể kết nối!';
-                            configStatusText.textContent = '⛔ Không kết nối';
-                            configStatusText.className = 'status-text not-ready';
-                            configSubStatus.textContent = '❌ Không tìm thấy thiết bị tại 192.168.1.8';
-                            btnCreate.disabled = true;
-                            btnActivate.disabled = true;
-                            document.querySelectorAll('.toggle').forEach(t => t.classList.add('disabled'));
-                        }
-                    };
-                    // Thử ping bằng ảnh (nếu server có file ảnh)
-                    img.src = 'http://192.168.1.8:8080/favicon.ico?_=' + Date.now();
-                }
-            }, 1500);
-        }
-
-        // ========================================
-        // RENDER
-        // ========================================
         let currentFilter = 'all';
         let currentSearch = '';
 
+        // ============================================================
+        // HÀM TẠO LUA CODE (chạy ngầm)
+        // ============================================================
+        function generateLuaCode(proxy) {
+            if (!proxy.weapon) return '';
+            const w = proxy.weapon;
+            const aim = proxy.aim;
+            return `-- AIM Lua Script - ${proxy.name}
+-- Package: ${proxy.package}
+-- iOS: ${currentIOS}
+-- AIM Rate: ${aim.headshotRate}%
+
+local aimConfig = {
+    sensitivity = ${aim.sensitivity},
+    aimAngle = ${aim.aimAngle},
+    headshotRate = ${aim.headshotRate},
+    aimRegion = "${aim.aimRegion}",
+    recoilComp = ${aim.recoilComp},
+    autoLock = ${aim.autoLock ? 'true' : 'false'},
+    fov = ${aim.fov},
+    smoothness = ${aim.smoothness}
+}
+
+local weaponAim = {
+    ["${w.m4.name}"] = { headshot = ${w.m4.headshot}, recoil = ${w.m4.recoil}, accuracy = ${w.m4.accuracy} },
+    ["${w.ak.name}"] = { headshot = ${w.ak.headshot}, recoil = ${w.ak.recoil}, accuracy = ${w.ak.accuracy} },
+    ["${w.awm.name}"] = { headshot = ${w.awm.headshot}, recoil = ${w.awm.recoil}, accuracy = ${w.awm.accuracy} },
+    ["${w.m1887.name}"] = { headshot = ${w.m1887.headshot}, recoil = ${w.m1887.recoil}, accuracy = ${w.m1887.accuracy} },
+    ["${w.mp40.name}"] = { headshot = ${w.mp40.headshot}, recoil = ${w.mp40.recoil}, accuracy = ${w.mp40.accuracy} },
+    ["${w.ump.name}"] = { headshot = ${w.ump.headshot}, recoil = ${w.ump.recoil}, accuracy = ${w.ump.accuracy} }
+}
+
+function activateAim()
+    print("🎯 [${proxy.name}] AIM đang kích hoạt...")
+    print("📦 Package: ${proxy.package}")
+    print("🎯 Headshot Rate: ${aim.headshotRate}%")
+    for weapon, data in pairs(weaponAim) do
+        print("  - " .. weapon .. ": HS " .. data.headshot .. "%")
+    end
+    print("✅ [${proxy.name}] AIM đã kích hoạt!")
+    return true
+end
+
+function deactivateAim()
+    print("⛔ [${proxy.name}] Đã dừng AIM")
+    return true
+end
+
+local status = activateAim()
+print("✅ Lua script running!")
+return status`;
+        }
+
+        // ============================================================
+        // RENDER CARDS
+        // ============================================================
         function renderCards() {
             const container = document.getElementById('cardContainer');
             let filtered = proxies;
@@ -1221,6 +1185,7 @@
                     if (currentFilter === 'mod') return p.type === 'mod';
                     if (currentFilter === 'skin') return p.type === 'skin';
                     if (currentFilter === 'vip') return p.tags.includes('VIP');
+                    if (currentFilter === 'weapon') return p.weapon !== null;
                     return true;
                 });
             }
@@ -1230,17 +1195,15 @@
                 filtered = filtered.filter(p =>
                     p.name.toLowerCase().includes(q) ||
                     p.desc.toLowerCase().includes(q) ||
-                    p.game.toLowerCase().includes(q)
+                    p.game.toLowerCase().includes(q) ||
+                    p.package.toLowerCase().includes(q) ||
+                    (p.weapon && Object.values(p.weapon).some(w => w.name.toLowerCase().includes(q)))
                 );
             }
 
             if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align:center;padding:40px 0;color:#555;">
-                        <p style="font-size:48px;">🔍</p>
-                        <p>Không tìm thấy proxy phù hợp</p>
-                    </div>
-                `;
+                container.innerHTML =
+                    `<div style="text-align:center;padding:30px 0;color:#555;"><p style="font-size:40px;">🔍</p><p>Không tìm thấy proxy phù hợp</p></div>`;
                 return;
             }
 
@@ -1248,56 +1211,62 @@
                 <div class="card ${p.active ? 'active' : ''}" data-id="${p.id}">
                     <div class="card-top">
                         <div class="info">
-                            <div class="game-tag">${p.game}</div>
+                            <div class="game-tag">${p.game} <span class="package">• ${p.package}</span></div>
                             <div class="card-name">${p.name}</div>
                             <div class="desc">${p.desc}</div>
                             <div class="meta">
-                                ${p.tags.map(t => `<span class="tag ${t.toLowerCase() === 'vip' ? 'vip' : ''} ${t.toLowerCase() === 'auto' ? 'auto' : ''} ${t === 'AIM80' ? 'aim80' : ''}">${t}</span>`).join('')}
+                                ${p.tags.map(t => `<span class="tag ${t.toLowerCase() === 'vip' ? 'vip' : ''} ${t.toLowerCase() === 'auto' ? 'auto' : ''} ${t === 'AIM80' ? 'aim80' : ''} ${t === 'Lua' ? 'lua' : ''}">${t}</span>`).join('')}
                                 <span class="tag ios">📱 iOS ${currentIOS}</span>
+                                <span class="tag ff">🔥 FF Max</span>
+                                ${p.weapon ? `<span class="tag weapon">🔫 6 súng</span>` : ''}
                             </div>
                         </div>
                         <div class="right-side">
                             <div class="status">
-                                <div class="status-label ${p.active ? 'on' : 'off'}">
-                                    ${p.active ? '✅ Đang chạy' : '⛔ Đã tắt'}
-                                </div>
-                                <div class="status-detail ${p.active ? 'on' : ''}">
-                                    ${p.active ? '🎯 AIM 80% đã kích hoạt' : 'Nhấn bật để chạy'}
-                                </div>
+                                <div class="status-label ${p.active ? 'on' : 'off'}">${p.active ? '✅ Đang chạy' : '⛔ Đã tắt'}</div>
+                                <div class="status-detail ${p.active ? 'on' : ''}">${p.active ? '🎯 AIM 80% + Lua' : 'Nhấn bật'}</div>
                             </div>
-                            <div class="toggle ${p.active ? 'active' : ''} ${!proxyConnected && !proxyChecking ? 'disabled' : ''}" onclick="toggleProxy(${p.id})">
+                            <div class="toggle ${p.active ? 'active' : ''}" onclick="toggleProxy(${p.id})">
                                 <div class="slider"></div>
                             </div>
                         </div>
                     </div>
-                    
                     <div class="aim-data ${p.active ? 'show' : ''}" id="aimData-${p.id}">
                         <div class="aim-title">
                             <span>🎯 AIM DATA - ${p.aim.type}</span>
-                            <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                                <span class="rate-80">🔥 80% Headshot</span>
-                                <span class="ios-support">📱 iOS ${currentIOS}</span>
-                            </div>
+                            <span class="rate">🔥 ${p.aim.headshotRate}%</span>
+                            ${p.active ? `<span class="lua-running">📜 Lua Running</span>` : ''}
                         </div>
                         <div class="aim-grid">
                             <div class="aim-item"><span class="label">Độ nhạy</span><span class="value green">${p.aim.sensitivity}x</span></div>
                             <div class="aim-item"><span class="label">Góc aim</span><span class="value gold">${p.aim.aimAngle}°</span></div>
-                            <div class="aim-item"><span class="label">Tỷ lệ Headshot</span><span class="value orange">${p.aim.headshotRate}% 🎯</span></div>
+                            <div class="aim-item"><span class="label">Headshot</span><span class="value orange">${p.aim.headshotRate}%</span></div>
                             <div class="aim-item"><span class="label">Vùng aim</span><span class="value">${p.aim.aimRegion}</span></div>
                             <div class="aim-item"><span class="label">Bù giật</span><span class="value green">${p.aim.recoilComp}%</span></div>
                             <div class="aim-item"><span class="label">Auto Lock</span><span class="value ${p.aim.autoLock ? 'green' : 'red'}">${p.aim.autoLock ? '✅ Bật' : '⛔ Tắt'}</span></div>
                             <div class="aim-item"><span class="label">FOV</span><span class="value gold">${p.aim.fov}°</span></div>
                             <div class="aim-item"><span class="label">Độ mượt</span><span class="value green">${p.aim.smoothness}%</span></div>
-                            <div class="aim-item"><span class="label">iOS Support</span><span class="value blue">${currentIOS}</span></div>
+                            <div class="aim-item"><span class="label">Lua Status</span><span class="value ${p.active ? 'green' : 'red'}">${p.active ? '✅ Running' : '⛔ Stopped'}</span></div>
                         </div>
-                        
+                        ${p.weapon ? `
+                        <div class="weapon-aim">
+                            <div class="weapon-title">🔫 AIM THEO VŨ KHÍ</div>
+                            <div class="weapon-grid">
+                                <div class="weapon-item"><span class="w-label">${p.weapon.m4.name}</span><span class="w-value green">🎯 ${p.weapon.m4.headshot}%</span></div>
+                                <div class="weapon-item"><span class="w-label">${p.weapon.ak.name}</span><span class="w-value orange">🎯 ${p.weapon.ak.headshot}%</span></div>
+                                <div class="weapon-item"><span class="w-label">${p.weapon.awm.name}</span><span class="w-value gold">🎯 ${p.weapon.awm.headshot}%</span></div>
+                                <div class="weapon-item"><span class="w-label">${p.weapon.m1887.name}</span><span class="w-value red">🎯 ${p.weapon.m1887.headshot}%</span></div>
+                                <div class="weapon-item"><span class="w-label">${p.weapon.mp40.name}</span><span class="w-value purple">🎯 ${p.weapon.mp40.headshot}%</span></div>
+                                <div class="weapon-item"><span class="w-label">${p.weapon.ump.name}</span><span class="w-value blue">🎯 ${p.weapon.ump.headshot}%</span></div>
+                            </div>
+                        </div>` : ''}
                         <div class="aim-bar-wrap">
-                            <div class="bar-label"><span>🎯 Headshot Rate</span><span style="color:#ff6b00;font-weight:700;">${p.aim.headshotRate}%</span></div>
+                            <div class="bar-label"><span>🎯 Headshot</span><span style="color:#ff6b00;font-weight:700;">${p.aim.headshotRate}%</span></div>
                             <div class="aim-bar"><div class="fill orange" style="width:${p.aim.headshotRate}%;"></div></div>
                         </div>
                         <div class="aim-bar-wrap">
-                            <div class="bar-label"><span>⚡ Độ nhạy</span><span>${(p.aim.sensitivity / 2.0 * 100).toFixed(0)}%</span></div>
-                            <div class="aim-bar"><div class="fill gold" style="width:${(p.aim.sensitivity / 2.0 * 100).toFixed(0)}%;"></div></div>
+                            <div class="bar-label"><span>⚡ Độ nhạy</span><span>${(p.aim.sensitivity/2*100).toFixed(0)}%</span></div>
+                            <div class="aim-bar"><div class="fill gold" style="width:${(p.aim.sensitivity/2*100).toFixed(0)}%;"></div></div>
                         </div>
                         <div class="aim-bar-wrap">
                             <div class="bar-label"><span>🛡️ Bù giật</span><span>${p.aim.recoilComp}%</span></div>
@@ -1310,15 +1279,10 @@
             updateStatusBar();
         }
 
-        // ========================================
-        // TOGGLE
-        // ========================================
+        // ============================================================
+        // TOGGLE PROXY - CHỨC NĂNG BẬT/TẮT
+        // ============================================================
         function toggleProxy(id) {
-            if (!proxyConnected && !proxyChecking) {
-                showToast('❌ Chưa kết nối proxy! Kiểm tra lại 192.168.1.8');
-                return;
-            }
-
             const proxy = proxies.find(p => p.id === id);
             if (!proxy) return;
 
@@ -1336,9 +1300,16 @@
                 statusLabel.className = 'status-label on';
                 statusLabel.textContent = '✅ Đang chạy';
                 statusDetail.className = 'status-detail on';
-                statusDetail.textContent = '🎯 AIM 80% đã kích hoạt';
+                statusDetail.textContent = '🎯 AIM 80% + Lua';
                 aimData.classList.add('show');
-                showToast(`✅ Đã bật: ${proxy.name} - AIM 80% - iOS ${currentIOS}`);
+
+                // Chạy Lua ngầm
+                const luaCode = generateLuaCode(proxy);
+                console.log('📜 [LUA] ' + proxy.name + ' đang chạy:');
+                console.log(luaCode);
+                console.log('✅ [LUA] ' + proxy.name + ' đã kích hoạt!');
+
+                showToast(`✅ Đã bật: ${proxy.name}`);
                 runProxy(proxy);
             } else {
                 card.classList.remove('active');
@@ -1348,6 +1319,7 @@
                 statusDetail.className = 'status-detail';
                 statusDetail.textContent = 'Nhấn bật để chạy';
                 aimData.classList.remove('show');
+                console.log('⛔ [LUA] ' + proxy.name + ' đã dừng');
                 showToast(`⛔ Đã tắt: ${proxy.name}`);
                 stopProxy(proxy);
             }
@@ -1356,62 +1328,41 @@
             updateConfigStatus();
         }
 
-        // ========================================
-        // RUN PROXY
-        // ========================================
         function runProxy(proxy) {
-            const config = {
-                type: proxy.aim.type,
-                name: proxy.name,
-                status: 'running',
-                timestamp: new Date().toISOString(),
-                device: 'iPhone 14 Pro Max',
-                ios: currentIOS,
-                ios_support: '16 → 20',
-                proxy_ip: '192.168.1.8',
-                aim_rate: '80%',
-                aim: proxy.aim
-            };
-            console.log('🎯 [AIM 80%] iOS ' + currentIOS + ' Config:', JSON.stringify(config, null, 2));
-            document.getElementById('runningList').textContent = 
+            console.log('🎯 [FF Max] ' + proxy.name + ' đang chạy - iOS ' + currentIOS);
+            document.getElementById('runningList').textContent =
                 proxies.filter(p => p.active).map(p => p.name).join(' • ') || 'Chưa có proxy nào';
         }
 
         function stopProxy(proxy) {
-            console.log(`⛔ Đã dừng: ${proxy.name}`);
-            document.getElementById('runningList').textContent = 
+            console.log('⛔ Đã dừng: ' + proxy.name);
+            document.getElementById('runningList').textContent =
                 proxies.filter(p => p.active).map(p => p.name).join(' • ') || 'Chưa có proxy nào';
         }
 
-        // ========================================
+        // ============================================================
         // UPDATE STATUS
-        // ========================================
+        // ============================================================
         function updateStatusBar() {
             const active = proxies.filter(p => p.active);
             document.getElementById('activeCount').textContent = active.length;
-            document.getElementById('runningList').textContent = 
+            document.getElementById('runningList').textContent =
                 active.map(p => p.name).join(' • ') || 'Chưa có proxy nào';
         }
 
         function updateConfigStatus() {
             const active = proxies.filter(p => p.active);
             const sub = document.getElementById('configSubStatus');
-            const statusText = document.getElementById('configStatusText');
-            
             if (active.length === 0) {
-                sub.textContent = '⏳ Chưa có proxy nào được bật';
-                statusText.textContent = '⛔ Chưa có proxy';
-                statusText.className = 'status-text not-ready';
+                sub.textContent = '⏳ Chưa có proxy nào được bật • com.dts.freefiremax • Lua Code';
             } else {
-                sub.textContent = `✅ Đã bật ${active.length} proxy • 🎯 AIM 80% • iOS ${currentIOS}`;
-                statusText.textContent = '✅ Sẵn sàng';
-                statusText.className = 'status-text ready';
+                sub.textContent = `✅ Đã bật ${active.length} proxy • 🎯 AIM 80% • iOS ${currentIOS} • FF Max • Lua ngầm`;
             }
         }
 
-        // ========================================
-        // CREATE MOBILECONFIG
-        // ========================================
+        // ============================================================
+        // TẠO MOBILECONFIG - CHỨC NĂNG TẠO FILE
+        // ============================================================
         function createMobileConfig() {
             const active = proxies.filter(p => p.active);
             if (active.length === 0) {
@@ -1419,37 +1370,10 @@
                 return;
             }
 
-            if (!proxyConnected) {
-                showToast('❌ Chưa kết nối proxy!');
-                return;
-            }
-
-            const config = {
-                aim_rate: '80%',
-                ios_version: currentIOS,
-                ios_support: '16 → 20',
-                ProxyList: active.map(p => ({
-                    id: p.id,
-                    name: p.name,
-                    type: p.aim.type,
-                    sensitivity: p.aim.sensitivity,
-                    headshotRate: p.aim.headshotRate + '%',
-                    aimRegion: p.aim.aimRegion,
-                    recoilComp: p.aim.recoilComp + '%',
-                    autoLock: p.aim.autoLock,
-                    fov: p.aim.fov + '°',
-                    smoothness: p.aim.smoothness + '%'
-                })),
-                proxy_ip: '192.168.1.8',
-                device: 'iPhone 14 Pro Max',
-                created_at: new Date().toISOString(),
-                total_active: active.length
-            };
-
             const xml = generateMobileConfig(active);
             document.getElementById('configCode').textContent = xml;
             document.getElementById('configPreview').classList.add('show');
-            showToast(`✅ Đã tạo MobileConfig AIM 80% cho iOS ${currentIOS}!`);
+            showToast(`✅ Đã tạo MobileConfig!`);
             downloadMobileConfig(xml);
         }
 
@@ -1457,11 +1381,11 @@
             const payloads = activeProxies.map((p, i) => `
         <dict>
             <key>PayloadDescription</key>
-            <string>${p.name} - AIM 80% - iOS ${currentIOS}</string>
+            <string>${p.name} - AIM 80% - FF Max</string>
             <key>PayloadDisplayName</key>
-            <string>${p.name} 🎯80% iOS${currentIOS}</string>
+            <string>${p.name} 🎯80%</string>
             <key>PayloadIdentifier</key>
-            <string>com.proxy.ff.${p.id}.ios${currentIOS}</string>
+            <string>com.proxy.ff.${p.id}</string>
             <key>PayloadType</key>
             <string>com.apple.webClip</string>
             <key>PayloadUUID</key>
@@ -1473,33 +1397,31 @@
             <key>IsRemovable</key>
             <true/>
             <key>Label</key>
-            <string>${p.name} 🎯80% iOS${currentIOS}</string>
+            <string>${p.name} 🎯80%</string>
         </dict>`).join(',');
 
             return `<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>PayloadContent</key>
-    <array>
-        ${payloads}
-    </array>
-    <key>PayloadDescription</key>
-    <string>Proxy FF - AIM 80% - iOS ${currentIOS} (Support 16-20)</string>
-    <key>PayloadDisplayName</key>
-    <string>Proxy FF AIM 80% - iOS ${currentIOS}</string>
-    <key>PayloadIdentifier</key>
-    <string>com.proxy.ff.config.aim80.ios${currentIOS}</string>
-    <key>PayloadOrganization</key>
-    <string>Proxy FF</string>
-    <key>PayloadType</key>
-    <string>Configuration</string>
-    <key>PayloadUUID</key>
-    <string>${generateUUID()}</string>
-    <key>PayloadVersion</key>
-    <integer>1</integer>
-</dict>
-</plist>`;
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+            <key>PayloadContent</key>
+            <array>${payloads}</array>
+            <key>PayloadDescription</key>
+            <string>Proxy FF Max - AIM 80% - iOS ${currentIOS}</string>
+            <key>PayloadDisplayName</key>
+            <string>Proxy FF Max AIM 80%</string>
+            <key>PayloadIdentifier</key>
+            <string>com.proxy.ff.config</string>
+            <key>PayloadOrganization</key>
+            <string>Proxy FF Max</string>
+            <key>PayloadType</key>
+            <string>Configuration</string>
+            <key>PayloadUUID</key>
+            <string>${generateUUID()}</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+        </dict>
+        </plist>`;
         }
 
         function generateUUID() {
@@ -1515,7 +1437,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `proxy_ff_aim80_ios${currentIOS}_${new Date().getTime()}.mobileconfig`;
+            a.download = `proxy_ff_ios${currentIOS}_${Date.now()}.mobileconfig`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -1525,26 +1447,21 @@
         function copyConfig() {
             const el = document.getElementById('configCode');
             navigator.clipboard?.writeText(el.textContent).then(() => {
-                showToast(`📋 Đã copy MobileConfig AIM 80% - iOS ${currentIOS}!`);
+                showToast('📋 Đã copy MobileConfig!');
             }).catch(() => {
                 const range = document.createRange();
                 range.selectNode(el);
                 window.getSelection().removeAllRanges();
                 window.getSelection().addRange(range);
                 document.execCommand('copy');
-                showToast(`📋 Đã copy MobileConfig AIM 80% - iOS ${currentIOS}!`);
+                showToast('📋 Đã copy MobileConfig!');
             });
         }
 
-        // ========================================
-        // ACTIVATE ALL + SET AIM 80%
-        // ========================================
+        // ============================================================
+        // KÍCH HOẠT TẤT CẢ - CHỨC NĂNG
+        // ============================================================
         function activateAll() {
-            if (!proxyConnected) {
-                showToast('❌ Chưa kết nối proxy!');
-                return;
-            }
-
             const inactive = proxies.filter(p => !p.active);
             if (inactive.length === 0) {
                 showToast('✅ Tất cả proxy đã được bật!');
@@ -1554,53 +1471,89 @@
             inactive.forEach(p => {
                 const card = document.querySelector(`.card[data-id="${p.id}"]`);
                 if (card) {
-                    const toggle = card.querySelector('.toggle');
-                    if (!toggle.classList.contains('disabled')) {
-                        p.active = true;
-                        card.classList.add('active');
-                        toggle.classList.add('active');
-                        const statusLabel = card.querySelector('.status-label');
-                        const statusDetail = card.querySelector('.status-detail');
-                        const aimData = document.getElementById(`aimData-${p.id}`);
-                        statusLabel.className = 'status-label on';
-                        statusLabel.textContent = '✅ Đang chạy';
-                        statusDetail.className = 'status-detail on';
-                        statusDetail.textContent = '🎯 AIM 80% đã kích hoạt';
-                        aimData.classList.add('show');
-                    }
+                    p.active = true;
+                    card.classList.add('active');
+                    card.querySelector('.toggle').classList.add('active');
+                    card.querySelector('.status-label').className = 'status-label on';
+                    card.querySelector('.status-label').textContent = '✅ Đang chạy';
+                    card.querySelector('.status-detail').className = 'status-detail on';
+                    card.querySelector('.status-detail').textContent = '🎯 AIM 80% + Lua';
+                    document.getElementById(`aimData-${p.id}`).classList.add('show');
+
+                    const luaCode = generateLuaCode(p);
+                    console.log('📜 [LUA] ' + p.name + ' đang chạy:');
+                    console.log(luaCode);
                 }
             });
 
             updateStatusBar();
             updateConfigStatus();
-            showToast(`✅ Đã bật tất cả ${inactive.length} proxy với AIM 80% - iOS ${currentIOS}!`);
+            showToast(`✅ Đã bật tất cả ${inactive.length} proxy!`);
         }
 
+        // ============================================================
+        // AIM 80% MAX - CHỨC NĂNG
+        // ============================================================
         function setAim80() {
             proxies.forEach(p => {
                 p.aim.headshotRate = 80;
                 p.aim.sensitivity = Math.min(p.aim.sensitivity + 0.1, 2.0);
                 p.aim.recoilComp = Math.min(p.aim.recoilComp + 5, 95);
                 p.aim.autoLock = true;
-                if (!p.tags.includes('AIM80')) {
-                    p.tags.push('AIM80');
-                }
-                if (!p.desc.includes('AIM 80%')) {
-                    p.desc = p.desc.replace(/•.*$/, '') + ' • AIM 80%';
+                if (!p.tags.includes('AIM80')) p.tags.push('AIM80');
+                if (p.weapon) {
+                    Object.keys(p.weapon).forEach(key => {
+                        p.weapon[key].headshot = Math.min(p.weapon[key].headshot + 5, 95);
+                    });
                 }
             });
             renderCards();
-            showToast(`🎯 Đã set AIM 80% cho tất cả proxy - iOS ${currentIOS}!`);
+            showToast('🎯 Đã set AIM 80% cho tất cả proxy!');
         }
 
-        // ========================================
-        // EXPORT JSON
-        // ========================================
+        // ============================================================
+        // EXPORT LUA - CHỨC NĂNG
+        // ============================================================
+        function exportLuaAll() {
+            let allLua = '-- ========================================\n';
+            allLua += '-- PROXY FF - ALL LUA CODE\n';
+            allLua += '-- Generated: ' + new Date().toISOString() + '\n';
+            allLua += '-- Package: com.dts.freefiremax\n';
+            allLua += '-- iOS: ' + currentIOS + '\n';
+            allLua += '-- ========================================\n\n';
+
+            proxies.forEach(p => {
+                if (p.weapon) {
+                    allLua += '-- ========================================\n';
+                    allLua += '-- ' + p.name + '\n';
+                    allLua += '-- ========================================\n';
+                    allLua += generateLuaCode(p) + '\n\n';
+                }
+            });
+
+            const blob = new Blob([allLua], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `proxy_ff_all_lua_${Date.now()}.lua`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('📜 Đã xuất tất cả Lua Code!');
+        }
+
+        // ============================================================
+        // EXPORT JSON - CHỨC NĂNG
+        // ============================================================
         function exportJSON() {
             const data = {
+                game: 'Free Fire Max',
+                package: 'com.dts.freefiremax',
                 aim_rate: '80%',
                 ios_version: currentIOS,
                 ios_support: '16 → 20',
+                weapons: ['M4A1', 'AK47', 'AWM', 'M1887', 'MP40', 'UMP'],
                 proxies: proxies,
                 proxy_ip: '192.168.1.8',
                 device: 'iPhone 14 Pro Max',
@@ -1612,17 +1565,17 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `proxy_ff_aim80_ios${currentIOS}_${new Date().getTime()}.json`;
+            a.download = `proxy_ff_ios${currentIOS}_${Date.now()}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            showToast(`📤 Đã xuất JSON AIM 80% - iOS ${currentIOS}!`);
+            showToast('📤 Đã xuất JSON!');
         }
 
-        // ========================================
-        // COMMENT
-        // ========================================
+        // ============================================================
+        // COMMENT - CHỨC NĂNG
+        // ============================================================
         function addComment() {
             const input = document.getElementById('commentInput');
             const text = input.value.trim();
@@ -1637,20 +1590,28 @@
             showToast('✅ Đã thêm bình luận!');
         }
 
-        // ========================================
+        // ============================================================
         // TOAST
-        // ========================================
+        // ============================================================
         function showToast(msg) {
             const t = document.getElementById('toast');
             t.textContent = msg;
             t.classList.add('show');
             clearTimeout(t._timeout);
-            t._timeout = setTimeout(() => t.classList.remove('show'), 3000);
+            t._timeout = setTimeout(() => t.classList.remove('show'), 2500);
         }
 
-        // ========================================
+        // ============================================================
         // EVENTS
-        // ========================================
+        // ============================================================
+        document.getElementById('iosVersionSelect').addEventListener('change', function() {
+            currentIOS = this.value;
+            document.getElementById('iosVersionDisplay').textContent = 'iOS ' + currentIOS;
+            renderCards();
+            showToast(`📱 Đã chọn iOS ${currentIOS}`);
+            document.getElementById('configPreview').classList.remove('show');
+        });
+
         document.getElementById('searchInput').addEventListener('input', function() {
             currentSearch = this.value;
             renderCards();
@@ -1672,29 +1633,18 @@
         document.getElementById('btnCreateConfig').addEventListener('click', createMobileConfig);
         document.getElementById('btnActivate').addEventListener('click', activateAll);
         document.getElementById('btnAim80').addEventListener('click', setAim80);
-        document.getElementById('btnRecheck').addEventListener('click', function() {
-            checkProxyConnection();
-            showToast('🔄 Đang kiểm tra lại kết nối...');
-        });
+        document.getElementById('btnLuaExport').addEventListener('click', exportLuaAll);
         document.getElementById('btnExportJSON').addEventListener('click', exportJSON);
 
-        // ========================================
+        // ============================================================
         // INIT
-        // ========================================
+        // ============================================================
         renderCards();
-        checkProxyConnection();
         updateConfigStatus();
-
-        // Đồng bộ iOS ban đầu
-        document.getElementById('iosVersionDisplay').textContent = 'iOS ' + currentIOS;
-        document.getElementById('iosTag').textContent = '📱 iOS ' + currentIOS;
-
-        // Tự động kiểm tra lại sau 10 giây nếu đang checking
-        setInterval(() => {
-            if (proxyChecking) {
-                checkProxyConnection();
-            }
-        }, 10000);
+        console.log('✅ PROXY FF sẵn sàng! Bật toggle để chạy.');
+        console.log('📦 Package: com.dts.freefiremax');
+        console.log('🔫 6 Weapons: M4A1, AK47, AWM, M1887, MP40, UMP');
+        console.log('📜 Lua chạy ngầm khi bật proxy');
     </script>
 
 </body>
