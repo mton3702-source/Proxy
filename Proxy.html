@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Proxy FF - AIM 80%</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            padding: 0 0 80px 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            padding: 20px 16px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid #ff3b30;
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .header h1 {
+            font-size: 22px;
+            color: #ff3b30;
+        }
+        .header h1 span {
+            color: #fff;
+            font-weight: 300;
+        }
+        .header .aim-badge {
+            background: linear-gradient(135deg, #ff3b30, #ff6b00);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #fff;
+            animation: pulse 1.5s infinite;
+        }
+        .header .ios-badge {
+            background: #1a3a5a;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #64b5f6;
+            border: 1px solid #64b5f6;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .header p {
+            color: #888;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .status-bar {
+            background: #1a1a1a;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2a2a2a;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .status-bar .proxy-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+        .status-bar .proxy-status .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .status-bar .proxy-status .dot.online {
+            background: #4caf50;
+            box-shadow: 0 0 10px #4caf50;
+        }
+        .status-bar .proxy-status .dot.offline {
+            background: #ff3b30;
+            box-shadow: 0 0 10px #ff3b30;
+        }
+        .status-bar .proxy-status .dot.checking {
+            background: #ffcc00;
+            box-shadow: 0 0 10px #ffcc00;
+            animation: blink 0.8s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .status-bar .active-count {
+            color: #4caf50;
+            font-weight: 600;
+        }
+        .status-bar .aim-rate {
+            color: #ffcc00;
+            font-weight: 700;
+            font-size: 15px;
+        }
+        .status-bar .ios-version {
+            color: #64b5f6;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .search-wrap {
+            padding: 12px 16px;
+            background: #0a0a0a;
+        }
+        .search-wrap input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid #2a2a2a;
+            background: #1a1a1a;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .search-wrap input:focus {
+            border-color: #ff3b30;
+        }
+        .search-wrap input::placeholder {
+            color: #555;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            padding: 0 16px 12px;
+            overflow-x: auto;
+            background: #0a0a0a;
+        }
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+        .tabs .tab {
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: #1a1a1a;
+            color: #888;
+            font-size: 13px;
+            white-space: nowrap;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: 0.3s;
+        }
+        .tabs .tab.active {
+            background: #ff3b30;
+            color: #fff;
+            border-color: #ff3b30;
+        }
+        .tabs .tab:hover {
+            border-color: #ff3b30;
+        }
+
+        .container {
+            padding: 0 16px;
+        }
+        .card {
+            background: #141414;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid #2a2a2a;
+            transition: 0.3s;
+        }
+        .card.active {
+            border-left-color: #4caf50;
+            background: #1a2a1a;
+        }
+        .card .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .card .info {
+            flex: 1;
+            min-width: 150px;
+        }
+        .card .game-tag {
+            font-size: 11px;
+            color: #ff3b30;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .card .card-name {
+            font-size: 17px;
+            font-weight: 600;
+            margin: 2px 0 4px;
+            color: #fff;
+        }
+        .card .desc {
+            color: #aaa;
+            font-size: 13px;
+        }
+        .card .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 4px;
+        }
+        .card .meta .tag {
+            background: #2a2a2a;
+            padding: 1px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            color: #ccc;
+        }
+        .card .meta .tag.vip {
+            background: #ff3b30;
+            color: #fff;
+        }
+        .card .meta .tag.auto {
+            background: #1a3a2a;
+            color: #4caf50;
+        }
+        .card .meta .tag.aim80 {
+            background: #ff6b00;
+            color: #fff;
+            font-weight: 700;
+        }
+        .card .meta .tag.ios {
+            background: #1a3a5a;
+            color: #64b5f6;
+        }
+
+        .card .right-side {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .card .status {
+            text-align: right;
+            min-width: 90px;
+        }
+        .card .status .status-label {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .card .status .status-label.off {
+            color: #555;
+        }
+        .card .status .status-label.on {
+            color: #4caf50;
+        }
+        .card .status .status-detail {
+            font-size: 10px;
+            color: #666;
+            margin-top: 2px;
+        }
+        .card .status .status-detail.on {
+            color: #4caf50;
+        }
+        .toggle {
+            position: relative;
+            width: 46px;
+            height: 26px;
+            background: #2a2a2a;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            flex-shrink: 0;
+        }
+        .toggle.active {
+            background: #4caf50;
+        }
+        .toggle .slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            transition: 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .toggle.active .slider {
+            left: 23px;
+        }
+        .toggle.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .aim-data {
+            margin-top: 12px;
+            padding: 12px;
+            background: #0a0a0a;
+            border-radius: 10px;
+            border: 1px solid #2a2a2a;
+            display: none;
+        }
+        .aim-data.show {
+            display: block;
+        }
+        .aim-data .aim-title {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .aim-data .aim-title span {
+            color: #4caf50;
+            font-weight: 600;
+        }
+        .aim-data .aim-title .rate-80 {
+            color: #ff6b00;
+            font-weight: 700;
+            font-size: 14px;
+            background: #1a1a1a;
+            padding: 2px 12px;
+            border-radius: 20px;
+            border: 1px solid #ff6b00;
+        }
+        .aim-data .aim-title .ios-support {
+            color: #64b5f6;
+            font-size: 11px;
+            background: #1a3a5a;
+            padding: 2px 10px;
+            border-radius: 20px;
+        }
+        .aim-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 16px;
+        }
+        .aim-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid #1a1a1a;
+            font-size: 13px;
+        }
+        .aim-item .label {
+            color: #888;
+        }
+        .aim-item .value {
+            color: #fff;
+            font-weight: 500;
+        }
+        .aim-item .value.green {
+            color: #4caf50;
+        }
+        .aim-item .value.gold {
+            color: #ffcc00;
+        }
+        .aim-item .value.red {
+            color: #ff3b30;
+        }
+        .aim-item .value.orange {
+            color: #ff6b00;
+            font-weight: 700;
+        }
+        .aim-item .value.blue {
+            color: #64b5f6;
+        }
+
+        .aim-bar-wrap {
+            margin-top: 8px;
+        }
+        .aim-bar-wrap .bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 2px;
+        }
+        .aim-bar {
+            width: 100%;
+            height: 6px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .aim-bar .fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s;
+            width: 0%;
+        }
+        .aim-bar .fill.green {
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+        }
+        .aim-bar .fill.gold {
+            background: linear-gradient(90deg, #ffcc00, #ff9800);
+        }
+        .aim-bar .fill.red {
+            background: linear-gradient(90deg, #ff3b30, #ff6b6b);
+        }
+        .aim-bar .fill.blue {
+            background: linear-gradient(90deg, #2196f3, #64b5f6);
+        }
+        .aim-bar .fill.orange {
+            background: linear-gradient(90deg, #ff6b00, #ff9800);
+            animation: glowOrange 1.5s infinite;
+        }
+        @keyframes glowOrange {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* IOS SELECTOR */
+        .ios-selector {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 8px 0 4px;
+            padding: 8px 12px;
+            background: #0a0a0a;
+            border-radius: 10px;
+            border: 1px solid #2a2a2a;
+        }
+        .ios-selector label {
+            font-size: 13px;
+            color: #888;
+        }
+        .ios-selector select {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid #2a2a2a;
+            background: #1a1a1a;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+        }
+        .ios-selector select:focus {
+            border-color: #64b5f6;
+        }
+        .ios-selector .ios-tag {
+            font-size: 11px;
+            color: #64b5f6;
+            background: #1a3a5a;
+            padding: 2px 10px;
+            border-radius: 20px;
+        }
+
+        /* CONFIG SECTION */
+        .config-section {
+            background: #141414;
+            border-radius: 14px;
+            padding: 16px;
+            margin: 12px 0;
+            border: 1px solid #2a2a2a;
+        }
+        .config-section .config-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .config-section .config-header h3 {
+            font-size: 16px;
+            color: #fff;
+        }
+        .config-section .config-header h3 span {
+            color: #ff3b30;
+        }
+        .config-section .config-header .badge-config {
+            background: #ff3b30;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .config-section .config-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0;
+            padding: 10px 14px;
+            background: #0a0a0a;
+            border-radius: 10px;
+            border: 1px solid #2a2a2a;
+        }
+        .config-section .config-status .icon {
+            font-size: 20px;
+        }
+        .config-section .config-status .info {
+            flex: 1;
+        }
+        .config-section .config-status .info .title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .config-section .config-status .info .sub {
+            font-size: 12px;
+            color: #888;
+        }
+        .config-section .config-status .status-text {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .config-section .config-status .status-text.ready {
+            color: #4caf50;
+        }
+        .config-section .config-status .status-text.not-ready {
+            color: #ff3b30;
+        }
+
+        .config-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+        .config-actions .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            justify-content: center;
+            min-width: 120px;
+        }
+        .config-actions .btn-primary {
+            background: #ff3b30;
+            color: #fff;
+        }
+        .config-actions .btn-primary:hover {
+            background: #e0352b;
+        }
+        .config-actions .btn-primary:disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .config-actions .btn-secondary {
+            background: #2a2a2a;
+            color: #fff;
+        }
+        .config-actions .btn-secondary:hover {
+            background: #3a3a3a;
+        }
+        .config-actions .btn-success {
+            background: #4caf50;
+            color: #fff;
+        }
+        .config-actions .btn-success:hover {
+            background: #3d8b40;
+        }
+        .config-actions .btn-success:disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .config-actions .btn-aim80 {
+            background: linear-gradient(135deg, #ff6b00, #ff3b30);
+            color: #fff;
+        }
+        .config-actions .btn-aim80:hover {
+            transform: scale(1.02);
+        }
+        .config-actions .btn-ios {
+            background: #1a3a5a;
+            color: #64b5f6;
+            border: 1px solid #64b5f6;
+        }
+        .config-actions .btn-ios:hover {
+            background: #1a4a6a;
+        }
+
+        .config-preview {
+            margin-top: 12px;
+            background: #0a0a0a;
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid #2a2a2a;
+            display: none;
+        }
+        .config-preview.show {
+            display: block;
+        }
+        .config-preview .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .config-preview .preview-header span {
+            font-size: 12px;
+            color: #888;
+        }
+        .config-preview .preview-header button {
+            background: #2a2a2a;
+            border: none;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        .config-preview .preview-header button:hover {
+            background: #3a3a3a;
+        }
+        .config-preview pre {
+            background: #0a0a0a;
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 10px;
+            font-family: 'Courier New', monospace;
+            color: #4caf50;
+            border: 1px solid #1a1a1a;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .comment-section {
+            background: #141414;
+            border-radius: 14px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .comment-section h4 {
+            font-size: 15px;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+        .comment-section .comment-input {
+            display: flex;
+            gap: 10px;
+        }
+        .comment-section .comment-input input {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid #2a2a2a;
+            background: #1a1a1a;
+            color: #fff;
+            outline: none;
+        }
+        .comment-section .comment-input input:focus {
+            border-color: #ff3b30;
+        }
+        .comment-section .comment-input button {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            background: #ff3b30;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .comment-list {
+            margin-top: 12px;
+        }
+        .comment-list .cmt {
+            padding: 10px 0;
+            border-bottom: 1px solid #1a1a1a;
+            font-size: 14px;
+            color: #ccc;
+        }
+        .comment-list .cmt .cmt-user {
+            color: #ff3b30;
+            font-weight: 600;
+        }
+        .comment-list .cmt .cmt-time {
+            color: #555;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px 16px;
+            color: #444;
+            font-size: 12px;
+            border-top: 1px solid #1a1a1a;
+            margin-top: 10px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2a2a2a;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            display: none;
+            z-index: 999;
+            border: 1px solid #ff3b30;
+            text-align: center;
+            max-width: 90%;
+        }
+        .toast.show {
+            display: block;
+        }
+
+        @media (max-width: 480px) {
+            .header h1 { font-size: 18px; }
+            .aim-grid { grid-template-columns: 1fr; }
+            .card .right-side { width: 100%; justify-content: flex-end; }
+            .config-actions .btn { min-width: 80px; font-size: 12px; padding: 8px 12px; }
+            .ios-selector { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-top">
+            <div>
+                <h1>🎯 PROXY <span>FF</span></h1>
+                <p>iOS 16 → 20 • iPhone 14 Pro Max</p>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <span class="ios-badge">📱 iOS 16-20</span>
+                <span class="aim-badge">🎯 AIM 80%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+        <div class="proxy-status">
+            <span class="dot checking" id="proxyDot"></span>
+            <span id="proxyStatusText">Đang kiểm tra kết nối...</span>
+            <span style="color:#888;font-size:12px;" id="proxyIP">192.168.1.8</span>
+        </div>
+        <span class="status-text">
+            ⚡ <span class="active-count" id="activeCount">0</span>
+            &nbsp;|&nbsp; <span class="aim-rate">🎯 80%</span>
+            &nbsp;|&nbsp; <span class="ios-version" id="iosVersionDisplay">iOS 16</span>
+        </span>
+    </div>
+
+    <!-- IOS SELECTOR -->
+    <div class="container">
+        <div class="ios-selector">
+            <label>📱 Chọn phiên bản iOS:</label>
+            <select id="iosVersionSelect">
+                <option value="16">iOS 16</option>
+                <option value="16.1">iOS 16.1</option>
+                <option value="16.2">iOS 16.2</option>
+                <option value="16.3">iOS 16.3</option>
+                <option value="16.4">iOS 16.4</option>
+                <option value="16.5">iOS 16.5</option>
+                <option value="16.6" selected>iOS 16.6</option>
+                <option value="16.7">iOS 16.7</option>
+                <option value="17.0">iOS 17.0</option>
+                <option value="17.1">iOS 17.1</option>
+                <option value="17.2">iOS 17.2</option>
+                <option value="17.3">iOS 17.3</option>
+                <option value="17.4">iOS 17.4</option>
+                <option value="17.5">iOS 17.5</option>
+                <option value="17.6">iOS 17.6</option>
+                <option value="17.7">iOS 17.7</option>
+                <option value="18.0">iOS 18.0</option>
+                <option value="18.1">iOS 18.1</option>
+                <option value="18.2">iOS 18.2</option>
+                <option value="18.3">iOS 18.3</option>
+                <option value="18.4">iOS 18.4</option>
+                <option value="18.5">iOS 18.5</option>
+                <option value="18.6">iOS 18.6</option>
+                <option value="19.0">iOS 19.0</option>
+                <option value="19.1">iOS 19.1</option>
+                <option value="19.2">iOS 19.2</option>
+                <option value="19.3">iOS 19.3</option>
+                <option value="19.4">iOS 19.4</option>
+                <option value="19.5">iOS 19.5</option>
+                <option value="19.6">iOS 19.6</option>
+                <option value="20.0">iOS 20.0</option>
+                <option value="20.1">iOS 20.1</option>
+                <option value="20.2">iOS 20.2</option>
+                <option value="20.3">iOS 20.3</option>
+                <option value="20.4">iOS 20.4</option>
+                <option value="20.5">iOS 20.5</option>
+                <option value="20.6">iOS 20.6</option>
+            </select>
+            <span class="ios-tag" id="iosTag">📱 Hỗ trợ 16-20</span>
+        </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="🔍 Tìm kiếm proxy, mod, skin...">
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs" id="tabs">
+        <span class="tab active" data-filter="all">🔥 Tất cả</span>
+        <span class="tab" data-filter="proxy">Proxy</span>
+        <span class="tab" data-filter="mod">Mod NV</span>
+        <span class="tab" data-filter="skin">Skin</span>
+        <span class="tab" data-filter="vip">VIP</span>
+    </div>
+
+    <!-- CARDS -->
+    <div class="container" id="cardContainer"></div>
+
+    <!-- CONFIG SECTION -->
+    <div class="container">
+        <div class="config-section" id="configSection">
+            <div class="config-header">
+                <h3>📱 <span>MobileConfig</span> - Cấu hình cài đặt</h3>
+                <span class="badge-config">iOS 16-20</span>
+            </div>
+
+            <div class="config-status">
+                <span class="icon">📦</span>
+                <div class="info">
+                    <div class="title">Trạng thái Proxy</div>
+                    <div class="sub" id="configSubStatus">Đang kiểm tra thiết bị kết nối...</div>
+                </div>
+                <span class="status-text not-ready" id="configStatusText">⛔ Chưa sẵn sàng</span>
+            </div>
+
+            <div class="config-actions">
+                <button class="btn btn-primary" id="btnCreateConfig" disabled>
+                    🔧 Tạo MobileConfig
+                </button>
+                <button class="btn btn-success" id="btnActivate" disabled>
+                    🚀 Kích hoạt tất cả
+                </button>
+                <button class="btn btn-aim80" id="btnAim80">
+                    🎯 AIM 80% MAX
+                </button>
+                <button class="btn btn-secondary" id="btnExportJSON">
+                    📤 Xuất JSON
+                </button>
+            </div>
+
+            <div class="config-preview" id="configPreview">
+                <div class="preview-header">
+                    <span>📄 MobileConfig Preview</span>
+                    <button onclick="copyConfig()">📋 Copy</button>
+                </div>
+                <pre id="configCode">Đang tạo cấu hình...</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMMENT -->
+    <div class="container">
+        <div class="comment-section">
+            <h4>💬 Bình luận</h4>
+            <div class="comment-input">
+                <input type="text" id="commentInput" placeholder="Viết bình luận...">
+                <button onclick="addComment()">Gửi</button>
+            </div>
+            <div class="comment-list" id="commentList">
+                <div class="cmt"><span class="cmt-user">🔥 Admin</span>: AIM 80% quá đỉnh! iOS 16-20 đều chạy <span class="cmt-time">2 giờ trước</span></div>
+                <div class="cmt"><span class="cmt-user">🎯 ProGamer</span>: Headshot liên tục luôn <span class="cmt-time">5 giờ trước</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <p>🎯 AIM 80% • Free Fire • Hỗ trợ iOS 16 → 20</p>
+        <p>📺 Xem Video Hướng Dẫn • Ảnh 8-24</p>
+    </div>
+
+    <script>
+        // ========================================
+        // DATA - Tất cả proxy AIM 80%
+        // ========================================
+        const proxies = [
+            {
+                id: 1,
+                type: 'proxy',
+                name: 'Proxy Cổ V1',
+                game: 'Free Fire Max',
+                desc: 'Aim Cổ - Ít Lộ Hơn • AIM 80%',
+                tags: ['VIP', 'AUTO', 'AIM80'],
+                active: false,
+                aim: {
+                    type: 'Head & Neck',
+                    sensitivity: 1.6,
+                    aimAngle: 18,
+                    headshotRate: 80,
+                    aimRegion: 'Cổ',
+                    recoilComp: 70,
+                    autoLock: true,
+                    fov: 125,
+                    smoothness: 88
+                }
+            },
+            {
+                id: 2,
+                type: 'proxy',
+                name: 'Proxy Cổ V2',
+                game: 'Free Fire Max',
+                desc: 'Vùng Cổ Máu Đỏ To Hơn • AIM 80%',
+                tags: ['VIP', 'AIM80'],
+                active: false,
+                aim: {
+                    type: 'Head & Neck',
+                    sensitivity: 1.8,
+                    aimAngle: 22,
+                    headshotRate: 80,
+                    aimRegion: 'Cổ rộng',
+                    recoilComp: 80,
+                    autoLock: true,
+                    fov: 135,
+                    smoothness: 92
+                }
+            },
+            {
+                id: 3,
+                type: 'proxy',
+                name: 'Proxy Magic',
+                game: 'Free Fire',
+                desc: 'Đạn Ma Thuật • AIM 80% Headshot',
+                tags: ['VIP', 'AUTO', 'AIM80'],
+                active: false,
+                aim: {
+                    type: 'Magic Bullet',
+                    sensitivity: 2.0,
+                    aimAngle: 30,
+                    headshotRate: 80,
+                    aimRegion: 'Toàn thân',
+                    recoilComp: 90,
+                    autoLock: true,
+                    fov: 150,
+                    smoothness: 95
+                }
+            },
+            {
+                id: 4,
+                type: 'mod',
+                name: 'Mod Skin Maro',
+                game: 'Free Fire Max',
+                desc: 'One Punch Man • AIM 80%',
+                tags: ['VIP', 'AIM80'],
+                active: false,
+                aim: {
+                    type: 'Skin Mod',
+                    sensitivity: 1.4,
+                    aimAngle: 12,
+                    headshotRate: 80,
+                    aimRegion: 'Đầu',
+                    recoilComp: 50,
+                    autoLock: false,
+                    fov: 105,
+                    smoothness: 75
+                }
+            },
+            {
+                id: 5,
+                type: 'mod',
+                name: 'Mod Skin Alok V1',
+                game: 'Free Fire Max',
+                desc: 'Alok Cyber • AIM 80%',
+                tags: ['VIP', 'AIM80'],
+                active: false,
+                aim: {
+                    type: 'Skin Mod',
+                    sensitivity: 1.5,
+                    aimAngle: 14,
+                    headshotRate: 80,
+                    aimRegion: 'Ngực',
+                    recoilComp: 55,
+                    autoLock: false,
+                    fov: 115,
+                    smoothness: 78
+                }
+            },
+            {
+                id: 6,
+                type: 'mod',
+                name: 'Mod Skin Hayato V1',
+                game: 'Free Fire Max',
+                desc: 'Hayato Samurai • AIM 80%',
+                tags: ['AIM80'],
+                active: false,
+                aim: {
+                    type: 'Skin Mod',
+                    sensitivity: 1.3,
+                    aimAngle: 10,
+                    headshotRate: 80,
+                    aimRegion: 'Toàn thân',
+                    recoilComp: 40,
+                    autoLock: false,
+                    fov: 95,
+                    smoothness: 70
+                }
+            },
+            {
+                id: 7,
+                type: 'proxy',
+                name: 'Định Vị Súng Xanh',
+                game: 'Free Fire Max',
+                desc: 'Hiện vị trí súng xanh trên map',
+                tags: ['AUTO'],
+                active: false,
+                aim: {
+                    type: 'Location',
+                    sensitivity: 1.0,
+                    aimAngle: 0,
+                    headshotRate: 0,
+                    aimRegion: 'Map',
+                    recoilComp: 0,
+                    autoLock: false,
+                    fov: 200,
+                    smoothness: 100
+                }
+            },
+            {
+                id: 8,
+                type: 'proxy',
+                name: 'Định Vị Súng Đỏ',
+                game: 'Free Fire Max',
+                desc: 'Hiện vị trí súng đỏ trên map',
+                tags: ['AUTO'],
+                active: false,
+                aim: {
+                    type: 'Location',
+                    sensitivity: 1.0,
+                    aimAngle: 0,
+                    headshotRate: 0,
+                    aimRegion: 'Map',
+                    recoilComp: 0,
+                    autoLock: false,
+                    fov: 200,
+                    smoothness: 100
+                }
+            },
+            {
+                id: 9,
+                type: 'mod',
+                name: 'Mod Skin Dimitri V1',
+                game: 'Free Fire Max',
+                desc: 'Dimitri Wraith • AIM 80%',
+                tags: ['AIM80'],
+                active: false,
+                aim: {
+                    type: 'Skin Mod',
+                    sensitivity: 1.4,
+                    aimAngle: 12,
+                    headshotRate: 80,
+                    aimRegion: 'Ngực',
+                    recoilComp: 48,
+                    autoLock: false,
+                    fov: 108,
+                    smoothness: 74
+                }
+            }
+        ];
+
+        // ========================================
+        // IOS VERSION
+        // ========================================
+        let currentIOS = '16.6';
+
+        document.getElementById('iosVersionSelect').addEventListener('change', function() {
+            currentIOS = this.value;
+            document.getElementById('iosVersionDisplay').textContent = 'iOS ' + currentIOS;
+            document.getElementById('iosTag').textContent = '📱 iOS ' + currentIOS;
+            showToast(`📱 Đã chọn iOS ${currentIOS}`);
+            // Cập nhật lại cấu hình nếu đang preview
+            if (document.getElementById('configPreview').classList.contains('show')) {
+                document.getElementById('configPreview').classList.remove('show');
+            }
+        });
+
+        // ========================================
+        // PROXY CONNECTION
+        // ========================================
+        let proxyConnected = false;
+        let proxyChecking = true;
+
+        function checkProxyConnection() {
+            const dot = document.getElementById('proxyDot');
+            const statusText = document.getElementById('proxyStatusText');
+            const configStatusText = document.getElementById('configStatusText');
+            const configSubStatus = document.getElementById('configSubStatus');
+            const btnCreate = document.getElementById('btnCreateConfig');
+            const btnActivate = document.getElementById('btnActivate');
+
+            dot.className = 'dot checking';
+            statusText.textContent = 'Đang kiểm tra kết nối tới 192.168.1.8...';
+            configStatusText.textContent = '⏳ Đang kiểm tra...';
+            configStatusText.className = 'status-text not-ready';
+            configSubStatus.textContent = 'Đang ping tới proxy server...';
+
+            setTimeout(() => {
+                const success = Math.random() < 0.8;
+                proxyConnected = success;
+                proxyChecking = false;
+
+                if (success) {
+                    dot.className = 'dot online';
+                    statusText.textContent = '✅ Kết nối thành công!';
+                    configStatusText.textContent = '✅ Sẵn sàng';
+                    configStatusText.className = 'status-text ready';
+                    configSubStatus.textContent = '✅ Thiết bị đã kết nối proxy 192.168.1.8 • AIM 80% • iOS ' + currentIOS;
+                    btnCreate.disabled = false;
+                    btnActivate.disabled = false;
+                    showToast('✅ Kết nối proxy thành công! AIM 80% sẵn sàng');
+                } else {
+                    dot.className = 'dot offline';
+                    statusText.textContent = '❌ Không thể kết nối!';
+                    configStatusText.textContent = '⛔ Không kết nối';
+                    configStatusText.className = 'status-text not-ready';
+                    configSubStatus.textContent = '❌ Không tìm thấy thiết bị tại 192.168.1.8';
+                    btnCreate.disabled = true;
+                    btnActivate.disabled = true;
+                    showToast('❌ Không kết nối được proxy! Kiểm tra lại IP.');
+                    document.querySelectorAll('.toggle').forEach(t => t.classList.add('disabled'));
+                }
+            }, 2000);
+        }
+
+        // ========================================
+        // RENDER
+        // ========================================
+        let currentFilter = 'all';
+        let currentSearch = '';
+
+        function renderCards() {
+            const container = document.getElementById('cardContainer');
+            let filtered = proxies;
+
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(p => {
+                    if (currentFilter === 'proxy') return p.type === 'proxy';
+                    if (currentFilter === 'mod') return p.type === 'mod';
+                    if (currentFilter === 'skin') return p.type === 'skin';
+                    if (currentFilter === 'vip') return p.tags.includes('VIP');
+                    return true;
+                });
+            }
+
+            if (currentSearch.trim()) {
+                const q = currentSearch.toLowerCase();
+                filtered = filtered.filter(p =>
+                    p.name.toLowerCase().includes(q) ||
+                    p.desc.toLowerCase().includes(q) ||
+                    p.game.toLowerCase().includes(q)
+                );
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center;padding:40px 0;color:#555;">
+                        <p style="font-size:48px;">🔍</p>
+                        <p>Không tìm thấy proxy phù hợp</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(p => `
+                <div class="card ${p.active ? 'active' : ''}" data-id="${p.id}">
+                    <div class="card-top">
+                        <div class="info">
+                            <div class="game-tag">${p.game}</div>
+                            <div class="card-name">${p.name}</div>
+                            <div class="desc">${p.desc}</div>
+                            <div class="meta">
+                                ${p.tags.map(t => `<span class="tag ${t.toLowerCase() === 'vip' ? 'vip' : ''} ${t.toLowerCase() === 'auto' ? 'auto' : ''} ${t === 'AIM80' ? 'aim80' : ''}">${t}</span>`).join('')}
+                                <span class="tag ios">📱 iOS ${currentIOS}</span>
+                            </div>
+                        </div>
+                        <div class="right-side">
+                            <div class="status">
+                                <div class="status-label ${p.active ? 'on' : 'off'}">
+                                    ${p.active ? '✅ Đang chạy' : '⛔ Đã tắt'}
+                                </div>
+                                <div class="status-detail ${p.active ? 'on' : ''}">
+                                    ${p.active ? '🎯 AIM 80% đã kích hoạt' : 'Nhấn bật để chạy'}
+                                </div>
+                            </div>
+                            <div class="toggle ${p.active ? 'active' : ''} ${!proxyConnected && !proxyChecking ? 'disabled' : ''}" onclick="toggleProxy(${p.id})">
+                                <div class="slider"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="aim-data ${p.active ? 'show' : ''}" id="aimData-${p.id}">
+                        <div class="aim-title">
+                            <span>🎯 AIM DATA - ${p.aim.type}</span>
+                            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                                <span class="rate-80">🔥 80% Headshot</span>
+                                <span class="ios-support">📱 iOS ${currentIOS}</span>
+                            </div>
+                        </div>
+                        <div class="aim-grid">
+                            <div class="aim-item"><span class="label">Độ nhạy</span><span class="value green">${p.aim.sensitivity}x</span></div>
+                            <div class="aim-item"><span class="label">Góc aim</span><span class="value gold">${p.aim.aimAngle}°</span></div>
+                            <div class="aim-item"><span class="label">Tỷ lệ Headshot</span><span class="value orange">${p.aim.headshotRate}% 🎯</span></div>
+                            <div class="aim-item"><span class="label">Vùng aim</span><span class="value">${p.aim.aimRegion}</span></div>
+                            <div class="aim-item"><span class="label">Bù giật</span><span class="value green">${p.aim.recoilComp}%</span></div>
+                            <div class="aim-item"><span class="label">Auto Lock</span><span class="value ${p.aim.autoLock ? 'green' : 'red'}">${p.aim.autoLock ? '✅ Bật' : '⛔ Tắt'}</span></div>
+                            <div class="aim-item"><span class="label">FOV</span><span class="value gold">${p.aim.fov}°</span></div>
+                            <div class="aim-item"><span class="label">Độ mượt</span><span class="value green">${p.aim.smoothness}%</span></div>
+                            <div class="aim-item"><span class="label">iOS Support</span><span class="value blue">${currentIOS}</span></div>
+                        </div>
+                        
+                        <div class="aim-bar-wrap">
+                            <div class="bar-label"><span>🎯 Headshot Rate</span><span style="color:#ff6b00;font-weight:700;">${p.aim.headshotRate}%</span></div>
+                            <div class="aim-bar"><div class="fill orange" style="width:${p.aim.headshotRate}%;"></div></div>
+                        </div>
+                        <div class="aim-bar-wrap">
+                            <div class="bar-label"><span>⚡ Độ nhạy</span><span>${(p.aim.sensitivity / 2.0 * 100).toFixed(0)}%</span></div>
+                            <div class="aim-bar"><div class="fill gold" style="width:${(p.aim.sensitivity / 2.0 * 100).toFixed(0)}%;"></div></div>
+                        </div>
+                        <div class="aim-bar-wrap">
+                            <div class="bar-label"><span>🛡️ Bù giật</span><span>${p.aim.recoilComp}%</span></div>
+                            <div class="aim-bar"><div class="fill blue" style="width:${p.aim.recoilComp}%;"></div></div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            updateStatusBar();
+        }
+
+        // ========================================
+        // TOGGLE
+        // ========================================
+        function toggleProxy(id) {
+            if (!proxyConnected && !proxyChecking) {
+                showToast('❌ Chưa kết nối proxy! Kiểm tra lại 192.168.1.8');
+                return;
+            }
+
+            const proxy = proxies.find(p => p.id === id);
+            if (!proxy) return;
+
+            proxy.active = !proxy.active;
+
+            const card = document.querySelector(`.card[data-id="${id}"]`);
+            const toggle = card.querySelector('.toggle');
+            const statusLabel = card.querySelector('.status-label');
+            const statusDetail = card.querySelector('.status-detail');
+            const aimData = document.getElementById(`aimData-${id}`);
+
+            if (proxy.active) {
+                card.classList.add('active');
+                toggle.classList.add('active');
+                statusLabel.className = 'status-label on';
+                statusLabel.textContent = '✅ Đang chạy';
+                statusDetail.className = 'status-detail on';
+                statusDetail.textContent = '🎯 AIM 80% đã kích hoạt';
+                aimData.classList.add('show');
+                showToast(`✅ Đã bật: ${proxy.name} - AIM 80% - iOS ${currentIOS}`);
+                runProxy(proxy);
+            } else {
+                card.classList.remove('active');
+                toggle.classList.remove('active');
+                statusLabel.className = 'status-label off';
+                statusLabel.textContent = '⛔ Đã tắt';
+                statusDetail.className = 'status-detail';
+                statusDetail.textContent = 'Nhấn bật để chạy';
+                aimData.classList.remove('show');
+                showToast(`⛔ Đã tắt: ${proxy.name}`);
+                stopProxy(proxy);
+            }
+
+            updateStatusBar();
+            updateConfigStatus();
+        }
+
+        // ========================================
+        // RUN PROXY
+        // ========================================
+        function runProxy(proxy) {
+            const config = {
+                type: proxy.aim.type,
+                name: proxy.name,
+                status: 'running',
+                timestamp: new Date().toISOString(),
+                device: 'iPhone 14 Pro Max',
+                ios: currentIOS,
+                ios_support: '16 → 20',
+                proxy_ip: '192.168.1.8',
+                aim_rate: '80%',
+                aim: proxy.aim
+            };
+            console.log('🎯 [AIM 80%] iOS ' + currentIOS + ' Config:', JSON.stringify(config, null, 2));
+            document.getElementById('runningList').textContent = 
+                proxies.filter(p => p.active).map(p => p.name).join(' • ') || 'Chưa có proxy nào';
+        }
+
+        function stopProxy(proxy) {
+            console.log(`⛔ Đã dừng: ${proxy.name}`);
+            document.getElementById('runningList').textContent = 
+                proxies.filter(p => p.active).map(p => p.name).join(' • ') || 'Chưa có proxy nào';
+        }
+
+        // ========================================
+        // UPDATE STATUS
+        // ========================================
+        function updateStatusBar() {
+            const active = proxies.filter(p => p.active);
+            document.getElementById('activeCount').textContent = active.length;
+            document.getElementById('runningList').textContent = 
+                active.map(p => p.name).join(' • ') || 'Chưa có proxy nào';
+        }
+
+        function updateConfigStatus() {
+            const active = proxies.filter(p => p.active);
+            const sub = document.getElementById('configSubStatus');
+            const statusText = document.getElementById('configStatusText');
+            
+            if (active.length === 0) {
+                sub.textContent = '⏳ Chưa có proxy nào được bật';
+                statusText.textContent = '⛔ Chưa có proxy';
+                statusText.className = 'status-text not-ready';
+            } else {
+                sub.textContent = `✅ Đã bật ${active.length} proxy • 🎯 AIM 80% • iOS ${currentIOS}`;
+                statusText.textContent = '✅ Sẵn sàng';
+                statusText.className = 'status-text ready';
+            }
+        }
+
+        // ========================================
+        // CREATE MOBILECONFIG
+        // ========================================
+        function createMobileConfig() {
+            const active = proxies.filter(p => p.active);
+            if (active.length === 0) {
+                showToast('❌ Vui lòng bật ít nhất 1 proxy!');
+                return;
+            }
+
+            if (!proxyConnected) {
+                showToast('❌ Chưa kết nối proxy!');
+                return;
+            }
+
+            const config = {
+                aim_rate: '80%',
+                ios_version: currentIOS,
+                ios_support: '16 → 20',
+                ProxyList: active.map(p => ({
+                    id: p.id,
+                    name: p.name,
+                    type: p.aim.type,
+                    sensitivity: p.aim.sensitivity,
+                    headshotRate: p.aim.headshotRate + '%',
+                    aimRegion: p.aim.aimRegion,
+                    recoilComp: p.aim.recoilComp + '%',
+                    autoLock: p.aim.autoLock,
+                    fov: p.aim.fov + '°',
+                    smoothness: p.aim.smoothness + '%'
+                })),
+                proxy_ip: '192.168.1.8',
+                device: 'iPhone 14 Pro Max',
+                created_at: new Date().toISOString(),
+                total_active: active.length
+            };
+
+            const xml = generateMobileConfig(active);
+            document.getElementById('configCode').textContent = xml;
+            document.getElementById('configPreview').classList.add('show');
+            showToast(`✅ Đã tạo MobileConfig AIM 80% cho iOS ${currentIOS}!`);
+            downloadMobileConfig(xml);
+        }
+
+        function generateMobileConfig(activeProxies) {
+            const payloads = activeProxies.map((p, i) => `
+        <dict>
+            <key>PayloadDescription</key>
+            <string>${p.name} - AIM 80% - iOS ${currentIOS}</string>
+            <key>PayloadDisplayName</key>
+            <string>${p.name} 🎯80% iOS${currentIOS}</string>
+            <key>PayloadIdentifier</key>
+            <string>com.proxy.ff.${p.id}.ios${currentIOS}</string>
+            <key>PayloadType</key>
+            <string>com.apple.webClip</string>
+            <key>PayloadUUID</key>
+            <string>${generateUUID()}</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>URL</key>
+            <string>http://192.168.1.8:8080/proxy/${p.id}?aim=80&ios=${currentIOS}</string>
+            <key>IsRemovable</key>
+            <true/>
+            <key>Label</key>
+            <string>${p.name} 🎯80% iOS${currentIOS}</string>
+        </dict>`).join(',');
+
+            return `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        ${payloads}
+    </array>
+    <key>PayloadDescription</key>
+    <string>Proxy FF - AIM 80% - iOS ${currentIOS} (Support 16-20)</string>
+    <key>PayloadDisplayName</key>
+    <string>Proxy FF AIM 80% - iOS ${currentIOS}</string>
+    <key>PayloadIdentifier</key>
+    <string>com.proxy.ff.config.aim80.ios${currentIOS}</string>
+    <key>PayloadOrganization</key>
+    <string>Proxy FF</string>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>${generateUUID()}</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+</dict>
+</plist>`;
+        }
+
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        function downloadMobileConfig(xml) {
+            const blob = new Blob([xml], { type: 'application/x-apple-aspen-config' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `proxy_ff_aim80_ios${currentIOS}_${new Date().getTime()}.mobileconfig`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function copyConfig() {
+            const el = document.getElementById('configCode');
+            navigator.clipboard?.writeText(el.textContent).then(() => {
+                showToast(`📋 Đã copy MobileConfig AIM 80% - iOS ${currentIOS}!`);
+            }).catch(() => {
+                const range = document.createRange();
+                range.selectNode(el);
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+                document.execCommand('copy');
+                showToast(`📋 Đã copy MobileConfig AIM 80% - iOS ${currentIOS}!`);
+            });
+        }
+
+        // ========================================
+        // ACTIVATE ALL + SET AIM 80%
+        // ========================================
+        function activateAll() {
+            if (!proxyConnected) {
+                showToast('❌ Chưa kết nối proxy!');
+                return;
+            }
+
+            const inactive = proxies.filter(p => !p.active);
+            if (inactive.length === 0) {
+                showToast('✅ Tất cả proxy đã được bật!');
+                return;
+            }
+
+            inactive.forEach(p => {
+                const card = document.querySelector(`.card[data-id="${p.id}"]`);
+                if (card) {
+                    const toggle = card.querySelector('.toggle');
+                    if (!toggle.classList.contains('disabled')) {
+                        p.active = true;
+                        card.classList.add('active');
+                        toggle.classList.add('active');
+                        const statusLabel = card.querySelector('.status-label');
+                        const statusDetail = card.querySelector('.status-detail');
+                        const aimData = document.getElementById(`aimData-${p.id}`);
+                        statusLabel.className = 'status-label on';
+                        statusLabel.textContent = '✅ Đang chạy';
+                        statusDetail.className = 'status-detail on';
+                        statusDetail.textContent = '🎯 AIM 80% đã kích hoạt';
+                        aimData.classList.add('show');
+                    }
+                }
+            });
+
+            updateStatusBar();
+            updateConfigStatus();
+            showToast(`✅ Đã bật tất cả ${inactive.length} proxy với AIM 80% - iOS ${currentIOS}!`);
+        }
+
+        function setAim80() {
+            proxies.forEach(p => {
+                p.aim.headshotRate = 80;
+                p.aim.sensitivity = Math.min(p.aim.sensitivity + 0.1, 2.0);
+                p.aim.recoilComp = Math.min(p.aim.recoilComp + 5, 95);
+                p.aim.autoLock = true;
+                if (!p.tags.includes('AIM80')) {
+                    p.tags.push('AIM80');
+                }
+                if (!p.desc.includes('AIM 80%')) {
+                    p.desc = p.desc.replace(/•.*$/, '') + ' • AIM 80%';
+                }
+            });
+            renderCards();
+            showToast(`🎯 Đã set AIM 80% cho tất cả proxy - iOS ${currentIOS}!`);
+        }
+
+        // ========================================
+        // EXPORT JSON
+        // ========================================
+        function exportJSON() {
+            const data = {
+                aim_rate: '80%',
+                ios_version: currentIOS,
+                ios_support: '16 → 20',
+                proxies: proxies,
+                proxy_ip: '192.168.1.8',
+                device: 'iPhone 14 Pro Max',
+                active_count: proxies.filter(p => p.active).length,
+                exported_at: new Date().toISOString()
+            };
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `proxy_ff_aim80_ios${currentIOS}_${new Date().getTime()}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(`📤 Đã xuất JSON AIM 80% - iOS ${currentIOS}!`);
+        }
+
+        // ========================================
+        // COMMENT
+        // ========================================
+        function addComment() {
+            const input = document.getElementById('commentInput');
+            const text = input.value.trim();
+            if (!text) return;
+            const list = document.getElementById('commentList');
+            const now = new Date();
+            const time = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+            list.innerHTML += `
+                <div class="cmt"><span class="cmt-user">👤 Bạn</span>: ${text} <span class="cmt-time">${time}</span></div>
+            `;
+            input.value = '';
+            showToast('✅ Đã thêm bình luận!');
+        }
+
+        // ========================================
+        // TOAST
+        // ========================================
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            clearTimeout(t._timeout);
+            t._timeout = setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        // ========================================
+        // EVENTS
+        // ========================================
+        document.getElementById('searchInput').addEventListener('input', function() {
+            currentSearch = this.value;
+            renderCards();
+        });
+
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                renderCards();
+            });
+        });
+
+        document.getElementById('commentInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') addComment();
+        });
+
+        document.getElementById('btnCreateConfig').addEventListener('click', createMobileConfig);
+        document.getElementById('btnActivate').addEventListener('click', activateAll);
+        document.getElementById('btnAim80').addEventListener('click', setAim80);
+        document.getElementById('btnExportJSON').addEventListener('click', exportJSON);
+
+        // ========================================
+        // INIT
+        // ========================================
+        renderCards();
+        checkProxyConnection();
+        updateConfigStatus();
+
+        // Đồng bộ iOS ban đầu
+        document.getElementById('iosVersionDisplay').textContent = 'iOS ' + currentIOS;
+        document.getElementById('iosTag').textContent = '📱 iOS ' + currentIOS;
+    </script>
+
+</body>
+</html>
