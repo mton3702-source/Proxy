@@ -586,12 +586,12 @@
         .config-actions .btn-aim80:hover {
             transform: scale(1.02);
         }
-        .config-actions .btn-ios {
+        .config-actions .btn-recheck {
             background: #1a3a5a;
             color: #64b5f6;
             border: 1px solid #64b5f6;
         }
-        .config-actions .btn-ios:hover {
+        .config-actions .btn-recheck:hover {
             background: #1a4a6a;
         }
 
@@ -771,7 +771,7 @@
         <div class="ios-selector">
             <label>📱 Chọn phiên bản iOS:</label>
             <select id="iosVersionSelect">
-                <option value="16">iOS 16</option>
+                <option value="16.0">iOS 16.0</option>
                 <option value="16.1">iOS 16.1</option>
                 <option value="16.2">iOS 16.2</option>
                 <option value="16.3">iOS 16.3</option>
@@ -809,7 +809,7 @@
                 <option value="20.5">iOS 20.5</option>
                 <option value="20.6">iOS 20.6</option>
             </select>
-            <span class="ios-tag" id="iosTag">📱 Hỗ trợ 16-20</span>
+            <span class="ios-tag" id="iosTag">📱 iOS 16.6</span>
         </div>
     </div>
 
@@ -856,6 +856,9 @@
                 </button>
                 <button class="btn btn-aim80" id="btnAim80">
                     🎯 AIM 80% MAX
+                </button>
+                <button class="btn btn-recheck" id="btnRecheck">
+                    🔄 Kiểm tra lại
                 </button>
                 <button class="btn btn-secondary" id="btnExportJSON">
                     📤 Xuất JSON
@@ -1093,14 +1096,13 @@
             document.getElementById('iosVersionDisplay').textContent = 'iOS ' + currentIOS;
             document.getElementById('iosTag').textContent = '📱 iOS ' + currentIOS;
             showToast(`📱 Đã chọn iOS ${currentIOS}`);
-            // Cập nhật lại cấu hình nếu đang preview
             if (document.getElementById('configPreview').classList.contains('show')) {
                 document.getElementById('configPreview').classList.remove('show');
             }
         });
 
         // ========================================
-        // PROXY CONNECTION
+        // PROXY CONNECTION - KIỂM TRA THẬT
         // ========================================
         let proxyConnected = false;
         let proxyChecking = true;
@@ -1113,38 +1115,94 @@
             const btnCreate = document.getElementById('btnCreateConfig');
             const btnActivate = document.getElementById('btnActivate');
 
+            // Reset state
+            proxyChecking = true;
+            proxyConnected = false;
+
             dot.className = 'dot checking';
-            statusText.textContent = 'Đang kiểm tra kết nối tới 192.168.1.8...';
-            configStatusText.textContent = '⏳ Đang kiểm tra...';
+            statusText.textContent = 'Đang ping tới 192.168.1.8:8080...';
+            configStatusText.textContent = '⏳ Đang ping...';
             configStatusText.className = 'status-text not-ready';
-            configSubStatus.textContent = 'Đang ping tới proxy server...';
+            configSubStatus.textContent = 'Đang kiểm tra kết nối...';
+            btnCreate.disabled = true;
+            btnActivate.disabled = true;
+            document.querySelectorAll('.toggle').forEach(t => t.classList.add('disabled'));
 
-            setTimeout(() => {
-                const success = Math.random() < 0.8;
-                proxyConnected = success;
+            // Gửi request thật tới proxy server
+            const proxyURL = 'http://192.168.1.8:8080/ping';
+            
+            fetch(proxyURL, {
+                method: 'GET',
+                mode: 'no-cors', // Bypass CORS nếu server không hỗ trợ
+                signal: AbortSignal.timeout(3000) // Timeout 3 giây
+            })
+            .then(() => {
+                // Fetch thành công (dù no-cors trả về opaque)
+                proxyConnected = true;
                 proxyChecking = false;
+                dot.className = 'dot online';
+                statusText.textContent = '✅ Kết nối thành công!';
+                configStatusText.textContent = '✅ Sẵn sàng';
+                configStatusText.className = 'status-text ready';
+                configSubStatus.textContent = '✅ Thiết bị đã kết nối proxy 192.168.1.8:8080';
+                btnCreate.disabled = false;
+                btnActivate.disabled = false;
+                document.querySelectorAll('.toggle').forEach(t => t.classList.remove('disabled'));
+                showToast('✅ Kết nối proxy 192.168.1.8 thành công!');
+            })
+            .catch((error) => {
+                // Fetch thất bại - không có server
+                proxyConnected = false;
+                proxyChecking = false;
+                dot.className = 'dot offline';
+                statusText.textContent = '❌ Không thể kết nối!';
+                configStatusText.textContent = '⛔ Không kết nối';
+                configStatusText.className = 'status-text not-ready';
+                configSubStatus.textContent = '❌ Không tìm thấy thiết bị tại 192.168.1.8:8080';
+                btnCreate.disabled = true;
+                btnActivate.disabled = true;
+                document.querySelectorAll('.toggle').forEach(t => t.classList.add('disabled'));
+                showToast('❌ Không kết nối được proxy! Kiểm tra lại IP và server.');
+            });
 
-                if (success) {
-                    dot.className = 'dot online';
-                    statusText.textContent = '✅ Kết nối thành công!';
-                    configStatusText.textContent = '✅ Sẵn sàng';
-                    configStatusText.className = 'status-text ready';
-                    configSubStatus.textContent = '✅ Thiết bị đã kết nối proxy 192.168.1.8 • AIM 80% • iOS ' + currentIOS;
-                    btnCreate.disabled = false;
-                    btnActivate.disabled = false;
-                    showToast('✅ Kết nối proxy thành công! AIM 80% sẵn sàng');
-                } else {
-                    dot.className = 'dot offline';
-                    statusText.textContent = '❌ Không thể kết nối!';
-                    configStatusText.textContent = '⛔ Không kết nối';
-                    configStatusText.className = 'status-text not-ready';
-                    configSubStatus.textContent = '❌ Không tìm thấy thiết bị tại 192.168.1.8';
-                    btnCreate.disabled = true;
-                    btnActivate.disabled = true;
-                    showToast('❌ Không kết nối được proxy! Kiểm tra lại IP.');
-                    document.querySelectorAll('.toggle').forEach(t => t.classList.add('disabled'));
+            // Fallback: Nếu fetch bị lỗi do CORS, thử ping bằng image
+            setTimeout(() => {
+                if (proxyChecking) {
+                    // Thử ping bằng cách load ảnh
+                    const img = new Image();
+                    img.onload = function() {
+                        if (proxyChecking) {
+                            proxyConnected = true;
+                            proxyChecking = false;
+                            dot.className = 'dot online';
+                            statusText.textContent = '✅ Kết nối thành công!';
+                            configStatusText.textContent = '✅ Sẵn sàng';
+                            configStatusText.className = 'status-text ready';
+                            configSubStatus.textContent = '✅ Thiết bị đã kết nối proxy 192.168.1.8';
+                            btnCreate.disabled = false;
+                            btnActivate.disabled = false;
+                            document.querySelectorAll('.toggle').forEach(t => t.classList.remove('disabled'));
+                            showToast('✅ Kết nối proxy 192.168.1.8 thành công!');
+                        }
+                    };
+                    img.onerror = function() {
+                        if (proxyChecking) {
+                            proxyConnected = false;
+                            proxyChecking = false;
+                            dot.className = 'dot offline';
+                            statusText.textContent = '❌ Không thể kết nối!';
+                            configStatusText.textContent = '⛔ Không kết nối';
+                            configStatusText.className = 'status-text not-ready';
+                            configSubStatus.textContent = '❌ Không tìm thấy thiết bị tại 192.168.1.8';
+                            btnCreate.disabled = true;
+                            btnActivate.disabled = true;
+                            document.querySelectorAll('.toggle').forEach(t => t.classList.add('disabled'));
+                        }
+                    };
+                    // Thử ping bằng ảnh (nếu server có file ảnh)
+                    img.src = 'http://192.168.1.8:8080/favicon.ico?_=' + Date.now();
                 }
-            }, 2000);
+            }, 1500);
         }
 
         // ========================================
@@ -1614,6 +1672,10 @@
         document.getElementById('btnCreateConfig').addEventListener('click', createMobileConfig);
         document.getElementById('btnActivate').addEventListener('click', activateAll);
         document.getElementById('btnAim80').addEventListener('click', setAim80);
+        document.getElementById('btnRecheck').addEventListener('click', function() {
+            checkProxyConnection();
+            showToast('🔄 Đang kiểm tra lại kết nối...');
+        });
         document.getElementById('btnExportJSON').addEventListener('click', exportJSON);
 
         // ========================================
@@ -1626,6 +1688,13 @@
         // Đồng bộ iOS ban đầu
         document.getElementById('iosVersionDisplay').textContent = 'iOS ' + currentIOS;
         document.getElementById('iosTag').textContent = '📱 iOS ' + currentIOS;
+
+        // Tự động kiểm tra lại sau 10 giây nếu đang checking
+        setInterval(() => {
+            if (proxyChecking) {
+                checkProxyConnection();
+            }
+        }, 10000);
     </script>
 
 </body>
