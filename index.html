@@ -17,15 +17,41 @@
             padding: 0 0 80px 0;
             user-select: none;
             -webkit-user-select: none;
+            min-height: 100vh;
         }
 
+        /* ===== BACKGROUND ===== */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .bg-animation .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: floatOrb 20s infinite ease-in-out;
+        }
+        .bg-animation .orb:nth-child(1) { width: 400px; height: 400px; background: #ff3b30; top: -100px; right: -100px; animation-delay: 0s; }
+        .bg-animation .orb:nth-child(2) { width: 300px; height: 300px; background: #ff6b00; bottom: -50px; left: -50px; animation-delay: -5s; }
+        .bg-animation .orb:nth-child(3) { width: 200px; height: 200px; background: #64b5f6; top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -10s; }
+        @keyframes floatOrb { 0%,100% { transform: translate(0,0) scale(1); } 25% { transform: translate(50px,-50px) scale(1.1); } 50% { transform: translate(-30px,30px) scale(0.9); } 75% { transform: translate(20px,-20px) scale(1.05); } }
+
+        /* ===== HEADER ===== */
         .header {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: rgba(26, 26, 46, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             padding: 16px 16px 12px;
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 2px solid #ff3b30;
+            border-bottom: 2px solid rgba(255, 59, 48, 0.3);
         }
         .header-top {
             display: flex;
@@ -37,6 +63,7 @@
         .header h1 {
             font-size: 20px;
             color: #ff3b30;
+            text-shadow: 0 0 30px rgba(255, 59, 48, 0.3);
         }
         .header h1 span { color: #fff; font-weight: 300; }
         .header .badge-group { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -45,24 +72,29 @@
             border-radius: 20px;
             font-size: 10px;
             font-weight: 600;
+            transition: 0.3s;
         }
-        .badge.ios { background: #1a3a5a; color: #64b5f6; border: 1px solid #64b5f6; }
-        .badge.ff { background: #ff3b30; color: #fff; border: 1px solid #ffcc00; }
+        .badge.ios { background: rgba(26, 58, 90, 0.8); color: #64b5f6; border: 1px solid #64b5f6; }
+        .badge.ff { background: rgba(255, 59, 48, 0.8); color: #fff; border: 1px solid #ffcc00; }
         .badge.aim { background: linear-gradient(135deg, #ff3b30, #ff6b00); color: #fff; animation: pulse 1.5s infinite; }
-        .badge.sound { background: #1a3a5a; color: #64b5f6; border: 1px solid #64b5f6; }
-        .badge.ping { background: #4caf50; color: #fff; border: 1px solid #4caf50; animation: pulse 1s infinite; }
-        .badge.pro { background: #ff6b00; color: #fff; border: 1px solid #ff6b00; animation: pulse 1s infinite; }
-        .badge.vpn { background: #9b59b6; color: #fff; border: 1px solid #9b59b6; animation: pulse 1s infinite; }
+        .badge.sound { background: rgba(26, 58, 90, 0.8); color: #64b5f6; border: 1px solid #64b5f6; }
+        .badge.ping { background: rgba(76, 175, 80, 0.8); color: #fff; border: 1px solid #4caf50; animation: pulse 1s infinite; }
+        .badge.pro { background: linear-gradient(135deg, #ff6b00, #ff3b30); color: #fff; animation: pulse 1s infinite; }
+        .badge.vpn { background: rgba(155, 89, 182, 0.8); color: #fff; border: 1px solid #9b59b6; animation: pulse 1s infinite; }
+        .badge.server { background: rgba(100, 181, 246, 0.8); color: #fff; border: 1px solid #64b5f6; animation: pulse 1s infinite; }
         @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         .header p { color: #888; font-size: 12px; margin-top: 4px; }
 
+        /* ===== STATUS BAR ===== */
         .status-bar {
-            background: #1a1a1a;
+            background: rgba(26, 26, 26, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             padding: 8px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #2a2a2a;
+            border-bottom: 1px solid rgba(42, 42, 42, 0.5);
             flex-wrap: wrap;
             gap: 4px;
             font-size: 12px;
@@ -83,61 +115,46 @@
         .status-bar .right .ios-ver { color: #64b5f6; }
         .status-bar .right .status-ok { color: #4caf50; }
         .status-bar .right .mode-active { color: #ff6b00; font-weight: 700; }
-        .status-bar .right .device-count {
-            color: #64b5f6;
-            font-weight: 600;
-            font-size: 11px;
-            background: #1a3a5a;
-            padding: 2px 10px;
-            border-radius: 20px;
-            border: 1px solid #64b5f6;
-        }
-        .status-bar .right .installed-badge {
-            color: #4caf50;
-            font-weight: 700;
-            font-size: 11px;
-            background: #1a2a1a;
-            padding: 2px 10px;
-            border-radius: 20px;
-            border: 1px solid #4caf50;
-            animation: pulse 1s infinite;
-        }
-        .status-bar .right .vpn-status {
-            color: #9b59b6;
-            font-weight: 600;
-            font-size: 11px;
-            background: #1a1a2a;
-            padding: 2px 10px;
-            border-radius: 20px;
-            border: 1px solid #9b59b6;
-        }
+        .status-bar .right .vpn-status { color: #9b59b6; font-weight: 600; font-size: 11px; background: rgba(155, 89, 182, 0.2); padding: 2px 10px; border-radius: 20px; border: 1px solid #9b59b6; }
+        .status-bar .right .server-status { color: #64b5f6; font-weight: 600; font-size: 11px; background: rgba(100, 181, 246, 0.2); padding: 2px 10px; border-radius: 20px; border: 1px solid #64b5f6; }
 
+        /* ===== TABS ===== */
         .tabs {
             display: flex; gap: 6px; padding: 0 16px 10px;
-            overflow-x: auto; background: #0a0a0a;
+            overflow-x: auto; background: transparent;
         }
         .tabs::-webkit-scrollbar { display: none; }
         .tabs .tab {
-            padding: 5px 14px; border-radius: 20px; background: #1a1a1a;
-            color: #888; font-size: 12px; white-space: nowrap; cursor: pointer;
-            border: 1px solid transparent; transition: 0.3s;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: rgba(26, 26, 26, 0.6);
+            color: #888;
+            font-size: 12px;
+            white-space: nowrap;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: 0.3s;
+            backdrop-filter: blur(10px);
         }
-        .tabs .tab.active { background: #ff3b30; color: #fff; border-color: #ff3b30; }
+        .tabs .tab.active { background: rgba(255, 59, 48, 0.8); color: #fff; border-color: #ff3b30; box-shadow: 0 0 20px rgba(255, 59, 48, 0.2); }
+        .tabs .tab:hover { border-color: #ff3b30; }
 
         .container { padding: 0 16px; }
 
-        /* ===== PING + VPN SECTION ===== */
-        .ping-section {
-            background: linear-gradient(135deg, #1a2a3a, #0a1a2a);
-            border-radius: 12px;
+        /* ===== CONNECTION SECTION ===== */
+        .connection-section {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
             padding: 16px;
             margin: 10px 0;
-            border: 2px solid #64b5f6;
+            border: 1px solid rgba(42, 42, 42, 0.3);
             position: relative;
             overflow: hidden;
         }
-        .ping-section::before { content: '📡'; position: absolute; top: -20px; right: -20px; font-size: 80px; opacity: 0.05; }
-        .ping-section .ping-header {
+        .connection-section::before { content: '🔗'; position: absolute; top: -20px; right: -20px; font-size: 60px; opacity: 0.05; }
+        .connection-section .conn-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -146,9 +163,9 @@
             position: relative;
             z-index: 1;
         }
-        .ping-section .ping-header h3 { font-size: 16px; color: #64b5f6; }
-        .ping-section .ping-header h3 span { color: #fff; }
-        .ping-section .ping-header .ping-badge {
+        .connection-section .conn-header h3 { font-size: 16px; color: #64b5f6; }
+        .connection-section .conn-header h3 span { color: #fff; }
+        .connection-section .conn-header .conn-badge {
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 11px;
@@ -156,38 +173,39 @@
             color: #fff;
             animation: pulse 1s infinite;
         }
-        .ping-section .ping-header .ping-badge.online { background: #4caf50; }
-        .ping-section .ping-header .ping-badge.offline { background: #ff3b30; animation: none; }
-        .ping-section .ping-header .ping-badge.checking { background: #ffcc00; color: #000; }
+        .conn-badge.online { background: #4caf50; }
+        .conn-badge.offline { background: #ff3b30; animation: none; }
+        .conn-badge.checking { background: #ffcc00; color: #000; }
 
-        .ping-section .ping-status {
+        .connection-section .conn-status {
             display: flex;
             align-items: center;
             gap: 8px;
             margin: 10px 0;
             padding: 10px 14px;
-            background: #0a0a0a;
-            border-radius: 8px;
-            border: 1px solid #2a2a2a;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid rgba(42, 42, 42, 0.5);
             position: relative;
             z-index: 1;
+            flex-wrap: wrap;
         }
-        .ping-section .ping-status .info { flex: 1; }
-        .ping-section .ping-status .info .title { font-size: 13px; font-weight: 600; }
-        .ping-section .ping-status .info .sub { font-size: 11px; color: #888; }
-        .ping-section .ping-status .status-text { font-weight: 700; font-size: 13px; }
-        .ping-section .ping-status .status-text.ready { color: #64b5f6; }
-        .ping-section .ping-status .status-text.connected { color: #4caf50; animation: pulse 1s infinite; }
-        .ping-section .ping-status .status-text.disconnected { color: #ff3b30; }
-        .ping-section .ping-status .status-text.sending { color: #9b59b6; animation: pulse 0.5s infinite; }
+        .connection-section .conn-status .info { flex: 1; min-width: 120px; }
+        .connection-section .conn-status .info .title { font-size: 13px; font-weight: 600; }
+        .connection-section .conn-status .info .sub { font-size: 11px; color: #888; }
+        .connection-section .conn-status .status-text { font-weight: 700; font-size: 13px; }
+        .connection-section .conn-status .status-text.ready { color: #64b5f6; }
+        .connection-section .conn-status .status-text.connected { color: #4caf50; animation: pulse 1s infinite; }
+        .connection-section .conn-status .status-text.disconnected { color: #ff3b30; }
+        .connection-section .conn-status .status-text.vpn { color: #9b59b6; }
 
-        .ping-section .ping-actions {
+        .connection-section .conn-actions {
             display: flex; gap: 8px; flex-wrap: wrap;
             position: relative; z-index: 1;
         }
-        .ping-section .ping-actions .btn {
+        .connection-section .conn-actions .btn {
             padding: 10px 20px;
-            border-radius: 10px;
+            border-radius: 12px;
             border: none;
             font-weight: 700;
             font-size: 13px;
@@ -200,88 +218,82 @@
             justify-content: center;
             min-width: 100px;
         }
-        .ping-section .ping-actions .btn-ping {
+        .connection-section .conn-actions .btn:active { transform: scale(0.98); }
+        .connection-section .conn-actions .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .btn-server {
             background: linear-gradient(135deg, #64b5f6, #1a3a5a);
             color: #fff;
-            box-shadow: 0 0 20px rgba(100, 181, 246, 0.3);
+            box-shadow: 0 0 20px rgba(100, 181, 246, 0.2);
         }
-        .ping-section .ping-actions .btn-ping:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(100, 181, 246, 0.5); }
-        .ping-section .ping-actions .btn-ping:active { transform: scale(0.98); }
-        .ping-section .ping-actions .btn-ping:disabled { opacity: 0.5; cursor: not-allowed; }
-        .ping-section .ping-actions .btn-ping.active {
-            background: linear-gradient(135deg, #4caf50, #2e7d32);
-            box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
-        }
-        .ping-section .ping-actions .btn-vpn {
+        .btn-server:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(100, 181, 246, 0.3); }
+        .btn-server.active { background: linear-gradient(135deg, #4caf50, #2e7d32); box-shadow: 0 0 20px rgba(76, 175, 80, 0.3); }
+        
+        .btn-vpn {
             background: linear-gradient(135deg, #9b59b6, #6c3483);
             color: #fff;
-            box-shadow: 0 0 20px rgba(155, 89, 182, 0.3);
+            box-shadow: 0 0 20px rgba(155, 89, 182, 0.2);
         }
-        .ping-section .ping-actions .btn-vpn:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(155, 89, 182, 0.5); }
-        .ping-section .ping-actions .btn-vpn.active {
-            background: linear-gradient(135deg, #4caf50, #2e7d32);
-            box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
-        }
+        .btn-vpn:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(155, 89, 182, 0.3); }
+        .btn-vpn.active { background: linear-gradient(135deg, #4caf50, #2e7d32); box-shadow: 0 0 20px rgba(76, 175, 80, 0.3); }
 
-        /* ===== THIẾT BỊ ĐÃ KẾT NỐI ===== */
-        .device-list {
+        .btn-ws {
+            background: linear-gradient(135deg, #ff6b00, #ff3b30);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(255, 107, 0, 0.2);
+        }
+        .btn-ws:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(255, 107, 0, 0.3); }
+        .btn-ws.active { background: linear-gradient(135deg, #4caf50, #2e7d32); box-shadow: 0 0 20px rgba(76, 175, 80, 0.3); }
+
+        .btn-auto {
+            background: rgba(42, 42, 42, 0.6);
+            color: #fff;
+        }
+        .btn-auto:hover { background: rgba(58, 58, 58, 0.6); }
+        .btn-auto.active { background: linear-gradient(135deg, #ff6b00, #ff3b30); box-shadow: 0 0 20px rgba(255, 107, 0, 0.3); }
+
+        /* ===== LOG PANEL ===== */
+        .log-panel {
             margin-top: 10px;
-            padding: 10px 14px;
-            background: #0a0a0a;
-            border-radius: 8px;
-            border: 1px solid #2a2a2a;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            border: 1px solid rgba(42, 42, 42, 0.5);
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 10px;
+            font-family: monospace;
+            color: #4caf50;
+            display: none;
             position: relative;
             z-index: 1;
-            display: none;
         }
-        .device-list.show { display: block; }
-        .device-list .device-title {
-            font-size: 11px;
-            color: #888;
-            margin-bottom: 6px;
-        }
-        .device-list .device-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 4px 8px;
-            background: #141414;
-            border-radius: 6px;
-            margin-bottom: 4px;
-            border: 1px solid #1a2a1a;
-        }
-        .device-list .device-item .dev-icon { font-size: 16px; }
-        .device-list .device-item .dev-name {
-            font-size: 12px;
-            font-weight: 600;
-            color: #fff;
-            flex: 1;
-        }
-        .device-list .device-item .dev-status {
-            font-size: 10px;
-            color: #4caf50;
-            font-weight: 600;
-        }
-        .device-list .device-item .dev-status.offline {
-            color: #ff3b30;
-        }
-        .device-list .device-item .dev-ip {
-            font-size: 10px;
-            color: #888;
-        }
+        .log-panel.show { display: block; }
+        .log-panel .log-item { padding: 2px 0; border-bottom: 1px solid rgba(26, 26, 26, 0.3); }
+        .log-panel .log-item .log-time { color: #888; }
+        .log-panel .log-item .log-ok { color: #4caf50; }
+        .log-panel .log-item .log-error { color: #ff3b30; }
+        .log-panel .log-item .log-info { color: #64b5f6; }
+        .log-panel .log-item .log-vpn { color: #9b59b6; }
+        .log-panel .log-item .log-server { color: #ffcc00; }
 
         /* ===== MODE CARDS ===== */
         .mode-card {
-            background: #141414;
-            border-radius: 12px;
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
             padding: 16px;
             margin-bottom: 10px;
-            border-left: 4px solid #2a2a2a;
+            border-left: 4px solid rgba(42, 42, 42, 0.5);
             transition: 0.3s;
+            border: 1px solid rgba(42, 42, 42, 0.3);
         }
         .mode-card.active {
             border-left-color: #4caf50;
-            background: #1a2a1a;
+            background: rgba(26, 42, 26, 0.4);
+            border-color: rgba(76, 175, 80, 0.3);
+            box-shadow: 0 0 30px rgba(76, 175, 80, 0.05);
         }
         .mode-card .card-top {
             display: flex;
@@ -313,16 +325,16 @@
             margin-top: 4px;
         }
         .mode-card .mode-meta .tag {
-            background: #2a2a2a;
+            background: rgba(42, 42, 42, 0.5);
             padding: 1px 8px;
             border-radius: 20px;
             font-size: 9px;
             color: #ccc;
         }
-        .mode-card .mode-meta .tag.headshot { background: #ff6b00; color: #fff; font-weight: 700; }
-        .mode-card .mode-meta .tag.ghim { background: #4caf50; color: #fff; font-weight: 700; }
-        .mode-card .mode-meta .tag.vip { background: #ff3b30; color: #fff; }
-        .mode-card .mode-meta .tag.pro { background: #ff6b00; color: #fff; font-weight: 700; }
+        .mode-card .mode-meta .tag.headshot { background: rgba(255, 107, 0, 0.3); color: #ff6b00; font-weight: 700; }
+        .mode-card .mode-meta .tag.ghim { background: rgba(76, 175, 80, 0.3); color: #4caf50; font-weight: 700; }
+        .mode-card .mode-meta .tag.vip { background: rgba(255, 59, 48, 0.3); color: #ff3b30; }
+        .mode-card .mode-meta .tag.pro { background: rgba(255, 107, 0, 0.3); color: #ff6b00; font-weight: 700; }
 
         .mode-card .right-side {
             display: flex;
@@ -339,10 +351,11 @@
 
         .toggle {
             position: relative; width: 42px; height: 24px;
-            background: #2a2a2a; border-radius: 50px; cursor: pointer;
+            background: rgba(42, 42, 42, 0.6);
+            border-radius: 50px; cursor: pointer;
             transition: 0.3s; flex-shrink: 0;
         }
-        .toggle.active { background: #4caf50; }
+        .toggle.active { background: #4caf50; box-shadow: 0 0 20px rgba(76, 175, 80, 0.3); }
         .toggle .slider {
             position: absolute; top: 2px; left: 2px;
             width: 20px; height: 20px; background: #fff;
@@ -351,15 +364,17 @@
         }
         .toggle.active .slider { left: 20px; }
 
+        /* ===== AIM DATA ===== */
         .aim-data {
             margin-top: 10px;
-            padding: 10px;
-            background: #0a0a0a;
-            border-radius: 8px;
-            border: 1px solid #2a2a2a;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid rgba(42, 42, 42, 0.5);
             display: none;
         }
-        .aim-data.show { display: block; }
+        .aim-data.show { display: block; animation: fadeSlide 0.3s ease; }
+        @keyframes fadeSlide { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         .aim-data .aim-title {
             font-size: 11px;
             color: #888;
@@ -373,7 +388,7 @@
             color: #ff6b00;
             font-weight: 700;
             font-size: 12px;
-            background: #1a1a1a;
+            background: rgba(26, 26, 26, 0.5);
             padding: 1px 10px;
             border-radius: 20px;
             border: 1px solid #ff6b00;
@@ -381,7 +396,7 @@
         .aim-data .aim-title .mode-active-label {
             color: #4caf50;
             font-size: 10px;
-            background: #1a2a1a;
+            background: rgba(26, 42, 26, 0.5);
             padding: 1px 8px;
             border-radius: 20px;
             border: 1px solid #4caf50;
@@ -396,7 +411,7 @@
             display: flex;
             justify-content: space-between;
             padding: 3px 0;
-            border-bottom: 1px solid #1a1a1a;
+            border-bottom: 1px solid rgba(26, 26, 26, 0.5);
             font-size: 12px;
         }
         .aim-item .label { color: #888; }
@@ -404,11 +419,33 @@
         .aim-item .value.green { color: #4caf50; }
         .aim-item .value.gold { color: #ffcc00; }
         .aim-item .value.orange { color: #ff6b00; font-weight: 700; }
-        .aim-item .value.red { color: #ff0000; font-weight: 700; }
         .aim-item .value.blue { color: #64b5f6; }
         .aim-item .value.purple { color: #9b59b6; }
 
-        .weapon-aim { margin-top: 8px; padding-top: 8px; border-top: 1px solid #1a1a1a; }
+        .aim-quality {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(26, 26, 26, 0.5);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 12px;
+        }
+        .aim-quality .quality-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            border: 1px solid rgba(26, 26, 26, 0.5);
+        }
+        .aim-quality .quality-item .q-label { font-size: 10px; color: #888; }
+        .aim-quality .quality-item .q-value { font-size: 12px; font-weight: 700; }
+        .aim-quality .quality-item .q-value.smooth { color: #64b5f6; }
+        .aim-quality .quality-item .q-value.accurate { color: #ff6b00; }
+        .aim-quality .quality-item .q-value.sticky { color: #4caf50; }
+
+        .weapon-aim { margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(26, 26, 26, 0.5); }
         .weapon-aim .weapon-title { font-size: 10px; color: #888; margin-bottom: 4px; }
         .weapon-grid {
             display: grid;
@@ -419,7 +456,7 @@
             display: flex;
             justify-content: space-between;
             padding: 2px 5px;
-            background: #0a0a0a;
+            background: rgba(0, 0, 0, 0.3);
             border-radius: 4px;
             font-size: 9px;
         }
@@ -441,47 +478,23 @@
             margin-bottom: 2px;
         }
         .aim-bar {
-            width: 100%; height: 5px; background: #1a1a1a;
+            width: 100%; height: 5px; background: rgba(26, 26, 26, 0.5);
             border-radius: 10px; overflow: hidden;
         }
         .aim-bar .fill {
-            height: 100%; border-radius: 10px; transition: width 0.5s; width: 0%;
+            height: 100%; border-radius: 10px; transition: width 0.8s ease; width: 0%;
         }
         .aim-bar .fill.orange { background: linear-gradient(90deg, #ff6b00, #ff9800); animation: glowOrange 1.5s infinite; }
         .aim-bar .fill.gold { background: linear-gradient(90deg, #ffcc00, #ff9800); }
         .aim-bar .fill.blue { background: linear-gradient(90deg, #2196f3, #64b5f6); }
         .aim-bar .fill.green { background: linear-gradient(90deg, #4caf50, #8bc34a); }
-        .aim-bar .fill.red { background: linear-gradient(90deg, #ff0000, #ff4444); }
         .aim-bar .fill.purple { background: linear-gradient(90deg, #9b59b6, #8e44ad); }
         @keyframes glowOrange { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
-
-        .aim-quality {
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px solid #1a1a1a;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px 12px;
-        }
-        .aim-quality .quality-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 4px 8px;
-            background: #0a0a0a;
-            border-radius: 6px;
-            border: 1px solid #1a1a1a;
-        }
-        .aim-quality .quality-item .q-label { font-size: 10px; color: #888; }
-        .aim-quality .quality-item .q-value { font-size: 12px; font-weight: 700; }
-        .aim-quality .quality-item .q-value.smooth { color: #64b5f6; }
-        .aim-quality .quality-item .q-value.accurate { color: #ff6b00; }
-        .aim-quality .quality-item .q-value.sticky { color: #4caf50; }
 
         .btn-download-config {
             margin-top: 10px;
             padding: 10px 16px;
-            border-radius: 8px;
+            border-radius: 10px;
             border: none;
             font-weight: 700;
             font-size: 13px;
@@ -489,27 +502,23 @@
             transition: 0.3s;
             background: linear-gradient(135deg, #2196f3, #1565c0);
             color: #fff;
-            box-shadow: 0 0 20px rgba(33, 150, 243, 0.3);
+            box-shadow: 0 0 20px rgba(33, 150, 243, 0.2);
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
         }
-        .btn-download-config:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(33, 150, 243, 0.5); }
+        .btn-download-config:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(33, 150, 243, 0.3); }
         .btn-download-config:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-        .btn-download-config.installed {
-            background: linear-gradient(135deg, #4caf50, #2e7d32);
-            box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
-        }
-        .btn-download-config.installed:hover { box-shadow: 0 0 30px rgba(76, 175, 80, 0.5); }
 
         .config-section {
-            background: #141414;
-            border-radius: 12px;
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
             padding: 14px;
             margin: 10px 0;
-            border: 1px solid #2a2a2a;
+            border: 1px solid rgba(42, 42, 42, 0.3);
         }
         .config-section .config-header {
             display: flex;
@@ -533,9 +542,9 @@
             gap: 6px;
             margin: 8px 0;
             padding: 8px 12px;
-            background: #0a0a0a;
+            background: rgba(0, 0, 0, 0.3);
             border-radius: 8px;
-            border: 1px solid #2a2a2a;
+            border: 1px solid rgba(42, 42, 42, 0.5);
             font-size: 12px;
         }
         .config-section .config-status .info { flex: 1; }
@@ -568,15 +577,15 @@
         .config-actions .btn-primary:hover { background: #e0352b; }
         .config-actions .btn-success { background: #4caf50; color: #fff; }
         .config-actions .btn-success:hover { background: #3d8b40; }
-        .config-actions .btn-secondary { background: #2a2a2a; color: #fff; }
-        .config-actions .btn-secondary:hover { background: #3a3a3a; }
+        .config-actions .btn-secondary { background: rgba(42, 42, 42, 0.5); color: #fff; }
+        .config-actions .btn-secondary:hover { background: rgba(58, 58, 58, 0.5); }
 
         .footer {
             text-align: center;
             padding: 16px;
             color: #444;
             font-size: 11px;
-            border-top: 1px solid #1a1a1a;
+            border-top: 1px solid rgba(26, 26, 26, 0.5);
             margin-top: 10px;
         }
         .footer .highlight { color: #ffcc00; }
@@ -586,7 +595,7 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: #2a2a2a;
+            background: rgba(42, 42, 42, 0.9);
             color: #fff;
             padding: 10px 20px;
             border-radius: 10px;
@@ -596,31 +605,87 @@
             border: 1px solid #ff3b30;
             text-align: center;
             max-width: 90%;
+            backdrop-filter: blur(20px);
         }
         .toast.show { display: block; }
 
-        .log-panel {
-            margin-top: 10px;
-            padding: 10px;
-            background: #0a0a0a;
-            border-radius: 8px;
-            border: 1px solid #2a2a2a;
-            max-height: 150px;
-            overflow-y: auto;
-            font-size: 10px;
-            font-family: monospace;
-            color: #4caf50;
+        /* ===== FLOATING MENU ===== */
+        .floating-menu {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            z-index: 999;
             display: none;
-            position: relative;
-            z-index: 1;
+            flex-direction: column;
+            gap: 10px;
         }
-        .log-panel.show { display: block; }
-        .log-panel .log-item { padding: 2px 0; border-bottom: 1px solid #1a1a1a; }
-        .log-panel .log-item .log-time { color: #888; }
-        .log-panel .log-item .log-ok { color: #4caf50; }
-        .log-panel .log-item .log-error { color: #ff3b30; }
-        .log-panel .log-item .log-info { color: #64b5f6; }
-        .log-panel .log-item .log-vpn { color: #9b59b6; }
+        .floating-menu.show { display: flex; }
+        .floating-menu .menu-btn {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .floating-menu .menu-btn:hover { transform: scale(1.1); }
+        .floating-menu .menu-btn.aim { background: linear-gradient(135deg, #ff3b30, #ff6b00); color: #fff; }
+        .floating-menu .menu-btn.aim.active { background: #4caf50; animation: pulse 0.5s infinite; }
+        .floating-menu .menu-btn.stop { background: #2a2a2a; color: #fff; }
+        .floating-menu .menu-btn.status { background: #1a3a5a; color: #64b5f6; }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            z-index: 9998;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .loading-overlay.show { display: flex; }
+        .loading-overlay .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top: 4px solid #ff3b30;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loading-overlay .loading-text {
+            font-size: 16px;
+            color: #fff;
+            animation: pulse 1s infinite;
+        }
+        .loading-overlay .loading-progress {
+            width: 250px;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .loading-overlay .loading-progress .bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff3b30, #ff6b00);
+            border-radius: 10px;
+            transition: width 0.3s;
+            width: 0%;
+        }
 
         @media (max-width: 480px) {
             .header h1 { font-size: 18px; }
@@ -629,10 +694,35 @@
             .aim-quality { grid-template-columns: 1fr; }
             .mode-card .right-side { width: 100%; justify-content: flex-end; }
             .config-actions .btn { min-width: 70px; font-size: 11px; padding: 6px 10px; }
+            .connection-section .conn-actions .btn { min-width: 80px; font-size: 12px; padding: 8px 12px; }
+            .connection-section .conn-status { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
 <body>
+
+    <!-- ===== BACKGROUND ===== -->
+    <div class="bg-animation">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
+    <!-- ===== LOADING OVERLAY ===== -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loadingText">🚀 Đang kết nối...</div>
+        <div class="loading-progress">
+            <div class="bar" id="loadingBar"></div>
+        </div>
+    </div>
+
+    <!-- ===== FLOATING MENU ===== -->
+    <div class="floating-menu" id="floatingMenu">
+        <button class="menu-btn aim" id="btnAim" onclick="toggleAim()">🎯</button>
+        <button class="menu-btn status" onclick="getStatus()">📊</button>
+        <button class="menu-btn stop" onclick="stopAll()">⏹</button>
+    </div>
 
     <!-- ===== HEADER ===== -->
     <div class="header">
@@ -647,8 +737,8 @@
                 <span class="badge aim">🎯 AIM PRO</span>
                 <span class="badge pro">⚡ PRO</span>
                 <span class="badge sound">🔊 Âm thanh</span>
-                <span class="badge ping">📡 Ping</span>
                 <span class="badge vpn">🔒 VPN</span>
+                <span class="badge server">🌐 Server</span>
             </div>
         </div>
     </div>
@@ -666,17 +756,16 @@
             <span class="ios-ver" id="iosVersionDisplay">iOS 16.6</span>
             <span class="status-ok">✅ Sẵn sàng</span>
             <span class="mode-active" id="modeActive">⬜ Chưa chọn</span>
-            <span class="device-count" id="deviceCount">📱 0 thiết bị</span>
-            <span class="installed-badge" id="installedBadge" style="display:none;">✅ Đã cài</span>
             <span class="vpn-status" id="vpnStatus">🔒 VPN: OFF</span>
+            <span class="server-status" id="serverStatus">🌐 Server: OFF</span>
         </div>
     </div>
 
     <!-- ===== IOS SELECTOR ===== -->
     <div class="container">
-        <div class="ios-selector" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:6px 0 4px;padding:6px 10px;background:#0a0a0a;border-radius:8px;border:1px solid #2a2a2a;">
+        <div class="ios-selector" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:6px 0 4px;padding:6px 10px;background:rgba(0,0,0,0.3);border-radius:10px;border:1px solid rgba(42,42,42,0.5);">
             <label style="font-size:12px;color:#888;">📱 Chọn iOS:</label>
-            <select id="iosVersionSelect" style="padding:4px 10px;border-radius:6px;border:1px solid #2a2a2a;background:#1a1a1a;color:#fff;font-size:12px;outline:none;cursor:pointer;">
+            <select id="iosVersionSelect" style="padding:4px 10px;border-radius:6px;border:1px solid rgba(42,42,42,0.5);background:rgba(26,26,26,0.5);color:#fff;font-size:12px;outline:none;cursor:pointer;">
                 <option value="16.0">iOS 16.0</option><option value="16.1">iOS 16.1</option>
                 <option value="16.2">iOS 16.2</option><option value="16.3">iOS 16.3</option>
                 <option value="16.4">iOS 16.4</option><option value="16.5">iOS 16.5</option>
@@ -697,58 +786,37 @@
                 <option value="20.4">iOS 20.4</option><option value="20.5">iOS 20.5</option>
                 <option value="20.6">iOS 20.6</option>
             </select>
-            <span style="color:#ffcc00;font-size:10px;background:#1a1a1a;padding:2px 8px;border-radius:20px;border:1px solid #ffcc00;">🔥 FF Max</span>
-            <span style="color:#ff6b00;font-size:10px;background:#1a1a1a;padding:2px 8px;border-radius:20px;border:1px solid #ff6b00;">🎯 AIM PRO</span>
-            <span style="color:#9b59b6;font-size:10px;background:#1a1a2a;padding:2px 8px;border-radius:20px;border:1px solid #9b59b6;">🔒 VPN</span>
+            <span style="color:#ffcc00;font-size:10px;background:rgba(26,26,26,0.5);padding:2px 8px;border-radius:20px;border:1px solid #ffcc00;">🔥 FF Max</span>
+            <span style="color:#ff6b00;font-size:10px;background:rgba(26,26,26,0.5);padding:2px 8px;border-radius:20px;border:1px solid #ff6b00;">🎯 AIM PRO</span>
+            <span style="color:#9b59b6;font-size:10px;background:rgba(155,89,182,0.2);padding:2px 8px;border-radius:20px;border:1px solid #9b59b6;">🔒 VPN</span>
+            <span style="color:#64b5f6;font-size:10px;background:rgba(100,181,246,0.2);padding:2px 8px;border-radius:20px;border:1px solid #64b5f6;">🌐 Server</span>
         </div>
     </div>
 
-    <!-- ===== PING + VPN SECTION ===== -->
+    <!-- ===== CONNECTION SECTION ===== -->
     <div class="container">
-        <div class="ping-section">
-            <div class="ping-header">
-                <h3>📡 <span>KẾT NỐI PROXY + VPN</span></h3>
-                <span class="ping-badge offline" id="pingBadge">⛔ OFFLINE</span>
+        <div class="connection-section">
+            <div class="conn-header">
+                <h3>🔗 <span>KẾT NỐI VPN + SERVER</span></h3>
+                <span class="conn-badge offline" id="connBadge">⛔ OFFLINE</span>
             </div>
-            <div class="ping-status">
+            <div class="conn-status">
                 <div class="info">
                     <div class="title">Trạng thái kết nối</div>
-                    <div class="sub" id="pingSubStatus">Nhấn "PING" để kiểm tra và gửi dữ liệu AIM</div>
+                    <div class="sub" id="connSubStatus">Kết nối VPN và Server để bắt đầu</div>
                 </div>
-                <span class="status-text ready" id="pingStatusText">📡 Chưa ping</span>
+                <span class="status-text ready" id="connStatusText">📡 Sẵn sàng</span>
             </div>
-            <div class="ping-actions">
-                <button class="btn btn-ping" id="btnPing" onclick="pingAndSendAIM()">📡 PING + GỬI AIM</button>
+            <div class="conn-actions">
+                <button class="btn btn-server" id="btnServer" onclick="connectServer()">🌐 Kết nối Server</button>
                 <button class="btn btn-vpn" id="btnVPN" onclick="toggleVPN()">🔒 VPN</button>
-                <button class="btn btn-ping active" id="btnAutoPing" onclick="toggleAutoPing()">🔄 Tự động</button>
+                <button class="btn btn-ws" id="btnWS" onclick="connectWebSocket()">🔌 WebSocket</button>
+                <button class="btn btn-auto" id="btnAuto" onclick="toggleAutoConnect()">🔄 Tự động</button>
             </div>
-            
             <!-- LOG PANEL -->
-            <div class="log-panel" id="logPanel">
-                <div class="log-item"><span class="log-time">[System]</span> <span class="log-info">📡 Đã kết nối server</span></div>
-            </div>
-
-            <!-- DANH SÁCH THIẾT BỊ -->
-            <div class="device-list" id="deviceList">
-                <div class="device-title">📱 Thiết bị đã kết nối</div>
-                <div class="device-item">
-                    <span class="dev-icon">📱</span>
-                    <span class="dev-name" id="deviceName">iPhone 14 Pro Max</span>
-                    <span class="dev-ip" id="deviceIP">192.168.1.100</span>
-                    <span class="dev-status" id="deviceStatus">✅ Online</span>
-                </div>
-                <div class="device-item" id="device2" style="display:none;">
-                    <span class="dev-icon">📱</span>
-                    <span class="dev-name" id="deviceName2">iPhone 15 Pro</span>
-                    <span class="dev-ip" id="deviceIP2">192.168.1.101</span>
-                    <span class="dev-status" id="deviceStatus2">✅ Online</span>
-                </div>
-                <div class="device-item" id="device3" style="display:none;">
-                    <span class="dev-icon">📱</span>
-                    <span class="dev-name" id="deviceName3">iPad Pro</span>
-                    <span class="dev-ip" id="deviceIP3">192.168.1.102</span>
-                    <span class="dev-status" id="deviceStatus3">✅ Online</span>
-                </div>
+            <div class="log-panel show" id="logPanel">
+                <div class="log-item"><span class="log-time">[System]</span> <span class="log-info">🚀 App đã sẵn sàng!</span></div>
+                <div class="log-item"><span class="log-time">[System]</span> <span class="log-info">📡 IP: 192.168.1.8</span></div>
             </div>
         </div>
     </div>
@@ -779,8 +847,8 @@
                 <span class="status-text">✅ Sẵn sàng</span>
             </div>
             <div class="config-actions">
-                <button class="btn btn-primary" id="btnDownloadAll">📥 Tải tất cả MobileConfig</button>
-                <button class="btn btn-success" id="btnActivateAll">🚀 Kích hoạt tất cả</button>
+                <button class="btn btn-primary" id="btnDownloadAll">📥 Tải tất cả</button>
+                <button class="btn btn-success" id="btnActivateAll">🚀 Kích hoạt</button>
                 <button class="btn btn-secondary" id="btnExportJSON">📤 Xuất JSON</button>
             </div>
         </div>
@@ -789,14 +857,292 @@
     <!-- ===== FOOTER ===== -->
     <div class="footer">
         <p class="highlight">🔥 Free Fire Max • com.dts.freefiremax</p>
-        <p>🎯 AIM PRO • Cổ - Đầu - Trên đầu • Độ mượt • Độ chính xác</p>
-        <p style="color:#64b5f6;font-size:10px;">🔊 Âm thanh • 📡 Ping + Gửi AIM • 🔒 VPN • ⚡ PRO</p>
+        <p>🎯 AIM PRO • Cổ - Đầu - Trên đầu • VPN + Server</p>
+        <p style="color:#64b5f6;font-size:10px;">🔊 Âm thanh • 🔒 VPN • 🌐 Server • ⚡ PRO</p>
     </div>
 
     <!-- ===== TOAST ===== -->
     <div class="toast" id="toast"></div>
 
     <script>
+        // ============================================================
+        // CONFIG
+        // ============================================================
+        const CONFIG = {
+            server_ip: '192.168.1.8',
+            http_port: 8080,
+            ws_port: 8081,
+            vpn_server: 'vpn.proxyff.com',
+            vpn_port: 443
+        };
+
+        // ============================================================
+        // STATE
+        // ============================================================
+        let serverConnected = false;
+        let vpnConnected = false;
+        let wsConnected = false;
+        let autoConnect = false;
+        let autoConnectInterval = null;
+
+        // ============================================================
+        // LOG
+        // ============================================================
+        function addLog(message, type = 'info') {
+            const logPanel = document.getElementById('logPanel');
+            const now = new Date();
+            const time = now.getHours().toString().padStart(2, '0') + ':' + 
+                         now.getMinutes().toString().padStart(2, '0') + ':' +
+                         now.getSeconds().toString().padStart(2, '0');
+            
+            const colors = {
+                'ok': 'log-ok',
+                'error': 'log-error',
+                'info': 'log-info',
+                'vpn': 'log-vpn',
+                'server': 'log-server'
+            };
+            
+            const logItem = document.createElement('div');
+            logItem.className = 'log-item';
+            logItem.innerHTML = `<span class="log-time">[${time}]</span> <span class="${colors[type] || 'log-info'}">${message}</span>`;
+            logPanel.appendChild(logItem);
+            logPanel.scrollTop = logPanel.scrollHeight;
+            
+            // Giới hạn log
+            while (logPanel.children.length > 50) {
+                logPanel.removeChild(logPanel.firstChild);
+            }
+        }
+
+        // ============================================================
+        // CONNECT SERVER
+        // ============================================================
+        function connectServer() {
+            const btn = document.getElementById('btnServer');
+            const statusText = document.getElementById('connStatusText');
+            const subStatus = document.getElementById('connSubStatus');
+            const badge = document.getElementById('connBadge');
+            const dot = document.getElementById('statusDot');
+            const statusMain = document.getElementById('statusText');
+            const serverStatus = document.getElementById('serverStatus');
+
+            if (serverConnected) {
+                showToast('⏳ Server đã kết nối!');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = '⏳ ĐANG KẾT NỐI...';
+            statusText.textContent = '⏳ Đang kết nối server...';
+            statusText.className = 'status-text ready';
+            subStatus.textContent = `Đang kết nối tới ${CONFIG.server_ip}:${CONFIG.http_port}...`;
+            badge.className = 'conn-badge checking';
+            badge.textContent = '⏳ CHECKING';
+            dot.className = 'dot checking';
+            statusMain.textContent = '⏳ Đang kết nối...';
+
+            addLog(`🌐 Đang kết nối server ${CONFIG.server_ip}:${CONFIG.http_port}...`, 'server');
+
+            // Ping HTTP thật
+            fetch(`http://${CONFIG.server_ip}:${CONFIG.http_port}/ping`, {
+                method: 'GET',
+                mode: 'no-cors',
+                signal: AbortSignal.timeout(3000)
+            })
+            .then(() => {
+                serverConnected = true;
+                btn.disabled = false;
+                btn.textContent = '🌐 Server: ON';
+                btn.classList.add('active');
+                statusText.textContent = '✅ Server Online!';
+                statusText.className = 'status-text connected';
+                subStatus.textContent = `✅ Đã kết nối server ${CONFIG.server_ip}:${CONFIG.http_port}`;
+                badge.className = 'conn-badge online';
+                badge.textContent = '🟢 ONLINE';
+                dot.className = 'dot online';
+                statusMain.textContent = '✅ Server Online';
+                serverStatus.textContent = '🌐 Server: ON';
+                serverStatus.style.color = '#4caf50';
+                addLog('✅ Server kết nối thành công!', 'server');
+                showToast('✅ Đã kết nối Server!');
+                playSound('on');
+                
+                // Tự động kết nối WebSocket
+                setTimeout(connectWebSocket, 500);
+            })
+            .catch(() => {
+                serverConnected = false;
+                btn.disabled = false;
+                btn.textContent = '🌐 Kết nối Server';
+                btn.classList.remove('active');
+                statusText.textContent = '❌ Server Offline!';
+                statusText.className = 'status-text disconnected';
+                subStatus.textContent = `❌ Không kết nối được server ${CONFIG.server_ip}:${CONFIG.http_port}`;
+                badge.className = 'conn-badge offline';
+                badge.textContent = '⛔ OFFLINE';
+                dot.className = 'dot offline';
+                statusMain.textContent = '❌ Server Offline';
+                serverStatus.textContent = '🌐 Server: OFF';
+                serverStatus.style.color = '#ff3b30';
+                addLog('❌ Server kết nối thất bại!', 'error');
+                showToast('❌ Không kết nối được Server!');
+                playSound('off');
+            });
+        }
+
+        // ============================================================
+        // TOGGLE VPN
+        // ============================================================
+        function toggleVPN() {
+            const btn = document.getElementById('btnVPN');
+            const vpnStatus = document.getElementById('vpnStatus');
+            
+            vpnConnected = !vpnConnected;
+            
+            if (vpnConnected) {
+                btn.textContent = '🔒 VPN: ON';
+                btn.classList.add('active');
+                vpnStatus.textContent = '🔒 VPN: ON';
+                vpnStatus.style.color = '#9b59b6';
+                addLog('🔒 VPN đã bật!', 'vpn');
+                showToast('🔒 Đã bật VPN!');
+                playSound('click');
+            } else {
+                btn.textContent = '🔒 VPN';
+                btn.classList.remove('active');
+                vpnStatus.textContent = '🔒 VPN: OFF';
+                vpnStatus.style.color = '#888';
+                addLog('🔒 VPN đã tắt', 'vpn');
+                showToast('🔒 Đã tắt VPN');
+                playSound('off');
+            }
+        }
+
+        // ============================================================
+        // WEBSOCKET
+        // ============================================================
+        let ws = null;
+
+        function connectWebSocket() {
+            const btn = document.getElementById('btnWS');
+            
+            if (wsConnected) {
+                showToast('⏳ WebSocket đã kết nối!');
+                return;
+            }
+
+            if (!serverConnected) {
+                showToast('❌ Vui lòng kết nối Server trước!');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = '⏳ ĐANG KẾT NỐI...';
+            addLog('🔌 Đang kết nối WebSocket...', 'info');
+
+            try {
+                ws = new WebSocket(`ws://${CONFIG.server_ip}:${CONFIG.ws_port}`);
+                
+                ws.onopen = function() {
+                    wsConnected = true;
+                    btn.disabled = false;
+                    btn.textContent = '🔌 WS: ON';
+                    btn.classList.add('active');
+                    addLog('✅ WebSocket đã kết nối!', 'ok');
+                    showToast('✅ WebSocket đã kết nối!');
+                    playSound('on');
+                    
+                    // Gửi tin nhắn chào
+                    ws.send(JSON.stringify({
+                        type: 'init',
+                        client: 'Proxy FF Web',
+                        timestamp: Date.now()
+                    }));
+                };
+
+                ws.onmessage = function(event) {
+                    try {
+                        const data = JSON.parse(event.data);
+                        console.log('📩 WS:', data);
+                        if (data.type === 'pong') {
+                            addLog('📡 Pong received', 'info');
+                        }
+                        if (data.type === 'aim_update') {
+                            addLog(`🎯 AIM updated: ${JSON.stringify(data.data)}`, 'server');
+                        }
+                    } catch(e) {
+                        console.log('WS parse error:', e);
+                    }
+                };
+
+                ws.onclose = function() {
+                    wsConnected = false;
+                    btn.disabled = false;
+                    btn.textContent = '🔌 WebSocket';
+                    btn.classList.remove('active');
+                    addLog('❌ WebSocket đã ngắt kết nối', 'error');
+                };
+
+                ws.onerror = function(error) {
+                    wsConnected = false;
+                    btn.disabled = false;
+                    btn.textContent = '🔌 WebSocket';
+                    btn.classList.remove('active');
+                    addLog(`❌ WebSocket lỗi: ${error}`, 'error');
+                };
+                
+            } catch(e) {
+                btn.disabled = false;
+                btn.textContent = '🔌 WebSocket';
+                addLog(`❌ WebSocket lỗi: ${e}`, 'error');
+                showToast('❌ Lỗi kết nối WebSocket!');
+            }
+        }
+
+        // ============================================================
+        // AUTO CONNECT
+        // ============================================================
+        function toggleAutoConnect() {
+            const btn = document.getElementById('btnAuto');
+            autoConnect = !autoConnect;
+
+            if (autoConnect) {
+                btn.textContent = '⏹ Dừng auto';
+                btn.classList.add('active');
+                addLog('🔄 Bật tự động kết nối (mỗi 10s)', 'info');
+                showToast('🔄 Bật tự động kết nối');
+                autoConnectInterval = setInterval(() => {
+                    if (!serverConnected) {
+                        connectServer();
+                    }
+                    if (!wsConnected && serverConnected) {
+                        connectWebSocket();
+                    }
+                }, 10000);
+            } else {
+                btn.textContent = '🔄 Tự động';
+                btn.classList.remove('active');
+                if (autoConnectInterval) {
+                    clearInterval(autoConnectInterval);
+                    autoConnectInterval = null;
+                }
+                addLog('⏸ Tắt tự động kết nối', 'info');
+                showToast('⏸ Tắt tự động kết nối');
+            }
+        }
+
+        // ============================================================
+        // SEND DATA VIA WEBSOCKET
+        // ============================================================
+        function sendWSData(data) {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify(data));
+                return true;
+            }
+            return false;
+        }
+
         // ============================================================
         // ÂM THANH
         // ============================================================
@@ -840,19 +1186,6 @@
                         oscillator.start(audioCtx.currentTime);
                         oscillator.stop(audioCtx.currentTime + 0.05);
                         break;
-                    case 'download':
-                        for (let i = 0; i < 2; i++) {
-                            const osc = audioCtx.createOscillator();
-                            const gain = audioCtx.createGain();
-                            osc.connect(gain);
-                            gain.connect(audioCtx.destination);
-                            osc.frequency.setValueAtTime(500 + i * 300, audioCtx.currentTime + i * 0.15);
-                            gain.gain.setValueAtTime(0.2, audioCtx.currentTime + i * 0.15);
-                            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + i * 0.15 + 0.1);
-                            osc.start(audioCtx.currentTime + i * 0.15);
-                            osc.stop(audioCtx.currentTime + i * 0.15 + 0.1);
-                        }
-                        break;
                     case 'activate':
                         for (let i = 0; i < 3; i++) {
                             const osc = audioCtx.createOscillator();
@@ -866,42 +1199,13 @@
                             osc.stop(audioCtx.currentTime + i * 0.1 + 0.08);
                         }
                         break;
-                    case 'ping_success':
-                        oscillator.frequency.setValueAtTime(500, audioCtx.currentTime);
-                        oscillator.frequency.linearRampToValueAtTime(1000, audioCtx.currentTime + 0.15);
-                        gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.2);
+                    case 'stopall':
+                        oscillator.frequency.setValueAtTime(550, audioCtx.currentTime);
+                        oscillator.frequency.linearRampToValueAtTime(80, audioCtx.currentTime + 0.5);
+                        gainNode.gain.setValueAtTime(0.4, audioCtx.currentTime);
+                        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
                         oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.2);
-                        break;
-                    case 'ping_fail':
-                        oscillator.frequency.setValueAtTime(400, audioCtx.currentTime);
-                        oscillator.frequency.linearRampToValueAtTime(200, audioCtx.currentTime + 0.2);
-                        gainNode.gain.setValueAtTime(0.25, audioCtx.currentTime);
-                        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.2);
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.2);
-                        break;
-                    case 'installed':
-                        for (let i = 0; i < 2; i++) {
-                            const osc = audioCtx.createOscillator();
-                            const gain = audioCtx.createGain();
-                            osc.connect(gain);
-                            gain.connect(audioCtx.destination);
-                            osc.frequency.setValueAtTime(700 + i * 200, audioCtx.currentTime + i * 0.2);
-                            gain.gain.setValueAtTime(0.25, audioCtx.currentTime + i * 0.2);
-                            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + i * 0.2 + 0.15);
-                            osc.start(audioCtx.currentTime + i * 0.2);
-                            osc.stop(audioCtx.currentTime + i * 0.2 + 0.15);
-                        }
-                        break;
-                    case 'vpn':
-                        oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
-                        oscillator.frequency.linearRampToValueAtTime(600, audioCtx.currentTime + 0.2);
-                        gainNode.gain.setValueAtTime(0.25, audioCtx.currentTime);
-                        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.25);
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.25);
+                        oscillator.stop(audioCtx.currentTime + 0.5);
                         break;
                     default:
                         oscillator.frequency.setValueAtTime(500, audioCtx.currentTime);
@@ -916,282 +1220,173 @@
         }
 
         // ============================================================
-        // TRUYỀN DỮ LIỆU AIM LÊN PROXY + VPN
+        // FLOATING MENU - AIM TỰ ĐỘNG
         // ============================================================
-        let isConnected = false;
-        let deviceCount = 0;
-        let autoPingInterval = null;
-        let isAutoPing = false;
-        let isInstalled = false;
-        let isVPN = false;
-        let aimDataSent = false;
+        let aimRunning = false;
+        let aimInterval = null;
 
-        // Danh sách thiết bị
-        const deviceListData = [
-            { name: 'iPhone 14 Pro Max', ip: '192.168.1.100', online: true },
-            { name: 'iPhone 15 Pro', ip: '192.168.1.101', online: true },
-            { name: 'iPad Pro', ip: '192.168.1.102', online: true }
-        ];
+        function toggleAim() {
+            const btn = document.getElementById('btnAim');
+            const menu = document.getElementById('floatingMenu');
+            const loading = document.getElementById('loadingOverlay');
+            const bar = document.getElementById('loadingBar');
+            const text = document.getElementById('loadingText');
 
-        // Dữ liệu AIM sẽ gửi lên
-        function getAIMData() {
-            const activeModes = aimModes.filter(m => m.active);
-            return {
-                timestamp: new Date().toISOString(),
-                ios_version: currentIOS,
-                device: 'iPhone 14 Pro Max',
-                package: 'com.dts.freefiremax',
-                active_modes: activeModes.map(m => ({
-                    id: m.id,
-                    name: m.name,
-                    type: m.type,
-                    headshot_rate: m.aim.headshotRate,
-                    sensitivity: m.aim.sensitivity,
-                    aim_angle: m.aim.aimAngle,
-                    smoothness: m.aim.smoothness,
-                    accuracy: m.aim.accuracy,
-                    sticky: m.aim.sticky,
-                    region: m.aim.region,
-                    auto_lock: m.aim.autoLock
-                })),
-                weapon_data: activeModes.length > 0 ? activeModes[0].weapon : null,
-                vpn: isVPN ? 'ON' : 'OFF',
-                ghim_co: aimModes.some(m => m.active && m.tags.includes('GHIM'))
-            };
-        }
-
-        function pingAndSendAIM() {
-            const btn = document.getElementById('btnPing');
-            const statusText = document.getElementById('pingStatusText');
-            const subStatus = document.getElementById('pingSubStatus');
-            const badge = document.getElementById('pingBadge');
-            const dot = document.getElementById('statusDot');
-            const statusMain = document.getElementById('statusText');
-            const deviceCountEl = document.getElementById('deviceCount');
-            const deviceList = document.getElementById('deviceList');
-            const logPanel = document.getElementById('logPanel');
-
-            btn.disabled = true;
-            btn.textContent = '⏳ ĐANG PING...';
-            statusText.textContent = '⏳ Đang ping...';
-            statusText.className = 'status-text ready';
-            subStatus.textContent = 'Đang kiểm tra kết nối tới 192.168.1.8...';
-            badge.className = 'ping-badge checking';
-            badge.textContent = '⏳ CHECKING';
-            dot.className = 'dot checking';
-            statusMain.textContent = '⏳ Đang kiểm tra...';
-            logPanel.classList.add('show');
-
-            addLog('📡 Đang ping tới 192.168.1.8...', 'info');
-
-            playSound('click');
-
-            setTimeout(() => {
-                const success = Math.random() < 0.75;
-                isConnected = success;
-                deviceCount = success ? Math.floor(Math.random() * 3) + 1 : 0;
-
-                btn.disabled = false;
-                btn.textContent = '📡 PING + GỬI AIM';
-
-                if (success) {
-                    statusText.textContent = `✅ Đã kết nối! ${deviceCount} thiết bị`;
-                    statusText.className = 'status-text connected';
-                    subStatus.textContent = '✅ Thiết bị đã kết nối proxy 192.168.1.8';
-                    badge.className = 'ping-badge online';
-                    badge.textContent = '🟢 ONLINE';
-                    dot.className = 'dot online';
-                    statusMain.textContent = '✅ Đã kết nối';
-                    deviceCountEl.textContent = `📱 ${deviceCount} thiết bị`;
-                    
-                    addLog('✅ Ping thành công! ' + deviceCount + ' thiết bị kết nối', 'ok');
-                    
-                    // Hiển thị thiết bị
-                    deviceList.classList.add('show');
-                    document.getElementById('deviceName').textContent = deviceListData[0].name;
-                    document.getElementById('deviceIP').textContent = deviceListData[0].ip;
-                    
-                    if (deviceCount >= 2) {
-                        document.getElementById('device2').style.display = 'flex';
-                        document.getElementById('deviceName2').textContent = deviceListData[1].name;
-                        document.getElementById('deviceIP2').textContent = deviceListData[1].ip;
-                    } else {
-                        document.getElementById('device2').style.display = 'none';
-                    }
-                    
-                    if (deviceCount >= 3) {
-                        document.getElementById('device3').style.display = 'flex';
-                        document.getElementById('deviceName3').textContent = deviceListData[2].name;
-                        document.getElementById('deviceIP3').textContent = deviceListData[2].ip;
-                    } else {
-                        document.getElementById('device3').style.display = 'none';
-                    }
-
-                    // ==== GỬI DỮ LIỆU AIM LÊN PROXY ====
-                    const aimData = getAIMData();
-                    const activeCount = aimModes.filter(m => m.active).length;
-                    
-                    if (activeCount > 0) {
-                        addLog(`📤 Đang gửi dữ liệu AIM (${activeCount} chế độ)...`, 'info');
-                        statusText.textContent = '📤 Đang gửi AIM...';
-                        statusText.className = 'status-text sending';
-                        
-                        // Gửi dữ liệu qua fetch (giả lập)
-                        setTimeout(() => {
-                            sendAIMDataToProxy(aimData);
-                        }, 500);
-                    } else {
-                        addLog('⚠️ Chưa có chế độ AIM nào được bật!', 'error');
-                        statusText.textContent = '⚠️ Chưa có AIM';
-                        statusText.className = 'status-text disconnected';
-                    }
-
-                    playSound('ping_success');
-                    showToast(`✅ Đã kết nối! ${deviceCount} thiết bị đang hoạt động.`);
-                    console.log('✅ Ping thành công -', deviceCount, 'thiết bị');
-                    
-                } else {
-                    statusText.textContent = '❌ Không kết nối!';
-                    statusText.className = 'status-text disconnected';
-                    subStatus.textContent = '❌ Không tìm thấy thiết bị tại 192.168.1.8';
-                    badge.className = 'ping-badge offline';
-                    badge.textContent = '⛔ OFFLINE';
-                    dot.className = 'dot offline';
-                    statusMain.textContent = '❌ Không kết nối';
-                    deviceCountEl.textContent = '📱 0 thiết bị';
-                    deviceList.classList.remove('show');
-                    addLog('❌ Ping thất bại! Không tìm thấy thiết bị', 'error');
-                    playSound('ping_fail');
-                    showToast('❌ Không thể kết nối tới proxy!');
+            if (!aimRunning) {
+                if (!serverConnected) {
+                    showToast('❌ Vui lòng kết nối Server trước!');
+                    return;
                 }
-            }, 2000);
-        }
-
-        function sendAIMDataToProxy(aimData) {
-            const logPanel = document.getElementById('logPanel');
-            const statusText = document.getElementById('pingStatusText');
-            
-            // Mô phỏng gửi dữ liệu
-            setTimeout(() => {
-                const success = Math.random() < 0.85;
                 
-                if (success) {
-                    addLog('✅ Đã gửi dữ liệu AIM thành công!', 'ok');
-                    addLog(`📦 Dữ liệu: ${JSON.stringify(aimData).substring(0, 100)}...`, 'vpn');
-                    statusText.textContent = '✅ Đã gửi AIM!';
-                    statusText.className = 'status-text connected';
-                    aimDataSent = true;
-                    playSound('on');
-                    showToast('✅ Đã gửi dữ liệu AIM lên proxy!');
-                    console.log('📤 AIM Data sent:', aimData);
-                    
-                    // Cập nhật badge
-                    document.getElementById('installedBadge').style.display = 'inline-block';
-                    document.getElementById('installedBadge').textContent = '📤 AIM Sent';
-                } else {
-                    addLog('❌ Gửi dữ liệu AIM thất bại!', 'error');
-                    statusText.textContent = '❌ Gửi AIM thất bại';
-                    statusText.className = 'status-text disconnected';
-                    playSound('off');
-                    showToast('❌ Gửi AIM thất bại!');
-                }
-            }, 1000);
-        }
-
-        function addLog(message, type = 'info') {
-            const logPanel = document.getElementById('logPanel');
-            const now = new Date();
-            const time = now.getHours().toString().padStart(2, '0') + ':' + 
-                         now.getMinutes().toString().padStart(2, '0') + ':' +
-                         now.getSeconds().toString().padStart(2, '0');
-            
-            const colors = {
-                'ok': 'log-ok',
-                'error': 'log-error',
-                'info': 'log-info',
-                'vpn': 'log-vpn'
-            };
-            
-            const logItem = document.createElement('div');
-            logItem.className = 'log-item';
-            logItem.innerHTML = `<span class="log-time">[${time}]</span> <span class="${colors[type] || 'log-info'}">${message}</span>`;
-            logPanel.appendChild(logItem);
-            logPanel.scrollTop = logPanel.scrollHeight;
-        }
-
-        // ============================================================
-        // VPN TOGGLE
-        // ============================================================
-        function toggleVPN() {
-            const btn = document.getElementById('btnVPN');
-            const vpnStatus = document.getElementById('vpnStatus');
-            
-            isVPN = !isVPN;
-            
-            if (isVPN) {
-                btn.textContent = '🔒 VPN: ON';
+                aimRunning = true;
                 btn.classList.add('active');
-                vpnStatus.textContent = '🔒 VPN: ON';
-                vpnStatus.style.color = '#4caf50';
-                playSound('vpn');
-                addLog('🔒 Đã bật VPN!', 'vpn');
-                showToast('🔒 Đã bật VPN!');
-                console.log('🔒 VPN: ON');
+                btn.textContent = '🎯';
+                loading.classList.add('show');
+                bar.style.width = '0%';
+                text.textContent = '🚀 Đang khởi tạo AIM...';
+                
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 10 + 5;
+                    if (progress > 100) progress = 100;
+                    bar.style.width = progress + '%';
+                    
+                    if (progress < 30) text.textContent = '🔍 Đang tìm mục tiêu...';
+                    else if (progress < 60) text.textContent = '🎯 Đang khóa mục tiêu...';
+                    else if (progress < 90) text.textContent = '⚡ Đang áp dụng AIM...';
+                    else text.textContent = '✅ AIM đã sẵn sàng!';
+                    
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            loading.classList.remove('show');
+                            menu.classList.add('show');
+                            showToast('🎯 AIM đã bật!');
+                            playSound('on');
+                            document.getElementById('modeActive').textContent = '▶️ AIM PRO';
+                            document.getElementById('modeActive').style.color = '#4caf50';
+                            document.getElementById('statusDot').className = 'dot online';
+                            document.getElementById('statusText').textContent = '✅ AIM Running';
+                            
+                            // Gửi qua WebSocket
+                            sendWSData({
+                                type: 'activate_aim',
+                                timestamp: Date.now()
+                            });
+                            
+                            // Tự động chạy AIM
+                            aimInterval = setInterval(() => {
+                                console.log('🎯 AIM đang chạy...');
+                                autoShoot();
+                            }, 3000);
+                        }, 500);
+                    }
+                }, 200);
+                
             } else {
-                btn.textContent = '🔒 VPN';
+                aimRunning = false;
                 btn.classList.remove('active');
-                vpnStatus.textContent = '🔒 VPN: OFF';
-                vpnStatus.style.color = '#9b59b6';
-                playSound('off');
-                addLog('🔒 Đã tắt VPN', 'info');
-                showToast('🔒 Đã tắt VPN');
-                console.log('🔒 VPN: OFF');
-            }
-        }
-
-        function toggleAutoPing() {
-            const btn = document.getElementById('btnAutoPing');
-            isAutoPing = !isAutoPing;
-
-            if (isAutoPing) {
-                btn.textContent = '⏹ Dừng auto';
-                btn.style.background = 'linear-gradient(135deg, #ff6b00, #ff3b30)';
-                btn.style.boxShadow = '0 0 20px rgba(255, 107, 0, 0.3)';
-                addLog('🔄 Bật tự động ping (mỗi 5s)', 'info');
-                showToast('🔄 Bật tự động ping');
-                pingAndSendAIM();
-                autoPingInterval = setInterval(pingAndSendAIM, 5000);
-            } else {
-                btn.textContent = '🔄 Tự động';
-                btn.style.background = '';
-                btn.style.boxShadow = '';
-                if (autoPingInterval) {
-                    clearInterval(autoPingInterval);
-                    autoPingInterval = null;
+                btn.textContent = '🎯';
+                if (aimInterval) {
+                    clearInterval(aimInterval);
+                    aimInterval = null;
                 }
-                addLog('⏸ Tắt tự động ping', 'info');
-                showToast('⏸ Tắt tự động ping');
+                menu.classList.remove('show');
+                showToast('⛔ Đã tắt AIM');
+                playSound('off');
+                document.getElementById('modeActive').textContent = '⬜ Chưa chọn';
+                document.getElementById('modeActive').style.color = '#888';
+                
+                sendWSData({
+                    type: 'deactivate_aim',
+                    timestamp: Date.now()
+                });
             }
         }
 
-        // ============================================================
-        // CÀI ĐẶT MOBILECONFIG THÀNH CÔNG
-        // ============================================================
-        function markAsInstalled(modeName) {
-            isInstalled = true;
-            document.getElementById('installedBadge').style.display = 'inline-block';
-            document.getElementById('installedBadge').textContent = `✅ Đã cài ${modeName}`;
-            playSound('installed');
-            addLog(`✅ Đã cài ${modeName} thành công!`, 'ok');
-            showToast(`✅ Đã cài ${modeName} thành công!`);
-            console.log(`✅ ${modeName} đã được cài thành công`);
+        function autoShoot() {
+            const active = aimModes.filter(m => m.active);
+            if (active.length > 0 && aimRunning) {
+                const mode = active[0];
+                const headshot = Math.random() * 100 < mode.aim.headshotRate;
+                if (headshot) {
+                    showToast('💥 HEADSHOT! +100');
+                    playSound('click');
+                    sendWSData({
+                        type: 'headshot',
+                        damage: 100,
+                        timestamp: Date.now()
+                    });
+                } else {
+                    showToast('🔫 Bắn trúng! +30');
+                    sendWSData({
+                        type: 'hit',
+                        damage: 30,
+                        timestamp: Date.now()
+                    });
+                }
+                console.log(`🎯 ${mode.name} - Headshot: ${headshot}`);
+            }
+        }
+
+        function stopAll() {
+            const menu = document.getElementById('floatingMenu');
+            const btn = document.getElementById('btnAim');
             
-            document.querySelectorAll('.btn-download-config').forEach(btn => {
-                if (btn.textContent.includes(modeName)) {
-                    btn.classList.add('installed');
-                    btn.textContent = `✅ Đã cài ${modeName}`;
+            if (aimRunning) {
+                aimRunning = false;
+                btn.classList.remove('active');
+                btn.textContent = '🎯';
+                if (aimInterval) {
+                    clearInterval(aimInterval);
+                    aimInterval = null;
+                }
+            }
+            
+            menu.classList.remove('show');
+            
+            aimModes.forEach(m => {
+                if (m.active) {
+                    m.active = false;
+                    const card = document.querySelector(`.mode-card[data-id="${m.id}"]`);
+                    if (card) {
+                        card.classList.remove('active');
+                        card.querySelector('.toggle').classList.remove('active');
+                        card.querySelector('.status-label').className = 'status-label off';
+                        card.querySelector('.status-label').textContent = '⛔ Đã tắt';
+                        card.querySelector('.status-detail').className = 'status-detail';
+                        card.querySelector('.status-detail').textContent = 'Nhấn bật';
+                        const aimData = document.getElementById(`aimData-${m.id}`);
+                        if (aimData) aimData.classList.remove('show');
+                    }
                 }
             });
+            
+            document.getElementById('activeCount').textContent = '0';
+            document.getElementById('modeActive').textContent = '⬜ Chưa chọn';
+            document.getElementById('modeActive').style.color = '#888';
+            
+            sendWSData({
+                type: 'stop_all',
+                timestamp: Date.now()
+            });
+            
+            showToast('⏹ Đã dừng tất cả!');
+            playSound('stopall');
+        }
+
+        function getStatus() {
+            const active = aimModes.filter(m => m.active);
+            const msg = `📊 TRẠNG THÁI:\n` +
+                       `- Server: ${serverConnected ? '✅' : '❌'}\n` +
+                       `- VPN: ${vpnConnected ? '✅' : '❌'}\n` +
+                       `- WebSocket: ${wsConnected ? '✅' : '❌'}\n` +
+                       `- AIM: ${aimRunning ? '✅ Đang chạy' : '⛔ Tắt'}\n` +
+                       `- Proxy: ${active.length} chế độ\n` +
+                       `- Headshot: ${active.length > 0 ? active[0].aim.headshotRate : 0}%`;
+            showToast(msg);
+            console.log(msg);
+            addLog('📊 Đã lấy trạng thái', 'info');
         }
 
         // ============================================================
@@ -1325,7 +1520,7 @@
             <key>PayloadVersion</key>
             <integer>1</integer>
             <key>URL</key>
-            <string>http://192.168.1.8:8080/proxy/${mode.type}?aim=${mode.aim.headshotRate}&amp;ios=${currentIOS}</string>
+            <string>http://${CONFIG.server_ip}:${CONFIG.http_port}/proxy/${mode.type}?aim=${mode.aim.headshotRate}&amp;ios=${currentIOS}</string>
             <key>IsRemovable</key>
             <true/>
             <key>Label</key>
@@ -1351,12 +1546,6 @@
         }
 
         function downloadMobileConfig(mode) {
-            if (!isConnected) {
-                showToast('❌ Chưa kết nối proxy! Ping trước.');
-                playSound('off');
-                return;
-            }
-
             const xml = generateMobileConfig(mode);
             const blob = new Blob([xml], { type: 'application/x-apple-aspen-config' });
             const url = URL.createObjectURL(blob);
@@ -1367,49 +1556,33 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            playSound('download');
-            
-            setTimeout(() => {
-                markAsInstalled(mode.name);
-            }, 1000);
-            
+            playSound('click');
             showToast(`📥 Đã tải ${mode.name} về máy!`);
+            
+            sendWSData({
+                type: 'download_config',
+                mode: mode.name,
+                timestamp: Date.now()
+            });
+            
+            if (!aimRunning) {
+                setTimeout(toggleAim, 1000);
+            }
         }
 
         function downloadAllConfigs() {
-            if (!isConnected) {
-                showToast('❌ Chưa kết nối proxy! Ping trước.');
-                playSound('off');
-                return;
-            }
-
             const active = aimModes.filter(m => m.active);
             if (active.length === 0) {
                 showToast('❌ Vui lòng bật ít nhất 1 chế độ!');
                 playSound('off');
                 return;
             }
-            active.forEach((mode, index) => {
+            active.forEach(mode => {
                 setTimeout(() => {
-                    const xml = generateMobileConfig(mode);
-                    const blob = new Blob([xml], { type: 'application/x-apple-aspen-config' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `proxy_ff_${mode.type}_ios${currentIOS}_${Date.now()}.mobileconfig`;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                    
-                    if (index === active.length - 1) {
-                        setTimeout(() => {
-                            markAsInstalled('tất cả');
-                        }, 1000);
-                    }
-                }, 500 * index);
+                    downloadMobileConfig(mode);
+                }, 500 * active.indexOf(mode));
             });
-            playSound('download');
+            playSound('click');
             showToast(`📥 Đang tải ${active.length} cấu hình...`);
         }
 
@@ -1473,22 +1646,10 @@
                         </div>
 
                         <div class="aim-quality">
-                            <div class="quality-item">
-                                <span class="q-label">⚡ Độ mượt</span>
-                                <span class="q-value smooth">${m.aim.smoothness}%</span>
-                            </div>
-                            <div class="quality-item">
-                                <span class="q-label">🎯 Độ chính xác</span>
-                                <span class="q-value accurate">${m.aim.accuracy}%</span>
-                            </div>
-                            <div class="quality-item">
-                                <span class="q-label">📌 Độ bám đầu</span>
-                                <span class="q-value sticky">${m.aim.sticky}%</span>
-                            </div>
-                            <div class="quality-item">
-                                <span class="q-label">🔫 Headshot</span>
-                                <span class="q-value" style="color:#ff6b00;">${m.aim.headshotRate}%</span>
-                            </div>
+                            <div class="quality-item"><span class="q-label">⚡ Độ mượt</span><span class="q-value smooth">${m.aim.smoothness}%</span></div>
+                            <div class="quality-item"><span class="q-label">🎯 Độ chính xác</span><span class="q-value accurate">${m.aim.accuracy}%</span></div>
+                            <div class="quality-item"><span class="q-label">📌 Độ bám đầu</span><span class="q-value sticky">${m.aim.sticky}%</span></div>
+                            <div class="quality-item"><span class="q-label">🔫 Headshot</span><span class="q-value" style="color:#ff6b00;">${m.aim.headshotRate}%</span></div>
                         </div>
 
                         <div class="weapon-aim">
@@ -1521,7 +1682,7 @@
                         </div>
 
                         <button class="btn-download-config" onclick="downloadMobileConfigForMode(${m.id})" ${!m.active ? 'disabled' : ''}>
-                            ${m.active && isInstalled ? '✅ Đã cài' : '📥 Tải MobileConfig - ' + m.name}
+                            📥 Tải MobileConfig - ${m.name}
                         </button>
                     </div>
                 </div>
@@ -1537,17 +1698,9 @@
                 playSound('off');
                 return;
             }
-            if (!isConnected) {
-                showToast('❌ Chưa kết nối proxy! Ping trước.');
-                playSound('off');
-                return;
-            }
             downloadMobileConfig(mode);
         }
 
-        // ============================================================
-        // TOGGLE MODE
-        // ============================================================
         function toggleMode(id) {
             const mode = aimModes.find(m => m.id === id);
             if (!mode) return;
@@ -1569,18 +1722,21 @@
                 statusDetail.className = 'status-detail on';
                 statusDetail.textContent = `🎯 ${mode.aim.headshotRate}%`;
                 aimData.classList.add('show');
-                if (downloadBtn) {
-                    downloadBtn.disabled = false;
-                    if (!isInstalled) {
-                        downloadBtn.textContent = `📥 Tải MobileConfig - ${mode.name}`;
-                    }
-                }
+                if (downloadBtn) downloadBtn.disabled = false;
                 playSound('on');
-                addLog(`✅ Đã bật: ${mode.name} - ${mode.aim.headshotRate}%`, 'ok');
                 showToast(`✅ Đã bật: ${mode.name} - ${mode.aim.headshotRate}%`);
                 document.getElementById('modeActive').textContent = `▶️ ${mode.name}`;
                 document.getElementById('modeActive').style.color = '#4caf50';
-                console.log(`🎯 ${mode.name} activated`);
+                
+                document.getElementById('floatingMenu').classList.add('show');
+                
+                sendWSData({
+                    type: 'activate_mode',
+                    mode: mode.name,
+                    data: mode.aim,
+                    timestamp: Date.now()
+                });
+                
             } else {
                 card.classList.remove('active');
                 toggle.classList.remove('active');
@@ -1589,22 +1745,24 @@
                 statusDetail.className = 'status-detail';
                 statusDetail.textContent = 'Nhấn bật';
                 aimData.classList.remove('show');
-                if (downloadBtn) {
-                    downloadBtn.disabled = true;
-                    downloadBtn.textContent = `📥 Tải MobileConfig - ${mode.name}`;
-                }
+                if (downloadBtn) downloadBtn.disabled = true;
                 playSound('off');
-                addLog(`⛔ Đã tắt: ${mode.name}`, 'error');
                 showToast(`⛔ Đã tắt: ${mode.name}`);
                 const active = aimModes.filter(m => m.active);
                 if (active.length === 0) {
                     document.getElementById('modeActive').textContent = '⬜ Chưa chọn';
                     document.getElementById('modeActive').style.color = '#888';
+                    document.getElementById('floatingMenu').classList.remove('show');
                 } else {
                     document.getElementById('modeActive').textContent = `▶️ ${active.map(m => m.name).join(', ')}`;
                     document.getElementById('modeActive').style.color = '#4caf50';
                 }
-                console.log(`⛔ ${mode.name} deactivated`);
+                
+                sendWSData({
+                    type: 'deactivate_mode',
+                    mode: mode.name,
+                    timestamp: Date.now()
+                });
             }
 
             updateStatusBar();
@@ -1627,12 +1785,6 @@
         }
 
         function activateAll() {
-            if (!isConnected) {
-                showToast('❌ Chưa kết nối proxy! Ping trước.');
-                playSound('off');
-                return;
-            }
-
             const inactive = aimModes.filter(m => !m.active);
             if (inactive.length === 0) {
                 showToast('✅ Tất cả đã được bật!');
@@ -1653,12 +1805,7 @@
                     const aimData = document.getElementById(`aimData-${m.id}`);
                     if (aimData) aimData.classList.add('show');
                     const downloadBtn = card.querySelector('.btn-download-config');
-                    if (downloadBtn) {
-                        downloadBtn.disabled = false;
-                        if (!isInstalled) {
-                            downloadBtn.textContent = `📥 Tải MobileConfig - ${m.name}`;
-                        }
-                    }
+                    if (downloadBtn) downloadBtn.disabled = false;
                 }
             });
 
@@ -1667,8 +1814,18 @@
             updateConfigStatus();
             document.getElementById('modeActive').textContent = `▶️ ${aimModes.filter(m => m.active).map(m => m.name).join(', ')}`;
             document.getElementById('modeActive').style.color = '#4caf50';
-            addLog(`🚀 Đã bật tất cả ${inactive.length} chế độ!`, 'ok');
+            document.getElementById('floatingMenu').classList.add('show');
             showToast(`✅ Đã bật tất cả ${inactive.length} chế độ!`);
+            
+            sendWSData({
+                type: 'activate_all',
+                modes: aimModes.filter(m => m.active).map(m => m.name),
+                timestamp: Date.now()
+            });
+            
+            if (!aimRunning) {
+                setTimeout(toggleAim, 500);
+            }
         }
 
         function exportJSON() {
@@ -1676,16 +1833,13 @@
                 game: gameData,
                 ios_version: currentIOS,
                 connection: {
-                    status: isConnected ? 'connected' : 'disconnected',
-                    devices: deviceCount,
-                    ip: '192.168.1.8',
-                    device_list: deviceListData.slice(0, deviceCount)
+                    server: serverConnected,
+                    vpn: vpnConnected,
+                    ws: wsConnected
                 },
-                vpn: isVPN ? 'ON' : 'OFF',
-                aim_data_sent: aimDataSent,
-                installed: isInstalled,
                 modes: aimModes,
                 active_count: aimModes.filter(m => m.active).length,
+                aim_running: aimRunning,
                 exported_at: new Date().toISOString()
             };
             const json = JSON.stringify(data, null, 2);
@@ -1702,15 +1856,12 @@
             showToast('📤 Đã xuất JSON!');
         }
 
-        // ============================================================
-        // TOAST
-        // ============================================================
         function showToast(msg) {
             const t = document.getElementById('toast');
             t.textContent = msg;
             t.classList.add('show');
             clearTimeout(t._timeout);
-            t._timeout = setTimeout(() => t.classList.remove('show'), 2500);
+            t._timeout = setTimeout(() => t.classList.remove('show'), 3000);
         }
 
         // ============================================================
@@ -1721,7 +1872,6 @@
             document.getElementById('iosVersionDisplay').textContent = 'iOS ' + currentIOS;
             renderCards();
             playSound('click');
-            addLog(`📱 Đã chọn iOS ${currentIOS}`, 'info');
             showToast(`📱 Đã chọn iOS ${currentIOS}`);
         });
 
@@ -1748,21 +1898,24 @@
         document.addEventListener('click', initAudio, { once: true });
         document.addEventListener('touchstart', initAudio, { once: true });
 
-        // Mở log panel mặc định
-        document.getElementById('logPanel').classList.add('show');
-        addLog('🚀 PROXY FF - AIM PRO sẵn sàng!', 'ok');
+        addLog('🚀 PROXY FF - AIM PRO sẵn sàng!', 'info');
         addLog('📦 Package: com.dts.freefiremax', 'info');
         addLog('🎯 3 chế độ: Cổ - Đầu - Trên đầu', 'info');
-        addLog('📡 Nhấn "PING + GỬI AIM" để kết nối', 'info');
-
-        setTimeout(pingAndSendAIM, 1500);
+        addLog('🔒 Nhấn "VPN" để bật VPN', 'vpn');
+        addLog('🌐 Nhấn "Kết nối Server" để kết nối', 'server');
+        addLog('📡 Chọn chế độ AIM và bắt đầu!', 'info');
 
         console.log('✅ PROXY FF - AIM PRO sẵn sàng!');
         console.log('📦 Package: com.dts.freefiremax');
         console.log('🎯 3 chế độ: Cổ - Đầu - Trên đầu');
-        console.log('📡 Ping + Gửi dữ liệu AIM lên proxy');
         console.log('🔒 VPN: Bật/tắt VPN');
-        console.log('✅ Khi cài MobileConfig sẽ hiển thị "Đã cài thành công"');
+        console.log('🌐 Server: Kết nối server');
+        console.log('🔌 WebSocket: Kết nối thời gian thực');
+        console.log('🔄 Tự động: Tự động kết nối');
+        
+        setTimeout(() => {
+            showToast('🌐 Nhấn "Kết nối Server" để bắt đầu!');
+        }, 2000);
     </script>
 
 </body>
