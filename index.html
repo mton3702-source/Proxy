@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PROXY FF - AIM Pro</title>
     <style>
-        /* ===== RESET ===== */
         * {
             margin: 0;
             padding: 0;
@@ -20,7 +19,6 @@
             -webkit-user-select: none;
         }
 
-        /* ===== HEADER ===== */
         .header {
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             padding: 16px 16px 12px;
@@ -43,17 +41,20 @@
         .header h1 span { color: #fff; font-weight: 300; }
         .header .badge-group { display: flex; gap: 6px; flex-wrap: wrap; }
         .header .badge {
-            padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
         }
         .badge.ios { background: #1a3a5a; color: #64b5f6; border: 1px solid #64b5f6; }
         .badge.ff { background: #ff3b30; color: #fff; border: 1px solid #ffcc00; }
         .badge.aim { background: linear-gradient(135deg, #ff3b30, #ff6b00); color: #fff; animation: pulse 1.5s infinite; }
         .badge.sound { background: #1a3a5a; color: #64b5f6; border: 1px solid #64b5f6; }
         .badge.ping { background: #4caf50; color: #fff; border: 1px solid #4caf50; animation: pulse 1s infinite; }
+        .badge.pro { background: #ff6b00; color: #fff; border: 1px solid #ff6b00; animation: pulse 1s infinite; }
         @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         .header p { color: #888; font-size: 12px; margin-top: 4px; }
 
-        /* ===== STATUS BAR ===== */
         .status-bar {
             background: #1a1a1a;
             padding: 8px 16px;
@@ -71,23 +72,10 @@
             background: #ff3b30; box-shadow: 0 0 10px #ff3b30;
             transition: 0.3s;
         }
-        .status-bar .dot.online {
-            background: #4caf50;
-            box-shadow: 0 0 10px #4caf50;
-        }
-        .status-bar .dot.offline {
-            background: #ff3b30;
-            box-shadow: 0 0 10px #ff3b30;
-        }
-        .status-bar .dot.checking {
-            background: #ffcc00;
-            box-shadow: 0 0 10px #ffcc00;
-            animation: blink 0.8s infinite;
-        }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
+        .status-bar .dot.online { background: #4caf50; box-shadow: 0 0 10px #4caf50; }
+        .status-bar .dot.offline { background: #ff3b30; box-shadow: 0 0 10px #ff3b30; }
+        .status-bar .dot.checking { background: #ffcc00; box-shadow: 0 0 10px #ffcc00; animation: blink 0.8s infinite; }
+        @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
         .status-bar .right { display: flex; gap: 12px; flex-wrap: wrap; }
         .status-bar .right .count { color: #4caf50; font-weight: 600; }
         .status-bar .right .aim-rate { color: #ffcc00; font-weight: 700; }
@@ -103,8 +91,17 @@
             border-radius: 20px;
             border: 1px solid #64b5f6;
         }
+        .status-bar .right .installed-badge {
+            color: #4caf50;
+            font-weight: 700;
+            font-size: 11px;
+            background: #1a2a1a;
+            padding: 2px 10px;
+            border-radius: 20px;
+            border: 1px solid #4caf50;
+            animation: pulse 1s infinite;
+        }
 
-        /* ===== TABS ===== */
         .tabs {
             display: flex; gap: 6px; padding: 0 16px 10px;
             overflow-x: auto; background: #0a0a0a;
@@ -117,7 +114,6 @@
         }
         .tabs .tab.active { background: #ff3b30; color: #fff; border-color: #ff3b30; }
 
-        /* ===== CONTAINER ===== */
         .container { padding: 0 16px; }
 
         /* ===== PING SECTION ===== */
@@ -130,14 +126,7 @@
             position: relative;
             overflow: hidden;
         }
-        .ping-section::before {
-            content: '📡';
-            position: absolute;
-            top: -20px;
-            right: -20px;
-            font-size: 80px;
-            opacity: 0.05;
-        }
+        .ping-section::before { content: '📡'; position: absolute; top: -20px; right: -20px; font-size: 80px; opacity: 0.05; }
         .ping-section .ping-header {
             display: flex;
             justify-content: space-between;
@@ -147,10 +136,7 @@
             position: relative;
             z-index: 1;
         }
-        .ping-section .ping-header h3 {
-            font-size: 16px;
-            color: #64b5f6;
-        }
+        .ping-section .ping-header h3 { font-size: 16px; color: #64b5f6; }
         .ping-section .ping-header h3 span { color: #fff; }
         .ping-section .ping-header .ping-badge {
             padding: 4px 12px;
@@ -160,17 +146,9 @@
             color: #fff;
             animation: pulse 1s infinite;
         }
-        .ping-section .ping-header .ping-badge.online {
-            background: #4caf50;
-        }
-        .ping-section .ping-header .ping-badge.offline {
-            background: #ff3b30;
-            animation: none;
-        }
-        .ping-section .ping-header .ping-badge.checking {
-            background: #ffcc00;
-            color: #000;
-        }
+        .ping-section .ping-header .ping-badge.online { background: #4caf50; }
+        .ping-section .ping-header .ping-badge.offline { background: #ff3b30; animation: none; }
+        .ping-section .ping-header .ping-badge.checking { background: #ffcc00; color: #000; }
 
         .ping-section .ping-status {
             display: flex;
@@ -216,18 +194,59 @@
             color: #fff;
             box-shadow: 0 0 20px rgba(100, 181, 246, 0.3);
         }
-        .ping-section .ping-actions .btn-ping:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(100, 181, 246, 0.5);
-        }
+        .ping-section .ping-actions .btn-ping:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(100, 181, 246, 0.5); }
         .ping-section .ping-actions .btn-ping:active { transform: scale(0.98); }
-        .ping-section .ping-actions .btn-ping:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        .ping-section .ping-actions .btn-ping:disabled { opacity: 0.5; cursor: not-allowed; }
         .ping-section .ping-actions .btn-ping.active {
             background: linear-gradient(135deg, #4caf50, #2e7d32);
             box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+        }
+
+        /* ===== THIẾT BỊ ĐÃ KẾT NỐI ===== */
+        .device-list {
+            margin-top: 10px;
+            padding: 10px 14px;
+            background: #0a0a0a;
+            border-radius: 8px;
+            border: 1px solid #2a2a2a;
+            position: relative;
+            z-index: 1;
+            display: none;
+        }
+        .device-list.show { display: block; }
+        .device-list .device-title {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 6px;
+        }
+        .device-list .device-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 8px;
+            background: #141414;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            border: 1px solid #1a2a1a;
+        }
+        .device-list .device-item .dev-icon { font-size: 16px; }
+        .device-list .device-item .dev-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+            flex: 1;
+        }
+        .device-list .device-item .dev-status {
+            font-size: 10px;
+            color: #4caf50;
+            font-weight: 600;
+        }
+        .device-list .device-item .dev-status.offline {
+            color: #ff3b30;
+        }
+        .device-list .device-item .dev-ip {
+            font-size: 10px;
+            color: #888;
         }
 
         /* ===== MODE CARDS ===== */
@@ -265,10 +284,7 @@
             margin: 2px 0 3px;
             color: #fff;
         }
-        .mode-card .mode-desc {
-            color: #aaa;
-            font-size: 12px;
-        }
+        .mode-card .mode-desc { color: #aaa; font-size: 12px; }
         .mode-card .mode-meta {
             display: flex;
             flex-wrap: wrap;
@@ -285,6 +301,7 @@
         .mode-card .mode-meta .tag.headshot { background: #ff6b00; color: #fff; font-weight: 700; }
         .mode-card .mode-meta .tag.ghim { background: #4caf50; color: #fff; font-weight: 700; }
         .mode-card .mode-meta .tag.vip { background: #ff3b30; color: #fff; }
+        .mode-card .mode-meta .tag.pro { background: #ff6b00; color: #fff; font-weight: 700; }
 
         .mode-card .right-side {
             display: flex;
@@ -299,7 +316,6 @@
         .mode-card .status .status-detail { font-size: 9px; color: #666; margin-top: 2px; }
         .mode-card .status .status-detail.on { color: #4caf50; }
 
-        /* ===== TOGGLE ===== */
         .toggle {
             position: relative; width: 42px; height: 24px;
             background: #2a2a2a; border-radius: 50px; cursor: pointer;
@@ -314,7 +330,6 @@
         }
         .toggle.active .slider { left: 20px; }
 
-        /* ===== AIM DATA ===== */
         .aim-data {
             margin-top: 10px;
             padding: 10px;
@@ -370,8 +385,8 @@
         .aim-item .value.orange { color: #ff6b00; font-weight: 700; }
         .aim-item .value.red { color: #ff0000; font-weight: 700; }
         .aim-item .value.blue { color: #64b5f6; }
+        .aim-item .value.purple { color: #9b59b6; }
 
-        /* ===== WEAPON ===== */
         .weapon-aim { margin-top: 8px; padding-top: 8px; border-top: 1px solid #1a1a1a; }
         .weapon-aim .weapon-title { font-size: 10px; color: #888; margin-bottom: 4px; }
         .weapon-grid {
@@ -393,8 +408,9 @@
         .weapon-item .w-value.orange { color: #ff6b00; }
         .weapon-item .w-value.gold { color: #ffcc00; }
         .weapon-item .w-value.red { color: #ff3b30; }
+        .weapon-item .w-value.purple { color: #9b59b6; }
+        .weapon-item .w-value.blue { color: #64b5f6; }
 
-        /* ===== AIM BAR ===== */
         .aim-bar-wrap { margin-top: 6px; }
         .aim-bar-wrap .bar-label {
             display: flex;
@@ -404,26 +420,43 @@
             margin-bottom: 2px;
         }
         .aim-bar {
-            width: 100%;
-            height: 5px;
-            background: #1a1a1a;
-            border-radius: 10px;
-            overflow: hidden;
+            width: 100%; height: 5px; background: #1a1a1a;
+            border-radius: 10px; overflow: hidden;
         }
         .aim-bar .fill {
-            height: 100%;
-            border-radius: 10px;
-            transition: width 0.5s;
-            width: 0%;
+            height: 100%; border-radius: 10px; transition: width 0.5s; width: 0%;
         }
         .aim-bar .fill.orange { background: linear-gradient(90deg, #ff6b00, #ff9800); animation: glowOrange 1.5s infinite; }
         .aim-bar .fill.gold { background: linear-gradient(90deg, #ffcc00, #ff9800); }
         .aim-bar .fill.blue { background: linear-gradient(90deg, #2196f3, #64b5f6); }
         .aim-bar .fill.green { background: linear-gradient(90deg, #4caf50, #8bc34a); }
         .aim-bar .fill.red { background: linear-gradient(90deg, #ff0000, #ff4444); }
+        .aim-bar .fill.purple { background: linear-gradient(90deg, #9b59b6, #8e44ad); }
         @keyframes glowOrange { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
 
-        /* ===== DOWNLOAD BUTTON ===== */
+        .aim-quality {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #1a1a1a;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 12px;
+        }
+        .aim-quality .quality-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 8px;
+            background: #0a0a0a;
+            border-radius: 6px;
+            border: 1px solid #1a1a1a;
+        }
+        .aim-quality .quality-item .q-label { font-size: 10px; color: #888; }
+        .aim-quality .quality-item .q-value { font-size: 12px; font-weight: 700; }
+        .aim-quality .quality-item .q-value.smooth { color: #64b5f6; }
+        .aim-quality .quality-item .q-value.accurate { color: #ff6b00; }
+        .aim-quality .quality-item .q-value.sticky { color: #4caf50; }
+
         .btn-download-config {
             margin-top: 10px;
             padding: 10px 16px;
@@ -442,17 +475,14 @@
             justify-content: center;
             gap: 8px;
         }
-        .btn-download-config:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(33, 150, 243, 0.5);
+        .btn-download-config:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(33, 150, 243, 0.5); }
+        .btn-download-config:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+        .btn-download-config.installed {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
         }
-        .btn-download-config:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .btn-download-config.installed:hover { box-shadow: 0 0 30px rgba(76, 175, 80, 0.5); }
 
-        /* ===== CONFIG SECTION ===== */
         .config-section {
             background: #141414;
             border-radius: 12px;
@@ -520,7 +550,6 @@
         .config-actions .btn-secondary { background: #2a2a2a; color: #fff; }
         .config-actions .btn-secondary:hover { background: #3a3a3a; }
 
-        /* ===== FOOTER ===== */
         .footer {
             text-align: center;
             padding: 16px;
@@ -531,7 +560,6 @@
         }
         .footer .highlight { color: #ffcc00; }
 
-        /* ===== TOAST ===== */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -550,11 +578,11 @@
         }
         .toast.show { display: block; }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 480px) {
             .header h1 { font-size: 18px; }
             .aim-grid { grid-template-columns: 1fr; }
             .weapon-grid { grid-template-columns: 1fr 1fr; }
+            .aim-quality { grid-template-columns: 1fr; }
             .mode-card .right-side { width: 100%; justify-content: flex-end; }
             .config-actions .btn { min-width: 70px; font-size: 11px; padding: 6px 10px; }
         }
@@ -573,6 +601,7 @@
                 <span class="badge ios">📱 iOS 16-20</span>
                 <span class="badge ff">🔥 com.dts.freefiremax</span>
                 <span class="badge aim">🎯 AIM PRO</span>
+                <span class="badge pro">⚡ PRO</span>
                 <span class="badge sound">🔊 Âm thanh</span>
                 <span class="badge ping">📡 Ping</span>
             </div>
@@ -593,6 +622,7 @@
             <span class="status-ok">✅ Sẵn sàng</span>
             <span class="mode-active" id="modeActive">⬜ Chưa chọn</span>
             <span class="device-count" id="deviceCount">📱 0 thiết bị</span>
+            <span class="installed-badge" id="installedBadge" style="display:none;">✅ Đã cài</span>
         </div>
     </div>
 
@@ -641,12 +671,30 @@
                 <span class="status-text ready" id="pingStatusText">📡 Chưa ping</span>
             </div>
             <div class="ping-actions">
-                <button class="btn btn-ping" id="btnPing" onclick="pingDevice()">
-                    📡 PING
-                </button>
-                <button class="btn btn-ping active" id="btnAutoPing" onclick="toggleAutoPing()">
-                    🔄 Tự động ping
-                </button>
+                <button class="btn btn-ping" id="btnPing" onclick="pingDevice()">📡 PING</button>
+                <button class="btn btn-ping active" id="btnAutoPing" onclick="toggleAutoPing()">🔄 Tự động ping</button>
+            </div>
+            <!-- DANH SÁCH THIẾT BỊ KẾT NỐI -->
+            <div class="device-list" id="deviceList">
+                <div class="device-title">📱 Thiết bị đã kết nối</div>
+                <div class="device-item">
+                    <span class="dev-icon">📱</span>
+                    <span class="dev-name" id="deviceName">iPhone 14 Pro Max</span>
+                    <span class="dev-ip" id="deviceIP">192.168.1.100</span>
+                    <span class="dev-status" id="deviceStatus">✅ Online</span>
+                </div>
+                <div class="device-item" id="device2" style="display:none;">
+                    <span class="dev-icon">📱</span>
+                    <span class="dev-name" id="deviceName2">iPhone 15 Pro</span>
+                    <span class="dev-ip" id="deviceIP2">192.168.1.101</span>
+                    <span class="dev-status" id="deviceStatus2">✅ Online</span>
+                </div>
+                <div class="device-item" id="device3" style="display:none;">
+                    <span class="dev-icon">📱</span>
+                    <span class="dev-name" id="deviceName3">iPad Pro</span>
+                    <span class="dev-ip" id="deviceIP3">192.168.1.102</span>
+                    <span class="dev-status" id="deviceStatus3">✅ Online</span>
+                </div>
             </div>
         </div>
     </div>
@@ -687,8 +735,8 @@
     <!-- ===== FOOTER ===== -->
     <div class="footer">
         <p class="highlight">🔥 Free Fire Max • com.dts.freefiremax</p>
-        <p>🎯 AIM PRO • Cổ - Đầu - Trên đầu • iOS 16 → 20</p>
-        <p style="color:#64b5f6;font-size:10px;">🔊 Có âm thanh khi bật/tắt • 📡 Kiểm tra kết nối</p>
+        <p>🎯 AIM PRO • Cổ - Đầu - Trên đầu • Độ mượt • Độ chính xác</p>
+        <p style="color:#64b5f6;font-size:10px;">🔊 Âm thanh • 📡 Kiểm tra kết nối • ⚡ PRO</p>
     </div>
 
     <!-- ===== TOAST ===== -->
@@ -780,6 +828,19 @@
                         oscillator.start(audioCtx.currentTime);
                         oscillator.stop(audioCtx.currentTime + 0.2);
                         break;
+                    case 'installed':
+                        for (let i = 0; i < 2; i++) {
+                            const osc = audioCtx.createOscillator();
+                            const gain = audioCtx.createGain();
+                            osc.connect(gain);
+                            gain.connect(audioCtx.destination);
+                            osc.frequency.setValueAtTime(700 + i * 200, audioCtx.currentTime + i * 0.2);
+                            gain.gain.setValueAtTime(0.25, audioCtx.currentTime + i * 0.2);
+                            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + i * 0.2 + 0.15);
+                            osc.start(audioCtx.currentTime + i * 0.2);
+                            osc.stop(audioCtx.currentTime + i * 0.2 + 0.15);
+                        }
+                        break;
                     default:
                         oscillator.frequency.setValueAtTime(500, audioCtx.currentTime);
                         gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
@@ -793,12 +854,20 @@
         }
 
         // ============================================================
-        // PING DEVICE - KIỂM TRA KẾT NỐI
+        // PING DEVICE + HIỂN THỊ TÊN THIẾT BỊ
         // ============================================================
         let isConnected = false;
         let deviceCount = 0;
         let autoPingInterval = null;
         let isAutoPing = false;
+        let isInstalled = false;
+
+        // Danh sách thiết bị mẫu
+        const deviceListData = [
+            { name: 'iPhone 14 Pro Max', ip: '192.168.1.100', online: true },
+            { name: 'iPhone 15 Pro', ip: '192.168.1.101', online: true },
+            { name: 'iPad Pro', ip: '192.168.1.102', online: true }
+        ];
 
         function pingDevice() {
             const btn = document.getElementById('btnPing');
@@ -808,6 +877,7 @@
             const dot = document.getElementById('statusDot');
             const statusMain = document.getElementById('statusText');
             const deviceCountEl = document.getElementById('deviceCount');
+            const deviceList = document.getElementById('deviceList');
 
             btn.disabled = true;
             btn.textContent = '⏳ ĐANG PING...';
@@ -821,7 +891,6 @@
 
             playSound('click');
 
-            // Giả lập ping
             setTimeout(() => {
                 const success = Math.random() < 0.75;
                 isConnected = success;
@@ -831,7 +900,7 @@
                 btn.textContent = '📡 PING';
 
                 if (success) {
-                    statusText.textContent = '✅ Đã kết nối!';
+                    statusText.textContent = `✅ Đã kết nối! ${deviceCount} thiết bị`;
                     statusText.className = 'status-text connected';
                     subStatus.textContent = '✅ Thiết bị đã kết nối proxy 192.168.1.8';
                     badge.className = 'ping-badge online';
@@ -839,9 +908,32 @@
                     dot.className = 'dot online';
                     statusMain.textContent = '✅ Đã kết nối';
                     deviceCountEl.textContent = `📱 ${deviceCount} thiết bị`;
+                    
+                    // Hiển thị danh sách thiết bị
+                    deviceList.classList.add('show');
+                    document.getElementById('deviceName').textContent = deviceListData[0].name;
+                    document.getElementById('deviceIP').textContent = deviceListData[0].ip;
+                    
+                    if (deviceCount >= 2) {
+                        document.getElementById('device2').style.display = 'flex';
+                        document.getElementById('deviceName2').textContent = deviceListData[1].name;
+                        document.getElementById('deviceIP2').textContent = deviceListData[1].ip;
+                    } else {
+                        document.getElementById('device2').style.display = 'none';
+                    }
+                    
+                    if (deviceCount >= 3) {
+                        document.getElementById('device3').style.display = 'flex';
+                        document.getElementById('deviceName3').textContent = deviceListData[2].name;
+                        document.getElementById('deviceIP3').textContent = deviceListData[2].ip;
+                    } else {
+                        document.getElementById('device3').style.display = 'none';
+                    }
+
                     playSound('ping_success');
                     showToast(`✅ Đã kết nối! ${deviceCount} thiết bị đang hoạt động.`);
                     console.log('✅ Ping thành công -', deviceCount, 'thiết bị kết nối');
+                    console.log('📱 Thiết bị:', deviceListData.slice(0, deviceCount).map(d => d.name).join(', '));
                 } else {
                     statusText.textContent = '❌ Không kết nối!';
                     statusText.className = 'status-text disconnected';
@@ -851,6 +943,7 @@
                     dot.className = 'dot offline';
                     statusMain.textContent = '❌ Không kết nối';
                     deviceCountEl.textContent = '📱 0 thiết bị';
+                    deviceList.classList.remove('show');
                     playSound('ping_fail');
                     showToast('❌ Không thể kết nối tới proxy!');
                     console.log('❌ Ping thất bại');
@@ -867,14 +960,8 @@
                 btn.style.background = 'linear-gradient(135deg, #ff6b00, #ff3b30)';
                 btn.style.boxShadow = '0 0 20px rgba(255, 107, 0, 0.3)';
                 showToast('🔄 Bật tự động ping (mỗi 5s)');
-                
-                // Ping ngay lập tức
                 pingDevice();
-                
-                // Ping mỗi 5 giây
-                autoPingInterval = setInterval(() => {
-                    pingDevice();
-                }, 5000);
+                autoPingInterval = setInterval(pingDevice, 5000);
             } else {
                 btn.textContent = '🔄 Tự động ping';
                 btn.style.background = '';
@@ -885,6 +972,26 @@
                 }
                 showToast('⏸ Tắt tự động ping');
             }
+        }
+
+        // ============================================================
+        // CÀI ĐẶT MOBILECONFIG THÀNH CÔNG
+        // ============================================================
+        function markAsInstalled(modeName) {
+            isInstalled = true;
+            document.getElementById('installedBadge').style.display = 'inline-block';
+            document.getElementById('installedBadge').textContent = `✅ Đã cài ${modeName}`;
+            playSound('installed');
+            showToast(`✅ Đã cài ${modeName} thành công!`);
+            console.log(`✅ ${modeName} đã được cài thành công`);
+            
+            // Cập nhật nút download
+            document.querySelectorAll('.btn-download-config').forEach(btn => {
+                if (btn.textContent.includes(modeName)) {
+                    btn.classList.add('installed');
+                    btn.textContent = `✅ Đã cài ${modeName}`;
+                }
+            });
         }
 
         // ============================================================
@@ -906,7 +1013,9 @@
                 recoilComp: 78,
                 autoLock: true,
                 fov: 130,
-                smoothness: 90
+                smoothness: 90,
+                accuracy: 85,
+                sticky: 92
             },
             weapon: {
                 m4: { name: 'M4A1', headshot: 82, recoil: 72, accuracy: 87 },
@@ -922,7 +1031,7 @@
             name: 'AIM Đầu',
             icon: '🎯',
             desc: 'Nhắm vào vùng đầu - Headshot cao',
-            tags: ['VIP', 'HEADSHOT', 'AUTO'],
+            tags: ['VIP', 'HEADSHOT', 'AUTO', 'PRO'],
             active: false,
             aim: {
                 region: 'Đầu (1.0x)',
@@ -932,7 +1041,9 @@
                 recoilComp: 65,
                 autoLock: true,
                 fov: 115,
-                smoothness: 82
+                smoothness: 85,
+                accuracy: 92,
+                sticky: 88
             },
             weapon: {
                 m4: { name: 'M4A1', headshot: 88, recoil: 60, accuracy: 82 },
@@ -947,8 +1058,8 @@
             type: 'tren',
             name: 'AIM Trên đầu',
             icon: '🔥',
-            desc: 'Nhắm trên đầu - Headshot siêu chuẩn',
-            tags: ['VIP', 'HEADSHOT', 'AUTO', 'PRO'],
+            desc: 'Nhắm trên đầu - Headshot siêu chuẩn, bám chặt',
+            tags: ['VIP', 'HEADSHOT', 'AUTO', 'PRO', 'GHIM'],
             active: false,
             aim: {
                 region: 'Trên đầu (0.8x)',
@@ -958,7 +1069,9 @@
                 recoilComp: 55,
                 autoLock: true,
                 fov: 105,
-                smoothness: 75
+                smoothness: 78,
+                accuracy: 97,
+                sticky: 95
             },
             weapon: {
                 m4: { name: 'M4A1', headshot: 92, recoil: 55, accuracy: 80 },
@@ -998,7 +1111,7 @@
         }
 
         // ============================================================
-        // TẠO MOBILECONFIG (SỬA LỖI)
+        // TẠO MOBILECONFIG
         // ============================================================
         function generateMobileConfig(mode) {
             const uuid = generateUUID();
@@ -1013,7 +1126,7 @@
     <array>
         <dict>
             <key>PayloadDescription</key>
-            <string>Proxy FF - ${mode.name} - AIM ${mode.aim.headshotRate}%</string>
+            <string>Proxy FF - ${mode.name} - AIM ${mode.aim.headshotRate}% - Độ mượt ${mode.aim.smoothness}% - Độ chính xác ${mode.aim.accuracy}%</string>
             <key>PayloadDisplayName</key>
             <string>${mode.icon} ${mode.name} - AIM PRO</string>
             <key>PayloadIdentifier</key>
@@ -1025,7 +1138,7 @@
             <key>PayloadVersion</key>
             <integer>1</integer>
             <key>URL</key>
-            <string>http://192.168.1.8:8080/proxy/${mode.type}?aim=${mode.aim.headshotRate}&amp;ios=${currentIOS}</string>
+            <string>http://192.168.1.8:8080/proxy/${mode.type}?aim=${mode.aim.headshotRate}&amp;ios=${currentIOS}&amp;smooth=${mode.aim.smoothness}&amp;accuracy=${mode.aim.accuracy}</string>
             <key>IsRemovable</key>
             <true/>
             <key>Label</key>
@@ -1033,7 +1146,7 @@
         </dict>
     </array>
     <key>PayloadDescription</key>
-    <string>Proxy FF - ${mode.name} - AIM ${mode.aim.headshotRate}% - iOS ${currentIOS}</string>
+    <string>Proxy FF - ${mode.name} - AIM ${mode.aim.headshotRate}% - Độ mượt ${mode.aim.smoothness}% - Độ chính xác ${mode.aim.accuracy}% - iOS ${currentIOS}</string>
     <key>PayloadDisplayName</key>
     <string>Proxy FF - ${mode.name}</string>
     <key>PayloadIdentifier</key>
@@ -1068,6 +1181,12 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             playSound('download');
+            
+            // Hiển thị thông báo đã cài
+            setTimeout(() => {
+                markAsInstalled(mode.name);
+            }, 1000);
+            
             showToast(`📥 Đã tải ${mode.name} về máy!`);
         }
 
@@ -1084,10 +1203,25 @@
                 playSound('off');
                 return;
             }
-            active.forEach(mode => {
+            active.forEach((mode, index) => {
                 setTimeout(() => {
-                    downloadMobileConfig(mode);
-                }, 500 * active.indexOf(mode));
+                    const xml = generateMobileConfig(mode);
+                    const blob = new Blob([xml], { type: 'application/x-apple-aspen-config' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `proxy_ff_${mode.type}_ios${currentIOS}_${Date.now()}.mobileconfig`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    if (index === active.length - 1) {
+                        setTimeout(() => {
+                            markAsInstalled('tất cả');
+                        }, 1000);
+                    }
+                }, 500 * index);
             });
             playSound('download');
             showToast(`📥 Đang tải ${active.length} cấu hình...`);
@@ -1115,7 +1249,7 @@
                             <div class="mode-name">${m.icon} ${m.name}</div>
                             <div class="mode-desc">${m.desc}</div>
                             <div class="mode-meta">
-                                ${m.tags.map(t => `<span class="tag ${t.toLowerCase() === 'headshot' ? 'headshot' : ''} ${t.toLowerCase() === 'ghim' ? 'ghim' : ''} ${t.toLowerCase() === 'vip' ? 'vip' : ''}">${t}</span>`).join('')}
+                                ${m.tags.map(t => `<span class="tag ${t.toLowerCase() === 'headshot' ? 'headshot' : ''} ${t.toLowerCase() === 'ghim' ? 'ghim' : ''} ${t.toLowerCase() === 'vip' ? 'vip' : ''} ${t.toLowerCase() === 'pro' ? 'pro' : ''}">${t}</span>`).join('')}
                                 <span class="tag">📱 iOS ${currentIOS}</span>
                             </div>
                         </div>
@@ -1147,8 +1281,30 @@
                             <div class="aim-item"><span class="label">Bù giật</span><span class="value green">${m.aim.recoilComp}%</span></div>
                             <div class="aim-item"><span class="label">Auto Lock</span><span class="value ${m.aim.autoLock ? 'green' : 'red'}">${m.aim.autoLock ? '✅ Bật' : '⛔ Tắt'}</span></div>
                             <div class="aim-item"><span class="label">FOV</span><span class="value gold">${m.aim.fov}°</span></div>
-                            <div class="aim-item"><span class="label">Độ mượt</span><span class="value green">${m.aim.smoothness}%</span></div>
+                            <div class="aim-item"><span class="label">Độ mượt</span><span class="value blue">${m.aim.smoothness}%</span></div>
+                            <div class="aim-item"><span class="label">Độ chính xác</span><span class="value purple">${m.aim.accuracy}%</span></div>
+                            <div class="aim-item"><span class="label">Độ bám</span><span class="value green">${m.aim.sticky}%</span></div>
                         </div>
+
+                        <div class="aim-quality">
+                            <div class="quality-item">
+                                <span class="q-label">⚡ Độ mượt</span>
+                                <span class="q-value smooth">${m.aim.smoothness}%</span>
+                            </div>
+                            <div class="quality-item">
+                                <span class="q-label">🎯 Độ chính xác</span>
+                                <span class="q-value accurate">${m.aim.accuracy}%</span>
+                            </div>
+                            <div class="quality-item">
+                                <span class="q-label">📌 Độ bám đầu</span>
+                                <span class="q-value sticky">${m.aim.sticky}%</span>
+                            </div>
+                            <div class="quality-item">
+                                <span class="q-label">🔫 Headshot</span>
+                                <span class="q-value" style="color:#ff6b00;">${m.aim.headshotRate}%</span>
+                            </div>
+                        </div>
+
                         <div class="weapon-aim">
                             <div class="weapon-title">🔫 AIM THEO VŨ KHÍ</div>
                             <div class="weapon-grid">
@@ -1160,20 +1316,26 @@
                                 <div class="weapon-item"><span class="w-label">${m.weapon.ump.name}</span><span class="w-value blue">🎯 ${m.weapon.ump.headshot}%</span></div>
                             </div>
                         </div>
+
                         <div class="aim-bar-wrap">
                             <div class="bar-label"><span>🎯 Headshot Rate</span><span style="color:#ff6b00;font-weight:700;">${m.aim.headshotRate}%</span></div>
                             <div class="aim-bar"><div class="fill orange" style="width:${m.aim.headshotRate}%;"></div></div>
                         </div>
                         <div class="aim-bar-wrap">
-                            <div class="bar-label"><span>⚡ Độ nhạy</span><span>${(m.aim.sensitivity/2*100).toFixed(0)}%</span></div>
-                            <div class="aim-bar"><div class="fill gold" style="width:${(m.aim.sensitivity/2*100).toFixed(0)}%;"></div></div>
+                            <div class="bar-label"><span>⚡ Độ mượt</span><span style="color:#64b5f6;font-weight:700;">${m.aim.smoothness}%</span></div>
+                            <div class="aim-bar"><div class="fill blue" style="width:${m.aim.smoothness}%;"></div></div>
                         </div>
                         <div class="aim-bar-wrap">
-                            <div class="bar-label"><span>🛡️ Bù giật</span><span>${m.aim.recoilComp}%</span></div>
-                            <div class="aim-bar"><div class="fill blue" style="width:${m.aim.recoilComp}%;"></div></div>
+                            <div class="bar-label"><span>🎯 Độ chính xác</span><span style="color:#9b59b6;font-weight:700;">${m.aim.accuracy}%</span></div>
+                            <div class="aim-bar"><div class="fill purple" style="width:${m.aim.accuracy}%;"></div></div>
                         </div>
+                        <div class="aim-bar-wrap">
+                            <div class="bar-label"><span>📌 Độ bám</span><span style="color:#4caf50;font-weight:700;">${m.aim.sticky}%</span></div>
+                            <div class="aim-bar"><div class="fill green" style="width:${m.aim.sticky}%;"></div></div>
+                        </div>
+
                         <button class="btn-download-config" onclick="downloadMobileConfigForMode(${m.id})" ${!m.active ? 'disabled' : ''}>
-                            📥 Tải MobileConfig - ${m.name}
+                            ${m.active && isInstalled ? '✅ Đã cài' : '📥 Tải MobileConfig - ' + m.name}
                         </button>
                     </div>
                 </div>
@@ -1224,12 +1386,17 @@
                 statusDetail.className = 'status-detail on';
                 statusDetail.textContent = `🎯 ${mode.aim.headshotRate}%`;
                 aimData.classList.add('show');
-                if (downloadBtn) downloadBtn.disabled = false;
+                if (downloadBtn) {
+                    downloadBtn.disabled = false;
+                    if (!isInstalled) {
+                        downloadBtn.textContent = `📥 Tải MobileConfig - ${mode.name}`;
+                    }
+                }
                 playSound('on');
-                showToast(`✅ Đã bật: ${mode.name} - ${mode.aim.headshotRate}%`);
+                showToast(`✅ Đã bật: ${mode.name} - ${mode.aim.headshotRate}% - Độ mượt ${mode.aim.smoothness}% - Độ chính xác ${mode.aim.accuracy}%`);
                 document.getElementById('modeActive').textContent = `▶️ ${mode.name}`;
                 document.getElementById('modeActive').style.color = '#4caf50';
-                console.log(`🎯 ${mode.name} activated - Headshot: ${mode.aim.headshotRate}%`);
+                console.log(`🎯 ${mode.name} activated - Headshot: ${mode.aim.headshotRate}% - Smooth: ${mode.aim.smoothness}% - Accuracy: ${mode.aim.accuracy}%`);
             } else {
                 card.classList.remove('active');
                 toggle.classList.remove('active');
@@ -1238,7 +1405,10 @@
                 statusDetail.className = 'status-detail';
                 statusDetail.textContent = 'Nhấn bật';
                 aimData.classList.remove('show');
-                if (downloadBtn) downloadBtn.disabled = true;
+                if (downloadBtn) {
+                    downloadBtn.disabled = true;
+                    downloadBtn.textContent = `📥 Tải MobileConfig - ${mode.name}`;
+                }
                 playSound('off');
                 showToast(`⛔ Đã tắt: ${mode.name}`);
                 const active = aimModes.filter(m => m.active);
@@ -1270,7 +1440,7 @@
             if (active.length === 0) {
                 sub.textContent = '⏳ Chưa có chế độ nào được bật • com.dts.freefiremax';
             } else {
-                sub.textContent = `✅ Đã bật ${active.length} chế độ: ${active.map(m => m.name).join(', ')} • 🎯 AIM PRO`;
+                sub.textContent = `✅ Đã bật ${active.length} chế độ: ${active.map(m => m.name).join(', ')} • 🎯 AIM PRO • ⚡ Độ mượt/Độ chính xác`;
             }
         }
 
@@ -1304,7 +1474,12 @@
                     const aimData = document.getElementById(`aimData-${m.id}`);
                     if (aimData) aimData.classList.add('show');
                     const downloadBtn = card.querySelector('.btn-download-config');
-                    if (downloadBtn) downloadBtn.disabled = false;
+                    if (downloadBtn) {
+                        downloadBtn.disabled = false;
+                        if (!isInstalled) {
+                            downloadBtn.textContent = `📥 Tải MobileConfig - ${m.name}`;
+                        }
+                    }
                 }
             });
 
@@ -1326,8 +1501,10 @@
                 connection: {
                     status: isConnected ? 'connected' : 'disconnected',
                     devices: deviceCount,
-                    ip: '192.168.1.8'
+                    ip: '192.168.1.8',
+                    device_list: deviceListData.slice(0, deviceCount)
                 },
+                installed: isInstalled,
                 modes: aimModes,
                 active_count: aimModes.filter(m => m.active).length,
                 exported_at: new Date().toISOString()
@@ -1391,14 +1568,15 @@
         document.addEventListener('click', initAudio, { once: true });
         document.addEventListener('touchstart', initAudio, { once: true });
 
-        // Auto ping lần đầu
         setTimeout(pingDevice, 1000);
 
         console.log('✅ PROXY FF - AIM PRO sẵn sàng!');
         console.log('📦 Package: com.dts.freefiremax');
         console.log('🎯 3 chế độ: Cổ - Đầu - Trên đầu');
+        console.log('⚡ Mỗi chế độ có: Độ mượt, Độ chính xác, Độ bám riêng');
         console.log('🔊 Âm thanh: Bật/tắt có tiếng');
-        console.log('📡 Ping: Kiểm tra kết nối thiết bị');
+        console.log('📡 Ping: Kiểm tra kết nối thiết bị + hiển thị tên thiết bị');
+        console.log('✅ Khi cài MobileConfig sẽ hiển thị "Đã cài thành công"');
         console.log('📥 Tải MobileConfig khi đã kết nối');
     </script>
 
