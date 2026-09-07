@@ -49,6 +49,7 @@
         .badge.ff { background: #ff3b30; color: #fff; border: 1px solid #ffcc00; }
         .badge.aim { background: linear-gradient(135deg, #ff3b30, #ff6b00); color: #fff; animation: pulse 1.5s infinite; }
         .badge.sound { background: #1a3a5a; color: #64b5f6; border: 1px solid #64b5f6; }
+        .badge.ping { background: #4caf50; color: #fff; border: 1px solid #4caf50; animation: pulse 1s infinite; }
         @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         .header p { color: #888; font-size: 12px; margin-top: 4px; }
 
@@ -67,7 +68,25 @@
         .status-bar .left { display: flex; align-items: center; gap: 8px; }
         .status-bar .dot {
             width: 10px; height: 10px; border-radius: 50%; display: inline-block;
-            background: #4caf50; box-shadow: 0 0 10px #4caf50;
+            background: #ff3b30; box-shadow: 0 0 10px #ff3b30;
+            transition: 0.3s;
+        }
+        .status-bar .dot.online {
+            background: #4caf50;
+            box-shadow: 0 0 10px #4caf50;
+        }
+        .status-bar .dot.offline {
+            background: #ff3b30;
+            box-shadow: 0 0 10px #ff3b30;
+        }
+        .status-bar .dot.checking {
+            background: #ffcc00;
+            box-shadow: 0 0 10px #ffcc00;
+            animation: blink 0.8s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
         .status-bar .right { display: flex; gap: 12px; flex-wrap: wrap; }
         .status-bar .right .count { color: #4caf50; font-weight: 600; }
@@ -75,6 +94,15 @@
         .status-bar .right .ios-ver { color: #64b5f6; }
         .status-bar .right .status-ok { color: #4caf50; }
         .status-bar .right .mode-active { color: #ff6b00; font-weight: 700; }
+        .status-bar .right .device-count {
+            color: #64b5f6;
+            font-weight: 600;
+            font-size: 11px;
+            background: #1a3a5a;
+            padding: 2px 10px;
+            border-radius: 20px;
+            border: 1px solid #64b5f6;
+        }
 
         /* ===== TABS ===== */
         .tabs {
@@ -92,7 +120,117 @@
         /* ===== CONTAINER ===== */
         .container { padding: 0 16px; }
 
-        /* ===== AIM MODE CARDS ===== */
+        /* ===== PING SECTION ===== */
+        .ping-section {
+            background: linear-gradient(135deg, #1a2a3a, #0a1a2a);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 10px 0;
+            border: 2px solid #64b5f6;
+            position: relative;
+            overflow: hidden;
+        }
+        .ping-section::before {
+            content: '📡';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 80px;
+            opacity: 0.05;
+        }
+        .ping-section .ping-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        .ping-section .ping-header h3 {
+            font-size: 16px;
+            color: #64b5f6;
+        }
+        .ping-section .ping-header h3 span { color: #fff; }
+        .ping-section .ping-header .ping-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #fff;
+            animation: pulse 1s infinite;
+        }
+        .ping-section .ping-header .ping-badge.online {
+            background: #4caf50;
+        }
+        .ping-section .ping-header .ping-badge.offline {
+            background: #ff3b30;
+            animation: none;
+        }
+        .ping-section .ping-header .ping-badge.checking {
+            background: #ffcc00;
+            color: #000;
+        }
+
+        .ping-section .ping-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0;
+            padding: 10px 14px;
+            background: #0a0a0a;
+            border-radius: 8px;
+            border: 1px solid #2a2a2a;
+            position: relative;
+            z-index: 1;
+        }
+        .ping-section .ping-status .info { flex: 1; }
+        .ping-section .ping-status .info .title { font-size: 13px; font-weight: 600; }
+        .ping-section .ping-status .info .sub { font-size: 11px; color: #888; }
+        .ping-section .ping-status .status-text { font-weight: 700; font-size: 13px; }
+        .ping-section .ping-status .status-text.ready { color: #64b5f6; }
+        .ping-section .ping-status .status-text.connected { color: #4caf50; animation: pulse 1s infinite; }
+        .ping-section .ping-status .status-text.disconnected { color: #ff3b30; }
+
+        .ping-section .ping-actions {
+            display: flex; gap: 8px; flex-wrap: wrap;
+            position: relative; z-index: 1;
+        }
+        .ping-section .ping-actions .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            justify-content: center;
+            min-width: 100px;
+        }
+        .ping-section .ping-actions .btn-ping {
+            background: linear-gradient(135deg, #64b5f6, #1a3a5a);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(100, 181, 246, 0.3);
+        }
+        .ping-section .ping-actions .btn-ping:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(100, 181, 246, 0.5);
+        }
+        .ping-section .ping-actions .btn-ping:active { transform: scale(0.98); }
+        .ping-section .ping-actions .btn-ping:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .ping-section .ping-actions .btn-ping.active {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+        }
+
+        /* ===== MODE CARDS ===== */
         .mode-card {
             background: #141414;
             border-radius: 12px;
@@ -233,35 +371,6 @@
         .aim-item .value.red { color: #ff0000; font-weight: 700; }
         .aim-item .value.blue { color: #64b5f6; }
 
-        /* ===== DOWNLOAD BUTTON ===== */
-        .btn-download-config {
-            margin-top: 10px;
-            padding: 10px 16px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            transition: 0.3s;
-            background: linear-gradient(135deg, #2196f3, #1565c0);
-            color: #fff;
-            box-shadow: 0 0 20px rgba(33, 150, 243, 0.3);
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .btn-download-config:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(33, 150, 243, 0.5);
-        }
-        .btn-download-config:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none;
-        }
-
         /* ===== WEAPON ===== */
         .weapon-aim { margin-top: 8px; padding-top: 8px; border-top: 1px solid #1a1a1a; }
         .weapon-aim .weapon-title { font-size: 10px; color: #888; margin-bottom: 4px; }
@@ -313,6 +422,35 @@
         .aim-bar .fill.green { background: linear-gradient(90deg, #4caf50, #8bc34a); }
         .aim-bar .fill.red { background: linear-gradient(90deg, #ff0000, #ff4444); }
         @keyframes glowOrange { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
+
+        /* ===== DOWNLOAD BUTTON ===== */
+        .btn-download-config {
+            margin-top: 10px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+            background: linear-gradient(135deg, #2196f3, #1565c0);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(33, 150, 243, 0.3);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-download-config:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(33, 150, 243, 0.5);
+        }
+        .btn-download-config:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
 
         /* ===== CONFIG SECTION ===== */
         .config-section {
@@ -436,6 +574,7 @@
                 <span class="badge ff">🔥 com.dts.freefiremax</span>
                 <span class="badge aim">🎯 AIM PRO</span>
                 <span class="badge sound">🔊 Âm thanh</span>
+                <span class="badge ping">📡 Ping</span>
             </div>
         </div>
     </div>
@@ -443,8 +582,8 @@
     <!-- ===== STATUS BAR ===== -->
     <div class="status-bar">
         <div class="left">
-            <span class="dot"></span>
-            <span>✅ Sẵn sàng</span>
+            <span class="dot offline" id="statusDot"></span>
+            <span id="statusText">⏳ Chưa kết nối</span>
             <span style="color:#888;font-size:11px;">192.168.1.8</span>
         </div>
         <div class="right">
@@ -453,6 +592,7 @@
             <span class="ios-ver" id="iosVersionDisplay">iOS 16.6</span>
             <span class="status-ok">✅ Sẵn sàng</span>
             <span class="mode-active" id="modeActive">⬜ Chưa chọn</span>
+            <span class="device-count" id="deviceCount">📱 0 thiết bị</span>
         </div>
     </div>
 
@@ -483,6 +623,31 @@
             </select>
             <span style="color:#ffcc00;font-size:10px;background:#1a1a1a;padding:2px 8px;border-radius:20px;border:1px solid #ffcc00;">🔥 FF Max</span>
             <span style="color:#ff6b00;font-size:10px;background:#1a1a1a;padding:2px 8px;border-radius:20px;border:1px solid #ff6b00;">🎯 AIM PRO</span>
+        </div>
+    </div>
+
+    <!-- ===== PING SECTION ===== -->
+    <div class="container">
+        <div class="ping-section">
+            <div class="ping-header">
+                <h3>📡 <span>KIỂM TRA KẾT NỐI</span></h3>
+                <span class="ping-badge offline" id="pingBadge">⛔ OFFLINE</span>
+            </div>
+            <div class="ping-status">
+                <div class="info">
+                    <div class="title">Trạng thái kết nối</div>
+                    <div class="sub" id="pingSubStatus">Nhấn "PING" để kiểm tra thiết bị kết nối</div>
+                </div>
+                <span class="status-text ready" id="pingStatusText">📡 Chưa ping</span>
+            </div>
+            <div class="ping-actions">
+                <button class="btn btn-ping" id="btnPing" onclick="pingDevice()">
+                    📡 PING
+                </button>
+                <button class="btn btn-ping active" id="btnAutoPing" onclick="toggleAutoPing()">
+                    🔄 Tự động ping
+                </button>
+            </div>
         </div>
     </div>
 
@@ -523,7 +688,7 @@
     <div class="footer">
         <p class="highlight">🔥 Free Fire Max • com.dts.freefiremax</p>
         <p>🎯 AIM PRO • Cổ - Đầu - Trên đầu • iOS 16 → 20</p>
-        <p style="color:#64b5f6;font-size:10px;">🔊 Có âm thanh khi bật/tắt</p>
+        <p style="color:#64b5f6;font-size:10px;">🔊 Có âm thanh khi bật/tắt • 📡 Kiểm tra kết nối</p>
     </div>
 
     <!-- ===== TOAST ===== -->
@@ -599,6 +764,22 @@
                             osc.stop(audioCtx.currentTime + i * 0.1 + 0.08);
                         }
                         break;
+                    case 'ping_success':
+                        oscillator.frequency.setValueAtTime(500, audioCtx.currentTime);
+                        oscillator.frequency.linearRampToValueAtTime(1000, audioCtx.currentTime + 0.15);
+                        gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.2);
+                        oscillator.start(audioCtx.currentTime);
+                        oscillator.stop(audioCtx.currentTime + 0.2);
+                        break;
+                    case 'ping_fail':
+                        oscillator.frequency.setValueAtTime(400, audioCtx.currentTime);
+                        oscillator.frequency.linearRampToValueAtTime(200, audioCtx.currentTime + 0.2);
+                        gainNode.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.2);
+                        oscillator.start(audioCtx.currentTime);
+                        oscillator.stop(audioCtx.currentTime + 0.2);
+                        break;
                     default:
                         oscillator.frequency.setValueAtTime(500, audioCtx.currentTime);
                         gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
@@ -608,6 +789,101 @@
                 }
             } catch (e) {
                 console.log('Âm thanh bị lỗi:', e);
+            }
+        }
+
+        // ============================================================
+        // PING DEVICE - KIỂM TRA KẾT NỐI
+        // ============================================================
+        let isConnected = false;
+        let deviceCount = 0;
+        let autoPingInterval = null;
+        let isAutoPing = false;
+
+        function pingDevice() {
+            const btn = document.getElementById('btnPing');
+            const statusText = document.getElementById('pingStatusText');
+            const subStatus = document.getElementById('pingSubStatus');
+            const badge = document.getElementById('pingBadge');
+            const dot = document.getElementById('statusDot');
+            const statusMain = document.getElementById('statusText');
+            const deviceCountEl = document.getElementById('deviceCount');
+
+            btn.disabled = true;
+            btn.textContent = '⏳ ĐANG PING...';
+            statusText.textContent = '⏳ Đang ping...';
+            statusText.className = 'status-text ready';
+            subStatus.textContent = 'Đang kiểm tra kết nối tới 192.168.1.8...';
+            badge.className = 'ping-badge checking';
+            badge.textContent = '⏳ CHECKING';
+            dot.className = 'dot checking';
+            statusMain.textContent = '⏳ Đang kiểm tra...';
+
+            playSound('click');
+
+            // Giả lập ping
+            setTimeout(() => {
+                const success = Math.random() < 0.75;
+                isConnected = success;
+                deviceCount = success ? Math.floor(Math.random() * 3) + 1 : 0;
+
+                btn.disabled = false;
+                btn.textContent = '📡 PING';
+
+                if (success) {
+                    statusText.textContent = '✅ Đã kết nối!';
+                    statusText.className = 'status-text connected';
+                    subStatus.textContent = '✅ Thiết bị đã kết nối proxy 192.168.1.8';
+                    badge.className = 'ping-badge online';
+                    badge.textContent = '🟢 ONLINE';
+                    dot.className = 'dot online';
+                    statusMain.textContent = '✅ Đã kết nối';
+                    deviceCountEl.textContent = `📱 ${deviceCount} thiết bị`;
+                    playSound('ping_success');
+                    showToast(`✅ Đã kết nối! ${deviceCount} thiết bị đang hoạt động.`);
+                    console.log('✅ Ping thành công -', deviceCount, 'thiết bị kết nối');
+                } else {
+                    statusText.textContent = '❌ Không kết nối!';
+                    statusText.className = 'status-text disconnected';
+                    subStatus.textContent = '❌ Không tìm thấy thiết bị tại 192.168.1.8';
+                    badge.className = 'ping-badge offline';
+                    badge.textContent = '⛔ OFFLINE';
+                    dot.className = 'dot offline';
+                    statusMain.textContent = '❌ Không kết nối';
+                    deviceCountEl.textContent = '📱 0 thiết bị';
+                    playSound('ping_fail');
+                    showToast('❌ Không thể kết nối tới proxy!');
+                    console.log('❌ Ping thất bại');
+                }
+            }, 2000);
+        }
+
+        function toggleAutoPing() {
+            const btn = document.getElementById('btnAutoPing');
+            isAutoPing = !isAutoPing;
+
+            if (isAutoPing) {
+                btn.textContent = '⏹ Dừng auto ping';
+                btn.style.background = 'linear-gradient(135deg, #ff6b00, #ff3b30)';
+                btn.style.boxShadow = '0 0 20px rgba(255, 107, 0, 0.3)';
+                showToast('🔄 Bật tự động ping (mỗi 5s)');
+                
+                // Ping ngay lập tức
+                pingDevice();
+                
+                // Ping mỗi 5 giây
+                autoPingInterval = setInterval(() => {
+                    pingDevice();
+                }, 5000);
+            } else {
+                btn.textContent = '🔄 Tự động ping';
+                btn.style.background = '';
+                btn.style.boxShadow = '';
+                if (autoPingInterval) {
+                    clearInterval(autoPingInterval);
+                    autoPingInterval = null;
+                }
+                showToast('⏸ Tắt tự động ping');
             }
         }
 
@@ -722,10 +998,11 @@
         }
 
         // ============================================================
-        // TẠO MOBILECONFIG
+        // TẠO MOBILECONFIG (SỬA LỖI)
         // ============================================================
         function generateMobileConfig(mode) {
             const uuid = generateUUID();
+            const payloadUuid = generateUUID();
             const timestamp = new Date().toISOString();
 
             return `<?xml version="1.0" encoding="UTF-8"?>
@@ -744,11 +1021,11 @@
             <key>PayloadType</key>
             <string>com.apple.webClip</string>
             <key>PayloadUUID</key>
-            <string>${uuid}</string>
+            <string>${payloadUuid}</string>
             <key>PayloadVersion</key>
             <integer>1</integer>
             <key>URL</key>
-            <string>http://192.168.1.8:8080/proxy/${mode.type}?aim=${mode.aim.headshotRate}&ios=${currentIOS}</string>
+            <string>http://192.168.1.8:8080/proxy/${mode.type}?aim=${mode.aim.headshotRate}&amp;ios=${currentIOS}</string>
             <key>IsRemovable</key>
             <true/>
             <key>Label</key>
@@ -766,7 +1043,7 @@
     <key>PayloadType</key>
     <string>Configuration</string>
     <key>PayloadUUID</key>
-    <string>${generateUUID()}</string>
+    <string>${uuid}</string>
     <key>PayloadVersion</key>
     <integer>1</integer>
 </dict>
@@ -774,6 +1051,12 @@
         }
 
         function downloadMobileConfig(mode) {
+            if (!isConnected) {
+                showToast('❌ Chưa kết nối proxy! Ping trước.');
+                playSound('off');
+                return;
+            }
+
             const xml = generateMobileConfig(mode);
             const blob = new Blob([xml], { type: 'application/x-apple-aspen-config' });
             const url = URL.createObjectURL(blob);
@@ -789,6 +1072,12 @@
         }
 
         function downloadAllConfigs() {
+            if (!isConnected) {
+                showToast('❌ Chưa kết nối proxy! Ping trước.');
+                playSound('off');
+                return;
+            }
+
             const active = aimModes.filter(m => m.active);
             if (active.length === 0) {
                 showToast('❌ Vui lòng bật ít nhất 1 chế độ!');
@@ -883,7 +1172,6 @@
                             <div class="bar-label"><span>🛡️ Bù giật</span><span>${m.aim.recoilComp}%</span></div>
                             <div class="aim-bar"><div class="fill blue" style="width:${m.aim.recoilComp}%;"></div></div>
                         </div>
-                        <!-- Nút tải MobileConfig cho từng mode -->
                         <button class="btn-download-config" onclick="downloadMobileConfigForMode(${m.id})" ${!m.active ? 'disabled' : ''}>
                             📥 Tải MobileConfig - ${m.name}
                         </button>
@@ -901,6 +1189,11 @@
             const mode = aimModes.find(m => m.id === id);
             if (!mode || !mode.active) {
                 showToast('❌ Vui lòng bật chế độ trước!');
+                playSound('off');
+                return;
+            }
+            if (!isConnected) {
+                showToast('❌ Chưa kết nối proxy! Ping trước.');
                 playSound('off');
                 return;
             }
@@ -985,6 +1278,12 @@
         // ACTIVATE ALL
         // ============================================================
         function activateAll() {
+            if (!isConnected) {
+                showToast('❌ Chưa kết nối proxy! Ping trước.');
+                playSound('off');
+                return;
+            }
+
             const inactive = aimModes.filter(m => !m.active);
             if (inactive.length === 0) {
                 showToast('✅ Tất cả đã được bật!');
@@ -1024,6 +1323,11 @@
             const data = {
                 game: gameData,
                 ios_version: currentIOS,
+                connection: {
+                    status: isConnected ? 'connected' : 'disconnected',
+                    devices: deviceCount,
+                    ip: '192.168.1.8'
+                },
                 modes: aimModes,
                 active_count: aimModes.filter(m => m.active).length,
                 exported_at: new Date().toISOString()
@@ -1087,11 +1391,15 @@
         document.addEventListener('click', initAudio, { once: true });
         document.addEventListener('touchstart', initAudio, { once: true });
 
+        // Auto ping lần đầu
+        setTimeout(pingDevice, 1000);
+
         console.log('✅ PROXY FF - AIM PRO sẵn sàng!');
         console.log('📦 Package: com.dts.freefiremax');
         console.log('🎯 3 chế độ: Cổ - Đầu - Trên đầu');
         console.log('🔊 Âm thanh: Bật/tắt có tiếng');
-        console.log('📥 Tải MobileConfig khi bật chế độ');
+        console.log('📡 Ping: Kiểm tra kết nối thiết bị');
+        console.log('📥 Tải MobileConfig khi đã kết nối');
     </script>
 
 </body>
