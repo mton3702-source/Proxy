@@ -52,6 +52,7 @@
         .badge.sound { background: #1a3a5a; color: #64b5f6; border: 1px solid #64b5f6; }
         .badge.ping { background: #4caf50; color: #fff; border: 1px solid #4caf50; animation: pulse 1s infinite; }
         .badge.pro { background: #ff6b00; color: #fff; border: 1px solid #ff6b00; animation: pulse 1s infinite; }
+        .badge.vpn { background: #9b59b6; color: #fff; border: 1px solid #9b59b6; animation: pulse 1s infinite; }
         @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         .header p { color: #888; font-size: 12px; margin-top: 4px; }
 
@@ -101,6 +102,15 @@
             border: 1px solid #4caf50;
             animation: pulse 1s infinite;
         }
+        .status-bar .right .vpn-status {
+            color: #9b59b6;
+            font-weight: 600;
+            font-size: 11px;
+            background: #1a1a2a;
+            padding: 2px 10px;
+            border-radius: 20px;
+            border: 1px solid #9b59b6;
+        }
 
         .tabs {
             display: flex; gap: 6px; padding: 0 16px 10px;
@@ -116,7 +126,7 @@
 
         .container { padding: 0 16px; }
 
-        /* ===== PING SECTION ===== */
+        /* ===== PING + VPN SECTION ===== */
         .ping-section {
             background: linear-gradient(135deg, #1a2a3a, #0a1a2a);
             border-radius: 12px;
@@ -169,6 +179,7 @@
         .ping-section .ping-status .status-text.ready { color: #64b5f6; }
         .ping-section .ping-status .status-text.connected { color: #4caf50; animation: pulse 1s infinite; }
         .ping-section .ping-status .status-text.disconnected { color: #ff3b30; }
+        .ping-section .ping-status .status-text.sending { color: #9b59b6; animation: pulse 0.5s infinite; }
 
         .ping-section .ping-actions {
             display: flex; gap: 8px; flex-wrap: wrap;
@@ -198,6 +209,16 @@
         .ping-section .ping-actions .btn-ping:active { transform: scale(0.98); }
         .ping-section .ping-actions .btn-ping:disabled { opacity: 0.5; cursor: not-allowed; }
         .ping-section .ping-actions .btn-ping.active {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+        }
+        .ping-section .ping-actions .btn-vpn {
+            background: linear-gradient(135deg, #9b59b6, #6c3483);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(155, 89, 182, 0.3);
+        }
+        .ping-section .ping-actions .btn-vpn:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(155, 89, 182, 0.5); }
+        .ping-section .ping-actions .btn-vpn.active {
             background: linear-gradient(135deg, #4caf50, #2e7d32);
             box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
         }
@@ -578,6 +599,29 @@
         }
         .toast.show { display: block; }
 
+        .log-panel {
+            margin-top: 10px;
+            padding: 10px;
+            background: #0a0a0a;
+            border-radius: 8px;
+            border: 1px solid #2a2a2a;
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 10px;
+            font-family: monospace;
+            color: #4caf50;
+            display: none;
+            position: relative;
+            z-index: 1;
+        }
+        .log-panel.show { display: block; }
+        .log-panel .log-item { padding: 2px 0; border-bottom: 1px solid #1a1a1a; }
+        .log-panel .log-item .log-time { color: #888; }
+        .log-panel .log-item .log-ok { color: #4caf50; }
+        .log-panel .log-item .log-error { color: #ff3b30; }
+        .log-panel .log-item .log-info { color: #64b5f6; }
+        .log-panel .log-item .log-vpn { color: #9b59b6; }
+
         @media (max-width: 480px) {
             .header h1 { font-size: 18px; }
             .aim-grid { grid-template-columns: 1fr; }
@@ -604,6 +648,7 @@
                 <span class="badge pro">⚡ PRO</span>
                 <span class="badge sound">🔊 Âm thanh</span>
                 <span class="badge ping">📡 Ping</span>
+                <span class="badge vpn">🔒 VPN</span>
             </div>
         </div>
     </div>
@@ -623,6 +668,7 @@
             <span class="mode-active" id="modeActive">⬜ Chưa chọn</span>
             <span class="device-count" id="deviceCount">📱 0 thiết bị</span>
             <span class="installed-badge" id="installedBadge" style="display:none;">✅ Đã cài</span>
+            <span class="vpn-status" id="vpnStatus">🔒 VPN: OFF</span>
         </div>
     </div>
 
@@ -653,28 +699,36 @@
             </select>
             <span style="color:#ffcc00;font-size:10px;background:#1a1a1a;padding:2px 8px;border-radius:20px;border:1px solid #ffcc00;">🔥 FF Max</span>
             <span style="color:#ff6b00;font-size:10px;background:#1a1a1a;padding:2px 8px;border-radius:20px;border:1px solid #ff6b00;">🎯 AIM PRO</span>
+            <span style="color:#9b59b6;font-size:10px;background:#1a1a2a;padding:2px 8px;border-radius:20px;border:1px solid #9b59b6;">🔒 VPN</span>
         </div>
     </div>
 
-    <!-- ===== PING SECTION ===== -->
+    <!-- ===== PING + VPN SECTION ===== -->
     <div class="container">
         <div class="ping-section">
             <div class="ping-header">
-                <h3>📡 <span>KIỂM TRA KẾT NỐI</span></h3>
+                <h3>📡 <span>KẾT NỐI PROXY + VPN</span></h3>
                 <span class="ping-badge offline" id="pingBadge">⛔ OFFLINE</span>
             </div>
             <div class="ping-status">
                 <div class="info">
                     <div class="title">Trạng thái kết nối</div>
-                    <div class="sub" id="pingSubStatus">Nhấn "PING" để kiểm tra thiết bị kết nối</div>
+                    <div class="sub" id="pingSubStatus">Nhấn "PING" để kiểm tra và gửi dữ liệu AIM</div>
                 </div>
                 <span class="status-text ready" id="pingStatusText">📡 Chưa ping</span>
             </div>
             <div class="ping-actions">
-                <button class="btn btn-ping" id="btnPing" onclick="pingDevice()">📡 PING</button>
-                <button class="btn btn-ping active" id="btnAutoPing" onclick="toggleAutoPing()">🔄 Tự động ping</button>
+                <button class="btn btn-ping" id="btnPing" onclick="pingAndSendAIM()">📡 PING + GỬI AIM</button>
+                <button class="btn btn-vpn" id="btnVPN" onclick="toggleVPN()">🔒 VPN</button>
+                <button class="btn btn-ping active" id="btnAutoPing" onclick="toggleAutoPing()">🔄 Tự động</button>
             </div>
-            <!-- DANH SÁCH THIẾT BỊ KẾT NỐI -->
+            
+            <!-- LOG PANEL -->
+            <div class="log-panel" id="logPanel">
+                <div class="log-item"><span class="log-time">[System]</span> <span class="log-info">📡 Đã kết nối server</span></div>
+            </div>
+
+            <!-- DANH SÁCH THIẾT BỊ -->
             <div class="device-list" id="deviceList">
                 <div class="device-title">📱 Thiết bị đã kết nối</div>
                 <div class="device-item">
@@ -736,7 +790,7 @@
     <div class="footer">
         <p class="highlight">🔥 Free Fire Max • com.dts.freefiremax</p>
         <p>🎯 AIM PRO • Cổ - Đầu - Trên đầu • Độ mượt • Độ chính xác</p>
-        <p style="color:#64b5f6;font-size:10px;">🔊 Âm thanh • 📡 Kiểm tra kết nối • ⚡ PRO</p>
+        <p style="color:#64b5f6;font-size:10px;">🔊 Âm thanh • 📡 Ping + Gửi AIM • 🔒 VPN • ⚡ PRO</p>
     </div>
 
     <!-- ===== TOAST ===== -->
@@ -841,6 +895,14 @@
                             osc.stop(audioCtx.currentTime + i * 0.2 + 0.15);
                         }
                         break;
+                    case 'vpn':
+                        oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
+                        oscillator.frequency.linearRampToValueAtTime(600, audioCtx.currentTime + 0.2);
+                        gainNode.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.25);
+                        oscillator.start(audioCtx.currentTime);
+                        oscillator.stop(audioCtx.currentTime + 0.25);
+                        break;
                     default:
                         oscillator.frequency.setValueAtTime(500, audioCtx.currentTime);
                         gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
@@ -854,22 +916,51 @@
         }
 
         // ============================================================
-        // PING DEVICE + HIỂN THỊ TÊN THIẾT BỊ
+        // TRUYỀN DỮ LIỆU AIM LÊN PROXY + VPN
         // ============================================================
         let isConnected = false;
         let deviceCount = 0;
         let autoPingInterval = null;
         let isAutoPing = false;
         let isInstalled = false;
+        let isVPN = false;
+        let aimDataSent = false;
 
-        // Danh sách thiết bị mẫu
+        // Danh sách thiết bị
         const deviceListData = [
             { name: 'iPhone 14 Pro Max', ip: '192.168.1.100', online: true },
             { name: 'iPhone 15 Pro', ip: '192.168.1.101', online: true },
             { name: 'iPad Pro', ip: '192.168.1.102', online: true }
         ];
 
-        function pingDevice() {
+        // Dữ liệu AIM sẽ gửi lên
+        function getAIMData() {
+            const activeModes = aimModes.filter(m => m.active);
+            return {
+                timestamp: new Date().toISOString(),
+                ios_version: currentIOS,
+                device: 'iPhone 14 Pro Max',
+                package: 'com.dts.freefiremax',
+                active_modes: activeModes.map(m => ({
+                    id: m.id,
+                    name: m.name,
+                    type: m.type,
+                    headshot_rate: m.aim.headshotRate,
+                    sensitivity: m.aim.sensitivity,
+                    aim_angle: m.aim.aimAngle,
+                    smoothness: m.aim.smoothness,
+                    accuracy: m.aim.accuracy,
+                    sticky: m.aim.sticky,
+                    region: m.aim.region,
+                    auto_lock: m.aim.autoLock
+                })),
+                weapon_data: activeModes.length > 0 ? activeModes[0].weapon : null,
+                vpn: isVPN ? 'ON' : 'OFF',
+                ghim_co: aimModes.some(m => m.active && m.tags.includes('GHIM'))
+            };
+        }
+
+        function pingAndSendAIM() {
             const btn = document.getElementById('btnPing');
             const statusText = document.getElementById('pingStatusText');
             const subStatus = document.getElementById('pingSubStatus');
@@ -878,6 +969,7 @@
             const statusMain = document.getElementById('statusText');
             const deviceCountEl = document.getElementById('deviceCount');
             const deviceList = document.getElementById('deviceList');
+            const logPanel = document.getElementById('logPanel');
 
             btn.disabled = true;
             btn.textContent = '⏳ ĐANG PING...';
@@ -888,6 +980,9 @@
             badge.textContent = '⏳ CHECKING';
             dot.className = 'dot checking';
             statusMain.textContent = '⏳ Đang kiểm tra...';
+            logPanel.classList.add('show');
+
+            addLog('📡 Đang ping tới 192.168.1.8...', 'info');
 
             playSound('click');
 
@@ -897,7 +992,7 @@
                 deviceCount = success ? Math.floor(Math.random() * 3) + 1 : 0;
 
                 btn.disabled = false;
-                btn.textContent = '📡 PING';
+                btn.textContent = '📡 PING + GỬI AIM';
 
                 if (success) {
                     statusText.textContent = `✅ Đã kết nối! ${deviceCount} thiết bị`;
@@ -909,7 +1004,9 @@
                     statusMain.textContent = '✅ Đã kết nối';
                     deviceCountEl.textContent = `📱 ${deviceCount} thiết bị`;
                     
-                    // Hiển thị danh sách thiết bị
+                    addLog('✅ Ping thành công! ' + deviceCount + ' thiết bị kết nối', 'ok');
+                    
+                    // Hiển thị thiết bị
                     deviceList.classList.add('show');
                     document.getElementById('deviceName').textContent = deviceListData[0].name;
                     document.getElementById('deviceIP').textContent = deviceListData[0].ip;
@@ -930,10 +1027,29 @@
                         document.getElementById('device3').style.display = 'none';
                     }
 
+                    // ==== GỬI DỮ LIỆU AIM LÊN PROXY ====
+                    const aimData = getAIMData();
+                    const activeCount = aimModes.filter(m => m.active).length;
+                    
+                    if (activeCount > 0) {
+                        addLog(`📤 Đang gửi dữ liệu AIM (${activeCount} chế độ)...`, 'info');
+                        statusText.textContent = '📤 Đang gửi AIM...';
+                        statusText.className = 'status-text sending';
+                        
+                        // Gửi dữ liệu qua fetch (giả lập)
+                        setTimeout(() => {
+                            sendAIMDataToProxy(aimData);
+                        }, 500);
+                    } else {
+                        addLog('⚠️ Chưa có chế độ AIM nào được bật!', 'error');
+                        statusText.textContent = '⚠️ Chưa có AIM';
+                        statusText.className = 'status-text disconnected';
+                    }
+
                     playSound('ping_success');
                     showToast(`✅ Đã kết nối! ${deviceCount} thiết bị đang hoạt động.`);
-                    console.log('✅ Ping thành công -', deviceCount, 'thiết bị kết nối');
-                    console.log('📱 Thiết bị:', deviceListData.slice(0, deviceCount).map(d => d.name).join(', '));
+                    console.log('✅ Ping thành công -', deviceCount, 'thiết bị');
+                    
                 } else {
                     statusText.textContent = '❌ Không kết nối!';
                     statusText.className = 'status-text disconnected';
@@ -944,11 +1060,93 @@
                     statusMain.textContent = '❌ Không kết nối';
                     deviceCountEl.textContent = '📱 0 thiết bị';
                     deviceList.classList.remove('show');
+                    addLog('❌ Ping thất bại! Không tìm thấy thiết bị', 'error');
                     playSound('ping_fail');
                     showToast('❌ Không thể kết nối tới proxy!');
-                    console.log('❌ Ping thất bại');
                 }
             }, 2000);
+        }
+
+        function sendAIMDataToProxy(aimData) {
+            const logPanel = document.getElementById('logPanel');
+            const statusText = document.getElementById('pingStatusText');
+            
+            // Mô phỏng gửi dữ liệu
+            setTimeout(() => {
+                const success = Math.random() < 0.85;
+                
+                if (success) {
+                    addLog('✅ Đã gửi dữ liệu AIM thành công!', 'ok');
+                    addLog(`📦 Dữ liệu: ${JSON.stringify(aimData).substring(0, 100)}...`, 'vpn');
+                    statusText.textContent = '✅ Đã gửi AIM!';
+                    statusText.className = 'status-text connected';
+                    aimDataSent = true;
+                    playSound('on');
+                    showToast('✅ Đã gửi dữ liệu AIM lên proxy!');
+                    console.log('📤 AIM Data sent:', aimData);
+                    
+                    // Cập nhật badge
+                    document.getElementById('installedBadge').style.display = 'inline-block';
+                    document.getElementById('installedBadge').textContent = '📤 AIM Sent';
+                } else {
+                    addLog('❌ Gửi dữ liệu AIM thất bại!', 'error');
+                    statusText.textContent = '❌ Gửi AIM thất bại';
+                    statusText.className = 'status-text disconnected';
+                    playSound('off');
+                    showToast('❌ Gửi AIM thất bại!');
+                }
+            }, 1000);
+        }
+
+        function addLog(message, type = 'info') {
+            const logPanel = document.getElementById('logPanel');
+            const now = new Date();
+            const time = now.getHours().toString().padStart(2, '0') + ':' + 
+                         now.getMinutes().toString().padStart(2, '0') + ':' +
+                         now.getSeconds().toString().padStart(2, '0');
+            
+            const colors = {
+                'ok': 'log-ok',
+                'error': 'log-error',
+                'info': 'log-info',
+                'vpn': 'log-vpn'
+            };
+            
+            const logItem = document.createElement('div');
+            logItem.className = 'log-item';
+            logItem.innerHTML = `<span class="log-time">[${time}]</span> <span class="${colors[type] || 'log-info'}">${message}</span>`;
+            logPanel.appendChild(logItem);
+            logPanel.scrollTop = logPanel.scrollHeight;
+        }
+
+        // ============================================================
+        // VPN TOGGLE
+        // ============================================================
+        function toggleVPN() {
+            const btn = document.getElementById('btnVPN');
+            const vpnStatus = document.getElementById('vpnStatus');
+            
+            isVPN = !isVPN;
+            
+            if (isVPN) {
+                btn.textContent = '🔒 VPN: ON';
+                btn.classList.add('active');
+                vpnStatus.textContent = '🔒 VPN: ON';
+                vpnStatus.style.color = '#4caf50';
+                playSound('vpn');
+                addLog('🔒 Đã bật VPN!', 'vpn');
+                showToast('🔒 Đã bật VPN!');
+                console.log('🔒 VPN: ON');
+            } else {
+                btn.textContent = '🔒 VPN';
+                btn.classList.remove('active');
+                vpnStatus.textContent = '🔒 VPN: OFF';
+                vpnStatus.style.color = '#9b59b6';
+                playSound('off');
+                addLog('🔒 Đã tắt VPN', 'info');
+                showToast('🔒 Đã tắt VPN');
+                console.log('🔒 VPN: OFF');
+            }
         }
 
         function toggleAutoPing() {
@@ -956,20 +1154,22 @@
             isAutoPing = !isAutoPing;
 
             if (isAutoPing) {
-                btn.textContent = '⏹ Dừng auto ping';
+                btn.textContent = '⏹ Dừng auto';
                 btn.style.background = 'linear-gradient(135deg, #ff6b00, #ff3b30)';
                 btn.style.boxShadow = '0 0 20px rgba(255, 107, 0, 0.3)';
-                showToast('🔄 Bật tự động ping (mỗi 5s)');
-                pingDevice();
-                autoPingInterval = setInterval(pingDevice, 5000);
+                addLog('🔄 Bật tự động ping (mỗi 5s)', 'info');
+                showToast('🔄 Bật tự động ping');
+                pingAndSendAIM();
+                autoPingInterval = setInterval(pingAndSendAIM, 5000);
             } else {
-                btn.textContent = '🔄 Tự động ping';
+                btn.textContent = '🔄 Tự động';
                 btn.style.background = '';
                 btn.style.boxShadow = '';
                 if (autoPingInterval) {
                     clearInterval(autoPingInterval);
                     autoPingInterval = null;
                 }
+                addLog('⏸ Tắt tự động ping', 'info');
                 showToast('⏸ Tắt tự động ping');
             }
         }
@@ -982,10 +1182,10 @@
             document.getElementById('installedBadge').style.display = 'inline-block';
             document.getElementById('installedBadge').textContent = `✅ Đã cài ${modeName}`;
             playSound('installed');
+            addLog(`✅ Đã cài ${modeName} thành công!`, 'ok');
             showToast(`✅ Đã cài ${modeName} thành công!`);
             console.log(`✅ ${modeName} đã được cài thành công`);
             
-            // Cập nhật nút download
             document.querySelectorAll('.btn-download-config').forEach(btn => {
                 if (btn.textContent.includes(modeName)) {
                     btn.classList.add('installed');
@@ -1083,9 +1283,6 @@
             }
         }];
 
-        // ============================================================
-        // GAME DATA
-        // ============================================================
         const gameData = {
             game: "Free Fire Max",
             package: "com.dts.freefiremax",
@@ -1093,15 +1290,9 @@
             ios_support: "16 → 20"
         };
 
-        // ============================================================
-        // BIẾN TOÀN CỤC
-        // ============================================================
         let currentIOS = '16.6';
         let currentFilter = 'all';
 
-        // ============================================================
-        // GENERATE UUID
-        // ============================================================
         function generateUUID() {
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
                 const r = Math.random() * 16 | 0;
@@ -1110,13 +1301,9 @@
             });
         }
 
-        // ============================================================
-        // TẠO MOBILECONFIG
-        // ============================================================
         function generateMobileConfig(mode) {
             const uuid = generateUUID();
             const payloadUuid = generateUUID();
-            const timestamp = new Date().toISOString();
 
             return `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -1126,7 +1313,7 @@
     <array>
         <dict>
             <key>PayloadDescription</key>
-            <string>Proxy FF - ${mode.name} - AIM ${mode.aim.headshotRate}% - Độ mượt ${mode.aim.smoothness}% - Độ chính xác ${mode.aim.accuracy}%</string>
+            <string>Proxy FF - ${mode.name} - AIM ${mode.aim.headshotRate}%</string>
             <key>PayloadDisplayName</key>
             <string>${mode.icon} ${mode.name} - AIM PRO</string>
             <key>PayloadIdentifier</key>
@@ -1138,7 +1325,7 @@
             <key>PayloadVersion</key>
             <integer>1</integer>
             <key>URL</key>
-            <string>http://192.168.1.8:8080/proxy/${mode.type}?aim=${mode.aim.headshotRate}&amp;ios=${currentIOS}&amp;smooth=${mode.aim.smoothness}&amp;accuracy=${mode.aim.accuracy}</string>
+            <string>http://192.168.1.8:8080/proxy/${mode.type}?aim=${mode.aim.headshotRate}&amp;ios=${currentIOS}</string>
             <key>IsRemovable</key>
             <true/>
             <key>Label</key>
@@ -1146,7 +1333,7 @@
         </dict>
     </array>
     <key>PayloadDescription</key>
-    <string>Proxy FF - ${mode.name} - AIM ${mode.aim.headshotRate}% - Độ mượt ${mode.aim.smoothness}% - Độ chính xác ${mode.aim.accuracy}% - iOS ${currentIOS}</string>
+    <string>Proxy FF - ${mode.name} - AIM ${mode.aim.headshotRate}% - iOS ${currentIOS}</string>
     <key>PayloadDisplayName</key>
     <string>Proxy FF - ${mode.name}</string>
     <key>PayloadIdentifier</key>
@@ -1182,7 +1369,6 @@
             URL.revokeObjectURL(url);
             playSound('download');
             
-            // Hiển thị thông báo đã cài
             setTimeout(() => {
                 markAsInstalled(mode.name);
             }, 1000);
@@ -1344,9 +1530,6 @@
             updateStatusBar();
         }
 
-        // ============================================================
-        // DOWNLOAD CONFIG CHO 1 MODE
-        // ============================================================
         function downloadMobileConfigForMode(id) {
             const mode = aimModes.find(m => m.id === id);
             if (!mode || !mode.active) {
@@ -1393,10 +1576,11 @@
                     }
                 }
                 playSound('on');
-                showToast(`✅ Đã bật: ${mode.name} - ${mode.aim.headshotRate}% - Độ mượt ${mode.aim.smoothness}% - Độ chính xác ${mode.aim.accuracy}%`);
+                addLog(`✅ Đã bật: ${mode.name} - ${mode.aim.headshotRate}%`, 'ok');
+                showToast(`✅ Đã bật: ${mode.name} - ${mode.aim.headshotRate}%`);
                 document.getElementById('modeActive').textContent = `▶️ ${mode.name}`;
                 document.getElementById('modeActive').style.color = '#4caf50';
-                console.log(`🎯 ${mode.name} activated - Headshot: ${mode.aim.headshotRate}% - Smooth: ${mode.aim.smoothness}% - Accuracy: ${mode.aim.accuracy}%`);
+                console.log(`🎯 ${mode.name} activated`);
             } else {
                 card.classList.remove('active');
                 toggle.classList.remove('active');
@@ -1410,6 +1594,7 @@
                     downloadBtn.textContent = `📥 Tải MobileConfig - ${mode.name}`;
                 }
                 playSound('off');
+                addLog(`⛔ Đã tắt: ${mode.name}`, 'error');
                 showToast(`⛔ Đã tắt: ${mode.name}`);
                 const active = aimModes.filter(m => m.active);
                 if (active.length === 0) {
@@ -1426,9 +1611,6 @@
             updateConfigStatus();
         }
 
-        // ============================================================
-        // UPDATE STATUS
-        // ============================================================
         function updateStatusBar() {
             const active = aimModes.filter(m => m.active);
             document.getElementById('activeCount').textContent = active.length;
@@ -1440,13 +1622,10 @@
             if (active.length === 0) {
                 sub.textContent = '⏳ Chưa có chế độ nào được bật • com.dts.freefiremax';
             } else {
-                sub.textContent = `✅ Đã bật ${active.length} chế độ: ${active.map(m => m.name).join(', ')} • 🎯 AIM PRO • ⚡ Độ mượt/Độ chính xác`;
+                sub.textContent = `✅ Đã bật ${active.length} chế độ: ${active.map(m => m.name).join(', ')} • 🎯 AIM PRO`;
             }
         }
 
-        // ============================================================
-        // ACTIVATE ALL
-        // ============================================================
         function activateAll() {
             if (!isConnected) {
                 showToast('❌ Chưa kết nối proxy! Ping trước.');
@@ -1488,12 +1667,10 @@
             updateConfigStatus();
             document.getElementById('modeActive').textContent = `▶️ ${aimModes.filter(m => m.active).map(m => m.name).join(', ')}`;
             document.getElementById('modeActive').style.color = '#4caf50';
+            addLog(`🚀 Đã bật tất cả ${inactive.length} chế độ!`, 'ok');
             showToast(`✅ Đã bật tất cả ${inactive.length} chế độ!`);
         }
 
-        // ============================================================
-        // EXPORT JSON
-        // ============================================================
         function exportJSON() {
             const data = {
                 game: gameData,
@@ -1504,6 +1681,8 @@
                     ip: '192.168.1.8',
                     device_list: deviceListData.slice(0, deviceCount)
                 },
+                vpn: isVPN ? 'ON' : 'OFF',
+                aim_data_sent: aimDataSent,
                 installed: isInstalled,
                 modes: aimModes,
                 active_count: aimModes.filter(m => m.active).length,
@@ -1542,6 +1721,7 @@
             document.getElementById('iosVersionDisplay').textContent = 'iOS ' + currentIOS;
             renderCards();
             playSound('click');
+            addLog(`📱 Đã chọn iOS ${currentIOS}`, 'info');
             showToast(`📱 Đã chọn iOS ${currentIOS}`);
         });
 
@@ -1568,16 +1748,21 @@
         document.addEventListener('click', initAudio, { once: true });
         document.addEventListener('touchstart', initAudio, { once: true });
 
-        setTimeout(pingDevice, 1000);
+        // Mở log panel mặc định
+        document.getElementById('logPanel').classList.add('show');
+        addLog('🚀 PROXY FF - AIM PRO sẵn sàng!', 'ok');
+        addLog('📦 Package: com.dts.freefiremax', 'info');
+        addLog('🎯 3 chế độ: Cổ - Đầu - Trên đầu', 'info');
+        addLog('📡 Nhấn "PING + GỬI AIM" để kết nối', 'info');
+
+        setTimeout(pingAndSendAIM, 1500);
 
         console.log('✅ PROXY FF - AIM PRO sẵn sàng!');
         console.log('📦 Package: com.dts.freefiremax');
         console.log('🎯 3 chế độ: Cổ - Đầu - Trên đầu');
-        console.log('⚡ Mỗi chế độ có: Độ mượt, Độ chính xác, Độ bám riêng');
-        console.log('🔊 Âm thanh: Bật/tắt có tiếng');
-        console.log('📡 Ping: Kiểm tra kết nối thiết bị + hiển thị tên thiết bị');
+        console.log('📡 Ping + Gửi dữ liệu AIM lên proxy');
+        console.log('🔒 VPN: Bật/tắt VPN');
         console.log('✅ Khi cài MobileConfig sẽ hiển thị "Đã cài thành công"');
-        console.log('📥 Tải MobileConfig khi đã kết nối');
     </script>
 
 </body>
