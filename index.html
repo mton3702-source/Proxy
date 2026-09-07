@@ -331,163 +331,6 @@
             border-color: #ff0000; color: #ff0000; background: #1a0a0a;
         }
 
-        /* ===== AIM SETTINGS - TRÊN TRANG CHÍNH ===== */
-        .aim-settings-section {
-            background: linear-gradient(135deg, #1a2a1a, #0a1a0a);
-            border-radius: 12px;
-            padding: 16px;
-            margin: 10px 0;
-            border: 2px solid #4caf50;
-            position: relative;
-            overflow: hidden;
-        }
-        .aim-settings-section::before {
-            content: '🎯';
-            position: absolute;
-            top: -20px;
-            right: -20px;
-            font-size: 80px;
-            opacity: 0.05;
-        }
-        .aim-settings-section .aim-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            position: relative;
-            z-index: 1;
-        }
-        .aim-settings-section .aim-header h3 {
-            font-size: 16px;
-            color: #4caf50;
-        }
-        .aim-settings-section .aim-header h3 span {
-            color: #fff;
-        }
-        .aim-settings-section .aim-header .aim-badge {
-            background: #4caf50;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            color: #fff;
-            animation: pulse 1s infinite;
-        }
-        .aim-settings-section .aim-setting-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin: 8px 0;
-            padding: 8px 12px;
-            background: #0a0a0a;
-            border-radius: 8px;
-            border: 1px solid #2a2a2a;
-            position: relative;
-            z-index: 1;
-            flex-wrap: wrap;
-        }
-        .aim-settings-section .aim-setting-row label {
-            font-size: 12px;
-            color: #888;
-            min-width: 80px;
-        }
-        .aim-settings-section .aim-setting-row input[type="range"] {
-            flex: 1;
-            min-width: 100px;
-            height: 4px;
-            -webkit-appearance: none;
-            background: #2a2a2a;
-            border-radius: 4px;
-            outline: none;
-        }
-        .aim-settings-section .aim-setting-row input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #ff6b00;
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(255, 107, 0, 0.5);
-        }
-        .aim-settings-section .aim-setting-row .value-display {
-            min-width: 40px;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 700;
-            color: #ffcc00;
-        }
-        .aim-settings-section .aim-setting-row .region-buttons {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-            flex: 1;
-        }
-        .aim-settings-section .aim-setting-row .region-buttons .btn-region {
-            padding: 4px 10px;
-            border-radius: 6px;
-            border: 1px solid #2a2a2a;
-            background: #1a1a1a;
-            color: #888;
-            font-size: 10px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .aim-settings-section .aim-setting-row .region-buttons .btn-region.active {
-            border-color: #ff6b00;
-            color: #ff6b00;
-            background: #1a0a0a;
-        }
-        .aim-settings-section .aim-setting-row .region-buttons .btn-region:hover {
-            border-color: #ff6b00;
-        }
-        .aim-settings-section .aim-toggle-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 12px;
-            background: #0a0a0a;
-            border-radius: 8px;
-            border: 1px solid #2a2a2a;
-            margin: 6px 0;
-            position: relative;
-            z-index: 1;
-        }
-        .aim-settings-section .aim-toggle-row .info .title {
-            font-size: 13px;
-            font-weight: 600;
-        }
-        .aim-settings-section .aim-toggle-row .info .desc {
-            font-size: 10px;
-            color: #888;
-        }
-        .aim-settings-section .aim-toggle-row .toggle-small {
-            position: relative;
-            width: 40px;
-            height: 22px;
-            background: #2a2a2a;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .aim-settings-section .aim-toggle-row .toggle-small.active {
-            background: #4caf50;
-        }
-        .aim-settings-section .aim-toggle-row .toggle-small .slider-small {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 18px;
-            height: 18px;
-            background: #fff;
-            border-radius: 50%;
-            transition: 0.3s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-        .aim-settings-section .aim-toggle-row .toggle-small.active .slider-small {
-            left: 20px;
-        }
-
         /* ===== VPN SECTION ===== */
         .vpn-section {
             background: linear-gradient(135deg, #1a2a3a, #0a1a2a);
@@ -591,6 +434,16 @@
         }
         .vpn-section .vpn-actions .btn-vpn-stop:hover { background: #3a3a3a; }
         .vpn-section .vpn-actions .btn-vpn-stop:disabled { opacity: 0.4; cursor: not-allowed; }
+        
+        .vpn-section .vpn-actions .btn-download {
+            background: linear-gradient(135deg, #2196f3, #1565c0);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(33, 150, 243, 0.3);
+        }
+        .vpn-section .vpn-actions .btn-download:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(33, 150, 243, 0.5);
+        }
 
         .vpn-section .vpn-list {
             margin-top: 10px;
@@ -851,8 +704,6 @@
             .config-actions .btn { min-width: 70px; font-size: 11px; padding: 6px 10px; }
             .run-ff-section .run-actions .btn { min-width: 80px; font-size: 12px; padding: 10px 16px; }
             .vpn-section .vpn-list { grid-template-columns: 1fr 1fr; }
-            .aim-settings-section .aim-setting-row { flex-direction: column; align-items: stretch; }
-            .aim-settings-section .aim-setting-row .region-buttons { justify-content: center; }
         }
     </style>
 </head>
@@ -877,7 +728,7 @@
         <div class="header-top">
             <div>
                 <h1>🎯 PROXY <span>FF</span></h1>
-                <p>iOS 16 → 20 • Free Fire Max • AimLock • Ghim Cổ</p>
+                <p>iOS 16 → 20 • Free Fire Max • Ghim Cổ</p>
             </div>
             <div class="badge-group">
                 <span class="badge ios">📱 iOS 16-20</span>
@@ -957,13 +808,13 @@
     <div class="container">
         <div class="vpn-section">
             <div class="vpn-header">
-                <h3>🔒 <span>VPN</span> - Kết nối Proxy</h3>
+                <h3>🔒 <span>VPN</span> - Kết nối & Tải về</h3>
                 <span class="vpn-badge">🌐 ONLINE</span>
             </div>
             <div class="vpn-status">
                 <div class="info">
                     <div class="title">Trạng thái VPN</div>
-                    <div class="sub" id="vpnSubStatus">Chọn server VPN để kết nối</div>
+                    <div class="sub" id="vpnSubStatus">Chọn server VPN để kết nối hoặc tải về</div>
                 </div>
                 <span class="status-text ready" id="vpnStatusText">✅ Sẵn sàng</span>
             </div>
@@ -973,6 +824,9 @@
                 </button>
                 <button class="btn btn-vpn-stop" id="btnVPNStop" onclick="stopVPN()" disabled>
                     ⏹ NGẮT VPN
+                </button>
+                <button class="btn btn-download" onclick="downloadVPN()">
+                    ⬇️ TẢI VPN
                 </button>
             </div>
             <div class="vpn-list">
@@ -1005,69 +859,6 @@
                     <div class="vpn-icon">🇩🇪</div>
                     <div class="vpn-name">Server 6</div>
                     <div class="vpn-status-text online">● Online</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== AIM SETTINGS - TRÊN TRANG CHÍNH ===== -->
-    <div class="container">
-        <div class="aim-settings-section">
-            <div class="aim-header">
-                <h3>🎯 <span>CÀI ĐẶT AIM</span></h3>
-                <span class="aim-badge">⚡ CUSTOM</span>
-            </div>
-
-            <!-- AIM Đầu vào -->
-            <div class="aim-setting-row">
-                <label>🎯 Đầu vào</label>
-                <input type="range" id="aimSensitivity" min="1.0" max="5.0" step="0.1" value="2.0">
-                <span class="value-display" id="sensitivityValue">2.0</span>
-            </div>
-
-            <!-- Tốc độ AIM -->
-            <div class="aim-setting-row">
-                <label>⚡ Tốc độ</label>
-                <input type="range" id="aimSpeed" min="1" max="100" step="1" value="50">
-                <span class="value-display" id="speedValue">50</span>
-            </div>
-
-            <!-- Góc AIM -->
-            <div class="aim-setting-row">
-                <label>📐 Góc</label>
-                <input type="range" id="aimAngle" min="0" max="45" step="1" value="22">
-                <span class="value-display" id="angleValue">22°</span>
-            </div>
-
-            <!-- Vùng AIM -->
-            <div class="aim-setting-row">
-                <label>📍 Vùng</label>
-                <div class="region-buttons">
-                    <button class="btn-region" data-region="Đầu" onclick="setAimRegion('Đầu')">Đầu</button>
-                    <button class="btn-region active" data-region="Cổ" onclick="setAimRegion('Cổ')">Cổ</button>
-                    <button class="btn-region" data-region="Ngực" onclick="setAimRegion('Ngực')">Ngực</button>
-                    <button class="btn-region" data-region="Toàn thân" onclick="setAimRegion('Toàn thân')">Toàn thân</button>
-                </div>
-            </div>
-
-            <!-- Ghim Cổ + Auto Lock -->
-            <div class="aim-toggle-row">
-                <div class="info">
-                    <div class="title">📌 Ghim Cổ</div>
-                    <div class="desc">Bật chế độ ghim cổ siêu chặt</div>
-                </div>
-                <div class="toggle-small active" id="ghimToggle" onclick="toggleGhim()">
-                    <div class="slider-small"></div>
-                </div>
-            </div>
-
-            <div class="aim-toggle-row">
-                <div class="info">
-                    <div class="title">🔒 Auto Lock</div>
-                    <div class="desc">Tự động khóa mục tiêu</div>
-                </div>
-                <div class="toggle-small active" id="autoLockToggle" onclick="toggleAutoLock()">
-                    <div class="slider-small"></div>
                 </div>
             </div>
         </div>
@@ -1169,7 +960,7 @@
         <p class="highlight">🔥 Free Fire Max • com.dts.freefiremax</p>
         <p class="run-footer">▶️ Kích hoạt FF • Ghim Cổ • AIM 80%</p>
         <p class="sound-footer">🔊 Âm thanh khi bật/tắt • iOS 16 → 20</p>
-        <p class="vpn-footer">🔒 Kết nối VPN để bảo mật • Chọn server phù hợp</p>
+        <p class="vpn-footer">🔒 Kết nối VPN để bảo mật • Tải VPN về máy</p>
     </div>
 
     <!-- ===== TOAST ===== -->
@@ -1282,18 +1073,6 @@
         let crosshairSize = 20;
 
         // ============================================================
-        // AIM SETTINGS
-        // ============================================================
-        let aimSettings = {
-            sensitivity: 2.0,
-            speed: 50,
-            angle: 22,
-            region: 'Cổ',
-            ghim: true,
-            autoLock: true
-        };
-
-        // ============================================================
         // RUN FF STATE
         // ============================================================
         let isRunning = false;
@@ -1376,59 +1155,86 @@
         }
 
         // ============================================================
-        // AIM SETTINGS CONTROLS
+        // DOWNLOAD VPN - TẢI FILE VPN VỀ MÁY
         // ============================================================
-        document.getElementById('aimSensitivity').addEventListener('input', function() {
-            const val = parseFloat(this.value);
-            document.getElementById('sensitivityValue').textContent = val.toFixed(1);
-            aimSettings.sensitivity = val;
-        });
+        function downloadVPN() {
+            playSound('click');
+            showToast('⏳ Đang tạo file VPN...');
 
-        document.getElementById('aimSpeed').addEventListener('input', function() {
-            const val = parseInt(this.value);
-            document.getElementById('speedValue').textContent = val;
-            aimSettings.speed = val;
-        });
+            // Tạo file .mobileconfig VPN
+            const vpnConfig = generateVPNConfig();
+            
+            // Tạo blob và download
+            const blob = new Blob([vpnConfig], { type: 'application/x-apple-aspen-config' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `vpn_proxy_${selectedServer}_${new Date().getTime()}.mobileconfig`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
 
-        document.getElementById('aimAngle').addEventListener('input', function() {
-            const val = parseInt(this.value);
-            document.getElementById('angleValue').textContent = val + '°';
-            aimSettings.angle = val;
-        });
+            playSound('on');
+            showToast('✅ Đã tải VPN về máy!');
+            console.log('📥 VPN downloaded:', selectedServer);
+        }
 
-        function setAimRegion(region) {
-            aimSettings.region = region;
-            document.querySelectorAll('.region-buttons .btn-region').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.region === region);
+        function generateVPNConfig() {
+            const now = new Date();
+            const uuid = generateUUID();
+
+            return `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        <dict>
+            <key>PayloadDescription</key>
+            <string>Proxy FF VPN - ${selectedServer}</string>
+            <key>PayloadDisplayName</key>
+            <string>Proxy FF VPN</string>
+            <key>PayloadIdentifier</key>
+            <string>com.proxy.ff.vpn.${selectedServer}</string>
+            <key>PayloadType</key>
+            <string>com.apple.webClip</string>
+            <key>PayloadUUID</key>
+            <string>${uuid}</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>URL</key>
+            <string>http://192.168.1.8:8080/proxy/vpn?server=${selectedServer}</string>
+            <key>IsRemovable</key>
+            <true/>
+            <key>Label</key>
+            <string>🔒 VPN ${selectedServer}</string>
+        </dict>
+    </array>
+    <key>PayloadDescription</key>
+    <string>Proxy FF VPN Configuration - ${selectedServer}</string>
+    <key>PayloadDisplayName</key>
+    <string>Proxy FF VPN ${selectedServer}</string>
+    <key>PayloadIdentifier</key>
+    <string>com.proxy.ff.vpn.config</string>
+    <key>PayloadOrganization</key>
+    <string>Proxy FF</string>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>${generateUUID()}</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+</dict>
+</plist>`;
+        }
+
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
             });
-            playSound('click');
-            showToast('📍 Đã chọn vùng: ' + region);
-        }
-
-        function toggleGhim() {
-            const toggle = document.getElementById('ghimToggle');
-            aimSettings.ghim = !aimSettings.ghim;
-            if (aimSettings.ghim) {
-                toggle.classList.add('active');
-                showToast('📌 Đã bật Ghim Cổ');
-            } else {
-                toggle.classList.remove('active');
-                showToast('📌 Đã tắt Ghim Cổ');
-            }
-            playSound('click');
-        }
-
-        function toggleAutoLock() {
-            const toggle = document.getElementById('autoLockToggle');
-            aimSettings.autoLock = !aimSettings.autoLock;
-            if (aimSettings.autoLock) {
-                toggle.classList.add('active');
-                showToast('🔒 Đã bật Auto Lock');
-            } else {
-                toggle.classList.remove('active');
-                showToast('🔒 Đã tắt Auto Lock');
-            }
-            playSound('click');
         }
 
         // ============================================================
@@ -1563,7 +1369,6 @@
             console.log('▶️ RUN FF - Kích hoạt Free Fire!');
             console.log('📦 Package: com.dts.freefiremax');
             console.log('🎯 Active proxies:', activeProxies.map(p => p.name).join(', '));
-            console.log('📌 Ghim Cổ: ' + (aimSettings.ghim ? 'ON' : 'OFF'));
             console.log('🔒 VPN: ' + selectedServer + ' - ' + (vpnConnected ? 'Connected' : 'Disconnected'));
 
             runInterval = setInterval(() => {
@@ -1588,34 +1393,24 @@
             cmd += `# 📱 iOS: ${currentIOS}\n`;
             cmd += `# 🔒 VPN: ${selectedServer} - ${vpnConnected ? 'Connected' : 'Disconnected'}\n`;
             cmd += `# ============================================\n\n`;
-            cmd += `# 🎯 AIM SETTINGS\n`;
-            cmd += `# Sensitivity: ${aimSettings.sensitivity}\n`;
-            cmd += `# Speed: ${aimSettings.speed}\n`;
-            cmd += `# Angle: ${aimSettings.angle}°\n`;
-            cmd += `# Region: ${aimSettings.region}\n`;
-            cmd += `# Ghim Cổ: ${aimSettings.ghim ? 'ON' : 'OFF'}\n`;
-            cmd += `# Auto Lock: ${aimSettings.autoLock ? 'ON' : 'OFF'}\n`;
-            cmd += `# ============================================\n\n`;
 
             cmd += `# 🔥 Kích hoạt ${activeProxies.length} proxy\n`;
             activeProxies.forEach((p, i) => {
                 const isGhim = p.ghim && p.ghim.enabled;
                 cmd += `\n# ----- ${i+1}. ${p.name}${isGhim ? ' 📌' : ''} -----\n`;
                 cmd += `aim activate --proxy ${p.id} --name "${p.name}"\n`;
-                cmd += `aim set sensitivity ${aimSettings.sensitivity}\n`;
-                cmd += `aim set speed ${aimSettings.speed}\n`;
-                cmd += `aim set aimAngle ${aimSettings.angle}\n`;
+                cmd += `aim set sensitivity ${p.aim.sensitivity}\n`;
+                cmd += `aim set aimAngle ${p.aim.aimAngle}\n`;
                 cmd += `aim set headshot ${p.aim.headshotRate}%\n`;
-                cmd += `aim set region "${aimSettings.region}"\n`;
+                cmd += `aim set region "${p.aim.aimRegion}"\n`;
                 cmd += `aim set recoil ${p.aim.recoilComp}%\n`;
-                cmd += `aim set autoLock ${aimSettings.autoLock ? 'ON' : 'OFF'}\n`;
+                cmd += `aim set autoLock ${p.aim.autoLock ? 'ON' : 'OFF'}\n`;
                 cmd += `aim set fov ${p.aim.fov}\n`;
                 cmd += `aim set smoothness ${p.aim.smoothness}%\n`;
 
-                if (isGhim || aimSettings.ghim) {
-                    cmd += `\n# 📌 GHIM CỔ - Vùng cổ rộng hơn, ghim chặt hơn\n`;
+                if (isGhim) {
+                    cmd += `\n# 📌 GHIM CỔ\n`;
                     cmd += `aim ghimco --enable true --range wide --lock tight\n`;
-                    cmd += `aim ghimco --target neck --area 1.5x --sticky 100%\n`;
                 }
 
                 if (p.weapon) {
@@ -1629,9 +1424,8 @@
             });
 
             cmd += `\n# ============================================\n`;
-            cmd += `# 🎯 Crosshair + AimLock + VPN\n`;
+            cmd += `# 🎯 Crosshair + VPN\n`;
             cmd += `crosshair activate --color ${crosshairColor} --size ${crosshairSize} --style ${crosshairStyle}\n`;
-            cmd += `aimlock activate --sensitivity ${aimSettings.sensitivity} --speed ${aimSettings.speed}\n`;
             cmd += `vpn connect --server "${selectedServer}" --secure\n`;
             cmd += `\n# ✅ ALL SYSTEMS GO!\n`;
             cmd += `echo "🎯 Free Fire đã sẵn sàng với VPN!"\n`;
@@ -1966,21 +1760,19 @@
             code += `-- iOS: ${currentIOS}\n`;
             code += `-- VPN: ${selectedServer} - ${vpnConnected ? 'Connected' : 'Disconnected'}\n`;
             code += `-- AIM Rate: ${aim.headshotRate}%\n`;
-            code += `-- Sensitivity: ${aimSettings.sensitivity}\n`;
-            code += `-- Speed: ${aimSettings.speed}\n`;
-            code += `-- Angle: ${aimSettings.angle}°\n`;
-            code += `-- Region: ${aimSettings.region}\n`;
-            if (ghim.enabled || aimSettings.ghim) {
+            code += `-- Sensitivity: ${aim.sensitivity}\n`;
+            code += `-- Angle: ${aim.aimAngle}°\n`;
+            code += `-- Region: ${aim.aimRegion}\n`;
+            if (ghim.enabled) {
                 code += `-- 📌 GHIM CỔ: ON\n`;
             }
             code += `\nlocal aimConfig = {\n`;
-            code += `    sensitivity = ${aimSettings.sensitivity},\n`;
-            code += `    speed = ${aimSettings.speed},\n`;
-            code += `    aimAngle = ${aimSettings.angle},\n`;
+            code += `    sensitivity = ${aim.sensitivity},\n`;
+            code += `    aimAngle = ${aim.aimAngle},\n`;
             code += `    headshotRate = ${aim.headshotRate},\n`;
-            code += `    aimRegion = "${aimSettings.region}",\n`;
+            code += `    aimRegion = "${aim.aimRegion}",\n`;
             code += `    recoilComp = ${aim.recoilComp},\n`;
-            code += `    autoLock = ${aimSettings.autoLock ? 'true' : 'false'},\n`;
+            code += `    autoLock = ${aim.autoLock ? 'true' : 'false'},\n`;
             code += `    fov = ${aim.fov},\n`;
             code += `    smoothness = ${aim.smoothness}\n`;
             code += `}\n\n`;
@@ -1995,11 +1787,10 @@
             code += `    print("🎯 [${proxy.name}] AIM đang kích hoạt...")\n`;
             code += `    print("📦 Package: ${proxy.package}")\n`;
             code += `    print("🔒 VPN: ${selectedServer}")\n`;
-            code += `    print("🎯 Sensitivity: ${aimSettings.sensitivity}")\n`;
-            code += `    print("⚡ Speed: ${aimSettings.speed}")\n`;
-            code += `    print("📐 Angle: ${aimSettings.angle}°")\n`;
-            code += `    print("📍 Region: ${aimSettings.region}")\n`;
-            if (ghim.enabled || aimSettings.ghim) {
+            code += `    print("🎯 Sensitivity: ${aim.sensitivity}")\n`;
+            code += `    print("📐 Angle: ${aim.aimAngle}°")\n`;
+            code += `    print("📍 Region: ${aim.aimRegion}")\n`;
+            if (ghim.enabled) {
                 code += `    print("📌 Ghim Cổ: ON")\n`;
             }
             code += `    for weapon, data in pairs(weaponAim) do\n`;
@@ -2243,9 +2034,9 @@
             const payloads = activeProxies.map((p, i) => `
         <dict>
             <key>PayloadDescription</key>
-            <string>${p.name} - AIM 80% - FF Max - Ghim Cổ - VPN</string>
+            <string>${p.name} - AIM 80% - FF Max - Ghim Cổ</string>
             <key>PayloadDisplayName</key>
-            <string>${p.name} 🎯80% 📌Ghim 🔒</string>
+            <string>${p.name} 🎯80% 📌Ghim</string>
             <key>PayloadIdentifier</key>
             <string>com.proxy.ff.${p.id}</string>
             <key>PayloadType</key>
@@ -2255,7 +2046,7 @@
             <key>PayloadVersion</key>
             <integer>1</integer>
             <key>URL</key>
-            <string>http://192.168.1.8:8080/proxy/${p.id}?aim=80&ios=${currentIOS}&ghim=on&vpn=${selectedServer}</string>
+            <string>http://192.168.1.8:8080/proxy/${p.id}?aim=80&ios=${currentIOS}&ghim=on</string>
             <key>IsRemovable</key>
             <true/>
             <key>Label</key>
@@ -2269,9 +2060,9 @@
             <key>PayloadContent</key>
             <array>${payloads}</array>
             <key>PayloadDescription</key>
-            <string>Proxy FF Max - AIM 80% - iOS ${currentIOS} - Ghim Cổ - VPN</string>
+            <string>Proxy FF Max - AIM 80% - iOS ${currentIOS} - Ghim Cổ</string>
             <key>PayloadDisplayName</key>
-            <string>Proxy FF Max AIM 80% + Ghim Cổ + VPN</string>
+            <string>Proxy FF Max AIM 80% + Ghim Cổ</string>
             <key>PayloadIdentifier</key>
             <string>com.proxy.ff.config</string>
             <key>PayloadOrganization</key>
@@ -2299,7 +2090,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `proxy_ff_vpn_ios${currentIOS}_${Date.now()}.mobileconfig`;
+            a.download = `proxy_ff_ios${currentIOS}_${Date.now()}.mobileconfig`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -2388,13 +2179,12 @@
                 aim_rate: '80%',
                 ios_version: currentIOS,
                 ios_support: '16 → 20',
-                ghim_co: aimSettings.ghim,
+                ghim_co: true,
                 sound: true,
                 vpn: {
                     connected: vpnConnected,
                     server: selectedServer
                 },
-                aim_settings: aimSettings,
                 crosshair: {
                     active: crosshairActive,
                     style: crosshairStyle,
@@ -2414,7 +2204,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `proxy_ff_vpn_ios${currentIOS}_${Date.now()}.json`;
+            a.download = `proxy_ff_ios${currentIOS}_${Date.now()}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -2491,7 +2281,7 @@
         console.log('📌 Ghim Cổ: Proxy Cổ V2 - Vùng cổ rộng hơn, ghim chặt hơn');
         console.log('🔊 Âm thanh: Bật/tắt có tiếng');
         console.log('🔒 VPN: Chọn server và kết nối để bảo mật');
-        console.log('🎯 Cài đặt AIM trên trang chính - Không cần trang 2');
+        console.log('⬇️ Tải VPN: Nhấn "TẢI VPN" để tải file về máy');
         console.log('⏹️ Click "DỪNG TẤT CẢ" để tắt hết toàn bộ');
     </script>
 
