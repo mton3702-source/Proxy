@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🔐 PROXY FF - KEY + AIM</title>
+    <title>🔐 PROXY FF - KEY + AIM + DPI 2400</title>
     <style>
         * {
             margin: 0;
@@ -19,7 +19,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            transition: 0.5s;
+            transition: 0.3s;
         }
         .bg {
             position: fixed;
@@ -53,7 +53,7 @@
             box-shadow: 0 30px 80px rgba(0,0,0,0.6);
             position: relative;
             overflow: hidden;
-            transition: 0.5s;
+            transition: 0.3s;
         }
 
         .header {
@@ -87,7 +87,6 @@
         .header .status-bar .server::before { content: "● "; }
         .header .status-bar .count { color: #666; }
 
-        /* ===== KEY ===== */
         .key-section .label {
             font-size: 14px;
             color: #888;
@@ -251,9 +250,10 @@
         .app-page .status-bar .right .mode-active { color: #ff6b00; font-weight: 600; }
         .app-page .status-bar .right .time-remain { color: #64b5f6; font-weight: 600; }
         .app-page .status-bar .right .device-id { color: #888; font-size: 10px; }
-        .app-page .status-bar .right .dpi-display { color: #ffcc00; font-weight: 600; font-size: 11px; }
+        .app-page .status-bar .right .dpi-display { color: #ffcc00; font-weight: 700; font-size: 11px; }
+        .app-page .status-bar .right .aim-sticky { color: #ff6b00; font-weight: 700; font-size: 10px; }
 
-        /* ===== DPI SETTINGS ===== */
+        /* ===== DPI SETTINGS - TĂNG LÊN 2400 ===== */
         .dpi-section {
             background: rgba(0,0,0,0.3);
             border-radius: 12px;
@@ -272,51 +272,57 @@
         .dpi-section .dpi-title .current-dpi {
             color: #ffcc00;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 18px;
+        }
+        .dpi-section .dpi-title .aim-sticky-label {
+            color: #ff6b00;
+            font-weight: 700;
+            font-size: 12px;
+            background: rgba(255,107,0,0.15);
+            padding: 2px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,107,0,0.2);
         }
         .dpi-section .dpi-slider {
             width: 100%;
             height: 6px;
             -webkit-appearance: none;
-            background: linear-gradient(90deg, #2a2a2a, #ff6b00);
+            background: linear-gradient(90deg, #2a2a2a, #ff6b00, #ff3b30);
             border-radius: 10px;
             outline: none;
             transition: 0.3s;
         }
         .dpi-section .dpi-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             background: linear-gradient(135deg, #ff3b30, #ff6b00);
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(255,107,0,0.3);
+            box-shadow: 0 0 30px rgba(255,107,0,0.5);
         }
         .dpi-section .dpi-presets {
             display: flex;
-            gap: 6px;
+            gap: 4px;
             margin-top: 10px;
             flex-wrap: wrap;
+            justify-content: center;
         }
         .dpi-section .dpi-presets .preset {
-            padding: 4px 12px;
+            padding: 3px 10px;
             border-radius: 20px;
             border: 1px solid rgba(42,42,42,0.5);
             background: rgba(0,0,0,0.3);
             color: #888;
-            font-size: 11px;
+            font-size: 10px;
             cursor: pointer;
             transition: 0.3s;
         }
-        .dpi-section .dpi-presets .preset:hover {
-            border-color: #ff6b00;
-            color: #fff;
-        }
-        .dpi-section .dpi-presets .preset.active {
-            border-color: #ff6b00;
-            color: #ffcc00;
-            background: rgba(255,107,0,0.1);
-        }
+        .dpi-section .dpi-presets .preset:hover { border-color: #ff6b00; color: #fff; }
+        .dpi-section .dpi-presets .preset.active { border-color: #ff6b00; color: #ffcc00; background: rgba(255,107,0,0.1); }
+        .dpi-section .dpi-presets .preset.high { border-color: #ff3b30; color: #ff3b30; }
+        .dpi-section .dpi-presets .preset.high.active { background: rgba(255,59,48,0.15); }
+
         .dpi-section .dpi-actions {
             display: flex;
             gap: 8px;
@@ -342,6 +348,21 @@
             color: #fff;
         }
         .dpi-section .dpi-actions .btn-reset:hover { background: rgba(58,58,58,0.5); }
+
+        .dpi-section .dpi-info {
+            margin-top: 8px;
+            padding: 6px 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 6px;
+            font-size: 10px;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+        }
+        .dpi-section .dpi-info .sticky-level {
+            color: #ff6b00;
+            font-weight: 700;
+        }
 
         /* ===== TABS ===== */
         .app-page .tabs {
@@ -371,6 +392,7 @@
         .app-page .mode-card .mode-meta { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
         .app-page .mode-card .mode-meta .tag { background: rgba(42,42,42,0.5); padding: 1px 8px; border-radius: 20px; font-size: 9px; color: #ccc; }
         .app-page .mode-card .mode-meta .tag.headshot { background: rgba(255,107,0,0.3); color: #ff6b00; font-weight: 700; }
+        .app-page .mode-card .mode-meta .tag.sticky { background: rgba(255,59,48,0.2); color: #ff3b30; font-weight: 700; }
 
         .app-page .mode-card .right-side { display: flex; align-items: center; gap: 8px; }
         .app-page .mode-card .status { text-align: right; min-width: 60px; }
@@ -515,6 +537,7 @@
             .floating-menu { bottom: 70px; right: 10px; }
             .floating-menu .menu-btn { width: 44px; height: 44px; font-size: 18px; }
             .dpi-section .dpi-presets { justify-content: center; }
+            .dpi-section .dpi-info { flex-direction: column; gap: 2px; text-align: center; }
         }
     </style>
 </head>
@@ -599,28 +622,36 @@
                 <span class="mode-active" id="modeActive">⬜ Chưa chọn</span>
                 <span class="time-remain" id="timeRemain">⏳ --</span>
                 <span class="device-id" id="deviceIdDisplay"></span>
-                <span class="dpi-display" id="dpiDisplay">📐 DPI: 0</span>
+                <span class="dpi-display" id="dpiDisplay">📐 DPI: 160</span>
+                <span class="aim-sticky" id="stickyDisplay">🎯 Bám: 0%</span>
             </div>
         </div>
 
-        <!-- ===== DPI SETTINGS ===== -->
+        <!-- ===== DPI SETTINGS - TĂNG LÊN 2400 ===== -->
         <div class="dpi-section" id="dpiSection">
             <div class="dpi-title">
-                <span>📐 ĐIỀU CHỈNH DPI</span>
+                <span>📐 ĐIỀU CHỈNH DPI (100 - 2400)</span>
                 <span class="current-dpi" id="currentDpi">160</span>
             </div>
-            <input type="range" class="dpi-slider" id="dpiSlider" min="100" max="400" step="10" value="160">
+            <input type="range" class="dpi-slider" id="dpiSlider" min="100" max="2400" step="10" value="160">
             <div class="dpi-presets">
-                <span class="preset" onclick="setDpi(120)">📱 120</span>
-                <span class="preset active" onclick="setDpi(160)">📱 160</span>
-                <span class="preset" onclick="setDpi(200)">📱 200</span>
-                <span class="preset" onclick="setDpi(240)">📱 240</span>
+                <span class="preset" onclick="setDpi(160)">📱 160</span>
                 <span class="preset" onclick="setDpi(320)">📱 320</span>
-                <span class="preset" onclick="setDpi(400)">📱 400</span>
+                <span class="preset" onclick="setDpi(480)">📱 480</span>
+                <span class="preset" onclick="setDpi(640)">📱 640</span>
+                <span class="preset" onclick="setDpi(800)">📱 800</span>
+                <span class="preset high" onclick="setDpi(1200)">🔥 1200</span>
+                <span class="preset high" onclick="setDpi(1800)">🔥 1800</span>
+                <span class="preset high" onclick="setDpi(2400)">🔥 2400</span>
             </div>
             <div class="dpi-actions">
                 <button class="btn btn-apply" onclick="applyDpi()">✅ Áp dụng DPI</button>
                 <button class="btn btn-reset" onclick="resetDpi()">🔄 Reset</button>
+            </div>
+            <div class="dpi-info">
+                <span>🎯 Độ bám: <span class="sticky-level" id="stickyLevel">0%</span></span>
+                <span>⚡ Tốc độ quay: <span id="speedLevel">1x</span></span>
+                <span>📐 DPI: <span id="dpiInfo">160</span></span>
             </div>
         </div>
 
@@ -643,7 +674,8 @@
             <div style="display:flex;justify-content:space-between;font-size:11px;color:#888;flex-wrap:wrap;gap:4px;">
                 <span>🔑 Key: <span id="currentKeyDisplay" style="color:#ffcc00;">--</span></span>
                 <span>⏳ Còn lại: <span id="timeRemaining" style="color:#4caf50;">--</span></span>
-                <span>📐 DPI: <span id="dpiStatusDisplay" style="color:#64b5f6;">160</span></span>
+                <span>📐 DPI: <span id="dpiStatusDisplay" style="color:#ffcc00;">160</span></span>
+                <span>🎯 Bám: <span id="stickyStatusDisplay" style="color:#ff6b00;">0%</span></span>
             </div>
         </div>
 
@@ -652,21 +684,44 @@
 
     <script>
         // ============================================================
-        // DPI SETTINGS
+        // DPI SETTINGS - TĂNG LÊN 2400
         // ============================================================
         let currentDpi = parseInt(localStorage.getItem('proxy_ff_dpi')) || 160;
         let dpiSectionVisible = false;
 
+        // Tính độ bám dựa trên DPI
+        function calculateSticky(dpi) {
+            // DPI càng cao, bám càng chặt (0-100%)
+            const minDpi = 100;
+            const maxDpi = 2400;
+            const normalized = (dpi - minDpi) / (maxDpi - minDpi);
+            return Math.min(100, Math.round(normalized * 100));
+        }
+
+        // Tính tốc độ quay
+        function calculateSpeed(dpi) {
+            return Math.round((dpi / 160) * 10) / 10;
+        }
+
         // Cập nhật hiển thị DPI
         function updateDpiDisplay() {
+            const sticky = calculateSticky(currentDpi);
+            const speed = calculateSpeed(currentDpi);
+            
             document.getElementById('currentDpi').textContent = currentDpi;
             document.getElementById('dpiDisplay').textContent = '📐 DPI: ' + currentDpi;
             document.getElementById('dpiStatusDisplay').textContent = currentDpi;
             document.getElementById('dpiSlider').value = currentDpi;
+            document.getElementById('stickyDisplay').textContent = '🎯 Bám: ' + sticky + '%';
+            document.getElementById('stickyLevel').textContent = sticky + '%';
+            document.getElementById('speedLevel').textContent = speed + 'x';
+            document.getElementById('dpiInfo').textContent = currentDpi;
+            document.getElementById('stickyStatusDisplay').textContent = sticky + '%';
             
             // Cập nhật preset active
             document.querySelectorAll('.dpi-presets .preset').forEach(el => {
-                el.classList.toggle('active', parseInt(el.textContent) === currentDpi);
+                const val = parseInt(el.textContent);
+                el.classList.toggle('active', val === currentDpi);
             });
         }
 
@@ -674,7 +729,7 @@
         function setDpi(value) {
             currentDpi = value;
             updateDpiDisplay();
-            showToast('📐 Đã chọn DPI: ' + value);
+            showToast('📐 Đã chọn DPI: ' + value + ' - Bám: ' + calculateSticky(value) + '%');
         }
 
         // Áp dụng DPI
@@ -683,14 +738,16 @@
             currentDpi = value;
             localStorage.setItem('proxy_ff_dpi', currentDpi);
             
-            // Áp dụng DPI vào body (scale)
-            const scale = currentDpi / 160;
+            // Scale giao diện
+            const scale = Math.min(currentDpi / 160, 15);
             document.body.style.transform = `scale(${scale})`;
             document.body.style.transformOrigin = 'center center';
             
             updateDpiDisplay();
             playSound('click');
-            showToast('✅ Đã áp dụng DPI: ' + currentDpi);
+            
+            const sticky = calculateSticky(currentDpi);
+            showToast('✅ Đã áp dụng DPI: ' + currentDpi + ' - Bám: ' + sticky + '%');
             
             // Cập nhật AIM theo DPI
             updateAimByDpi();
@@ -711,20 +768,34 @@
             updateAimByDpi();
         }
 
-        // Cập nhật AIM theo DPI
+        // Cập nhật AIM theo DPI - BÁM CHẶT HƠN
         function updateAimByDpi() {
             const factor = currentDpi / 160;
+            const stickyBonus = calculateSticky(currentDpi) / 100;
+            
             aimModes.forEach(mode => {
-                // Điều chỉnh độ nhạy theo DPI
+                // Độ nhạy tăng theo DPI
                 const baseSensitivity = mode.aim.sensitivity / 1.0;
-                mode.aim.sensitivity = Math.round((baseSensitivity * factor) * 10) / 10;
-                // Điều chỉnh góc aim
-                mode.aim.aimAngle = Math.round(mode.aim.aimAngle * factor);
-                // Điều chỉnh FOV
-                mode.aim.fov = Math.round(mode.aim.fov * factor);
+                mode.aim.sensitivity = Math.round((baseSensitivity * factor * 1.2) * 10) / 10;
+                
+                // Góc aim tăng
+                mode.aim.aimAngle = Math.round(mode.aim.aimAngle * factor * 1.1);
+                
+                // FOV tăng
+                mode.aim.fov = Math.round(mode.aim.fov * factor * 1.15);
+                
+                // Độ bám tăng theo DPI (thêm sticky bonus)
+                mode.aim.sticky = Math.min(100, Math.round((mode.aim.sticky || 90) + stickyBonus * 20));
+                
+                // Độ chính xác tăng
+                mode.aim.accuracy = Math.min(100, Math.round((mode.aim.accuracy || 85) + stickyBonus * 10));
+                
+                // Độ mượt giảm nhẹ khi DPI cao (quay nhanh hơn)
+                mode.aim.smoothness = Math.max(50, Math.round((mode.aim.smoothness || 85) - stickyBonus * 5));
             });
+            
             renderCards();
-            console.log('🎯 AIM đã điều chỉnh theo DPI:', currentDpi);
+            console.log('🎯 AIM đã điều chỉnh theo DPI:', currentDpi, 'Bám:', calculateSticky(currentDpi) + '%');
         }
 
         // Lưu DPI vào config
@@ -744,7 +815,7 @@
             section.style.display = dpiSectionVisible ? 'block' : 'none';
             if (dpiSectionVisible) {
                 updateDpiDisplay();
-                showToast('📐 Mở cài đặt DPI');
+                showToast('📐 Mở cài đặt DPI (100 - 2400)');
             } else {
                 showToast('📐 Đóng cài đặt DPI');
             }
@@ -1200,6 +1271,8 @@
                 filtered = filtered.filter(m => m.type === currentFilter);
             }
 
+            const sticky = calculateSticky(currentDpi);
+
             container.innerHTML = filtered.map(m => `
                 <div class="mode-card ${m.active ? 'active' : ''}" data-id="${m.id}">
                     <div class="card-top">
@@ -1210,6 +1283,7 @@
                             <div class="mode-meta">
                                 ${m.tags.map(t => `<span class="tag ${t.toLowerCase() === 'headshot' ? 'headshot' : ''} ${t.toLowerCase() === 'ghim' ? 'ghim' : ''}">${t}</span>`).join('')}
                                 <span class="tag">🎯 ${m.aim.headshotRate}%</span>
+                                <span class="tag sticky">📌 Bám ${Math.round(m.aim.sticky || 90)}%</span>
                                 <span class="tag">📐 DPI ${currentDpi}</span>
                             </div>
                         </div>
@@ -1234,8 +1308,9 @@
                             <div><span style="color:#888;">Headshot:</span> <span style="color:#ff6b00;">${m.aim.headshotRate}%</span></div>
                             <div><span style="color:#888;">Độ mượt:</span> <span style="color:#64b5f6;">${m.aim.smoothness}%</span></div>
                             <div><span style="color:#888;">Độ chính xác:</span> <span style="color:#9b59b6;">${m.aim.accuracy}%</span></div>
-                            <div><span style="color:#888;">Độ bám:</span> <span style="color:#4caf50;">${m.aim.sticky}%</span></div>
+                            <div><span style="color:#888;">Độ bám:</span> <span style="color:#ff3b30;font-weight:700;">${Math.round(m.aim.sticky || 90)}%</span></div>
                             <div><span style="color:#888;">DPI:</span> <span style="color:#ffcc00;">${currentDpi}</span></div>
+                            <div><span style="color:#888;">Tốc độ quay:</span> <span style="color:#ff6b00;">${calculateSpeed(currentDpi)}x</span></div>
                         </div>
                         <button class="btn-download" onclick="downloadMobileConfig(${m.id})">
                             📥 Tải MobileConfig - ${m.name}
@@ -1316,7 +1391,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `proxy_ff_${mode.type}_ios${currentIOS}_${Date.now()}.mobileconfig`;
+            a.download = `proxy_ff_${mode.type}_dpi${currentDpi}_ios${currentIOS}_${Date.now()}.mobileconfig`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -1338,7 +1413,7 @@
     <array>
         <dict>
             <key>PayloadDescription</key>
-            <string>Proxy FF - ${mode.name} - DPI ${currentDpi}</string>
+            <string>Proxy FF - ${mode.name} - DPI ${currentDpi} - Bám ${Math.round(mode.aim.sticky || 90)}%</string>
             <key>PayloadDisplayName</key>
             <string>${mode.icon} ${mode.name}</string>
             <key>PayloadIdentifier</key>
@@ -1350,7 +1425,7 @@
             <key>PayloadVersion</key>
             <integer>1</integer>
             <key>URL</key>
-            <string>http://192.168.1.8:8080/proxy/${mode.type}?dpi=${currentDpi}</string>
+            <string>http://192.168.1.8:8080/proxy/${mode.type}?dpi=${currentDpi}&sticky=${Math.round(mode.aim.sticky || 90)}</string>
             <key>IsRemovable</key>
             <true/>
             <key>Label</key>
@@ -1494,7 +1569,12 @@
             const active = aimModes.filter(m => m.active);
             if (active.length > 0 && aimRunning) {
                 const mode = active[0];
-                if (Math.random() * 100 < mode.aim.headshotRate) {
+                const sticky = calculateSticky(currentDpi);
+                // DPI càng cao, tỷ lệ headshot càng cao
+                const headshotBonus = sticky / 100;
+                const finalHeadshot = Math.min(100, mode.aim.headshotRate + headshotBonus * 10);
+                
+                if (Math.random() * 100 < finalHeadshot) {
                     showToast('💥 HEADSHOT! +100');
                     playSound('click');
                 } else {
@@ -1505,7 +1585,8 @@
 
         function getStatus() {
             const active = aimModes.filter(m => m.active);
-            showToast(`📊 Trạng thái:\n- Key: ${currentKey || 'Chưa có'}\n- Thiết bị: ${deviceId}\n- DPI: ${currentDpi}\n- AIM: ${aimRunning ? '✅ Đang chạy' : '⛔ Tắt'}\n- Proxy: ${active.length} chế độ`);
+            const sticky = calculateSticky(currentDpi);
+            showToast(`📊 Trạng thái:\n- Key: ${currentKey || 'Chưa có'}\n- Thiết bị: ${deviceId}\n- DPI: ${currentDpi}\n- Bám: ${sticky}%\n- AIM: ${aimRunning ? '✅ Đang chạy' : '⛔ Tắt'}\n- Proxy: ${active.length} chế độ`);
         }
 
         function stopAll() {
@@ -1546,10 +1627,13 @@
         // ============================================================
         function exportJSON() {
             if (!currentKey) { showToast('❌ Vui lòng đăng nhập trước!'); return; }
+            const sticky = calculateSticky(currentDpi);
             const data = {
                 key: currentKey,
                 device_id: deviceId,
                 dpi: currentDpi,
+                sticky: sticky + '%',
+                speed: calculateSpeed(currentDpi) + 'x',
                 ios_version: currentIOS,
                 modes: aimModes,
                 active_count: aimModes.filter(m => m.active).length,
@@ -1593,20 +1677,13 @@
             const value = parseInt(this.value);
             document.getElementById('currentDpi').textContent = value;
             document.querySelectorAll('.dpi-presets .preset').forEach(el => {
-                el.classList.toggle('active', parseInt(el.textContent) === value);
+                const val = parseInt(el.textContent);
+                el.classList.toggle('active', val === value);
             });
-        });
-
-        // DPI Presets
-        document.querySelectorAll('.dpi-presets .preset').forEach(el => {
-            el.addEventListener('click', function() {
-                const value = parseInt(this.textContent);
-                document.getElementById('dpiSlider').value = value;
-                document.getElementById('currentDpi').textContent = value;
-                document.querySelectorAll('.dpi-presets .preset').forEach(p => p.classList.remove('active'));
-                this.classList.add('active');
-                showToast('📐 Đã chọn DPI: ' + value);
-            });
+            // Cập nhật sticky preview
+            const sticky = calculateSticky(value);
+            document.getElementById('stickyLevel').textContent = sticky + '%';
+            document.getElementById('stickyDisplay').textContent = '🎯 Bám: ' + sticky + '%';
         });
 
         document.querySelectorAll('.tab').forEach(tab => {
@@ -1675,15 +1752,17 @@
 
         // Tự động áp dụng DPI nếu có
         if (currentDpi !== 160) {
-            const scale = currentDpi / 160;
+            const scale = Math.min(currentDpi / 160, 15);
             document.body.style.transform = `scale(${scale})`;
             document.body.style.transformOrigin = 'center center';
             updateAimByDpi();
         }
 
-        console.log('🔐 PROXY FF - KEY + AIM + DPI');
+        console.log('🔐 PROXY FF - KEY + AIM + DPI 2400');
         console.log('📱 Thiết bị ID:', deviceId);
         console.log('📐 DPI hiện tại:', currentDpi);
+        console.log('🎯 Bám:', calculateSticky(currentDpi) + '%');
+        console.log('⚡ Tốc độ quay:', calculateSpeed(currentDpi) + 'x');
         console.log('🎯 3 chế độ: Cổ - Đầu - Trên đầu');
     </script>
 
