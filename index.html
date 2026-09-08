@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title> PROXY FF</title>
+    <title>🔐 PROXY FF - KEY + AIM</title>
     <style>
         * {
             margin: 0;
@@ -85,7 +85,6 @@
         .header .status-bar .server::before { content: "● "; }
         .header .status-bar .count { color: #666; }
 
-        /* ===== KEY ===== */
         .key-section .label {
             font-size: 14px;
             color: #888;
@@ -162,8 +161,14 @@
             color: #ff6b00;
             border: 1px solid rgba(255,107,0,0.2);
         }
+        .key-section .key-status.device-used {
+            display: block;
+            background: rgba(255,59,48,0.15);
+            color: #ff3b30;
+            border: 1px solid rgba(255,59,48,0.3);
+        }
         @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
-        
+
         .key-section .links {
             margin-top: 12px;
             display: flex;
@@ -185,6 +190,23 @@
             color: #90caf9;
         }
 
+        .info-section {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(42,42,42,0.3);
+        }
+        .info-section .info-item {
+            display: flex;
+            gap: 10px;
+            padding: 4px 0;
+            font-size: 12px;
+            color: #666;
+        }
+        .info-section .info-item .icon { font-size: 14px; flex-shrink: 0; }
+        .info-section .info-item .text { color: #888; }
+        .info-section .info-item .text strong { color: #fff; }
+        .info-section .info-item .text .highlight { color: #ff6b00; }
+
         /* ===== APP ===== */
         .app-page {
             display: none;
@@ -198,6 +220,15 @@
         .app-page .app-header .logo span { color: #fff; }
         .app-page .app-header .sub { font-size: 12px; color: #888; margin-top: 2px; }
         .app-page .app-header .key-info { margin-top: 6px; font-size: 11px; color: #4caf50; background: rgba(76,175,80,0.1); padding: 2px 14px; border-radius: 20px; display: inline-block; border: 1px solid rgba(76,175,80,0.2); }
+        .app-page .app-header .device-info {
+            margin-top: 4px;
+            font-size: 10px;
+            color: #888;
+            background: rgba(0,0,0,0.2);
+            padding: 2px 12px;
+            border-radius: 20px;
+            display: inline-block;
+        }
 
         .app-page .status-bar {
             background: rgba(0,0,0,0.3);
@@ -216,6 +247,7 @@
         .app-page .status-bar .right .count { color: #4caf50; font-weight: 600; }
         .app-page .status-bar .right .mode-active { color: #ff6b00; font-weight: 600; }
         .app-page .status-bar .right .time-remain { color: #64b5f6; font-weight: 600; }
+        .app-page .status-bar .right .device-id { color: #888; font-size: 10px; }
 
         .app-page .tabs {
             display: flex; gap: 6px; padding: 0 0 10px 0; overflow-x: auto;
@@ -415,7 +447,7 @@
     <div class="container" id="keyPage">
         <div class="header">
             <div class="logo">🔐 PROXY <span>FF</span></div>
-            <div class="sub"><strong> SUPER 4.0</strong></div>
+            <div class="sub"><strong>AIMLOCK SUPER 4.5</strong></div>
             <div class="status-bar">
                 <span class="server">Server: Đã kết nối</span>
                 <span class="count">1 lần</span>
@@ -434,19 +466,18 @@
             </div>
         </div>
 
-        <!-- ===== INFO ===== -->
-        <div class="info-section" style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(42,42,42,0.3);">
-            <div class="info-item" style="display:flex;gap:10px;padding:4px 0;font-size:12px;color:#666;">
-                <span style="font-size:14px;flex-shrink:0;">📌</span>
-                <span style="color:#888;">Tạo short-link lấy key free theo thiết bị</span>
+        <div class="info-section">
+            <div class="info-item">
+                <span class="icon">📌</span>
+                <span class="text">Tạo short-link lấy key free theo thiết bị</span>
             </div>
-            <div class="info-item" style="display:flex;gap:10px;padding:4px 0;font-size:12px;color:#666;">
-                <span style="font-size:14px;flex-shrink:0;">⏳</span>
-                <span style="color:#888;">Key free <strong style="color:#fff;">5 giờ</strong> và chỉ dùng trên <strong style="color:#fff;">1 thiết bị</strong></span>
+            <div class="info-item">
+                <span class="icon">⏳</span>
+                <span class="text">Key free <strong>5 giờ</strong> và chỉ dùng trên <strong>1 thiết bị</strong></span>
             </div>
-            <div class="info-item" style="display:flex;gap:10px;padding:4px 0;font-size:12px;color:#666;">
-                <span style="font-size:14px;flex-shrink:0;">✅</span>
-                <span style="color:#888;">Key Free Cho Từng Thiết Bị và <strong style="color:#ff6b00;">Ổn Định</strong></span>
+            <div class="info-item">
+                <span class="icon">✅</span>
+                <span class="text">Key Free Cho Từng Thiết Bị và <strong class="highlight">Ổn Định</strong></span>
             </div>
         </div>
     </div>
@@ -455,8 +486,9 @@
     <div class="container app-page" id="appPage">
         <div class="app-header">
             <div class="logo">🎯 PROXY <span>FF</span></div>
-            <div class="sub"> SUPER 4.5 • Đã kích hoạt</div>
+            <div class="sub">AIMLOCK SUPER 4.5 • Đã kích hoạt</div>
             <div class="key-info" id="appKeyDisplay">🔑 --</div>
+            <div class="device-info" id="deviceDisplay">📱 Thiết bị: --</div>
         </div>
 
         <div class="status-bar">
@@ -468,14 +500,15 @@
                 <span>⚡ <span class="count" id="activeCount">0</span></span>
                 <span class="mode-active" id="modeActive">⬜ Chưa chọn</span>
                 <span class="time-remain" id="timeRemain">⏳ --</span>
+                <span class="device-id" id="deviceIdDisplay"></span>
             </div>
         </div>
 
         <div class="tabs" id="tabs">
             <span class="tab active" data-filter="all">🔥 Tất cả</span>
-            <span class="tab" data-filter="co">🎯 2.0</span>
-            <span class="tab" data-filter="dau">🎯 3.0</span>
-            <span class="tab" data-filter="tren">🔥 4.0</span>
+            <span class="tab" data-filter="co">🎯 Cổ</span>
+            <span class="tab" data-filter="dau">🎯 Đầu</span>
+            <span class="tab" data-filter="tren">🔥 Trên đầu</span>
         </div>
 
         <div id="cardContainer"></div>
@@ -500,7 +533,6 @@
         // ============================================================
         // KEY DATA - CHẠY NGẦM (25 KEY)
         // ============================================================
-        // Key 5 giờ (5 key) - Chỉ hiện khi bấm "Lấy key free"
         const keys5h = [
             'PROXY-A6EB-B66C-2470-5DA3-FF',
             'PROXY-F7DC-C77D-3581-6EB4-FF',
@@ -509,7 +541,6 @@
             'PROXY-I0GF-F00G-68B4-9HE7-FF'
         ];
 
-        // Key 7 ngày (10 key)
         const keys7d = [
             'PROXY-J1HG-G11H-79C5-0IF8-FF',
             'PROXY-K2IH-H22I-80D6-1JG9-FF',
@@ -523,7 +554,6 @@
             'PROXY-S0QP-P00Q-68L4-9RO7-FF'
         ];
 
-        // Key 1 tháng (10 key)
         const keys30d = [
             'PROXY-T1RQ-Q11R-79M5-0SP8-FF',
             'PROXY-U2SR-R22S-80N6-1TQ9-FF',
@@ -537,11 +567,67 @@
             'PROXY-C0AZ-Z00A-68V4-9BY7-FF'
         ];
 
-        // Gộp tất cả key
         const allKeys = [...keys5h, ...keys7d, ...keys30d];
 
-        // Trạng thái key (lưu key đã dùng)
-        let usedKeys = JSON.parse(localStorage.getItem('proxy_ff_used_keys') || '[]');
+        // ============================================================
+        // LƯU THIẾT BỊ - LẤY ID THIẾT BỊ DUY NHẤT
+        // ============================================================
+        function getDeviceId() {
+            let deviceId = localStorage.getItem('proxy_ff_device_id');
+            if (!deviceId) {
+                // Tạo ID thiết bị duy nhất
+                const ua = navigator.userAgent;
+                let deviceName = 'iPhone';
+                if (ua.includes('iPhone')) deviceName = 'iPhone';
+                else if (ua.includes('iPad')) deviceName = 'iPad';
+                else if (ua.includes('Android')) deviceName = 'Android';
+                else deviceName = 'Unknown';
+                
+                const randomId = Math.random().toString(36).substr(2, 8).toUpperCase();
+                deviceId = deviceName + '-' + randomId;
+                localStorage.setItem('proxy_ff_device_id', deviceId);
+            }
+            return deviceId;
+        }
+
+        const deviceId = getDeviceId();
+
+        // ============================================================
+        // QUẢN LÝ KEY ĐÃ SỬ DỤNG + THIẾT BỊ
+        // ============================================================
+        function getKeyData() {
+            try {
+                return JSON.parse(localStorage.getItem('proxy_ff_keys_data') || '{}');
+            } catch {
+                return {};
+            }
+        }
+
+        function saveKeyData(data) {
+            localStorage.setItem('proxy_ff_keys_data', JSON.stringify(data));
+        }
+
+        function isKeyUsedOnOtherDevice(key) {
+            const keyData = getKeyData();
+            if (!keyData[key]) return false;
+            return keyData[key].deviceId !== deviceId;
+        }
+
+        function getKeyDevice(key) {
+            const keyData = getKeyData();
+            return keyData[key] || null;
+        }
+
+        function registerKey(key, duration) {
+            const keyData = getKeyData();
+            keyData[key] = {
+                deviceId: deviceId,
+                usedAt: Date.now(),
+                duration: duration,
+                expiresAt: Date.now() + (duration * 60 * 60 * 1000)
+            };
+            saveKeyData(keyData);
+        }
 
         // ============================================================
         // AIM MODES
@@ -549,13 +635,13 @@
         const aimModes = [{
             id: 1,
             type: 'co',
-            name: '2.0',
+            name: 'AIM Cổ',
             icon: '🎯',
             desc: 'Nhắm vào vùng cổ - Ghim chặt, ít lộ',
             tags: ['VIP', 'GHIM', 'AUTO'],
             active: false,
             aim: {
-                region: '2.0 (1.2x)',
+                region: 'Cổ (1.2x)',
                 sensitivity: 1.8,
                 aimAngle: 20,
                 headshotRate: 82,
@@ -577,7 +663,7 @@
         }, {
             id: 2,
             type: 'dau',
-            name: '3.0',
+            name: 'AIM Đầu',
             icon: '🎯',
             desc: 'Nhắm vào vùng đầu - Headshot cao',
             tags: ['VIP', 'HEADSHOT', 'AUTO', 'PRO'],
@@ -605,7 +691,7 @@
         }, {
             id: 3,
             type: 'tren',
-            name: '4.0',
+            name: 'AIM Trên đầu',
             icon: '🔥',
             desc: 'Nhắm trên đầu - Headshot siêu chuẩn, bám chặt',
             tags: ['VIP', 'HEADSHOT', 'AUTO', 'PRO', 'GHIM'],
@@ -734,12 +820,25 @@
                 return;
             }
 
-            // Kiểm tra key đã dùng chưa
-            if (usedKeys.includes(key)) {
-                statusEl.className = 'key-status invalid';
-                statusEl.textContent = '❌ Key đã được sử dụng!';
-                showToast('❌ Key đã được sử dụng!');
+            // Kiểm tra key đã được sử dụng trên thiết bị khác chưa
+            if (isKeyUsedOnOtherDevice(key)) {
+                const keyData = getKeyDevice(key);
+                statusEl.className = 'key-status device-used';
+                statusEl.textContent = `❌ Key đã được sử dụng trên thiết bị: ${keyData ? keyData.deviceId : 'khác'}`;
+                showToast(`❌ Key đã được sử dụng trên thiết bị khác!`);
                 return;
+            }
+
+            // Kiểm tra key đã hết hạn chưa (nếu đã từng dùng)
+            const keyData = getKeyDevice(key);
+            if (keyData) {
+                const elapsed = (Date.now() - keyData.usedAt) / (1000 * 60 * 60);
+                if (elapsed >= keyData.duration) {
+                    statusEl.className = 'key-status expired';
+                    statusEl.textContent = `⏰ Key đã hết hạn!`;
+                    showToast('⏰ Key đã hết hạn!');
+                    return;
+                }
             }
 
             // Xác định thời hạn của key
@@ -747,19 +846,19 @@
             if (keys7d.includes(key)) duration = 168; // 7 ngày = 168 giờ
             if (keys30d.includes(key)) duration = 720; // 30 ngày = 720 giờ
 
+            // Đăng ký key cho thiết bị này
+            registerKey(key, duration);
+
             // Đăng nhập thành công
             currentKey = key;
             loginTime = Date.now();
-
-            // Lưu key đã dùng
-            usedKeys.push(key);
-            localStorage.setItem('proxy_ff_used_keys', JSON.stringify(usedKeys));
 
             // Lưu thông tin đăng nhập
             localStorage.setItem('proxy_ff_key', JSON.stringify({
                 key: key,
                 loginTime: loginTime,
-                duration: duration
+                duration: duration,
+                deviceId: deviceId
             }));
 
             statusEl.className = 'key-status success';
@@ -771,6 +870,8 @@
                 document.getElementById('appPage').classList.add('show');
                 document.getElementById('appKeyDisplay').textContent = '🔑 ' + key;
                 document.getElementById('currentKeyDisplay').textContent = key;
+                document.getElementById('deviceDisplay').textContent = '📱 Thiết bị: ' + deviceId;
+                document.getElementById('deviceIdDisplay').textContent = '🆔 ' + deviceId;
                 renderCards();
                 startTimer(duration);
                 updateTimeRemaining();
@@ -780,11 +881,12 @@
         }
 
         // ============================================================
-        // GET FREE KEY - Lấy key 5 giờ
+        // GET FREE KEY
         // ============================================================
         function getFreeKey() {
-            // Tìm key 5 giờ chưa dùng
-            const available = keys5h.filter(k => !usedKeys.includes(k));
+            const keyData = getKeyData();
+            // Tìm key 5 giờ chưa được đăng ký
+            const available = keys5h.filter(k => !keyData[k]);
             if (available.length > 0) {
                 const key = available[0];
                 document.getElementById('keyInput').value = key;
@@ -803,6 +905,7 @@
         // ============================================================
         function logout() {
             if (currentKey) {
+                // Không xóa key khỏi danh sách đã dùng, chỉ logout
                 currentKey = null;
                 loginTime = null;
                 localStorage.removeItem('proxy_ff_key');
@@ -836,7 +939,6 @@
                 return;
             }
 
-            // Lấy duration từ localStorage
             const saved = localStorage.getItem('proxy_ff_key');
             let dur = duration || 5;
             if (saved) {
@@ -1139,7 +1241,7 @@
                 btn.classList.add('active');
                 loading.classList.add('show');
                 bar.style.width = '0%';
-                text.textContent = '🚀 Đang khởi tạo ...';
+                text.textContent = '🚀 Đang khởi tạo AIM...';
 
                 let progress = 0;
                 const interval = setInterval(() => {
@@ -1149,7 +1251,7 @@
                     if (progress < 30) text.textContent = '🔍 Đang tìm mục tiêu...';
                     else if (progress < 60) text.textContent = '🎯 Đang khóa mục tiêu...';
                     else if (progress < 90) text.textContent = '⚡ Đang áp dụng AIM...';
-                    else text.textContent = '✅ Aã sẵn sàng!';
+                    else text.textContent = '✅ AIM đã sẵn sàng!';
 
                     if (progress >= 100) {
                         clearInterval(interval);
@@ -1157,8 +1259,8 @@
                             loading.classList.remove('show');
                             menu.classList.add('show');
                             playSound('on');
-                            showToast('🎯  đã bật!');
-                            document.getElementById('modeActive').textContent = '▶️ Chạy';
+                            showToast('🎯 AIM đã bật!');
+                            document.getElementById('modeActive').textContent = '▶️ AIM PRO';
                             document.getElementById('modeActive').style.color = '#4caf50';
                             aimInterval = setInterval(autoShoot, 3000);
                         }, 500);
@@ -1181,7 +1283,7 @@
             if (active.length > 0 && aimRunning) {
                 const mode = active[0];
                 if (Math.random() * 100 < mode.aim.headshotRate) {
-                    showToast('💥 ĐÃ CHẠY ');
+                    showToast('💥 HEADSHOT! +100');
                     playSound('click');
                 } else {
                     showToast('🔫 Bắn trúng! +30');
@@ -1191,7 +1293,7 @@
 
         function getStatus() {
             const active = aimModes.filter(m => m.active);
-            showToast(`📊 Trạng thái:\n- Key: ${currentKey || 'Chưa có'}\n- AIM: ${aimRunning ? '✅ Đang chạy' : '⛔ Tắt'}\n- Proxy: ${active.length} chế độ`);
+            showToast(`📊 Trạng thái:\n- Key: ${currentKey || 'Chưa có'}\n- Thiết bị: ${deviceId}\n- AIM: ${aimRunning ? '✅ Đang chạy' : '⛔ Tắt'}\n- Proxy: ${active.length} chế độ`);
         }
 
         function stopAll() {
@@ -1234,6 +1336,7 @@
             if (!currentKey) { showToast('❌ Vui lòng đăng nhập trước!'); return; }
             const data = {
                 key: currentKey,
+                device_id: deviceId,
                 ios_version: currentIOS,
                 modes: aimModes,
                 active_count: aimModes.filter(m => m.active).length,
@@ -1287,26 +1390,43 @@
         document.addEventListener('click', initAudio, { once: true });
         document.addEventListener('touchstart', initAudio, { once: true });
 
+        // Hiển thị device ID trên status bar
+        document.getElementById('deviceIdDisplay').textContent = '🆔 ' + deviceId;
+
         const saved = localStorage.getItem('proxy_ff_key');
         if (saved) {
             try {
                 const data = JSON.parse(saved);
                 const key = data.key;
-                if (allKeys.includes(key) && !usedKeys.includes(key)) {
-                    currentKey = key;
-                    loginTime = data.loginTime;
-                    usedKeys.push(key);
-                    localStorage.setItem('proxy_ff_used_keys', JSON.stringify(usedKeys));
-                    document.getElementById('keyInput').value = currentKey;
-                    document.getElementById('keyPage').style.display = 'none';
-                    document.getElementById('appPage').classList.add('show');
-                    document.getElementById('appKeyDisplay').textContent = '🔑 ' + currentKey;
-                    document.getElementById('currentKeyDisplay').textContent = currentKey;
-                    renderCards();
-                    startTimer(data.duration || 5);
-                    updateTimeRemaining();
-                    document.getElementById('floatingMenu').classList.add('show');
-                    showToast('✅ Đã khôi phục key!');
+                if (allKeys.includes(key)) {
+                    // Kiểm tra key có hợp lệ không (không bị hết hạn và cùng thiết bị)
+                    const keyData = getKeyDevice(key);
+                    if (keyData && keyData.deviceId === deviceId) {
+                        const elapsed = (Date.now() - keyData.usedAt) / (1000 * 60 * 60);
+                        if (elapsed < keyData.duration) {
+                            currentKey = key;
+                            loginTime = data.loginTime;
+                            document.getElementById('keyInput').value = currentKey;
+                            document.getElementById('keyPage').style.display = 'none';
+                            document.getElementById('appPage').classList.add('show');
+                            document.getElementById('appKeyDisplay').textContent = '🔑 ' + currentKey;
+                            document.getElementById('currentKeyDisplay').textContent = currentKey;
+                            document.getElementById('deviceDisplay').textContent = '📱 Thiết bị: ' + deviceId;
+                            renderCards();
+                            startTimer(data.duration || 5);
+                            updateTimeRemaining();
+                            document.getElementById('floatingMenu').classList.add('show');
+                            showToast('✅ Đã khôi phục key!');
+                        } else {
+                            localStorage.removeItem('proxy_ff_key');
+                            showToast('⏰ Key đã hết hạn!');
+                        }
+                    } else if (keyData && keyData.deviceId !== deviceId) {
+                        localStorage.removeItem('proxy_ff_key');
+                        showToast('❌ Key đã được sử dụng trên thiết bị khác!');
+                    } else {
+                        localStorage.removeItem('proxy_ff_key');
+                    }
                 } else {
                     localStorage.removeItem('proxy_ff_key');
                 }
@@ -1315,10 +1435,11 @@
             }
         }
 
-        console.log('🔐 PROXY FF');
+        console.log('🔐 PROXY FF - KEY + AIM');
         console.log('📋 Tổng 25 key: 5 key 5h, 10 key 7 ngày, 10 key 30 ngày');
+        console.log('📱 Thiết bị ID:', deviceId);
+        console.log('🔑 Key được lưu theo thiết bị, không dùng chung');
         console.log('🎯 3 chế độ: Cổ - Đầu - Trên đầu');
-        console.log('🔑 Key đang chạy ngầm, không hiển thị danh sách');
     </script>
 
 </body>
