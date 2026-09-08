@@ -19,6 +19,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            transition: 0.5s;
         }
         .bg {
             position: fixed;
@@ -52,6 +53,7 @@
             box-shadow: 0 30px 80px rgba(0,0,0,0.6);
             position: relative;
             overflow: hidden;
+            transition: 0.5s;
         }
 
         .header {
@@ -85,6 +87,7 @@
         .header .status-bar .server::before { content: "● "; }
         .header .status-bar .count { color: #666; }
 
+        /* ===== KEY ===== */
         .key-section .label {
             font-size: 14px;
             color: #888;
@@ -248,7 +251,99 @@
         .app-page .status-bar .right .mode-active { color: #ff6b00; font-weight: 600; }
         .app-page .status-bar .right .time-remain { color: #64b5f6; font-weight: 600; }
         .app-page .status-bar .right .device-id { color: #888; font-size: 10px; }
+        .app-page .status-bar .right .dpi-display { color: #ffcc00; font-weight: 600; font-size: 11px; }
 
+        /* ===== DPI SETTINGS ===== */
+        .dpi-section {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(42,42,42,0.3);
+        }
+        .dpi-section .dpi-title {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dpi-section .dpi-title .current-dpi {
+            color: #ffcc00;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        .dpi-section .dpi-slider {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            background: linear-gradient(90deg, #2a2a2a, #ff6b00);
+            border-radius: 10px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .dpi-section .dpi-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff3b30, #ff6b00);
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255,107,0,0.3);
+        }
+        .dpi-section .dpi-presets {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .dpi-section .dpi-presets .preset {
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(42,42,42,0.5);
+            background: rgba(0,0,0,0.3);
+            color: #888;
+            font-size: 11px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .dpi-section .dpi-presets .preset:hover {
+            border-color: #ff6b00;
+            color: #fff;
+        }
+        .dpi-section .dpi-presets .preset.active {
+            border-color: #ff6b00;
+            color: #ffcc00;
+            background: rgba(255,107,0,0.1);
+        }
+        .dpi-section .dpi-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .dpi-section .dpi-actions .btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .dpi-section .dpi-actions .btn-apply {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: #fff;
+        }
+        .dpi-section .dpi-actions .btn-apply:hover { transform: scale(1.02); }
+        .dpi-section .dpi-actions .btn-reset {
+            background: rgba(42,42,42,0.5);
+            color: #fff;
+        }
+        .dpi-section .dpi-actions .btn-reset:hover { background: rgba(58,58,58,0.5); }
+
+        /* ===== TABS ===== */
         .app-page .tabs {
             display: flex; gap: 6px; padding: 0 0 10px 0; overflow-x: auto;
         }
@@ -411,6 +506,7 @@
         .floating-menu .menu-btn.aim.active { background: #4caf50; animation: pulse 0.5s infinite; }
         .floating-menu .menu-btn.stop { background: #2a2a2a; color: #fff; }
         .floating-menu .menu-btn.status { background: #1a3a5a; color: #64b5f6; }
+        .floating-menu .menu-btn.dpi { background: linear-gradient(135deg, #9b59b6, #6c3483); color: #fff; }
 
         @media (max-width: 480px) {
             .container { padding: 16px; }
@@ -418,6 +514,7 @@
             .key-section .input-group .btn-login { width: 100%; }
             .floating-menu { bottom: 70px; right: 10px; }
             .floating-menu .menu-btn { width: 44px; height: 44px; font-size: 18px; }
+            .dpi-section .dpi-presets { justify-content: center; }
         }
     </style>
 </head>
@@ -437,6 +534,7 @@
 
     <div class="floating-menu" id="floatingMenu">
         <button class="menu-btn aim" id="btnAim" onclick="toggleAim()">🎯</button>
+        <button class="menu-btn dpi" onclick="toggleDpiSettings()">📐</button>
         <button class="menu-btn status" onclick="getStatus()">📊</button>
         <button class="menu-btn stop" onclick="stopAll()">⏹</button>
     </div>
@@ -501,6 +599,28 @@
                 <span class="mode-active" id="modeActive">⬜ Chưa chọn</span>
                 <span class="time-remain" id="timeRemain">⏳ --</span>
                 <span class="device-id" id="deviceIdDisplay"></span>
+                <span class="dpi-display" id="dpiDisplay">📐 DPI: 0</span>
+            </div>
+        </div>
+
+        <!-- ===== DPI SETTINGS ===== -->
+        <div class="dpi-section" id="dpiSection">
+            <div class="dpi-title">
+                <span>📐 ĐIỀU CHỈNH DPI</span>
+                <span class="current-dpi" id="currentDpi">160</span>
+            </div>
+            <input type="range" class="dpi-slider" id="dpiSlider" min="100" max="400" step="10" value="160">
+            <div class="dpi-presets">
+                <span class="preset" onclick="setDpi(120)">📱 120</span>
+                <span class="preset active" onclick="setDpi(160)">📱 160</span>
+                <span class="preset" onclick="setDpi(200)">📱 200</span>
+                <span class="preset" onclick="setDpi(240)">📱 240</span>
+                <span class="preset" onclick="setDpi(320)">📱 320</span>
+                <span class="preset" onclick="setDpi(400)">📱 400</span>
+            </div>
+            <div class="dpi-actions">
+                <button class="btn btn-apply" onclick="applyDpi()">✅ Áp dụng DPI</button>
+                <button class="btn btn-reset" onclick="resetDpi()">🔄 Reset</button>
             </div>
         </div>
 
@@ -523,6 +643,7 @@
             <div style="display:flex;justify-content:space-between;font-size:11px;color:#888;flex-wrap:wrap;gap:4px;">
                 <span>🔑 Key: <span id="currentKeyDisplay" style="color:#ffcc00;">--</span></span>
                 <span>⏳ Còn lại: <span id="timeRemaining" style="color:#4caf50;">--</span></span>
+                <span>📐 DPI: <span id="dpiStatusDisplay" style="color:#64b5f6;">160</span></span>
             </div>
         </div>
 
@@ -531,7 +652,106 @@
 
     <script>
         // ============================================================
-        // KEY DATA - CHẠY NGẦM (25 KEY)
+        // DPI SETTINGS
+        // ============================================================
+        let currentDpi = parseInt(localStorage.getItem('proxy_ff_dpi')) || 160;
+        let dpiSectionVisible = false;
+
+        // Cập nhật hiển thị DPI
+        function updateDpiDisplay() {
+            document.getElementById('currentDpi').textContent = currentDpi;
+            document.getElementById('dpiDisplay').textContent = '📐 DPI: ' + currentDpi;
+            document.getElementById('dpiStatusDisplay').textContent = currentDpi;
+            document.getElementById('dpiSlider').value = currentDpi;
+            
+            // Cập nhật preset active
+            document.querySelectorAll('.dpi-presets .preset').forEach(el => {
+                el.classList.toggle('active', parseInt(el.textContent) === currentDpi);
+            });
+        }
+
+        // Set DPI từ preset
+        function setDpi(value) {
+            currentDpi = value;
+            updateDpiDisplay();
+            showToast('📐 Đã chọn DPI: ' + value);
+        }
+
+        // Áp dụng DPI
+        function applyDpi() {
+            const value = parseInt(document.getElementById('dpiSlider').value);
+            currentDpi = value;
+            localStorage.setItem('proxy_ff_dpi', currentDpi);
+            
+            // Áp dụng DPI vào body (scale)
+            const scale = currentDpi / 160;
+            document.body.style.transform = `scale(${scale})`;
+            document.body.style.transformOrigin = 'center center';
+            
+            updateDpiDisplay();
+            playSound('click');
+            showToast('✅ Đã áp dụng DPI: ' + currentDpi);
+            
+            // Cập nhật AIM theo DPI
+            updateAimByDpi();
+            
+            // Lưu vào config
+            saveDpiToConfig(currentDpi);
+        }
+
+        // Reset DPI về mặc định
+        function resetDpi() {
+            currentDpi = 160;
+            localStorage.setItem('proxy_ff_dpi', currentDpi);
+            document.body.style.transform = 'scale(1)';
+            document.body.style.transformOrigin = 'center center';
+            updateDpiDisplay();
+            playSound('click');
+            showToast('🔄 Đã reset DPI về 160');
+            updateAimByDpi();
+        }
+
+        // Cập nhật AIM theo DPI
+        function updateAimByDpi() {
+            const factor = currentDpi / 160;
+            aimModes.forEach(mode => {
+                // Điều chỉnh độ nhạy theo DPI
+                const baseSensitivity = mode.aim.sensitivity / 1.0;
+                mode.aim.sensitivity = Math.round((baseSensitivity * factor) * 10) / 10;
+                // Điều chỉnh góc aim
+                mode.aim.aimAngle = Math.round(mode.aim.aimAngle * factor);
+                // Điều chỉnh FOV
+                mode.aim.fov = Math.round(mode.aim.fov * factor);
+            });
+            renderCards();
+            console.log('🎯 AIM đã điều chỉnh theo DPI:', currentDpi);
+        }
+
+        // Lưu DPI vào config
+        function saveDpiToConfig(dpi) {
+            const config = {
+                dpi: dpi,
+                device: deviceId,
+                timestamp: Date.now()
+            };
+            localStorage.setItem('proxy_ff_dpi_config', JSON.stringify(config));
+        }
+
+        // Toggle hiển thị DPI settings
+        function toggleDpiSettings() {
+            const section = document.getElementById('dpiSection');
+            dpiSectionVisible = !dpiSectionVisible;
+            section.style.display = dpiSectionVisible ? 'block' : 'none';
+            if (dpiSectionVisible) {
+                updateDpiDisplay();
+                showToast('📐 Mở cài đặt DPI');
+            } else {
+                showToast('📐 Đóng cài đặt DPI');
+            }
+        }
+
+        // ============================================================
+        // KEY DATA
         // ============================================================
         const keys5h = [
             'PROXY-A6EB-B66C-2470-5DA3-FF',
@@ -570,19 +790,17 @@
         const allKeys = [...keys5h, ...keys7d, ...keys30d];
 
         // ============================================================
-        // LƯU THIẾT BỊ - LẤY ID THIẾT BỊ DUY NHẤT
+        // DEVICE ID
         // ============================================================
         function getDeviceId() {
             let deviceId = localStorage.getItem('proxy_ff_device_id');
             if (!deviceId) {
-                // Tạo ID thiết bị duy nhất
                 const ua = navigator.userAgent;
                 let deviceName = 'iPhone';
                 if (ua.includes('iPhone')) deviceName = 'iPhone';
                 else if (ua.includes('iPad')) deviceName = 'iPad';
                 else if (ua.includes('Android')) deviceName = 'Android';
                 else deviceName = 'Unknown';
-                
                 const randomId = Math.random().toString(36).substr(2, 8).toUpperCase();
                 deviceId = deviceName + '-' + randomId;
                 localStorage.setItem('proxy_ff_device_id', deviceId);
@@ -593,7 +811,7 @@
         const deviceId = getDeviceId();
 
         // ============================================================
-        // QUẢN LÝ KEY ĐÃ SỬ DỤNG + THIẾT BỊ
+        // KEY MANAGEMENT
         // ============================================================
         function getKeyData() {
             try {
@@ -812,7 +1030,6 @@
                 return;
             }
 
-            // Kiểm tra key có trong danh sách không
             if (!allKeys.includes(key)) {
                 statusEl.className = 'key-status invalid';
                 statusEl.textContent = '❌ Key không hợp lệ!';
@@ -820,7 +1037,6 @@
                 return;
             }
 
-            // Kiểm tra key đã được sử dụng trên thiết bị khác chưa
             if (isKeyUsedOnOtherDevice(key)) {
                 const keyData = getKeyDevice(key);
                 statusEl.className = 'key-status device-used';
@@ -829,7 +1045,6 @@
                 return;
             }
 
-            // Kiểm tra key đã hết hạn chưa (nếu đã từng dùng)
             const keyData = getKeyDevice(key);
             if (keyData) {
                 const elapsed = (Date.now() - keyData.usedAt) / (1000 * 60 * 60);
@@ -841,19 +1056,15 @@
                 }
             }
 
-            // Xác định thời hạn của key
-            let duration = 5; // mặc định 5 giờ
-            if (keys7d.includes(key)) duration = 168; // 7 ngày = 168 giờ
-            if (keys30d.includes(key)) duration = 720; // 30 ngày = 720 giờ
+            let duration = 5;
+            if (keys7d.includes(key)) duration = 168;
+            if (keys30d.includes(key)) duration = 720;
 
-            // Đăng ký key cho thiết bị này
             registerKey(key, duration);
 
-            // Đăng nhập thành công
             currentKey = key;
             loginTime = Date.now();
 
-            // Lưu thông tin đăng nhập
             localStorage.setItem('proxy_ff_key', JSON.stringify({
                 key: key,
                 loginTime: loginTime,
@@ -872,6 +1083,8 @@
                 document.getElementById('currentKeyDisplay').textContent = key;
                 document.getElementById('deviceDisplay').textContent = '📱 Thiết bị: ' + deviceId;
                 document.getElementById('deviceIdDisplay').textContent = '🆔 ' + deviceId;
+                document.getElementById('dpiSection').style.display = 'block';
+                updateDpiDisplay();
                 renderCards();
                 startTimer(duration);
                 updateTimeRemaining();
@@ -885,7 +1098,6 @@
         // ============================================================
         function getFreeKey() {
             const keyData = getKeyData();
-            // Tìm key 5 giờ chưa được đăng ký
             const available = keys5h.filter(k => !keyData[k]);
             if (available.length > 0) {
                 const key = available[0];
@@ -893,7 +1105,6 @@
                 showToast('🎯 Key free: ' + key);
                 document.getElementById('keyStatus').className = 'key-status';
                 document.getElementById('keyStatus').textContent = '';
-                // Tự động login luôn
                 setTimeout(login, 500);
             } else {
                 showToast('❌ Hiện không còn key free 5 giờ!');
@@ -905,7 +1116,6 @@
         // ============================================================
         function logout() {
             if (currentKey) {
-                // Không xóa key khỏi danh sách đã dùng, chỉ logout
                 currentKey = null;
                 loginTime = null;
                 localStorage.removeItem('proxy_ff_key');
@@ -1000,6 +1210,7 @@
                             <div class="mode-meta">
                                 ${m.tags.map(t => `<span class="tag ${t.toLowerCase() === 'headshot' ? 'headshot' : ''} ${t.toLowerCase() === 'ghim' ? 'ghim' : ''}">${t}</span>`).join('')}
                                 <span class="tag">🎯 ${m.aim.headshotRate}%</span>
+                                <span class="tag">📐 DPI ${currentDpi}</span>
                             </div>
                         </div>
                         <div class="right-side">
@@ -1024,6 +1235,7 @@
                             <div><span style="color:#888;">Độ mượt:</span> <span style="color:#64b5f6;">${m.aim.smoothness}%</span></div>
                             <div><span style="color:#888;">Độ chính xác:</span> <span style="color:#9b59b6;">${m.aim.accuracy}%</span></div>
                             <div><span style="color:#888;">Độ bám:</span> <span style="color:#4caf50;">${m.aim.sticky}%</span></div>
+                            <div><span style="color:#888;">DPI:</span> <span style="color:#ffcc00;">${currentDpi}</span></div>
                         </div>
                         <button class="btn-download" onclick="downloadMobileConfig(${m.id})">
                             📥 Tải MobileConfig - ${m.name}
@@ -1126,7 +1338,7 @@
     <array>
         <dict>
             <key>PayloadDescription</key>
-            <string>Proxy FF - ${mode.name}</string>
+            <string>Proxy FF - ${mode.name} - DPI ${currentDpi}</string>
             <key>PayloadDisplayName</key>
             <string>${mode.icon} ${mode.name}</string>
             <key>PayloadIdentifier</key>
@@ -1138,7 +1350,7 @@
             <key>PayloadVersion</key>
             <integer>1</integer>
             <key>URL</key>
-            <string>http://192.168.1.8:8080/proxy/${mode.type}</string>
+            <string>http://192.168.1.8:8080/proxy/${mode.type}?dpi=${currentDpi}</string>
             <key>IsRemovable</key>
             <true/>
             <key>Label</key>
@@ -1146,7 +1358,7 @@
         </dict>
     </array>
     <key>PayloadDescription</key>
-    <string>Proxy FF - ${mode.name}</string>
+    <string>Proxy FF - ${mode.name} - DPI ${currentDpi}</string>
     <key>PayloadDisplayName</key>
     <string>Proxy FF</string>
     <key>PayloadIdentifier</key>
@@ -1293,7 +1505,7 @@
 
         function getStatus() {
             const active = aimModes.filter(m => m.active);
-            showToast(`📊 Trạng thái:\n- Key: ${currentKey || 'Chưa có'}\n- Thiết bị: ${deviceId}\n- AIM: ${aimRunning ? '✅ Đang chạy' : '⛔ Tắt'}\n- Proxy: ${active.length} chế độ`);
+            showToast(`📊 Trạng thái:\n- Key: ${currentKey || 'Chưa có'}\n- Thiết bị: ${deviceId}\n- DPI: ${currentDpi}\n- AIM: ${aimRunning ? '✅ Đang chạy' : '⛔ Tắt'}\n- Proxy: ${active.length} chế độ`);
         }
 
         function stopAll() {
@@ -1337,6 +1549,7 @@
             const data = {
                 key: currentKey,
                 device_id: deviceId,
+                dpi: currentDpi,
                 ios_version: currentIOS,
                 modes: aimModes,
                 active_count: aimModes.filter(m => m.active).length,
@@ -1348,7 +1561,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `proxy_ff_ios${currentIOS}_${Date.now()}.json`;
+            a.download = `proxy_ff_dpi${currentDpi}_ios${currentIOS}_${Date.now()}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -1375,6 +1588,27 @@
             if (e.key === 'Enter') login();
         });
 
+        // DPI Slider
+        document.getElementById('dpiSlider').addEventListener('input', function() {
+            const value = parseInt(this.value);
+            document.getElementById('currentDpi').textContent = value;
+            document.querySelectorAll('.dpi-presets .preset').forEach(el => {
+                el.classList.toggle('active', parseInt(el.textContent) === value);
+            });
+        });
+
+        // DPI Presets
+        document.querySelectorAll('.dpi-presets .preset').forEach(el => {
+            el.addEventListener('click', function() {
+                const value = parseInt(this.textContent);
+                document.getElementById('dpiSlider').value = value;
+                document.getElementById('currentDpi').textContent = value;
+                document.querySelectorAll('.dpi-presets .preset').forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                showToast('📐 Đã chọn DPI: ' + value);
+            });
+        });
+
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', function() {
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -1390,16 +1624,19 @@
         document.addEventListener('click', initAudio, { once: true });
         document.addEventListener('touchstart', initAudio, { once: true });
 
-        // Hiển thị device ID trên status bar
+        // DPI init
+        document.getElementById('dpiSection').style.display = 'none';
+        updateDpiDisplay();
+
         document.getElementById('deviceIdDisplay').textContent = '🆔 ' + deviceId;
 
+        // Khôi phục key
         const saved = localStorage.getItem('proxy_ff_key');
         if (saved) {
             try {
                 const data = JSON.parse(saved);
                 const key = data.key;
                 if (allKeys.includes(key)) {
-                    // Kiểm tra key có hợp lệ không (không bị hết hạn và cùng thiết bị)
                     const keyData = getKeyDevice(key);
                     if (keyData && keyData.deviceId === deviceId) {
                         const elapsed = (Date.now() - keyData.usedAt) / (1000 * 60 * 60);
@@ -1412,6 +1649,7 @@
                             document.getElementById('appKeyDisplay').textContent = '🔑 ' + currentKey;
                             document.getElementById('currentKeyDisplay').textContent = currentKey;
                             document.getElementById('deviceDisplay').textContent = '📱 Thiết bị: ' + deviceId;
+                            document.getElementById('dpiSection').style.display = 'block';
                             renderCards();
                             startTimer(data.duration || 5);
                             updateTimeRemaining();
@@ -1435,10 +1673,17 @@
             }
         }
 
-        console.log('🔐 PROXY FF - KEY + AIM');
-        console.log('📋 Tổng 25 key: 5 key 5h, 10 key 7 ngày, 10 key 30 ngày');
+        // Tự động áp dụng DPI nếu có
+        if (currentDpi !== 160) {
+            const scale = currentDpi / 160;
+            document.body.style.transform = `scale(${scale})`;
+            document.body.style.transformOrigin = 'center center';
+            updateAimByDpi();
+        }
+
+        console.log('🔐 PROXY FF - KEY + AIM + DPI');
         console.log('📱 Thiết bị ID:', deviceId);
-        console.log('🔑 Key được lưu theo thiết bị, không dùng chung');
+        console.log('📐 DPI hiện tại:', currentDpi);
         console.log('🎯 3 chế độ: Cổ - Đầu - Trên đầu');
     </script>
 
