@@ -1,17 +1,20 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PROXY FF - KEY + AIM + DPI 2400</title>
+    <title>🐉 BÁ KHÍ 3.0 - KEY + AIM</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Orbitron', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #0a0a0a;
             color: #fff;
             min-height: 100vh;
@@ -20,7 +23,10 @@
             align-items: center;
             padding: 20px;
             transition: 0.3s;
+            overflow-x: hidden;
         }
+
+        /* Nền động */
         .bg {
             position: fixed;
             top: 0;
@@ -28,69 +34,218 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0a 100%);
+            background: radial-gradient(ellipse at center, #1a0a2e 0%, #0a0a0a 100%);
+            overflow: hidden;
         }
+
         .bg .orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.1;
+            filter: blur(100px);
+            opacity: 0.15;
             animation: floatOrb 20s infinite ease-in-out;
         }
-        .bg .orb:nth-child(1) { width: 400px; height: 400px; background: #ff3b30; top: -100px; right: -100px; }
-        .bg .orb:nth-child(2) { width: 300px; height: 300px; background: #ff6b00; bottom: -50px; left: -50px; animation-delay: -5s; }
-        .bg .orb:nth-child(3) { width: 200px; height: 200px; background: #64b5f6; top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -10s; }
-        @keyframes floatOrb { 0%,100% { transform: translate(0,0) scale(1); } 25% { transform: translate(50px,-50px) scale(1.1); } 50% { transform: translate(-30px,30px) scale(0.9); } 75% { transform: translate(20px,-20px) scale(1.05); } }
+        .bg .orb:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, #ff3b30, #ff6b00);
+            top: -200px;
+            right: -200px;
+            animation-delay: 0s;
+        }
+        .bg .orb:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #6c3483, #2e86c1);
+            bottom: -150px;
+            left: -150px;
+            animation-delay: -7s;
+        }
+        .bg .orb:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #f1c40f, #e67e22);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -14s;
+        }
+        .bg .orb:nth-child(4) {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            top: 20%;
+            left: 10%;
+            animation-delay: -5s;
+            opacity: 0.08;
+        }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translate(0,0) scale(1) rotate(0deg); }
+            25% { transform: translate(60px,-60px) scale(1.1) rotate(5deg); }
+            50% { transform: translate(-40px,40px) scale(0.9) rotate(-5deg); }
+            75% { transform: translate(30px,-30px) scale(1.05) rotate(3deg); }
+        }
+
+        /* Particle nhỏ */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #fff;
+            border-radius: 50%;
+            animation: particleFloat linear infinite;
+            opacity: 0.3;
+        }
+        @keyframes particleFloat {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
+        }
 
         .container {
             width: 100%;
-            max-width: 420px;
-            background: rgba(20, 20, 20, 0.92);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 28px 20px;
-            border: 1px solid rgba(255, 59, 48, 0.15);
-            box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+            max-width: 440px;
+            background: rgba(10, 10, 20, 0.85);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 32px;
+            padding: 30px 22px;
+            border: 1px solid rgba(255, 59, 48, 0.2);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 60px rgba(255, 59, 48, 0.05), inset 0 1px 0 rgba(255,255,255,0.05);
             position: relative;
             overflow: hidden;
-            transition: 0.3s;
+            transition: 0.4s;
+        }
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255,59,48,0.03), transparent, rgba(255,107,0,0.03), transparent);
+            animation: rotateGlow 30s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes rotateGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
+        .container > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== HEADER ===== */
         .header {
             text-align: center;
-            padding-bottom: 18px;
-            border-bottom: 1px solid rgba(42, 42, 42, 0.3);
-            margin-bottom: 18px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 59, 48, 0.15);
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff3b30, #ff6b00, transparent);
+            border-radius: 2px;
         }
         .header .logo {
-            font-size: 26px;
-            font-weight: 700;
-            color: #ff3b30;
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff3b30, #ff6b00, #ffcc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+            letter-spacing: 2px;
         }
-        .header .logo span { color: #fff; }
+        .header .logo span {
+            -webkit-text-fill-color: #fff;
+            background: none;
+        }
         .header .sub {
             font-size: 13px;
             color: #888;
-            margin-top: 4px;
+            margin-top: 6px;
+            letter-spacing: 3px;
+            font-weight: 400;
         }
-        .header .sub strong { color: #fff; }
+        .header .sub strong {
+            color: #ff6b00;
+            font-weight: 700;
+            -webkit-text-fill-color: #ff6b00;
+            background: none;
+        }
         .header .status-bar {
             display: flex;
             justify-content: space-between;
-            margin-top: 10px;
-            padding: 6px 14px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            font-size: 12px;
+            margin-top: 12px;
+            padding: 8px 16px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 12px;
+            font-size: 11px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
-        .header .status-bar .server { color: #4caf50; font-weight: 600; }
-        .header .status-bar .server::before { content: "● "; }
-        .header .status-bar .count { color: #666; }
+        .header .status-bar .server {
+            color: #4caf50;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .header .status-bar .server::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #4caf50;
+            border-radius: 50%;
+            animation: pulseDot 2s infinite;
+        }
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.8); }
+        }
+        .header .status-bar .count {
+            color: #666;
+            font-weight: 400;
+        }
 
+        /* ===== KEY SECTION ===== */
         .key-section .label {
-            font-size: 14px;
+            font-size: 13px;
             color: #888;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .key-section .label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent);
         }
         .key-section .input-group {
             display: flex;
@@ -98,10 +253,10 @@
         }
         .key-section .input-group input {
             flex: 1;
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 1px solid rgba(42,42,42,0.5);
-            background: rgba(0,0,0,0.3);
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(0,0,0,0.4);
             color: #ffcc00;
             font-size: 14px;
             font-weight: 700;
@@ -109,34 +264,69 @@
             outline: none;
             font-family: 'Courier New', monospace;
             text-transform: uppercase;
+            transition: 0.3s;
         }
-        .key-section .input-group input:focus { border-color: #ff3b30; }
+        .key-section .input-group input:focus {
+            border-color: #ff3b30;
+            box-shadow: 0 0 30px rgba(255, 59, 48, 0.1);
+        }
         .key-section .input-group input::placeholder {
             color: #444;
             font-weight: 400;
             letter-spacing: 0;
             text-transform: none;
+            font-family: 'Orbitron', sans-serif;
         }
         .key-section .input-group .btn-login {
-            padding: 12px 20px;
-            border-radius: 12px;
+            padding: 14px 24px;
+            border-radius: 14px;
             border: none;
             background: linear-gradient(135deg, #ff3b30, #ff6b00);
             color: #fff;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             transition: 0.3s;
             white-space: nowrap;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 20px rgba(255, 59, 48, 0.3);
+            position: relative;
+            overflow: hidden;
         }
-        .key-section .input-group .btn-login:hover { transform: scale(1.02); }
+        .key-section .input-group .btn-login::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            transform: scale(0);
+            transition: 0.5s;
+        }
+        .key-section .input-group .btn-login:hover::before {
+            transform: scale(1);
+        }
+        .key-section .input-group .btn-login:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 30px rgba(255, 59, 48, 0.4);
+        }
+        .key-section .input-group .btn-login:active {
+            transform: scale(0.97);
+        }
+
         .key-section .key-status {
-            margin-top: 10px;
-            padding: 8px 12px;
-            border-radius: 8px;
+            margin-top: 12px;
+            padding: 10px 14px;
+            border-radius: 12px;
             font-size: 13px;
             font-weight: 600;
             display: none;
+            animation: slideDown 0.4s ease;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .key-section .key-status.valid {
             display: block;
@@ -169,259 +359,412 @@
             color: #ff3b30;
             border: 1px solid rgba(255,59,48,0.3);
         }
-        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
 
         .key-section .links {
-            margin-top: 12px;
+            margin-top: 14px;
             display: flex;
             justify-content: center;
         }
         .key-section .links .link {
-            font-size: 13px;
+            font-size: 12px;
             color: #64b5f6;
             cursor: pointer;
             transition: 0.3s;
-            padding: 8px 20px;
-            border-radius: 10px;
-            background: rgba(100,181,246,0.1);
-            border: 1px solid rgba(100,181,246,0.2);
+            padding: 10px 24px;
+            border-radius: 12px;
+            background: rgba(100,181,246,0.08);
+            border: 1px solid rgba(100,181,246,0.15);
             text-align: center;
+            letter-spacing: 1px;
+            font-weight: 400;
         }
         .key-section .links .link:hover {
-            background: rgba(100,181,246,0.2);
+            background: rgba(100,181,246,0.15);
             color: #90caf9;
+            border-color: rgba(100,181,246,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(100,181,246,0.1);
         }
 
+        /* ===== INFO SECTION ===== */
         .info-section {
-            margin-top: 16px;
-            padding-top: 14px;
-            border-top: 1px solid rgba(42,42,42,0.3);
+            margin-top: 18px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
         }
         .info-section .info-item {
             display: flex;
-            gap: 10px;
-            padding: 4px 0;
-            font-size: 12px;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 6px;
+            font-size: 10px;
             color: #666;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.03);
+            text-align: center;
+            transition: 0.3s;
         }
-        .info-section .info-item .icon { font-size: 14px; flex-shrink: 0; }
-        .info-section .info-item .text { color: #888; }
-        .info-section .info-item .text strong { color: #fff; }
-        .info-section .info-item .text .highlight { color: #ff6b00; }
+        .info-section .info-item:hover {
+            background: rgba(0,0,0,0.3);
+            border-color: rgba(255,255,255,0.06);
+        }
+        .info-section .info-item .icon {
+            font-size: 18px;
+        }
+        .info-section .info-item .text {
+            color: #888;
+            line-height: 1.4;
+            font-size: 9px;
+        }
+        .info-section .info-item .text strong {
+            color: #fff;
+            font-weight: 600;
+        }
+        .info-section .info-item .text .highlight {
+            color: #ff6b00;
+            font-weight: 700;
+        }
 
-        /* ===== APP ===== */
+        /* ===== APP PAGE ===== */
         .app-page {
             display: none;
-            animation: fadeIn 0.5s ease;
+            animation: fadeIn 0.6s ease;
         }
         .app-page.show { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
 
-        .app-page .app-header { text-align: center; padding-bottom: 14px; border-bottom: 1px solid rgba(42,42,42,0.3); margin-bottom: 14px; }
-        .app-page .app-header .logo { font-size: 24px; font-weight: 700; color: #ff3b30; }
-        .app-page .app-header .logo span { color: #fff; }
-        .app-page .app-header .sub { font-size: 12px; color: #888; margin-top: 2px; }
-        .app-page .app-header .key-info { margin-top: 6px; font-size: 11px; color: #4caf50; background: rgba(76,175,80,0.1); padding: 2px 14px; border-radius: 20px; display: inline-block; border: 1px solid rgba(76,175,80,0.2); }
-        .app-page .app-header .device-info {
-            margin-top: 4px;
-            font-size: 10px;
+        .app-page .app-header {
+            text-align: center;
+            padding-bottom: 16px;
+            border-bottom: 2px solid rgba(255, 59, 48, 0.1);
+            margin-bottom: 16px;
+            position: relative;
+        }
+        .app-page .app-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff6b00, transparent);
+            border-radius: 2px;
+        }
+        .app-page .app-header .logo {
+            font-size: 26px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff3b30, #ff6b00, #ffcc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+        }
+        .app-page .app-header .logo span {
+            -webkit-text-fill-color: #fff;
+            background: none;
+        }
+        .app-page .app-header .sub {
+            font-size: 11px;
             color: #888;
-            background: rgba(0,0,0,0.2);
-            padding: 2px 12px;
+            margin-top: 4px;
+            letter-spacing: 2px;
+        }
+        .app-page .app-header .key-info {
+            margin-top: 8px;
+            font-size: 10px;
+            color: #4caf50;
+            background: rgba(76,175,80,0.08);
+            padding: 4px 16px;
             border-radius: 20px;
             display: inline-block;
+            border: 1px solid rgba(76,175,80,0.15);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.5px;
+        }
+        .app-page .app-header .device-info {
+            margin-top: 4px;
+            font-size: 9px;
+            color: #666;
+            background: rgba(0,0,0,0.2);
+            padding: 3px 14px;
+            border-radius: 20px;
+            display: inline-block;
+            letter-spacing: 0.5px;
         }
 
         .app-page .status-bar {
             background: rgba(0,0,0,0.3);
-            border-radius: 10px;
-            padding: 8px 12px;
-            margin-bottom: 10px;
+            border-radius: 14px;
+            padding: 10px 14px;
+            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 4px;
-            font-size: 12px;
+            gap: 6px;
+            font-size: 11px;
+            border: 1px solid rgba(255,255,255,0.04);
         }
-        .app-page .status-bar .left { display: flex; align-items: center; gap: 6px; }
-        .app-page .status-bar .dot { width: 8px; height: 8px; border-radius: 50%; background: #4caf50; }
-        .app-page .status-bar .right { display: flex; gap: 10px; flex-wrap: wrap; }
-        .app-page .status-bar .right .count { color: #4caf50; font-weight: 600; }
-        .app-page .status-bar .right .mode-active { color: #ff6b00; font-weight: 600; }
-        .app-page .status-bar .right .time-remain { color: #64b5f6; font-weight: 600; }
-        .app-page .status-bar .right .device-id { color: #888; font-size: 10px; }
-        .app-page .status-bar .right .dpi-display { color: #ffcc00; font-weight: 700; font-size: 11px; }
-        .app-page .status-bar .right .aim-sticky { color: #ff6b00; font-weight: 700; font-size: 10px; }
-
-        /* ===== DPI SETTINGS - TĂNG LÊN 2400 ===== */
-        .dpi-section {
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 10px;
-            border: 1px solid rgba(42,42,42,0.3);
-        }
-        .dpi-section .dpi-title {
-            font-size: 13px;
-            color: #888;
-            margin-bottom: 8px;
+        .app-page .status-bar .left {
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+        .app-page .status-bar .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4caf50;
+            animation: pulseDot 2s infinite;
+        }
+        .app-page .status-bar .right {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
             align-items: center;
         }
-        .dpi-section .dpi-title .current-dpi {
-            color: #ffcc00;
-            font-weight: 700;
-            font-size: 18px;
-        }
-        .dpi-section .dpi-title .aim-sticky-label {
-            color: #ff6b00;
-            font-weight: 700;
-            font-size: 12px;
-            background: rgba(255,107,0,0.15);
-            padding: 2px 10px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,107,0,0.2);
-        }
-        .dpi-section .dpi-slider {
-            width: 100%;
-            height: 6px;
-            -webkit-appearance: none;
-            background: linear-gradient(90deg, #2a2a2a, #ff6b00, #ff3b30);
-            border-radius: 10px;
-            outline: none;
-            transition: 0.3s;
-        }
-        .dpi-section .dpi-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ff3b30, #ff6b00);
-            cursor: pointer;
-            box-shadow: 0 0 30px rgba(255,107,0,0.5);
-        }
-        .dpi-section .dpi-presets {
-            display: flex;
-            gap: 4px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .dpi-section .dpi-presets .preset {
-            padding: 3px 10px;
-            border-radius: 20px;
-            border: 1px solid rgba(42,42,42,0.5);
-            background: rgba(0,0,0,0.3);
-            color: #888;
-            font-size: 10px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .dpi-section .dpi-presets .preset:hover { border-color: #ff6b00; color: #fff; }
-        .dpi-section .dpi-presets .preset.active { border-color: #ff6b00; color: #ffcc00; background: rgba(255,107,0,0.1); }
-        .dpi-section .dpi-presets .preset.high { border-color: #ff3b30; color: #ff3b30; }
-        .dpi-section .dpi-presets .preset.high.active { background: rgba(255,59,48,0.15); }
-
-        .dpi-section .dpi-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-        }
-        .dpi-section .dpi-actions .btn {
-            flex: 1;
-            padding: 8px;
-            border-radius: 8px;
-            border: none;
+        .app-page .status-bar .right .count {
+            color: #4caf50;
             font-weight: 600;
-            font-size: 12px;
-            cursor: pointer;
-            transition: 0.3s;
         }
-        .dpi-section .dpi-actions .btn-apply {
-            background: linear-gradient(135deg, #4caf50, #2e7d32);
-            color: #fff;
-        }
-        .dpi-section .dpi-actions .btn-apply:hover { transform: scale(1.02); }
-        .dpi-section .dpi-actions .btn-reset {
-            background: rgba(42,42,42,0.5);
-            color: #fff;
-        }
-        .dpi-section .dpi-actions .btn-reset:hover { background: rgba(58,58,58,0.5); }
-
-        .dpi-section .dpi-info {
-            margin-top: 8px;
-            padding: 6px 10px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 6px;
-            font-size: 10px;
-            color: #666;
-            display: flex;
-            justify-content: space-between;
-        }
-        .dpi-section .dpi-info .sticky-level {
+        .app-page .status-bar .right .mode-active {
             color: #ff6b00;
-            font-weight: 700;
+            font-weight: 600;
+        }
+        .app-page .status-bar .right .time-remain {
+            color: #64b5f6;
+            font-weight: 600;
+        }
+        .app-page .status-bar .right .device-id {
+            color: #555;
+            font-size: 9px;
+            font-family: 'Courier New', monospace;
         }
 
         /* ===== TABS ===== */
         .app-page .tabs {
-            display: flex; gap: 6px; padding: 0 0 10px 0; overflow-x: auto;
+            display: flex;
+            gap: 6px;
+            padding: 0 0 12px 0;
+            overflow-x: auto;
+            scrollbar-width: none;
         }
         .app-page .tabs::-webkit-scrollbar { display: none; }
         .app-page .tabs .tab {
-            padding: 5px 14px; border-radius: 20px; background: rgba(26,26,26,0.6); color: #888; font-size: 12px; white-space: nowrap; cursor: pointer; border: 1px solid transparent; transition: 0.3s;
-        }
-        .app-page .tabs .tab.active { background: rgba(255,59,48,0.8); color: #fff; border-color: #ff3b30; }
-
-        .app-page .mode-card {
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 8px;
-            border-left: 4px solid rgba(42,42,42,0.5);
-            border: 1px solid rgba(42,42,42,0.3);
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: rgba(26,26,26,0.6);
+            color: #888;
+            font-size: 11px;
+            white-space: nowrap;
+            cursor: pointer;
+            border: 1px solid transparent;
             transition: 0.3s;
+            font-weight: 400;
+            letter-spacing: 0.5px;
         }
-        .app-page .mode-card.active { border-left-color: #4caf50; background: rgba(26,42,26,0.3); border-color: rgba(76,175,80,0.3); }
-        .app-page .mode-card .card-top { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
-        .app-page .mode-card .info { flex: 1; min-width: 120px; }
-        .app-page .mode-card .mode-tag { font-size: 10px; color: #ff3b30; font-weight: 600; text-transform: uppercase; }
-        .app-page .mode-card .mode-name { font-size: 15px; font-weight: 700; margin: 2px 0; color: #fff; }
-        .app-page .mode-card .mode-desc { color: #aaa; font-size: 12px; }
-        .app-page .mode-card .mode-meta { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
-        .app-page .mode-card .mode-meta .tag { background: rgba(42,42,42,0.5); padding: 1px 8px; border-radius: 20px; font-size: 9px; color: #ccc; }
-        .app-page .mode-card .mode-meta .tag.headshot { background: rgba(255,107,0,0.3); color: #ff6b00; font-weight: 700; }
-        .app-page .mode-card .mode-meta .tag.sticky { background: rgba(255,59,48,0.2); color: #ff3b30; font-weight: 700; }
+        .app-page .tabs .tab:hover {
+            background: rgba(255,255,255,0.05);
+            color: #ccc;
+        }
+        .app-page .tabs .tab.active {
+            background: linear-gradient(135deg, rgba(255,59,48,0.8), rgba(255,107,0,0.5));
+            color: #fff;
+            border-color: rgba(255,59,48,0.3);
+            box-shadow: 0 4px 20px rgba(255,59,48,0.15);
+        }
 
-        .app-page .mode-card .right-side { display: flex; align-items: center; gap: 8px; }
-        .app-page .mode-card .status { text-align: right; min-width: 60px; }
-        .app-page .mode-card .status .status-label { font-size: 11px; font-weight: 600; }
+        /* ===== MODE CARDS ===== */
+        .app-page .mode-card {
+            background: rgba(0,0,0,0.25);
+            border-radius: 16px;
+            padding: 14px;
+            margin-bottom: 10px;
+            border-left: 4px solid rgba(42,42,42,0.5);
+            border: 1px solid rgba(255,255,255,0.04);
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        .app-page .mode-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,59,48,0.03), rgba(255,107,0,0.01));
+            pointer-events: none;
+        }
+        .app-page .mode-card.active {
+            border-left-color: #4caf50;
+            background: rgba(26,42,26,0.2);
+            border-color: rgba(76,175,80,0.15);
+            box-shadow: 0 4px 30px rgba(76,175,80,0.05);
+        }
+        .app-page .mode-card.active::before {
+            background: linear-gradient(135deg, rgba(76,175,80,0.05), rgba(46,125,50,0.02));
+        }
+        .app-page .mode-card .card-top {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 6px;
+            position: relative;
+            z-index: 1;
+        }
+        .app-page .mode-card .info { flex: 1; min-width: 120px; }
+        .app-page .mode-card .mode-tag {
+            font-size: 9px;
+            color: #ff6b00;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .app-page .mode-card .mode-name {
+            font-size: 15px;
+            font-weight: 700;
+            margin: 2px 0;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+        .app-page .mode-card .mode-desc {
+            color: #888;
+            font-size: 11px;
+            font-weight: 400;
+        }
+        .app-page .mode-card .mode-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 6px;
+        }
+        .app-page .mode-card .mode-meta .tag {
+            background: rgba(42,42,42,0.5);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 8px;
+            color: #aaa;
+            letter-spacing: 0.5px;
+            font-weight: 400;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+        .app-page .mode-card .mode-meta .tag.headshot {
+            background: rgba(255,107,0,0.15);
+            color: #ff6b00;
+            font-weight: 700;
+            border-color: rgba(255,107,0,0.1);
+        }
+        .app-page .mode-card .mode-meta .tag.sticky {
+            background: rgba(255,59,48,0.1);
+            color: #ff3b30;
+            font-weight: 700;
+            border-color: rgba(255,59,48,0.1);
+        }
+        .app-page .mode-card .mode-meta .tag.vip {
+            background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,165,0,0.1));
+            color: #ffd700;
+            border-color: rgba(255,215,0,0.1);
+        }
+
+        .app-page .mode-card .right-side {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .app-page .mode-card .status {
+            text-align: right;
+            min-width: 60px;
+        }
+        .app-page .mode-card .status .status-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
         .app-page .mode-card .status .status-label.off { color: #555; }
         .app-page .mode-card .status .status-label.on { color: #4caf50; }
-        .app-page .mode-card .status .status-detail { font-size: 9px; color: #666; }
+        .app-page .mode-card .status .status-detail {
+            font-size: 8px;
+            color: #666;
+        }
 
         .app-page .toggle {
-            position: relative; width: 38px; height: 22px;
-            background: rgba(42,42,42,0.6);
-            border-radius: 50px; cursor: pointer;
-            transition: 0.3s; flex-shrink: 0;
+            position: relative;
+            width: 40px;
+            height: 24px;
+            background: rgba(42,42,42,0.5);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            flex-shrink: 0;
+            border: 1px solid rgba(255,255,255,0.05);
         }
-        .app-page .toggle.active { background: #4caf50; }
+        .app-page .toggle.active {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            border-color: rgba(76,175,80,0.3);
+        }
         .app-page .toggle .slider {
-            position: absolute; top: 2px; left: 2px;
-            width: 18px; height: 18px; background: #fff;
-            border-radius: 50%; transition: 0.3s;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            background: #fff;
+            border-radius: 50%;
+            transition: 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
-        .app-page .toggle.active .slider { left: 18px; }
+        .app-page .toggle.active .slider {
+            left: 18px;
+            background: #fff;
+        }
+
+        .app-page .aim-data {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+        .app-page .aim-data > div {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px 12px;
+            font-size: 10px;
+            background: rgba(0,0,0,0.2);
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+        .app-page .aim-data > div span {
+            display: flex;
+            justify-content: space-between;
+        }
+        .app-page .aim-data > div span:first-child {
+            color: #666;
+        }
+        .app-page .aim-data > div span:last-child {
+            color: #ffcc00;
+            font-weight: 600;
+        }
 
         .app-page .btn-download {
             margin-top: 8px;
-            padding: 6px 12px;
-            border-radius: 8px;
+            padding: 8px 14px;
+            border-radius: 10px;
             border: none;
             font-weight: 600;
-            font-size: 11px;
+            font-size: 10px;
             cursor: pointer;
             background: linear-gradient(135deg, #2196f3, #1565c0);
             color: #fff;
@@ -429,176 +772,354 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 8px;
+            transition: 0.3s;
+            letter-spacing: 0.5px;
         }
-        .app-page .btn-download:hover { transform: scale(1.02); }
-        .app-page .btn-download:disabled { opacity: 0.4; cursor: not-allowed; }
+        .app-page .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(33,150,243,0.3);
+        }
 
-        .app-page .config-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
-        .app-page .config-actions .btn {
-            padding: 6px 12px; border-radius: 8px; border: none; font-weight: 600; font-size: 11px; cursor: pointer; transition: 0.3s; flex: 1; min-width: 70px;
+        .app-page .config-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 12px;
         }
-        .btn-primary { background: #ff3b30; color: #fff; }
-        .btn-primary:hover { background: #e0352b; }
-        .btn-success { background: #4caf50; color: #fff; }
-        .btn-success:hover { background: #3d8b40; }
-        .btn-secondary { background: rgba(42,42,42,0.5); color: #fff; }
-        .btn-secondary:hover { background: rgba(58,58,58,0.5); }
+        .app-page .config-actions .btn {
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            flex: 1;
+            min-width: 70px;
+            letter-spacing: 0.5px;
+        }
+        .app-page .config-actions .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #ff3b30, #e0352b);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(255,59,48,0.2);
+        }
+        .btn-primary:hover { box-shadow: 0 6px 25px rgba(255,59,48,0.3); }
+        .btn-success {
+            background: linear-gradient(135deg, #4caf50, #3d8b40);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(76,175,80,0.2);
+        }
+        .btn-success:hover { box-shadow: 0 6px 25px rgba(76,175,80,0.3); }
+        .btn-secondary {
+            background: rgba(42,42,42,0.5);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .btn-secondary:hover { background: rgba(58,58,58,0.6); }
 
         .app-page .logout-btn {
-            width: 100%; margin-top: 10px; padding: 8px; border-radius: 10px; border: none;
-            background: rgba(255,59,48,0.15); color: #ff3b30; font-weight: 600; font-size: 12px; cursor: pointer;
-            border: 1px solid rgba(255,59,48,0.2);
+            width: 100%;
+            margin-top: 12px;
+            padding: 10px;
+            border-radius: 12px;
+            border: none;
+            background: rgba(255,59,48,0.08);
+            color: #ff3b30;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            border: 1px solid rgba(255,59,48,0.1);
+            transition: 0.3s;
+            letter-spacing: 1px;
         }
-        .app-page .logout-btn:hover { background: rgba(255,59,48,0.25); }
+        .app-page .logout-btn:hover {
+            background: rgba(255,59,48,0.15);
+            border-color: rgba(255,59,48,0.2);
+        }
 
+        /* ===== TOAST ===== */
         .toast {
             position: fixed;
-            bottom: 20px;
+            bottom: 30px;
             left: 50%;
-            transform: translateX(-50%);
-            background: rgba(42,42,42,0.95);
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(20,20,30,0.95);
+            backdrop-filter: blur(20px);
             color: #fff;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-size: 13px;
+            padding: 12px 24px;
+            border-radius: 14px;
+            font-size: 12px;
             display: none;
             z-index: 9999;
-            border: 1px solid #ff3b30;
+            border: 1px solid rgba(255,59,48,0.15);
             text-align: center;
             max-width: 90%;
-            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-weight: 400;
+            letter-spacing: 0.5px;
         }
-        .toast.show { display: block; }
+        .toast.show {
+            display: block;
+            transform: translateX(-50%) translateY(0);
+        }
 
+        /* ===== LOADING ===== */
         .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(20px);
             z-index: 9998;
             display: none;
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            gap: 20px;
+            gap: 24px;
         }
         .loading-overlay.show { display: flex; }
         .loading-overlay .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255,255,255,0.1);
-            border-top: 4px solid #ff3b30;
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255,255,255,0.05);
+            border-top: 3px solid #ff3b30;
+            border-right: 3px solid #ff6b00;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 0.8s linear infinite;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .loading-overlay .loading-text { font-size: 15px; color: #fff; animation: pulse 1s infinite; }
-        .loading-overlay .loading-progress { width: 200px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
-        .loading-overlay .loading-progress .bar { height: 100%; background: linear-gradient(90deg, #ff3b30, #ff6b00); border-radius: 10px; transition: width 0.3s; width: 0%; }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loading-overlay .loading-text {
+            font-size: 14px;
+            color: #fff;
+            animation: pulse 1.5s infinite;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+        .loading-overlay .loading-progress {
+            width: 200px;
+            height: 3px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .loading-overlay .loading-progress .bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff3b30, #ff6b00, #ffcc00);
+            border-radius: 10px;
+            transition: width 0.3s;
+            width: 0%;
+        }
 
+        /* ===== FLOATING MENU ===== */
         .floating-menu {
             position: fixed;
-            bottom: 80px;
-            right: 20px;
+            bottom: 90px;
+            right: 24px;
             z-index: 999;
             display: none;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
         .floating-menu.show { display: flex; }
         .floating-menu .menu-btn {
-            width: 50px;
-            height: 50px;
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
             border: none;
             font-size: 20px;
             cursor: pointer;
             transition: 0.3s;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+        }
+        .floating-menu .menu-btn::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            padding: 2px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
         }
         .floating-menu .menu-btn:hover { transform: scale(1.1); }
-        .floating-menu .menu-btn.aim { background: linear-gradient(135deg, #ff3b30, #ff6b00); color: #fff; }
-        .floating-menu .menu-btn.aim.active { background: #4caf50; animation: pulse 0.5s infinite; }
-        .floating-menu .menu-btn.stop { background: #2a2a2a; color: #fff; }
-        .floating-menu .menu-btn.status { background: #1a3a5a; color: #64b5f6; }
-        .floating-menu .menu-btn.dpi { background: linear-gradient(135deg, #9b59b6, #6c3483); color: #fff; }
+        .floating-menu .menu-btn:active { transform: scale(0.9); }
+        .floating-menu .menu-btn.aim {
+            background: linear-gradient(135deg, #ff3b30, #ff6b00);
+            color: #fff;
+            box-shadow: 0 8px 30px rgba(255,59,48,0.3);
+        }
+        .floating-menu .menu-btn.aim.active {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            animation: pulse 0.8s infinite;
+            box-shadow: 0 8px 30px rgba(76,175,80,0.3);
+        }
+        .floating-menu .menu-btn.stop {
+            background: rgba(30,30,40,0.8);
+            color: #fff;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .floating-menu .menu-btn.status {
+            background: rgba(26,58,90,0.8);
+            color: #64b5f6;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100,181,246,0.1);
+        }
+
+        /* Tooltip cho floating menu */
+        .floating-menu .menu-btn .tooltip {
+            position: absolute;
+            right: 62px;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 9px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.05);
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+        .floating-menu .menu-btn:hover .tooltip {
+            opacity: 1;
+        }
 
         @media (max-width: 480px) {
-            .container { padding: 16px; }
+            .container { padding: 18px 14px; border-radius: 24px; }
             .key-section .input-group { flex-direction: column; }
             .key-section .input-group .btn-login { width: 100%; }
-            .floating-menu { bottom: 70px; right: 10px; }
-            .floating-menu .menu-btn { width: 44px; height: 44px; font-size: 18px; }
-            .dpi-section .dpi-presets { justify-content: center; }
-            .dpi-section .dpi-info { flex-direction: column; gap: 2px; text-align: center; }
+            .floating-menu { bottom: 70px; right: 12px; }
+            .floating-menu .menu-btn { width: 46px; height: 46px; font-size: 18px; }
+            .info-section { grid-template-columns: 1fr; gap: 6px; }
+            .info-section .info-item { flex-direction: row; padding: 8px 12px; gap: 10px; }
+            .app-page .aim-data > div { grid-template-columns: 1fr; }
+            .app-page .status-bar .right { gap: 6px; font-size: 10px; }
+        }
+
+        /* ===== BOTTOM STATUS ===== */
+        .bottom-status {
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.03);
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #666;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .bottom-status span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .bottom-status .key-val {
+            color: #ffcc00;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            font-size: 9px;
+        }
+        .bottom-status .time-val {
+            color: #4caf50;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
 
+    <!-- Nền động -->
     <div class="bg">
+        <div class="orb"></div>
         <div class="orb"></div>
         <div class="orb"></div>
         <div class="orb"></div>
     </div>
 
+    <!-- Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Loading -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
         <div class="loading-text" id="loadingText">🚀 Đang khởi tạo...</div>
         <div class="loading-progress"><div class="bar" id="loadingBar"></div></div>
     </div>
 
+    <!-- Floating Menu -->
     <div class="floating-menu" id="floatingMenu">
-        <button class="menu-btn aim" id="btnAim" onclick="toggleAim()">🎯</button>
-        <button class="menu-btn dpi" onclick="toggleDpiSettings()">📐</button>
-        <button class="menu-btn status" onclick="getStatus()">📊</button>
-        <button class="menu-btn stop" onclick="stopAll()">⏹</button>
+        <button class="menu-btn aim" id="btnAim" onclick="toggleAim()">
+            🎯
+            <span class="tooltip">Bật AIM</span>
+        </button>
+        <button class="menu-btn status" onclick="getStatus()">
+            📊
+            <span class="tooltip">Trạng thái</span>
+        </button>
+        <button class="menu-btn stop" onclick="stopAll()">
+            ⏹
+            <span class="tooltip">Dừng tất cả</span>
+        </button>
     </div>
 
+    <!-- Toast -->
     <div class="toast" id="toast"></div>
 
     <!-- ===== TRANG KEY ===== -->
     <div class="container" id="keyPage">
         <div class="header">
-            <div class="logo">🔐 PROXY <span>FF</span></div>
-            <div class="sub"><strong>AIMLOCK SUPER 4.5</strong></div>
+            <div class="logo">🐉 BÁ <span>KHÍ 3.0</span></div>
+            <div class="sub"><strong>⚡</strong> BÁ KHÍ 4.5 <strong>⚡</strong></div>
             <div class="status-bar">
-                <span class="server">Server: Đã kết nối</span>
-                <span class="count">1 lần</span>
+                <span class="server">Server Online</span>
+                <span class="count">🔐 Bảo mật cao</span>
             </div>
         </div>
 
         <div class="key-section">
-            <div class="label">🔑 Key đăng nhập</div>
+            <div class="label">🔑 NHẬP KEY</div>
             <div class="input-group">
-                <input type="text" id="keyInput" placeholder="PROXY-XXXX-XXXX-XXXX-XXXX-FF">
-                <button class="btn-login" onclick="login()">Đăng Nhập</button>
+                <input type="text" id="keyInput" placeholder="VD: BAKHI-XXXX-XXXX-XXXX">
+                <button class="btn-login" onclick="login()">ĐĂNG NHẬP</button>
             </div>
             <div class="key-status" id="keyStatus"></div>
             <div class="links">
-                <span class="link" onclick="getFreeKey()">🔗 Mở trang lấy key free</span>
+                <span class="link" onclick="getFreeKey()">🎁 LẤY KEY FREE</span>
             </div>
         </div>
 
         <div class="info-section">
             <div class="info-item">
-                <span class="icon">📌</span>
-                <span class="text">Tạo short-link lấy key free theo thiết bị</span>
+                <span class="icon">⚡</span>
+                <span class="text">Bá Khí <strong>Pro</strong></span>
             </div>
             <div class="info-item">
                 <span class="icon">⏳</span>
-                <span class="text">Key free <strong>5 giờ</strong> và chỉ dùng trên <strong>1 thiết bị</strong></span>
+                <span class="text">Key <strong>5h</strong> / <strong>1</strong> thiết bị</span>
             </div>
             <div class="info-item">
                 <span class="icon">✅</span>
-                <span class="text">Key Free Cho Từng Thiết Bị và <strong class="highlight">Ổn Định</strong></span>
+                <span class="text"><strong class="highlight">Ổn định</strong> • Bảo mật</span>
             </div>
         </div>
     </div>
@@ -606,8 +1127,8 @@
     <!-- ===== TRANG APP ===== -->
     <div class="container app-page" id="appPage">
         <div class="app-header">
-            <div class="logo">🎯 PROXY <span>FF</span></div>
-            <div class="sub">AIMLOCK SUPER 4.5 • Đã kích hoạt</div>
+            <div class="logo">🐉 BÁ <span>KHÍ 3.0</span></div>
+            <div class="sub">⚡ BÁ KHÍ 4.5 • ĐÃ KÍCH HOẠT ⚡</div>
             <div class="key-info" id="appKeyDisplay">🔑 --</div>
             <div class="device-info" id="deviceDisplay">📱 Thiết bị: --</div>
         </div>
@@ -615,51 +1136,21 @@
         <div class="status-bar">
             <div class="left">
                 <span class="dot"></span>
-                <span>✅ Đã kết nối</span>
+                <span>Đã kết nối</span>
             </div>
             <div class="right">
                 <span>⚡ <span class="count" id="activeCount">0</span></span>
                 <span class="mode-active" id="modeActive">⬜ Chưa chọn</span>
                 <span class="time-remain" id="timeRemain">⏳ --</span>
                 <span class="device-id" id="deviceIdDisplay"></span>
-                <span class="dpi-display" id="dpiDisplay">📐 DPI: 160</span>
-                <span class="aim-sticky" id="stickyDisplay">🎯 Bám: 0%</span>
-            </div>
-        </div>
-
-        <!-- ===== DPI SETTINGS - TĂNG LÊN 2400 ===== -->
-        <div class="dpi-section" id="dpiSection">
-            <div class="dpi-title">
-                <span>📐 ĐIỀU CHỈNH DPI (100 - 2400)</span>
-                <span class="current-dpi" id="currentDpi">160</span>
-            </div>
-            <input type="range" class="dpi-slider" id="dpiSlider" min="100" max="2400" step="10" value="160">
-            <div class="dpi-presets">
-                <span class="preset" onclick="setDpi(160)">📱 160</span>
-                <span class="preset" onclick="setDpi(320)">📱 320</span>
-                <span class="preset" onclick="setDpi(480)">📱 480</span>
-                <span class="preset" onclick="setDpi(640)">📱 640</span>
-                <span class="preset" onclick="setDpi(800)">📱 800</span>
-                <span class="preset high" onclick="setDpi(1200)">🔥 1200</span>
-                <span class="preset high" onclick="setDpi(1800)">🔥 1800</span>
-                <span class="preset high" onclick="setDpi(2400)">🔥 2400</span>
-            </div>
-            <div class="dpi-actions">
-                <button class="btn btn-apply" onclick="applyDpi()">✅ Áp dụng DPI</button>
-                <button class="btn btn-reset" onclick="resetDpi()">🔄 Reset</button>
-            </div>
-            <div class="dpi-info">
-                <span>🎯 Độ bám: <span class="sticky-level" id="stickyLevel">0%</span></span>
-                <span>⚡ Tốc độ quay: <span id="speedLevel">1x</span></span>
-                <span>📐 DPI: <span id="dpiInfo">160</span></span>
             </div>
         </div>
 
         <div class="tabs" id="tabs">
             <span class="tab active" data-filter="all">🔥 Tất cả</span>
-            <span class="tab" data-filter="co">🎯 Cổ</span>
-            <span class="tab" data-filter="dau">🎯 Đầu</span>
-            <span class="tab" data-filter="tren">🔥 Trên đầu</span>
+            <span class="tab" data-filter="co">🐉 Bá Khí 2.0</span>
+            <span class="tab" data-filter="dau">🐉 Bá Khí 3.0</span>
+            <span class="tab" data-filter="tren">🔥 Bá Khí 4.0</span>
         </div>
 
         <div id="cardContainer"></div>
@@ -670,192 +1161,69 @@
             <button class="btn btn-secondary" onclick="exportJSON()">📤 Xuất JSON</button>
         </div>
 
-        <div style="margin-top:10px;padding:8px 12px;background:rgba(0,0,0,0.2);border-radius:8px;border:1px solid rgba(42,42,42,0.3);">
-            <div style="display:flex;justify-content:space-between;font-size:11px;color:#888;flex-wrap:wrap;gap:4px;">
-                <span>🔑 Key: <span id="currentKeyDisplay" style="color:#ffcc00;">--</span></span>
-                <span>⏳ Còn lại: <span id="timeRemaining" style="color:#4caf50;">--</span></span>
-                <span>📐 DPI: <span id="dpiStatusDisplay" style="color:#ffcc00;">160</span></span>
-                <span>🎯 Bám: <span id="stickyStatusDisplay" style="color:#ff6b00;">0%</span></span>
-            </div>
+        <div class="bottom-status">
+            <span>🔑 Key: <span class="key-val" id="currentKeyDisplay">--</span></span>
+            <span>⏳ Còn: <span class="time-val" id="timeRemaining">--</span></span>
         </div>
 
-        <button class="logout-btn" onclick="logout()">🔄 Đăng xuất</button>
+        <button class="logout-btn" onclick="logout()">🔄 ĐĂNG XUẤT</button>
     </div>
 
     <script>
         // ============================================================
-        // DPI SETTINGS - TĂNG LÊN 2400
+        // PARTICLES
         // ============================================================
-        let currentDpi = parseInt(localStorage.getItem('proxy_ff_dpi')) || 160;
-        let dpiSectionVisible = false;
-
-        // Tính độ bám dựa trên DPI
-        function calculateSticky(dpi) {
-            // DPI càng cao, bám càng chặt (0-100%)
-            const minDpi = 100;
-            const maxDpi = 2400;
-            const normalized = (dpi - minDpi) / (maxDpi - minDpi);
-            return Math.min(100, Math.round(normalized * 100));
-        }
-
-        // Tính tốc độ quay
-        function calculateSpeed(dpi) {
-            return Math.round((dpi / 160) * 10) / 10;
-        }
-
-        // Cập nhật hiển thị DPI
-        function updateDpiDisplay() {
-            const sticky = calculateSticky(currentDpi);
-            const speed = calculateSpeed(currentDpi);
-            
-            document.getElementById('currentDpi').textContent = currentDpi;
-            document.getElementById('dpiDisplay').textContent = '📐 DPI: ' + currentDpi;
-            document.getElementById('dpiStatusDisplay').textContent = currentDpi;
-            document.getElementById('dpiSlider').value = currentDpi;
-            document.getElementById('stickyDisplay').textContent = '🎯 Bám: ' + sticky + '%';
-            document.getElementById('stickyLevel').textContent = sticky + '%';
-            document.getElementById('speedLevel').textContent = speed + 'x';
-            document.getElementById('dpiInfo').textContent = currentDpi;
-            document.getElementById('stickyStatusDisplay').textContent = sticky + '%';
-            
-            // Cập nhật preset active
-            document.querySelectorAll('.dpi-presets .preset').forEach(el => {
-                const val = parseInt(el.textContent);
-                el.classList.toggle('active', val === currentDpi);
-            });
-        }
-
-        // Set DPI từ preset
-        function setDpi(value) {
-            currentDpi = value;
-            updateDpiDisplay();
-            showToast('📐 Đã chọn DPI: ' + value + ' - Bám: ' + calculateSticky(value) + '%');
-        }
-
-        // Áp dụng DPI
-        function applyDpi() {
-            const value = parseInt(document.getElementById('dpiSlider').value);
-            currentDpi = value;
-            localStorage.setItem('proxy_ff_dpi', currentDpi);
-            
-            // Scale giao diện
-            const scale = Math.min(currentDpi / 160, 15);
-            document.body.style.transform = `scale(${scale})`;
-            document.body.style.transformOrigin = 'center center';
-            
-            updateDpiDisplay();
-            playSound('click');
-            
-            const sticky = calculateSticky(currentDpi);
-            showToast('✅ Đã áp dụng DPI: ' + currentDpi + ' - Bám: ' + sticky + '%');
-            
-            // Cập nhật AIM theo DPI
-            updateAimByDpi();
-            
-            // Lưu vào config
-            saveDpiToConfig(currentDpi);
-        }
-
-        // Reset DPI về mặc định
-        function resetDpi() {
-            currentDpi = 160;
-            localStorage.setItem('proxy_ff_dpi', currentDpi);
-            document.body.style.transform = 'scale(1)';
-            document.body.style.transformOrigin = 'center center';
-            updateDpiDisplay();
-            playSound('click');
-            showToast('🔄 Đã reset DPI về 160');
-            updateAimByDpi();
-        }
-
-        // Cập nhật AIM theo DPI - BÁM CHẶT HƠN
-        function updateAimByDpi() {
-            const factor = currentDpi / 160;
-            const stickyBonus = calculateSticky(currentDpi) / 100;
-            
-            aimModes.forEach(mode => {
-                // Độ nhạy tăng theo DPI
-                const baseSensitivity = mode.aim.sensitivity / 1.0;
-                mode.aim.sensitivity = Math.round((baseSensitivity * factor * 1.2) * 10) / 10;
-                
-                // Góc aim tăng
-                mode.aim.aimAngle = Math.round(mode.aim.aimAngle * factor * 1.1);
-                
-                // FOV tăng
-                mode.aim.fov = Math.round(mode.aim.fov * factor * 1.15);
-                
-                // Độ bám tăng theo DPI (thêm sticky bonus)
-                mode.aim.sticky = Math.min(100, Math.round((mode.aim.sticky || 90) + stickyBonus * 20));
-                
-                // Độ chính xác tăng
-                mode.aim.accuracy = Math.min(100, Math.round((mode.aim.accuracy || 85) + stickyBonus * 10));
-                
-                // Độ mượt giảm nhẹ khi DPI cao (quay nhanh hơn)
-                mode.aim.smoothness = Math.max(50, Math.round((mode.aim.smoothness || 85) - stickyBonus * 5));
-            });
-            
-            renderCards();
-            console.log('🎯 AIM đã điều chỉnh theo DPI:', currentDpi, 'Bám:', calculateSticky(currentDpi) + '%');
-        }
-
-        // Lưu DPI vào config
-        function saveDpiToConfig(dpi) {
-            const config = {
-                dpi: dpi,
-                device: deviceId,
-                timestamp: Date.now()
-            };
-            localStorage.setItem('proxy_ff_dpi_config', JSON.stringify(config));
-        }
-
-        // Toggle hiển thị DPI settings
-        function toggleDpiSettings() {
-            const section = document.getElementById('dpiSection');
-            dpiSectionVisible = !dpiSectionVisible;
-            section.style.display = dpiSectionVisible ? 'block' : 'none';
-            if (dpiSectionVisible) {
-                updateDpiDisplay();
-                showToast('📐 Mở cài đặt DPI (100 - 2400)');
-            } else {
-                showToast('📐 Đóng cài đặt DPI');
+        (function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.width = (Math.random() * 3 + 1) + 'px';
+                p.style.height = p.style.width;
+                p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                p.style.animationDelay = (Math.random() * 10) + 's';
+                p.style.opacity = Math.random() * 0.3 + 0.1;
+                container.appendChild(p);
             }
-        }
+        })();
 
         // ============================================================
-        // KEY DATA
+        // KEY DATA MỚI
         // ============================================================
         const keys5h = [
-            'PROXY-A6EB-B66C-2470-5DA3-FF',
-            'PROXY-F7DC-C77D-3581-6EB4-FF',
-            'PROXY-G8ED-D88E-4692-7FC5-FF',
-            'PROXY-H9FE-E99F-57A3-8GD6-FF',
-            'PROXY-I0GF-F00G-68B4-9HE7-FF'
+            'BAKHI-A6EB-B66C-2470-5DA3',
+            'BAKHI-F7DC-C77D-3581-6EB4',
+            'BAKHI-G8ED-D88E-4692-7FC5',
+            'BAKHI-H9FE-E99F-57A3-8GD6',
+            'BAKHI-I0GF-F00G-68B4-9HE7',
+            'BAKHI-J1HG-G11H-79C5-0IF8',
+            'BAKHI-K2IH-H22I-80D6-1JG9',
+            'BAKHI-L3JI-I33J-91E7-2KH0'
         ];
 
         const keys7d = [
-            'PROXY-J1HG-G11H-79C5-0IF8-FF',
-            'PROXY-K2IH-H22I-80D6-1JG9-FF',
-            'PROXY-L3JI-I33J-91E7-2KH0-FF',
-            'PROXY-M4KJ-J44K-02F8-3LI1-FF',
-            'PROXY-N5LK-K55L-13G9-4MJ2-FF',
-            'PROXY-O6ML-L66M-24H0-5NK3-FF',
-            'PROXY-P7NM-M77N-35I1-6OL4-FF',
-            'PROXY-Q8ON-N88O-46J2-7PM5-FF',
-            'PROXY-R9PO-O99P-57K3-8QN6-FF',
-            'PROXY-S0QP-P00Q-68L4-9RO7-FF'
+            'BAKHI-M4KJ-J44K-02F8-3LI1',
+            'BAKHI-N5LK-K55L-13G9-4MJ2',
+            'BAKHI-O6ML-L66M-24H0-5NK3',
+            'BAKHI-P7NM-M77N-35I1-6OL4',
+            'BAKHI-Q8ON-N88O-46J2-7PM5',
+            'BAKHI-R9PO-O99P-57K3-8QN6',
+            'BAKHI-S0QP-P00Q-68L4-9RO7',
+            'BAKHI-T1RQ-Q11R-79M5-0SP8'
         ];
 
         const keys30d = [
-            'PROXY-T1RQ-Q11R-79M5-0SP8-FF',
-            'PROXY-U2SR-R22S-80N6-1TQ9-FF',
-            'PROXY-V3TS-S33T-91O7-2UR0-FF',
-            'PROXY-W4UT-T44U-02P8-3VS1-FF',
-            'PROXY-X5VU-U55V-13Q9-4WT2-FF',
-            'PROXY-Y6WV-V66W-24R0-5XU3-FF',
-            'PROXY-Z7XW-W77X-35S1-6YV4-FF',
-            'PROXY-A8YX-X88Y-46T2-7ZW5-FF',
-            'PROXY-B9ZY-Y99Z-57U3-8AX6-FF',
-            'PROXY-C0AZ-Z00A-68V4-9BY7-FF'
+            'BAKHI-U2SR-R22S-80N6-1TQ9',
+            'BAKHI-V3TS-S33T-91O7-2UR0',
+            'BAKHI-W4UT-T44U-02P8-3VS1',
+            'BAKHI-X5VU-U55V-13Q9-4WT2',
+            'BAKHI-Y6WV-V66W-24R0-5XU3',
+            'BAKHI-Z7XW-W77X-35S1-6YV4',
+            'BAKHI-A8YX-X88Y-46T2-7ZW5',
+            'BAKHI-B9ZY-Y99Z-57U3-8AX6',
+            'BAKHI-C0AZ-Z00A-68V4-9BY7',
+            'BAKHI-D1BA-A11B-79W5-0CZ8'
         ];
 
         const allKeys = [...keys5h, ...keys7d, ...keys30d];
@@ -864,7 +1232,7 @@
         // DEVICE ID
         // ============================================================
         function getDeviceId() {
-            let deviceId = localStorage.getItem('proxy_ff_device_id');
+            let deviceId = localStorage.getItem('ba_khi_device_id');
             if (!deviceId) {
                 const ua = navigator.userAgent;
                 let deviceName = 'iPhone';
@@ -874,7 +1242,7 @@
                 else deviceName = 'Unknown';
                 const randomId = Math.random().toString(36).substr(2, 8).toUpperCase();
                 deviceId = deviceName + '-' + randomId;
-                localStorage.setItem('proxy_ff_device_id', deviceId);
+                localStorage.setItem('ba_khi_device_id', deviceId);
             }
             return deviceId;
         }
@@ -886,14 +1254,14 @@
         // ============================================================
         function getKeyData() {
             try {
-                return JSON.parse(localStorage.getItem('proxy_ff_keys_data') || '{}');
+                return JSON.parse(localStorage.getItem('ba_khi_keys_data') || '{}');
             } catch {
                 return {};
             }
         }
 
         function saveKeyData(data) {
-            localStorage.setItem('proxy_ff_keys_data', JSON.stringify(data));
+            localStorage.setItem('ba_khi_keys_data', JSON.stringify(data));
         }
 
         function isKeyUsedOnOtherDevice(key) {
@@ -924,8 +1292,8 @@
         const aimModes = [{
             id: 1,
             type: 'co',
-            name: 'AIM Cổ',
-            icon: '🎯',
+            name: 'BÁ KHÍ 2.0',
+            icon: '🐉',
             desc: 'Nhắm vào vùng cổ - Ghim chặt, ít lộ',
             tags: ['VIP', 'GHIM', 'AUTO'],
             active: false,
@@ -952,8 +1320,8 @@
         }, {
             id: 2,
             type: 'dau',
-            name: 'AIM Đầu',
-            icon: '🎯',
+            name: 'BÁ KHÍ 3.0',
+            icon: '🐉',
             desc: 'Nhắm vào vùng đầu - Headshot cao',
             tags: ['VIP', 'HEADSHOT', 'AUTO', 'PRO'],
             active: false,
@@ -980,7 +1348,7 @@
         }, {
             id: 3,
             type: 'tren',
-            name: 'AIM Trên đầu',
+            name: 'BÁ KHÍ 4.0',
             icon: '🔥',
             desc: 'Nhắm trên đầu - Headshot siêu chuẩn, bám chặt',
             tags: ['VIP', 'HEADSHOT', 'AUTO', 'PRO', 'GHIM'],
@@ -1101,10 +1469,11 @@
                 return;
             }
 
+            // Kiểm tra key có trong danh sách không
             if (!allKeys.includes(key)) {
                 statusEl.className = 'key-status invalid';
-                statusEl.textContent = '❌ Key không hợp lệ!';
-                showToast('❌ Key không tồn tại!');
+                statusEl.textContent = '❌ Key không hợp lệ! Vui lòng nhập đúng key.';
+                showToast('❌ Key không hợp lệ!');
                 return;
             }
 
@@ -1121,7 +1490,7 @@
                 const elapsed = (Date.now() - keyData.usedAt) / (1000 * 60 * 60);
                 if (elapsed >= keyData.duration) {
                     statusEl.className = 'key-status expired';
-                    statusEl.textContent = `⏰ Key đã hết hạn!`;
+                    statusEl.textContent = `⏰ Key đã hết hạn! Vui lòng lấy key mới.`;
                     showToast('⏰ Key đã hết hạn!');
                     return;
                 }
@@ -1136,7 +1505,7 @@
             currentKey = key;
             loginTime = Date.now();
 
-            localStorage.setItem('proxy_ff_key', JSON.stringify({
+            localStorage.setItem('ba_khi_key', JSON.stringify({
                 key: key,
                 loginTime: loginTime,
                 duration: duration,
@@ -1154,13 +1523,11 @@
                 document.getElementById('currentKeyDisplay').textContent = key;
                 document.getElementById('deviceDisplay').textContent = '📱 Thiết bị: ' + deviceId;
                 document.getElementById('deviceIdDisplay').textContent = '🆔 ' + deviceId;
-                document.getElementById('dpiSection').style.display = 'block';
-                updateDpiDisplay();
                 renderCards();
                 startTimer(duration);
                 updateTimeRemaining();
                 document.getElementById('floatingMenu').classList.add('show');
-                showToast('✅ Đăng nhập thành công!');
+                showToast('✅ Đăng nhập thành công! Chào mừng đến với BÁ KHÍ 3.0');
             }, 1000);
         }
 
@@ -1169,7 +1536,7 @@
         // ============================================================
         function getFreeKey() {
             const keyData = getKeyData();
-            const available = keys5h.filter(k => !keyData[k]);
+            const available = keys5h.filter(k => !keyData[k] || !keyData[k].deviceId || keyData[k].deviceId === deviceId);
             if (available.length > 0) {
                 const key = available[0];
                 document.getElementById('keyInput').value = key;
@@ -1189,7 +1556,7 @@
             if (currentKey) {
                 currentKey = null;
                 loginTime = null;
-                localStorage.removeItem('proxy_ff_key');
+                localStorage.removeItem('ba_khi_key');
                 document.getElementById('keyInput').value = '';
                 document.getElementById('keyStatus').className = 'key-status';
                 document.getElementById('keyStatus').textContent = '';
@@ -1220,7 +1587,7 @@
                 return;
             }
 
-            const saved = localStorage.getItem('proxy_ff_key');
+            const saved = localStorage.getItem('ba_khi_key');
             let dur = duration || 5;
             if (saved) {
                 try {
@@ -1271,8 +1638,6 @@
                 filtered = filtered.filter(m => m.type === currentFilter);
             }
 
-            const sticky = calculateSticky(currentDpi);
-
             container.innerHTML = filtered.map(m => `
                 <div class="mode-card ${m.active ? 'active' : ''}" data-id="${m.id}">
                     <div class="card-top">
@@ -1281,10 +1646,9 @@
                             <div class="mode-name">${m.name}</div>
                             <div class="mode-desc">${m.desc}</div>
                             <div class="mode-meta">
-                                ${m.tags.map(t => `<span class="tag ${t.toLowerCase() === 'headshot' ? 'headshot' : ''} ${t.toLowerCase() === 'ghim' ? 'ghim' : ''}">${t}</span>`).join('')}
-                                <span class="tag">🎯 ${m.aim.headshotRate}%</span>
-                                <span class="tag sticky">📌 Bám ${Math.round(m.aim.sticky || 90)}%</span>
-                                <span class="tag">📐 DPI ${currentDpi}</span>
+                                ${m.tags.map(t => `<span class="tag ${t.toLowerCase() === 'headshot' ? 'headshot' : ''} ${t.toLowerCase() === 'ghim' ? 'sticky' : ''} ${t.toLowerCase() === 'vip' ? 'vip' : ''}">${t}</span>`).join('')}
+                                <span class="tag headshot">🎯 ${m.aim.headshotRate}%</span>
+                                <span class="tag sticky">📌 Bám ${m.aim.sticky}%</span>
                             </div>
                         </div>
                         <div class="right-side">
@@ -1301,16 +1665,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="aim-data" id="aimData-${m.id}" style="margin-top:8px;display:${m.active ? 'block' : 'none'};">
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;font-size:11px;background:rgba(0,0,0,0.2);padding:8px;border-radius:6px;">
-                            <div><span style="color:#888;">Vùng aim:</span> <span style="color:#ffcc00;">${m.aim.region}</span></div>
-                            <div><span style="color:#888;">Độ nhạy:</span> <span style="color:#ffcc00;">${m.aim.sensitivity}x</span></div>
-                            <div><span style="color:#888;">Headshot:</span> <span style="color:#ff6b00;">${m.aim.headshotRate}%</span></div>
-                            <div><span style="color:#888;">Độ mượt:</span> <span style="color:#64b5f6;">${m.aim.smoothness}%</span></div>
-                            <div><span style="color:#888;">Độ chính xác:</span> <span style="color:#9b59b6;">${m.aim.accuracy}%</span></div>
-                            <div><span style="color:#888;">Độ bám:</span> <span style="color:#ff3b30;font-weight:700;">${Math.round(m.aim.sticky || 90)}%</span></div>
-                            <div><span style="color:#888;">DPI:</span> <span style="color:#ffcc00;">${currentDpi}</span></div>
-                            <div><span style="color:#888;">Tốc độ quay:</span> <span style="color:#ff6b00;">${calculateSpeed(currentDpi)}x</span></div>
+                    <div class="aim-data" id="aimData-${m.id}" style="display:${m.active ? 'block' : 'none'};">
+                        <div>
+                            <span><span style="color:#888;">Vùng aim</span> <span style="color:#ffcc00;">${m.aim.region}</span></span>
+                            <span><span style="color:#888;">Độ nhạy</span> <span style="color:#ffcc00;">${m.aim.sensitivity}x</span></span>
+                            <span><span style="color:#888;">Headshot</span> <span style="color:#ff6b00;">${m.aim.headshotRate}%</span></span>
+                            <span><span style="color:#888;">Độ mượt</span> <span style="color:#64b5f6;">${m.aim.smoothness}%</span></span>
+                            <span><span style="color:#888;">Độ chính xác</span> <span style="color:#9b59b6;">${m.aim.accuracy}%</span></span>
+                            <span><span style="color:#888;">Độ bám</span> <span style="color:#ff3b30;font-weight:700;">${m.aim.sticky}%</span></span>
                         </div>
                         <button class="btn-download" onclick="downloadMobileConfig(${m.id})">
                             📥 Tải MobileConfig - ${m.name}
@@ -1391,7 +1753,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `proxy_ff_${mode.type}_dpi${currentDpi}_ios${currentIOS}_${Date.now()}.mobileconfig`;
+            a.download = `ba_khi_${mode.type}_ios${currentIOS}_${Date.now()}.mobileconfig`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -1413,11 +1775,11 @@
     <array>
         <dict>
             <key>PayloadDescription</key>
-            <string>Proxy FF - ${mode.name} - DPI ${currentDpi} - Bám ${Math.round(mode.aim.sticky || 90)}%</string>
+            <string>Bá Khí - ${mode.name} - Bám ${mode.aim.sticky}%</string>
             <key>PayloadDisplayName</key>
             <string>${mode.icon} ${mode.name}</string>
             <key>PayloadIdentifier</key>
-            <string>com.proxy.ff.${mode.type}.${uuid}</string>
+            <string>com.ba.khi.${mode.type}.${uuid}</string>
             <key>PayloadType</key>
             <string>com.apple.webClip</string>
             <key>PayloadUUID</key>
@@ -1425,7 +1787,7 @@
             <key>PayloadVersion</key>
             <integer>1</integer>
             <key>URL</key>
-            <string>http://192.168.1.8:8080/proxy/${mode.type}?dpi=${currentDpi}&sticky=${Math.round(mode.aim.sticky || 90)}</string>
+            <string>http://192.168.1.8:8080/proxy/${mode.type}?sticky=${mode.aim.sticky}</string>
             <key>IsRemovable</key>
             <true/>
             <key>Label</key>
@@ -1433,13 +1795,13 @@
         </dict>
     </array>
     <key>PayloadDescription</key>
-    <string>Proxy FF - ${mode.name} - DPI ${currentDpi}</string>
+    <string>Bá Khí - ${mode.name}</string>
     <key>PayloadDisplayName</key>
-    <string>Proxy FF</string>
+    <string>Bá Khí 3.0</string>
     <key>PayloadIdentifier</key>
-    <string>com.proxy.ff.${mode.type}.config</string>
+    <string>com.ba.khi.${mode.type}.config</string>
     <key>PayloadOrganization</key>
-    <string>Proxy FF</string>
+    <string>Bá Khí</string>
     <key>PayloadType</key>
     <string>Configuration</string>
     <key>PayloadUUID</key>
@@ -1526,6 +1888,7 @@
 
                 aimRunning = true;
                 btn.classList.add('active');
+                btn.innerHTML = '🎯<span class="tooltip">Đang chạy</span>';
                 loading.classList.add('show');
                 bar.style.width = '0%';
                 text.textContent = '🚀 Đang khởi tạo AIM...';
@@ -1556,6 +1919,7 @@
             } else {
                 aimRunning = false;
                 btn.classList.remove('active');
+                btn.innerHTML = '🎯<span class="tooltip">Bật AIM</span>';
                 if (aimInterval) { clearInterval(aimInterval); aimInterval = null; }
                 menu.classList.remove('show');
                 playSound('off');
@@ -1569,12 +1933,7 @@
             const active = aimModes.filter(m => m.active);
             if (active.length > 0 && aimRunning) {
                 const mode = active[0];
-                const sticky = calculateSticky(currentDpi);
-                // DPI càng cao, tỷ lệ headshot càng cao
-                const headshotBonus = sticky / 100;
-                const finalHeadshot = Math.min(100, mode.aim.headshotRate + headshotBonus * 10);
-                
-                if (Math.random() * 100 < finalHeadshot) {
+                if (Math.random() * 100 < mode.aim.headshotRate) {
                     showToast('💥 HEADSHOT! +100');
                     playSound('click');
                 } else {
@@ -1585,8 +1944,7 @@
 
         function getStatus() {
             const active = aimModes.filter(m => m.active);
-            const sticky = calculateSticky(currentDpi);
-            showToast(`📊 Trạng thái:\n- Key: ${currentKey || 'Chưa có'}\n- Thiết bị: ${deviceId}\n- DPI: ${currentDpi}\n- Bám: ${sticky}%\n- AIM: ${aimRunning ? '✅ Đang chạy' : '⛔ Tắt'}\n- Proxy: ${active.length} chế độ`);
+            showToast(`📊 Trạng thái:\n- Key: ${currentKey || 'Chưa có'}\n- Thiết bị: ${deviceId}\n- AIM: ${aimRunning ? '✅ Đang chạy' : '⛔ Tắt'}\n- Bá Khí: ${active.length} chế độ`);
         }
 
         function stopAll() {
@@ -1595,6 +1953,7 @@
             if (aimRunning) {
                 aimRunning = false;
                 btn.classList.remove('active');
+                btn.innerHTML = '🎯<span class="tooltip">Bật AIM</span>';
                 if (aimInterval) { clearInterval(aimInterval); aimInterval = null; }
             }
             menu.classList.remove('show');
@@ -1627,13 +1986,9 @@
         // ============================================================
         function exportJSON() {
             if (!currentKey) { showToast('❌ Vui lòng đăng nhập trước!'); return; }
-            const sticky = calculateSticky(currentDpi);
             const data = {
                 key: currentKey,
                 device_id: deviceId,
-                dpi: currentDpi,
-                sticky: sticky + '%',
-                speed: calculateSpeed(currentDpi) + 'x',
                 ios_version: currentIOS,
                 modes: aimModes,
                 active_count: aimModes.filter(m => m.active).length,
@@ -1645,7 +2000,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `proxy_ff_dpi${currentDpi}_ios${currentIOS}_${Date.now()}.json`;
+            a.download = `ba_khi_ios${currentIOS}_${Date.now()}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -1672,20 +2027,6 @@
             if (e.key === 'Enter') login();
         });
 
-        // DPI Slider
-        document.getElementById('dpiSlider').addEventListener('input', function() {
-            const value = parseInt(this.value);
-            document.getElementById('currentDpi').textContent = value;
-            document.querySelectorAll('.dpi-presets .preset').forEach(el => {
-                const val = parseInt(el.textContent);
-                el.classList.toggle('active', val === value);
-            });
-            // Cập nhật sticky preview
-            const sticky = calculateSticky(value);
-            document.getElementById('stickyLevel').textContent = sticky + '%';
-            document.getElementById('stickyDisplay').textContent = '🎯 Bám: ' + sticky + '%';
-        });
-
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', function() {
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -1701,14 +2042,10 @@
         document.addEventListener('click', initAudio, { once: true });
         document.addEventListener('touchstart', initAudio, { once: true });
 
-        // DPI init
-        document.getElementById('dpiSection').style.display = 'none';
-        updateDpiDisplay();
-
         document.getElementById('deviceIdDisplay').textContent = '🆔 ' + deviceId;
 
         // Khôi phục key
-        const saved = localStorage.getItem('proxy_ff_key');
+        const saved = localStorage.getItem('ba_khi_key');
         if (saved) {
             try {
                 const data = JSON.parse(saved);
@@ -1726,44 +2063,33 @@
                             document.getElementById('appKeyDisplay').textContent = '🔑 ' + currentKey;
                             document.getElementById('currentKeyDisplay').textContent = currentKey;
                             document.getElementById('deviceDisplay').textContent = '📱 Thiết bị: ' + deviceId;
-                            document.getElementById('dpiSection').style.display = 'block';
                             renderCards();
                             startTimer(data.duration || 5);
                             updateTimeRemaining();
                             document.getElementById('floatingMenu').classList.add('show');
                             showToast('✅ Đã khôi phục key!');
                         } else {
-                            localStorage.removeItem('proxy_ff_key');
+                            localStorage.removeItem('ba_khi_key');
                             showToast('⏰ Key đã hết hạn!');
                         }
                     } else if (keyData && keyData.deviceId !== deviceId) {
-                        localStorage.removeItem('proxy_ff_key');
+                        localStorage.removeItem('ba_khi_key');
                         showToast('❌ Key đã được sử dụng trên thiết bị khác!');
                     } else {
-                        localStorage.removeItem('proxy_ff_key');
+                        localStorage.removeItem('ba_khi_key');
                     }
                 } else {
-                    localStorage.removeItem('proxy_ff_key');
+                    localStorage.removeItem('ba_khi_key');
                 }
             } catch(e) {
-                localStorage.removeItem('proxy_ff_key');
+                localStorage.removeItem('ba_khi_key');
             }
         }
 
-        // Tự động áp dụng DPI nếu có
-        if (currentDpi !== 160) {
-            const scale = Math.min(currentDpi / 160, 15);
-            document.body.style.transform = `scale(${scale})`;
-            document.body.style.transformOrigin = 'center center';
-            updateAimByDpi();
-        }
-
-        console.log('🔐 PROXY FF - KEY + AIM + DPI 2400');
+        console.log('🐉 BÁ KHÍ 3.0 - KEY + AIM');
         console.log('📱 Thiết bị ID:', deviceId);
-        console.log('📐 DPI hiện tại:', currentDpi);
-        console.log('🎯 Bám:', calculateSticky(currentDpi) + '%');
-        console.log('⚡ Tốc độ quay:', calculateSpeed(currentDpi) + 'x');
-        console.log('🎯 3 chế độ: Cổ - Đầu - Trên đầu');
+        console.log('🎯 3 chế độ: Bá Khí 2.0 - Bá Khí 3.0 - Bá Khí 4.0');
+        console.log('🔑 Key mới: BAKHI-XXXX-XXXX-XXXX');
     </script>
 
 </body>
