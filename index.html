@@ -524,7 +524,7 @@
             display: flex;
             justify-content: space-around;
             align-items: center;
-            padding: 10px 5px 20px 5px;
+            padding: 10px 10px 20px 10px;
             background: rgba(13, 13, 26, 0.95);
             backdrop-filter: blur(20px);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -539,17 +539,17 @@
             background: none;
             border: none;
             color: #666;
-            font-size: 9px;
+            font-size: 10px;
             font-weight: 600;
             cursor: pointer;
-            padding: 5px 8px;
+            padding: 5px 15px;
             border-radius: 12px;
             transition: all 0.3s;
             flex: 1;
         }
 
         .nav-item .nav-icon {
-            font-size: 20px;
+            font-size: 22px;
             transition: transform 0.3s;
         }
 
@@ -665,186 +665,11 @@
             50% { opacity: 0.5; }
         }
 
-        /* ============ STATS ============ */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 10px;
-        }
-
-        .stat-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(168, 85, 247, 0.2);
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: 900;
-            color: #d946ef;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            font-size: 11px;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* ============ LOGS ============ */
-        .log-list {
-            max-height: 250px;
-            overflow-y: auto;
-        }
-
-        .log-item {
-            font-size: 12px;
-            color: #ccc;
-            padding: 8px 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .log-item .log-time {
-            color: #888;
-            font-size: 10px;
-        }
-
-        /* ============ SETTINGS ============ */
-        .setting-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .setting-item:last-child {
-            border-bottom: none;
-        }
-
-        .setting-label {
-            font-size: 14px;
-            color: #e0d0ff;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .setting-label .setting-icon {
-            font-size: 18px;
-        }
-
-        /* ============ LIGHT MODE ============ */
-        .light-mode {
-            background: #f0f0f5 !important;
-        }
-
-        .light-mode .app-container {
-            background: #ffffff;
-        }
-
-        .light-mode .status-bar,
-        .light-mode .app-header {
-            background: #ffffff;
-            color: #333;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .light-mode .app-header .logo {
-            background: linear-gradient(to right, #7c3aed, #c026d3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .light-mode .card {
-            background: #f8f8ff;
-            border-color: #e0e0e0;
-        }
-
-        .light-mode .feature-card {
-            background: #ffffff;
-            border-color: #e0e0e0;
-        }
-
-        .light-mode .feature-card.active-feature {
-            background: #f3e8ff;
-            border-color: #a855f7;
-        }
-
-        .light-mode .card-title,
-        .light-mode .feature-header {
-            color: #7c3aed;
-        }
-
-        .light-mode .feature-header .feature-name {
-            color: #333;
-        }
-
-        .light-mode .card-desc,
-        .light-mode .guide-list li {
-            color: #666;
-        }
-
-        .light-mode .bottom-nav {
-            background: rgba(255, 255, 255, 0.95);
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .light-mode .nav-item {
-            color: #999;
-        }
-
-        .light-mode .nav-item.active {
-            color: #7c3aed;
-        }
-
-        .light-mode .lock-screen {
-            background: #ffffff;
-        }
-
-        .light-mode .lock-card {
-            background: #f8f8ff;
-            border-color: #e0e0e0;
-        }
-
-        .light-mode .lock-card h3 {
-            color: #7c3aed;
-        }
-
-        .light-mode .lock-card p {
-            color: #666;
-        }
-
-        .light-mode .lock-input-group input {
-            background: #ffffff;
-            color: #333;
-            border-color: #e0e0e0;
-        }
-
-        .light-mode .loading-screen {
-            background: #ffffff;
-        }
-
-        .light-mode .loading-text {
-            color: #7c3aed;
-        }
-
-        .light-mode .loading-subtext {
-            color: #666;
-        }
-
     </style>
 </head>
 <body>
 
-    <div class="app-container" id="app-container">
+    <div class="app-container">
         
         <!-- ============ MÀN HÌNH LOADING ============ -->
         <div id="loading-screen" class="loading-screen hidden">
@@ -890,7 +715,7 @@
         <!-- ============ APP HEADER ============ -->
         <div class="app-header">
             <div class="logo">HEADLOCK</div>
-            <div class="user-icon" onclick="logout()">👤</div>
+            <div class="user-icon">👤</div>
         </div>
 
         <!-- ============ MAIN CONTENT ============ -->
@@ -911,7 +736,7 @@
                         <div class="feature-card active-feature">
                             <div class="feature-header">
                                 <div class="feature-name"><span class="feature-icon">🚀</span> Fix Lag Chơi Game</div>
-                                <div class="toggle-switch active" onclick="toggleFeature(this, 'Fix Lag')"></div>
+                                <div class="toggle-switch active" onclick="toggleFeature(this)"></div>
                             </div>
                             <div class="slider-container">
                                 <span>0%</span>
@@ -927,7 +752,7 @@
                         <div class="feature-card active-feature">
                             <div class="feature-header">
                                 <div class="feature-name"><span class="feature-icon">👁️</span> Tâm Ảo (Visual)</div>
-                                <div class="toggle-switch active" onclick="toggleFeature(this, 'Tâm Ảo')"></div>
+                                <div class="toggle-switch active" onclick="toggleFeature(this)"></div>
                             </div>
                             <div class="slider-container">
                                 <span>0%</span>
@@ -943,7 +768,7 @@
                         <div class="feature-card active-feature" id="aimlock-card">
                             <div class="feature-header">
                                 <div class="feature-name"><span class="feature-icon">🎯</span> Aim Lock</div>
-                                <div class="toggle-switch active" id="aimlock-toggle" onclick="toggleFeature(this, 'Aim Lock')"></div>
+                                <div class="toggle-switch active" id="aimlock-toggle" onclick="toggleFeature(this)"></div>
                             </div>
                             <div class="slider-container">
                                 <span>0%</span>
@@ -964,7 +789,7 @@
                         <div class="feature-card active-feature" id="aimdau-card">
                             <div class="feature-header">
                                 <div class="feature-name"><span class="feature-icon">💀</span> Aim Đầu</div>
-                                <div class="toggle-switch active" id="aimdau-toggle" onclick="toggleFeature(this, 'Aim Đầu')"></div>
+                                <div class="toggle-switch active" id="aimdau-toggle" onclick="toggleFeature(this)"></div>
                             </div>
                             <div class="slider-container">
                                 <span>0%</span>
@@ -984,7 +809,7 @@
                         <div class="feature-card active-feature" id="chaygam-card">
                             <div class="feature-header">
                                 <div class="feature-name"><span class="feature-icon">🏃</span> Chạy Gầm (Speed)</div>
-                                <div class="toggle-switch active" id="chaygam-toggle" onclick="toggleFeature(this, 'Chạy Gầm')"></div>
+                                <div class="toggle-switch active" id="chaygam-toggle" onclick="toggleFeature(this)"></div>
                             </div>
                             <div class="slider-container">
                                 <span>0%</span>
@@ -1005,4 +830,427 @@
                         <div class="feature-card active-feature">
                             <div class="feature-header">
                                 <div class="feature-name"><span class="feature-icon">🛡️</span> Bypass Anti-Cheat</div>
-                                <div class="toggle-switch active
+                                <div class="toggle-switch active" onclick="toggleFeature(this)"></div>
+                            </div>
+                            <div class="slider-container">
+                                <span>0%</span>
+                                <div class="slider-bar" onmousedown="startDrag(event, this)" ontouchstart="startDrag(event, this)">
+                                    <div class="slider-fill" style="width: 100%;"></div>
+                                    <div class="slider-thumb" style="left: 100%;"></div>
+                                </div>
+                                <span class="slider-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">📖 Hướng Dẫn Sử Dụng</div>
+                    <ul class="guide-list">
+                        <li><span>1.</span> Nhập Key hợp lệ ở màn hình khóa để vào App.</li>
+                        <li><span>2.</span> Chờ màn hình Loading kết nối xong.</li>
+                        <li><span>3.</span> Các tính năng Aim và Chạy Gầm sẽ tự động bật.</li>
+                        <li><span>4.</span> Theo dõi Ping và thời gian còn lại trên thanh trạng thái.</li>
+                        <li><span>5.</span> Khi hết thời gian, App sẽ tự động khóa lại.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- STORE PAGE -->
+            <div id="page-store" class="page">
+                <div class="card">
+                    <div class="card-title">🔑 Kho Key</div>
+                    <div class="card-desc">Hệ thống Key đã được tích hợp sẵn. Vui lòng nhập Key ở màn hình khóa khi mở App.</div>
+                    <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                        <span class="key-badge badge-week">10 Key Tuần</span>
+                        <span class="key-badge badge-month">20 Key Tháng</span>
+                        <span class="key-badge badge-forever">20 Key Vĩnh Viễn</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FEATURES PAGE -->
+            <div id="page-features" class="page">
+                <div class="card">
+                    <div class="card-title">⚙️ Tính Năng</div>
+                    <div class="card-desc">Vui lòng xem danh sách tính năng ở Trang Chủ.</div>
+                </div>
+            </div>
+
+            <!-- ACTIVATE PAGE -->
+            <div id="page-activate" class="page">
+                <div class="card">
+                    <div class="card-title">🔐 Nhập Key</div>
+                    <div class="card-desc">Vui lòng nhập Key ở màn hình khóa khi mở App.</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ============ BOTTOM NAV ============ -->
+        <div class="bottom-nav">
+            <button class="nav-item active" onclick="switchPage('page-home', this)">
+                <span class="nav-icon">🏠</span>
+                <span>Trang Chủ</span>
+            </button>
+            <button class="nav-item" onclick="switchPage('page-store', this)">
+                <span class="nav-icon">🔑</span>
+                <span>Kho Key</span>
+            </button>
+            <button class="nav-item" onclick="switchPage('page-features', this)">
+                <span class="nav-icon">⚙️</span>
+                <span>Tính Năng</span>
+            </button>
+            <button class="nav-item" onclick="switchPage('page-activate', this)">
+                <span class="nav-icon">🔐</span>
+                <span>Nhập Key</span>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- ============ TOAST ============ -->
+    <div id="toast" class="toast">Thông báo</div>
+
+    <script>
+        // ==========================================
+        // DANH SÁCH KEY HỢP LỆ
+        // ==========================================
+        const WEEK_KEYS = [
+            "HEAD-WK01-A1B2-C3D4-FF", "HEAD-WK02-E5F6-G7H8-FF", "HEAD-WK03-I9J0-K1L2-FF",
+            "HEAD-WK04-M3N4-O5P6-FF", "HEAD-WK05-Q7R8-S9T0-FF", "HEAD-WK06-U1V2-W3X4-FF",
+            "HEAD-WK07-Y5Z6-A7B8-FF", "HEAD-WK08-C9D0-E1F2-FF", "HEAD-WK09-G3H4-I5J6-FF",
+            "HEAD-WK10-K7L8-M9N0-FF"
+        ];
+
+        const MONTH_KEYS = [
+            "HEAD-MT01-A1B2-C3D4-FF", "HEAD-MT02-E5F6-G7H8-FF", "HEAD-MT03-I9J0-K1L2-FF",
+            "HEAD-MT04-M3N4-O5P6-FF", "HEAD-MT05-Q7R8-S9T0-FF", "HEAD-MT06-U1V2-W3X4-FF",
+            "HEAD-MT07-Y5Z6-A7B8-FF", "HEAD-MT08-C9D0-E1F2-FF", "HEAD-MT09-G3H4-I5J6-FF",
+            "HEAD-MT10-K7L8-M9N0-FF", "HEAD-MT11-O1P2-Q3R4-FF", "HEAD-MT12-S5T6-U7V8-FF",
+            "HEAD-MT13-W9X0-Y1Z2-FF", "HEAD-MT14-A3B4-C5D6-FF", "HEAD-MT15-E7F8-G9H0-FF",
+            "HEAD-MT16-I1J2-K3L4-FF", "HEAD-MT17-M5N6-O7P8-FF", "HEAD-MT18-Q9R0-S1T2-FF",
+            "HEAD-MT19-U3V4-W5X6-FF", "HEAD-MT20-Y7Z8-A9B0-FF"
+        ];
+
+        const FOREVER_KEYS = [
+            "HEAD-FV01-A1B2-C3D4-FF", "HEAD-FV02-E5F6-G7H8-FF", "HEAD-FV03-I9J0-K1L2-FF",
+            "HEAD-FV04-M3N4-O5P6-FF", "HEAD-FV05-Q7R8-S9T0-FF", "HEAD-FV06-U1V2-W3X4-FF",
+            "HEAD-FV07-Y5Z6-A7B8-FF", "HEAD-FV08-C9D0-E1F2-FF", "HEAD-FV09-G3H4-I5J6-FF",
+            "HEAD-FV10-K7L8-M9N0-FF", "HEAD-FV11-O1P2-Q3R4-FF", "HEAD-FV12-S5T6-U7V8-FF",
+            "HEAD-FV13-W9X0-Y1Z2-FF", "HEAD-FV14-A3B4-C5D6-FF", "HEAD-FV15-E7F8-G9H0-FF",
+            "HEAD-FV16-I1J2-K3L4-FF", "HEAD-FV17-M5N6-O7P8-FF", "HEAD-FV18-Q9R0-S1T2-FF",
+            "HEAD-FV19-U3V4-W5X6-FF", "HEAD-FV20-Y7Z8-A9B0-FF"
+        ];
+
+        const ALL_VALID_KEYS = [...WEEK_KEYS, ...MONTH_KEYS, ...FOREVER_KEYS];
+
+        // ==========================================
+        // BIẾN TOÀN CỤC
+        // ==========================================
+        let pingInterval = null;
+        let countdownInterval = null;
+        let currentKeyType = null;
+        let keyExpiryTime = null;
+
+        // ==========================================
+        // UNLOCK APP + HIỂN THỊ LOADING
+        // ==========================================
+        function unlockApp() {
+            const input = document.getElementById('lock-key-input');
+            const key = input.value.trim().toUpperCase();
+
+            if (!key) {
+                showToast('Vui lòng nhập Key!', 'error');
+                return;
+            }
+
+            if (ALL_VALID_KEYS.includes(key)) {
+                document.getElementById('lock-screen').classList.add('hidden');
+                
+                // Xác định loại Key và thời gian
+                if (WEEK_KEYS.includes(key)) {
+                    currentKeyType = "week";
+                    keyExpiryTime = Date.now() + (7 * 24 * 60 * 60 * 1000); // 7 ngày
+                } else if (MONTH_KEYS.includes(key)) {
+                    currentKeyType = "month";
+                    keyExpiryTime = Date.now() + (30 * 24 * 60 * 60 * 1000); // 30 ngày
+                } else if (FOREVER_KEYS.includes(key)) {
+                    currentKeyType = "forever";
+                    keyExpiryTime = null; // Vĩnh viễn
+                }
+                
+                showLoadingScreen();
+                input.value = '';
+            } else {
+                showToast('❌ Key không hợp lệ! Vui lòng kiểm tra lại.', 'error');
+            }
+        }
+
+        // ==========================================
+        // HÀM HIỂN THỊ LOADING
+        // ==========================================
+        function showLoadingScreen() {
+            const loadingScreen = document.getElementById('loading-screen');
+            const loadingBarFill = document.getElementById('loading-bar-fill');
+            const loadingPercent = document.getElementById('loading-percent');
+            
+            loadingBarFill.style.width = '0%';
+            loadingPercent.textContent = '0%';
+            
+            loadingScreen.classList.remove('hidden');
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 15) + 5;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    setTimeout(() => {
+                        loadingScreen.classList.add('hidden');
+                        autoActivateFeatures();
+                        startPingSimulation();
+                        startCountdown();
+                        
+                        let keyTypeText = currentKeyType === 'week' ? 'Key Tuần (7 Ngày)' :
+                                         currentKeyType === 'month' ? 'Key Tháng (30 Ngày)' : 'Key Vĩnh Viễn';
+                        showToast(`🎉 Kích hoạt thành công! (${keyTypeText})`, 'success');
+                        
+                    }, 300);
+                }
+                loadingBarFill.style.width = progress + '%';
+                loadingPercent.textContent = progress + '%';
+            }, 150);
+        }
+
+        // ==========================================
+        // TỰ ĐỘNG KÍCH HOẠT AIM + CHẠY GẦM
+        // ==========================================
+        function autoActivateFeatures() {
+            const aimlockToggle = document.getElementById('aimlock-toggle');
+            if (aimlockToggle && !aimlockToggle.classList.contains('active')) {
+                aimlockToggle.classList.add('active');
+                aimlockToggle.closest('.feature-card').classList.add('active-feature');
+            }
+            
+            const aimdauToggle = document.getElementById('aimdau-toggle');
+            if (aimdauToggle && !aimdauToggle.classList.contains('active')) {
+                aimdauToggle.classList.add('active');
+                aimdauToggle.closest('.feature-card').classList.add('active-feature');
+            }
+            
+            const chaygamToggle = document.getElementById('chaygam-toggle');
+            if (chaygamToggle && !chaygamToggle.classList.contains('active')) {
+                chaygamToggle.classList.add('active');
+                chaygamToggle.closest('.feature-card').classList.add('active-feature');
+            }
+        }
+
+        // ==========================================
+        // PING GIẢ LẬP
+        // ==========================================
+        function startPingSimulation() {
+            if (pingInterval) clearInterval(pingInterval);
+            
+            const pingDisplay = document.getElementById('ping-display');
+            
+            function updatePing() {
+                const ping = Math.floor(Math.random() * 40) + 20; // 20-60ms
+                pingDisplay.textContent = ping + ' ms';
+                
+                // Đổi màu theo mức ping
+                pingDisplay.classList.remove('warning', 'danger');
+                if (ping > 50) {
+                    pingDisplay.classList.add('danger');
+                } else if (ping > 40) {
+                    pingDisplay.classList.add('warning');
+                }
+            }
+            
+            updatePing();
+            pingInterval = setInterval(updatePing, 2000); // Cập nhật mỗi 2 giây
+        }
+
+        // ==========================================
+        // ĐẾM NGƯỢC THỜI GIAN KEY
+        // ==========================================
+        function startCountdown() {
+            if (countdownInterval) clearInterval(countdownInterval);
+            
+            const timeDisplay = document.getElementById('time-display');
+            
+            if (currentKeyType === 'forever') {
+                timeDisplay.textContent = '∞ Vĩnh Viễn';
+                timeDisplay.style.color = '#e879f9';
+                return;
+            }
+            
+            function updateCountdown() {
+                if (!keyExpiryTime) {
+                    timeDisplay.textContent = '∞';
+                    return;
+                }
+                
+                const now = Date.now();
+                const remaining = keyExpiryTime - now;
+                
+                if (remaining <= 0) {
+                    // Hết hạn
+                    clearInterval(countdownInterval);
+                    clearInterval(pingInterval);
+                    timeDisplay.textContent = '00:00:00';
+                    timeDisplay.classList.add('time-warning');
+                    
+                    // Khóa lại App
+                    setTimeout(() => {
+                        document.getElementById('lock-screen').classList.remove('hidden');
+                        showToast('⏰ Key đã hết hạn! Vui lòng nhập Key mới.', 'error');
+                        
+                        // Reset các biến
+                        currentKeyType = null;
+                        keyExpiryTime = null;
+                        timeDisplay.classList.remove('time-warning');
+                        timeDisplay.textContent = '--:--:--';
+                        timeDisplay.style.color = '#d946ef';
+                        
+                        // Tắt các tính năng
+                        document.querySelectorAll('.toggle-switch').forEach(t => t.classList.remove('active'));
+                        document.querySelectorAll('.feature-card').forEach(c => c.classList.remove('active-feature'));
+                        
+                    }, 1000);
+                    return;
+                }
+                
+                // Tính toán giờ, phút, giây
+                const totalSeconds = Math.floor(remaining / 1000);
+                const days = Math.floor(totalSeconds / 86400);
+                const hours = Math.floor((totalSeconds % 86400) / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+                
+                let displayText = '';
+                if (days > 0) {
+                    displayText = `${days}d ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                } else {
+                    displayText = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                }
+                
+                timeDisplay.textContent = displayText;
+                
+                // Cảnh báo khi còn dưới 1 giờ
+                if (remaining < 3600000) {
+                    timeDisplay.classList.add('time-warning');
+                } else {
+                    timeDisplay.classList.remove('time-warning');
+                }
+            }
+            
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        document.getElementById('lock-key-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') unlockApp();
+        });
+
+        // ==========================================
+        // CHUYỂN TRANG
+        // ==========================================
+        function switchPage(pageId, btnElement) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+
+            if (btnElement) {
+                document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+                btnElement.classList.add('active');
+            }
+            document.querySelector('.app-content').scrollTop = 0;
+        }
+
+        // ==========================================
+        // TOGGLE FEATURE
+        // ==========================================
+        function toggleFeature(element) {
+            element.classList.toggle('active');
+            const isActive = element.classList.contains('active');
+            const card = element.closest('.feature-card');
+            const featureName = card.querySelector('.feature-name').textContent.trim();
+            
+            if (isActive) card.classList.add('active-feature');
+            else card.classList.remove('active-feature');
+            
+            showToast(`${featureName}: ${isActive ? 'BẬT' : 'TẮT'}`, isActive ? 'success' : 'info');
+        }
+
+        // ==========================================
+        // SLIDER KÉO ĐƯỢC
+        // ==========================================
+        function startDrag(event, sliderBar) {
+            event.preventDefault();
+            const fill = sliderBar.querySelector('.slider-fill');
+            const thumb = sliderBar.querySelector('.slider-thumb');
+            const valueDisplay = sliderBar.closest('.slider-container').querySelector('.slider-value');
+
+            function updateSlider(clientX) {
+                const rect = sliderBar.getBoundingClientRect();
+                let percentage = ((clientX - rect.left) / rect.width) * 100;
+                percentage = Math.max(0, Math.min(100, percentage));
+                
+                fill.style.width = percentage + '%';
+                thumb.style.left = percentage + '%';
+                valueDisplay.textContent = Math.round(percentage) + '%';
+            }
+
+            function onMouseMove(e) { updateSlider(e.clientX); }
+            function onTouchMove(e) { updateSlider(e.touches[0].clientX); }
+
+            function stopDrag() {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', stopDrag);
+                document.removeEventListener('touchmove', onTouchMove);
+                document.removeEventListener('touchend', stopDrag);
+            }
+
+            updateSlider(event.clientX || event.touches[0].clientX);
+            
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', stopDrag);
+            document.addEventListener('touchmove', onTouchMove, { passive: false });
+            document.addEventListener('touchend', stopDrag);
+        }
+
+        // ==========================================
+        // AIM BUTTONS
+        // ==========================================
+        function setAim(element, mode) {
+            const container = element.parentElement;
+            container.querySelectorAll('.aim-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            showToast(`🎯 Đã chọn chế độ Aim: ${mode}`, 'info');
+        }
+
+        // ==========================================
+        // SPEED BUTTONS (Chạy Gầm)
+        // ==========================================
+        function setSpeed(element, speed) {
+            const container = element.parentElement;
+            container.querySelectorAll('.aim-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            showToast(`🏃 Đã chọn tốc độ chạy gầm: ${speed}`, 'info');
+        }
+
+        // ==========================================
+        // TOAST
+        // ==========================================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.classList.add('show');
+            
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+    </script>
+</body>
+</html>
