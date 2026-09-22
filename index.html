@@ -14,8 +14,6 @@ html, body {
   color: #ffe6ff;
   user-select: none;
 }
-
-/* LOADING */
 #loadingBar {
   position: fixed; inset: 0;
   display: flex; align-items: center; justify-content: center;
@@ -69,8 +67,6 @@ html, body {
   margin-top: 10px; font-size: 13px;
   color: #ff80e0; font-weight: bold;
 }
-
-/* KEY PAGE */
 #keyPage {
   position: fixed; inset: 0;
   display: flex; align-items: center; justify-content: center;
@@ -143,7 +139,6 @@ html, body {
 }
 .msg.error   { background: rgba(255,0,60,.15); color: #ff4d6d; border: 1px solid #ff4d6d; display: block; }
 .msg.success { background: rgba(0,255,120,.12); color: #4dff9e; border: 1px solid #4dff9e; display: block; }
-
 .toggleKeys {
   margin-top: 14px;
   background: transparent;
@@ -198,8 +193,6 @@ html, body {
 }
 .keyItem:hover { background: rgba(255,77,210,.2); transform: translateX(3px); }
 .keyItem .copyHint { font-size: 10px; color: #b380d9; }
-
-/* APP */
 #app {
   position: fixed; inset: 0;
   display: none; flex-direction: column; z-index: 50;
@@ -257,190 +250,211 @@ html, body {
   cursor: pointer; transition: .2s; letter-spacing: 1px;
 }
 .card button:hover { opacity: .85; transform: translateY(-2px); }
-
-/* AIMLOCK */
-.card.aimlock-card {
-  border-color: #00ffea;
-  box-shadow: 0 0 25px rgba(0, 255, 234, .4);
-  background: linear-gradient(135deg, rgba(42, 0, 51, .9) 0%, rgba(0, 60, 70, .5) 100%);
-}
-.card.aimlock-card h3 { color: #00ffea; text-shadow: 0 0 10px #00ffea; }
-.card.aimlock-card button { background: linear-gradient(90deg, #00c9b7, #00ffea); color: #001a1f; }
-.card.aimlock-card.active { animation: aimGlow 1.5s ease-in-out infinite; }
-@keyframes aimGlow {
-  0%, 100% { box-shadow: 0 0 25px rgba(0, 255, 234, .4); }
-  50%      { box-shadow: 0 0 45px rgba(0, 255, 234, .9), 0 0 70px rgba(0, 255, 234, .5); }
-}
-
-/* AIMNECK */
-.card.aimneck-card {
-  border-color: #ffb300;
-  box-shadow: 0 0 25px rgba(255, 179, 0, .4);
-  background: linear-gradient(135deg, rgba(42, 0, 51, .9) 0%, rgba(70, 40, 0, .5) 100%);
-}
-.card.aimneck-card h3 { color: #ffb300; text-shadow: 0 0 10px #ffb300; }
-.card.aimneck-card button { background: linear-gradient(90deg, #ff8c00, #ffb300); color: #1a0f00; }
-.card.aimneck-card.active { animation: neckGlow 1.5s ease-in-out infinite; }
-@keyframes neckGlow {
-  0%, 100% { box-shadow: 0 0 25px rgba(255, 179, 0, .4); }
-  50%      { box-shadow: 0 0 45px rgba(255, 179, 0, .9), 0 0 70px rgba(255, 140, 0, .5); }
-}
-
-/* LAUNCH */
-.card.launch-card {
-  border-color: #00ff5c;
-  box-shadow: 0 0 25px rgba(0, 255, 92, .4);
-  background: linear-gradient(135deg, rgba(42, 0, 51, .9) 0%, rgba(0, 70, 20, .5) 100%);
-}
-.card.launch-card h3 { color: #00ff5c; text-shadow: 0 0 10px #00ff5c; }
 .launchBtns { display: flex; flex-direction: column; gap: 8px; }
-.btnFF {
-  padding: 12px; border: none; border-radius: 10px;
-  font-weight: bold; cursor: pointer;
-  letter-spacing: 1px; transition: .2s;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-.btnFFMax {
-  background: linear-gradient(90deg, #ff1744, #ff5252);
-  color: #fff; box-shadow: 0 0 15px rgba(255, 23, 68, .6);
-}
-.btnFFMax:hover { transform: translateY(-2px); box-shadow: 0 0 25px rgba(255, 23, 68, .9); }
-.btnFFNormal {
-  background: linear-gradient(90deg, #00c853, #00e676);
-  color: #003d13; box-shadow: 0 0 15px rgba(0, 200, 83, .6);
-}
-.btnFFNormal:hover { transform: translateY(-2px); box-shadow: 0 0 25px rgba(0, 200, 83, .9); }
-
-/* DNS */
-.card.dns-card {
-  border-color: #4d9fff;
-  box-shadow: 0 0 25px rgba(77, 159, 255, .4);
-  background: linear-gradient(135deg, rgba(42, 0, 51, .9) 0%, rgba(0, 30, 70, .5) 100%);
+.btnFF { padding: 12px !important; font-size: 14px; }
+.btnFFMax { background: linear-gradient(90deg, #ff006e, #ff9100) !important; }
+.btnFFNormal { background: linear-gradient(90deg, #a200ff, #00d4ff) !important; }
+.card.aimdata-card {
+  border-color: #a200ff;
+  box-shadow: 0 0 30px rgba(162, 0, 255, .5);
+  background: linear-gradient(135deg,
+    rgba(42, 0, 51, .95) 0%,
+    rgba(70, 0, 120, .6) 100%);
   grid-column: 1 / -1;
-  max-width: 720px;
+  max-width: 1100px;
   margin: 0 auto;
   width: 100%;
 }
-.card.dns-card h3 { color: #4d9fff; text-shadow: 0 0 10px #4d9fff; }
-
-.dnsWrap {
-  background: #0f0f14;
-  border-radius: 14px;
-  overflow: hidden;
-  margin-top: 10px;
-  border: 1px solid #2a2a35;
+.card.aimdata-card h3 {
+  color: #c44dff;
+  text-shadow: 0 0 12px #a200ff;
+  font-size: 19px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.dnsHeader {
-  padding: 14px 16px;
-  color: #b0b0c0;
+.gameTabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.gameTabs button {
+  padding: 8px 16px;
+  background: #2a0033;
+  border: 1px solid #a200ff;
+  color: #d9a6ff;
+  border-radius: 10px;
+  cursor: pointer;
   font-size: 12px;
+  font-weight: bold;
+  transition: .2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.gameTabs button:hover { background: rgba(162, 0, 255, .2); }
+.gameTabs button.active {
+  background: linear-gradient(90deg, #a200ff, #c44dff);
+  color: #fff;
+  box-shadow: 0 0 15px rgba(162, 0, 255, .7);
+}
+.gameStats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.statBox {
+  background: rgba(26, 0, 31, .8);
+  border: 1px solid #a200ff;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+}
+.statBox .label {
+  font-size: 10px;
+  color: #b380d9;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.statBox .value {
+  font-size: 18px;
+  font-weight: bold;
+  color: #c44dff;
+  text-shadow: 0 0 8px #a200ff;
+  font-family: 'Courier New', monospace;
+}
+.barBox { margin-bottom: 12px; }
+.barLabel {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: #d9a6ff;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+.barTrack {
+  height: 10px;
+  background: #1a001f;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #a200ff;
+}
+.barFill {
+  height: 100%;
+  background: linear-gradient(90deg, #a200ff, #ff4dd2);
+  border-radius: 6px;
+  transition: width .5s ease;
+  box-shadow: 0 0 10px #c44dff;
+}
+.aimCodeBox {
+  background: #0d0014;
+  border: 1px solid #a200ff;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-top: 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 11.5px;
+  color: #c44dff;
+  line-height: 1.6;
+  max-height: 220px;
+  overflow-y: auto;
+  white-space: pre;
+}
+.aimDataBtns {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.aimDataBtns button { flex: 1; min-width: 140px; }
+.btnInject {
+  background: linear-gradient(90deg, #a200ff, #ff4dd2) !important;
+  color: #fff !important;
+  font-weight: bold;
+  box-shadow: 0 0 15px rgba(162, 0, 255, .6) !important;
+}
+.btnCopy {
+  background: linear-gradient(90deg, #00c9b7, #00ffea) !important;
+  color: #001a1f !important;
+}
+.btnTest {
+  background: linear-gradient(90deg, #ff9100, #ffb300) !important;
+  color: #1a0f00 !important;
+}
+.dnsWrap { margin-bottom: 14px; }
+.dnsHeader {
+  font-size: 11px;
+  color: #b380d9;
   line-height: 1.5;
-  border-bottom: 1px solid #2a2a35;
-  background: #16161d;
+  padding: 10px;
+  background: rgba(26, 0, 31, .6);
+  border-radius: 8px;
+  margin-bottom: 12px;
 }
 .dnsSectionTitle {
-  padding: 12px 16px 8px;
-  color: #8a8a99;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: bold;
+  color: #ff4dd2;
   letter-spacing: 1px;
-  text-transform: uppercase;
+  margin-bottom: 8px;
 }
+#dnsList { display: flex; flex-direction: column; gap: 6px; }
 .dnsItem {
-  display: flex;
-  align-items: center;
-  padding: 14px 16px;
-  border-bottom: 1px solid #1e1e26;
-  cursor: pointer;
-  transition: background .15s;
-  gap: 14px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  background: rgba(26, 0, 31, .7);
+  border: 1px solid rgba(255, 77, 210, .3);
+  border-radius: 10px;
+  cursor: pointer; transition: .2s;
 }
-.dnsItem:hover { background: #1c1c24; }
-.dnsItem:last-child { border-bottom: none; }
-.dnsItem.active { background: rgba(77, 159, 255, .08); }
-
-.dnsIcon {
-  width: 36px; height: 36px;
-  border-radius: 9px;
-  background: #2a2a35;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; flex-shrink: 0;
-  transition: .2s;
+.dnsItem:hover { background: rgba(255, 77, 210, .1); border-color: #ff4dd2; }
+.dnsItem.active {
+  background: rgba(162, 0, 255, .25);
+  border-color: #a200ff;
+  box-shadow: 0 0 15px rgba(162, 0, 255, .5);
 }
-.dnsItem.active .dnsIcon { background: linear-gradient(135deg, #4d9fff, #00d4ff); }
-
-.dnsInfo { flex: 1; text-align: left; min-width: 0; }
+.dnsIcon { font-size: 22px; }
+.dnsInfo { flex: 1; }
 .dnsName {
-  font-size: 15px;
-  color: #e8e8f0;
-  font-weight: 500;
-  margin-bottom: 3px;
-  display: flex; align-items: center; gap: 6px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-size: 13px; font-weight: bold; color: #ffb3e6;
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
 }
-.dnsDesc {
-  font-size: 12px;
-  color: #6a6a80;
-  font-style: italic;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.dnsCheck {
-  width: 24px; height: 24px;
-  flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  color: #4d9fff;
-  opacity: 0;
-  transition: .2s;
-}
-.dnsItem.active .dnsCheck { opacity: 1; }
-
-/* Tag AIM hiển thị trong DNS item */
 .dnsAimTag {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 10px;
-  font-weight: bold;
-  background: rgba(255, 77, 210, .15);
-  color: #ff80e0;
-  border: 1px solid rgba(255, 77, 210, .4);
-  white-space: nowrap;
+  font-size: 9px; padding: 2px 6px;
+  background: linear-gradient(90deg, #a200ff, #ff4dd2);
+  border-radius: 4px; color: #fff; font-weight: bold;
+  letter-spacing: .5px;
 }
-.dnsItem.active .dnsAimTag {
-  background: rgba(0, 255, 234, .15);
-  color: #00ffea;
-  border-color: rgba(0, 255, 234, .5);
-}
-
-.dnsBtnRow {
-  display: flex; gap: 8px; margin-top: 12px;
-}
-.dnsBtnRow button { flex: 1; }
-.btnDnsApply {
-  background: linear-gradient(90deg, #4d9fff, #00d4ff) !important;
-  color: #001a33 !important;
-}
-.btnDnsReset {
-  background: linear-gradient(90deg, #6a6a80, #8a8a99) !important;
-  color: #fff !important;
-}
-
-/* Banner hiển thị DNS đang dùng */
+.dnsDesc { font-size: 10px; color: #b380d9; margin-top: 3px; }
+.dnsCheck { color: #4dff9e; font-weight: bold; opacity: 0; font-size: 16px; }
+.dnsItem.active .dnsCheck { opacity: 1; }
 .dnsActiveBanner {
-  margin-top: 12px;
-  padding: 10px 14px;
-  background: rgba(0, 255, 234, .08);
+  display: none; padding: 8px 12px;
+  background: rgba(0, 255, 234, .12);
   border: 1px solid #00ffea;
-  border-radius: 10px;
-  font-size: 12px;
-  color: #00ffea;
-  text-align: center;
-  font-weight: bold;
-  display: none;
+  border-radius: 8px; color: #00ffea;
+  font-size: 12px; font-weight: bold;
+  text-align: center; margin-bottom: 10px;
 }
 .dnsActiveBanner.show { display: block; }
-
+.dnsBtnRow { display: flex; gap: 8px; }
+.btnDnsApply {
+  flex: 2;
+  background: linear-gradient(90deg, #00c9b7, #00ffea) !important;
+  color: #001a1f !important;
+}
+.btnDnsReset {
+  flex: 1;
+  background: linear-gradient(90deg, #6b3d7a, #b380d9) !important;
+  color: #fff !important;
+}
+.aimlock-card.active {
+  border-color: #00ffea;
+  box-shadow: 0 0 25px rgba(0, 255, 234, .6);
+}
+.aimneck-card.active {
+  border-color: #ffb300;
+  box-shadow: 0 0 25px rgba(255, 179, 0, .6);
+}
 .aimStatus {
   display: flex; align-items: center; gap: 8px;
   margin-bottom: 12px; padding: 6px 10px;
@@ -466,7 +480,6 @@ html, body {
   animation: blinkDot .8s infinite;
 }
 @keyframes blinkDot { 50% { opacity: .4; } }
-
 .switch { position: relative; display: inline-block;
           width: 54px; height: 28px; margin-left: 8px; vertical-align: middle; }
 .switch input { opacity: 0; width: 0; height: 0; }
@@ -483,8 +496,6 @@ html, body {
 }
 input:checked + .slider { background: #a200ff; }
 input:checked + .slider:before { transform: translateX(26px); background: #fff; }
-
-/* OVERLAYS */
 #aimOverlay {
   position: fixed; top: 50%; left: 50%;
   transform: translate(-50%, -50%);
@@ -493,7 +504,6 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
   display: none;
 }
 #aimOverlay.show { display: block; }
-
 #aimlockOverlay {
   position: fixed; top: 50%; left: 50%;
   transform: translate(-50%, -50%);
@@ -504,7 +514,6 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
 #aimlockOverlay.show { display: block; }
 #aimlockOverlay svg { animation: lockSpin 3s linear infinite; }
 @keyframes lockSpin { to { transform: rotate(360deg); } }
-
 #aimneckOverlay {
   position: fixed; top: 50%; left: 50%;
   transform: translate(-50%, -50%);
@@ -518,7 +527,6 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
   0%, 100% { transform: scale(1); }
   50%      { transform: scale(1.15); }
 }
-
 .target {
   position: fixed; width: 40px; height: 40px;
   border-radius: 50%;
@@ -540,7 +548,6 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
   0%, 100% { transform: scale(1); opacity: 1; }
   50%      { transform: scale(1.3); opacity: .5; }
 }
-
 .neckTarget {
   position: fixed; width: 30px; height: 30px;
   border-radius: 4px;
@@ -552,14 +559,13 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
 }
 .neckTarget.show { display: block; }
 .neckTarget::after {
-  content: '🦴 NECK';
+  content: 'NECK';
   position: absolute; top: -20px; left: 50%;
   transform: translateX(-50%);
   font-size: 10px; font-weight: bold;
   color: #ffb300; white-space: nowrap;
   text-shadow: 0 0 6px #ffb300;
 }
-
 #lockLine {
   position: fixed; top: 0; left: 0;
   width: 100%; height: 100%;
@@ -567,8 +573,6 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
   display: none;
 }
 #lockLine.show { display: block; }
-
-/* SETTINGS */
 #settingsPanel {
   position: fixed; top: 0; right: -420px;
   width: 400px; height: 100vh;
@@ -604,7 +608,6 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
   border-radius: 50%; color: #fff;
   font-size: 16px; cursor: pointer;
 }
-
 #toast {
   position: fixed; bottom: 24px; left: 50%;
   transform: translateX(-50%) translateY(80px);
@@ -619,7 +622,6 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
   pointer-events: none;
 }
 #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-
 #audioCtrl {
   position: fixed; bottom: 16px; right: 16px;
   background: rgba(42, 0, 51, .9);
@@ -638,7 +640,6 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
   color: #fff; font-weight: bold;
   cursor: pointer; font-size: 12px;
 }
-
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: #1a001f; }
 ::-webkit-scrollbar-thumb { background: #ff4dd2; border-radius: 8px; }
@@ -646,7 +647,6 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
 </head>
 <body>
 
-<!-- LOADING -->
 <div id="loadingBar">
   <div class="loadBox">
     <div class="spinner"></div>
@@ -656,7 +656,6 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
   </div>
 </div>
 
-<!-- KEY PAGE -->
 <div id="keyPage" class="hidden">
   <div class="keyCard">
     <h1>🔒 REG FILE FF</h1>
@@ -682,22 +681,58 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
   </div>
 </div>
 
-<!-- APP PAGE -->
 <div id="app">
   <div class="topbar">
     <div class="brand">REG FILE FF</div>
     <div class="timer" id="timer">--:--:--</div>
   </div>
-
   <div class="content">
     <div class="cards">
-
       <div class="card launch-card">
         <h3>🚀 KHỞI CHẠY FREE FIRE</h3>
         <p>Mở game trực tiếp từ app</p>
         <div class="launchBtns">
           <button class="btnFF btnFFMax" onclick="launchFF('max')">🔥 FF MAX</button>
           <button class="btnFF btnFFNormal" onclick="launchFF('normal')">🎮 FF THƯỜNG</button>
+        </div>
+      </div>
+
+      <div class="card aimdata-card">
+        <h3>
+          📊 AIM DATA GAME
+          <span style="font-size:11px;color:#b380d9;font-weight:normal;">Dữ liệu aim theo game</span>
+        </h3>
+        <p style="color:#d9a6ff;font-size:13px;margin-bottom:14px;">
+          Xem & áp dụng dữ liệu aim chuyên biệt cho từng game
+        </p>
+        <div class="gameTabs" id="gameTabs"></div>
+        <div class="gameStats" id="gameStats"></div>
+        <div class="barBox">
+          <div class="barLabel">
+            <span>🎯 ĐỘ CHÍNH XÁC</span>
+            <span id="accVal">95%</span>
+          </div>
+          <div class="barTrack"><div class="barFill" id="accBar" style="width:95%"></div></div>
+        </div>
+        <div class="barBox">
+          <div class="barLabel">
+            <span>⚡ TỐC ĐỘ LOCK</span>
+            <span id="spdVal">88%</span>
+          </div>
+          <div class="barTrack"><div class="barFill" id="spdBar" style="width:88%"></div></div>
+        </div>
+        <div class="barBox">
+          <div class="barLabel">
+            <span>🦴 ỔN ĐỊNH NECK</span>
+            <span id="nckVal">92%</span>
+          </div>
+          <div class="barTrack"><div class="barFill" id="nckBar" style="width:92%"></div></div>
+        </div>
+        <div class="aimCodeBox" id="aimCodeBox"></div>
+        <div class="aimDataBtns">
+          <button class="btnInject" onclick="injectAimData()">⚡ ÁP DỤNG DATA</button>
+          <button class="btnCopy" onclick="copyAimData()">📋 COPY JSON</button>
+          <button class="btnTest" onclick="testAimData()">🎯 TEST AIM</button>
         </div>
       </div>
 
@@ -768,25 +803,21 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
         <h3>🔑 THÔNG TIN KEY</h3>
         <p id="keyInfoBox">Đang tải...</p>
       </div>
-
       <div class="card">
         <h3>⚙️ CÀI ĐẶT</h3>
         <p>Cấp quyền tâm ảo & tùy chỉnh hiển thị</p>
         <button onclick="openSettings()">MỞ CÀI ĐẶT</button>
       </div>
-
       <div class="card">
         <h3>🔊 ÂM THANH</h3>
         <p>Tiếng kêu (beep) + Gầm (growl) khi kích hoạt</p>
         <button onclick="playBeep();setTimeout(playGrowl,500);">🔔 TEST ÂM THANH</button>
       </div>
-
       <div class="card">
         <h3>📱 THIẾT BỊ</h3>
         <p id="deviceInfo">Device ID: --</p>
         <button onclick="clearDevice()">XOÁ LIÊN KẾT</button>
       </div>
-
     </div>
   </div>
 </div>
@@ -801,7 +832,6 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
     <circle cx="20" cy="20" r="1.5" fill="#ff003c"/>
   </svg>
 </div>
-
 <div id="aimlockOverlay">
   <svg width="60" height="60" viewBox="0 0 60 60">
     <circle cx="30" cy="30" r="26" fill="none" stroke="#00ffea" stroke-width="2" stroke-dasharray="8 6"/>
@@ -813,7 +843,6 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
     <circle cx="30" cy="30" r="2" fill="#00ffea"/>
   </svg>
 </div>
-
 <div id="aimneckOverlay">
   <svg width="70" height="70" viewBox="0 0 70 70">
     <rect x="15" y="25" width="40" height="20" fill="none" stroke="#ffb300" stroke-width="2.5" rx="4"/>
@@ -824,10 +853,8 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
     <text x="35" y="18" text-anchor="middle" fill="#ffb300" font-size="9" font-weight="bold">NECK</text>
   </svg>
 </div>
-
 <div class="target" id="target1"></div>
 <div class="neckTarget" id="neckTarget1"></div>
-
 <svg id="lockLine">
   <line id="lockLineEl" x1="0" y1="0" x2="0" y2="0"
         stroke="#00ffea" stroke-width="1.5" stroke-dasharray="6 4" opacity=".6"/>
@@ -836,7 +863,6 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
 <div id="settingsPanel">
   <button class="closeBtn" onclick="closeSettings()">✕</button>
   <h2>⚙️ CÀI ĐẶT AIM</h2>
-
   <div class="settingRow">
     <label>Màu tâm ảo</label>
     <input type="color" id="aimColor" value="#ff003c" onchange="updateAim()">
@@ -869,7 +895,6 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
       <span class="slider"></span>
     </label>
   </div>
-
   <h2 style="margin-top:24px;">🔒 AIMLOCK</h2>
   <div class="settingRow">
     <label>Màu lock</label>
@@ -892,7 +917,6 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
       <span class="slider"></span>
     </label>
   </div>
-
   <h2 style="margin-top:24px;">🦴 AIMNECK</h2>
   <div class="settingRow">
     <label>Màu neck</label>
@@ -908,7 +932,6 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
     <input type="range" id="neckSpeed" min="1" max="20" value="10" oninput="updateNeckSpeed()">
     <span class="val" id="neckSpeedVal">10</span>
   </div>
-
   <h2 style="margin-top:24px;">🔊 ÂM THANH</h2>
   <div class="settingRow">
     <label>Âm lượng</label>
@@ -929,7 +952,6 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
       <span class="slider"></span>
     </label>
   </div>
-
   <button onclick="applySettings()"
     style="width:100%;margin-top:24px;padding:12px;
            background:linear-gradient(90deg,#ff006e,#a200ff);
@@ -950,13 +972,10 @@ input:checked + .slider:before { transform: translateX(26px); background: #fff; 
 
 <script>
 /* ===================================================
-   REG FILE FF v1.4.0
-   - Mỗi DNS có bộ AIM riêng
-   - Bỏ "Nghiem.iOS - Config"
+   REG FILE FF v1.5.1 - FIXED HOÀN CHỈNH
    =================================================== */
 
-/* ============ KEY DATABASE ============ */
-const KEY_DB_ORIGINAL = {
+var KEY_DB_ORIGINAL = {
   weekly: [
     "REG-WK-A1B2-C3D4-FF","REG-WK-E5F6-G7H8-FF","REG-WK-I9J0-K1L2-FF",
     "REG-WK-M3N4-O5P6-FF","REG-WK-Q7R8-S9T0-FF","REG-WK-U1V2-W3X4-FF",
@@ -994,127 +1013,123 @@ const KEY_DB_ORIGINAL = {
     "REG-PM-I9J0-K1L2-FF","REG-PM-M3N4-O5P6-FF","REG-PM-Q7R8-S9T0-FF"
   ]
 };
-const KEY_DB = JSON.parse(JSON.stringify(KEY_DB_ORIGINAL));
+var KEY_DB = JSON.parse(JSON.stringify(KEY_DB_ORIGINAL));
 
-/* ===================================================
-   📡 DNS PROFILES + AIM CONFIG RIÊNG CHO TỪNG DNS
-   =================================================== */
-const DNS_PROFILES = [
-  {
-    id: 'auto',
-    icon: '⌨️',
-    name: 'Tự động',
-    desc: 'DNS mặc định hệ thống',
-    profile: null,
-    aimTag: 'AIM Gốc',
-    aim: {
-      aimColor: '#ff003c', aimSize: 40, aimThick: 2, aimStyle: 'cross',
-      lockColor: '#00ffea', lockRadius: 400, lockSpeed: 8, lockLine: true,
-      neckColor: '#ffb300', neckOffset: -12, neckSpeed: 10,
-      beep: true, growl: true
-    }
+var GAME_AIM_DATA = {
+  freefire: {
+    icon: '🔥', name: 'Free Fire', code: 'FF_NORMAL',
+    stats: { accuracy: 95, speed: 88, neck: 92, range: 250, headshot: 78, recoil: 85 },
+    aim: { aimColor: '#ff003c', aimSize: 42, aimThick: 2, aimStyle: 'cross',
+      lockColor: '#ff1744', lockRadius: 450, lockSpeed: 14, lockLine: true,
+      neckColor: '#ffb300', neckOffset: -12, neckSpeed: 12, beep: true, growl: true },
+    config: { "game": "Free Fire", "package": "com.dts.freefireth",
+      "aim": { "fov": 250, "sensitivity": 92, "smooth": 0.35 },
+      "lock": { "mode": "closest", "bone": "neck", "delay": 0.05 },
+      "recoil": { "control": 0.85, "pattern": "v-shape" } }
   },
-  {
-    id: 'aimbot',
-    icon: '🎯',
-    name: 'Aimbot ⚡',
-    desc: 'Auto-aim cực nhạy, lock nhanh',
-    profile: 'Aimbot',
-    aimTag: 'AIM LOCK CỰC MẠNH',
-    aim: {
-      aimColor: '#ff1744', aimSize: 50, aimThick: 3, aimStyle: 'full',
+  ffmax: {
+    icon: '💥', name: 'FF MAX', code: 'FF_MAX',
+    stats: { accuracy: 98, speed: 95, neck: 96, range: 350, headshot: 88, recoil: 92 },
+    aim: { aimColor: '#ff1744', aimSize: 48, aimThick: 3, aimStyle: 'full',
       lockColor: '#ff1744', lockRadius: 600, lockSpeed: 18, lockLine: true,
-      neckColor: '#ff1744', neckOffset: -10, neckSpeed: 16,
-      beep: true, growl: true
-    }
+      neckColor: '#ff1744', neckOffset: -14, neckSpeed: 16, beep: true, growl: true },
+    config: { "game": "Free Fire MAX", "package": "com.dts.freefiremax",
+      "aim": { "fov": 350, "sensitivity": 100, "smooth": 0.20 },
+      "lock": { "mode": "closest", "bone": "head-neck", "delay": 0.03 },
+      "recoil": { "control": 0.92, "pattern": "advanced" } }
   },
-  {
-    id: 'dpi1200',
-    icon: '🎮',
-    name: 'DPI 1200 👶',
-    desc: 'Tâm to, dễ nhìn, ổn định',
-    profile: 'DPI1200',
-    aimTag: 'AIM SIZE LỚN',
-    aim: {
-      aimColor: '#00e676', aimSize: 60, aimThick: 3, aimStyle: 'dot',
+  pubg: {
+    icon: '🎖️', name: 'PUBG Mobile', code: 'PUBG',
+    stats: { accuracy: 92, speed: 78, neck: 85, range: 400, headshot: 82, recoil: 90 },
+    aim: { aimColor: '#00e676', aimSize: 40, aimThick: 2, aimStyle: 'dot',
       lockColor: '#00e676', lockRadius: 500, lockSpeed: 10, lockLine: false,
-      neckColor: '#00e676', neckOffset: -14, neckSpeed: 10,
-      beep: true, growl: false
-    }
+      neckColor: '#00e676', neckOffset: -18, neckSpeed: 10, beep: false, growl: true },
+    config: { "game": "PUBG Mobile", "package": "com.tencent.ig",
+      "aim": { "fov": 400, "sensitivity": 85, "smooth": 0.45 },
+      "lock": { "mode": "fov-based", "bone": "chest-neck", "delay": 0.08 },
+      "recoil": { "control": 0.90, "pattern": "full-auto" } }
   },
-  {
-    id: 'fps90',
-    icon: '⚡',
-    name: 'FPS 90 📱',
-    desc: 'Tâm mỏng, lock mượt, không gầm',
-    profile: 'FPS90',
-    aimTag: 'AIM MƯỢT',
-    aim: {
-      aimColor: '#00d4ff', aimSize: 30, aimThick: 1, aimStyle: 'circle',
-      lockColor: '#00d4ff', lockRadius: 350, lockSpeed: 14, lockLine: true,
-      neckColor: '#00d4ff', neckOffset: -12, neckSpeed: 14,
-      beep: false, growl: false
-    }
+  lol: {
+    icon: '⚔️', name: 'Liên Quân', code: 'AOV',
+    stats: { accuracy: 90, speed: 82, neck: 75, range: 200, headshot: 70, recoil: 88 },
+    aim: { aimColor: '#7c4dff', aimSize: 38, aimThick: 2, aimStyle: 'circle',
+      lockColor: '#7c4dff', lockRadius: 350, lockSpeed: 8, lockLine: false,
+      neckColor: '#7c4dff', neckOffset: -10, neckSpeed: 8, beep: false, growl: false },
+    config: { "game": "Liên Quân Mobile", "package": "com.garena.game.kgvn",
+      "aim": { "fov": 200, "sensitivity": 80, "smooth": 0.55 },
+      "lock": { "mode": "skill-priority", "bone": "center", "delay": 0.15 },
+      "recoil": { "control": 0.88, "pattern": "burst" } }
   },
-  {
-    id: 'fullsettings',
-    icon: '🔥',
-    name: 'Full Settings DNS ✅',
-    desc: 'Full AIM: lock + neck + growl mạnh',
-    profile: 'FullSettings',
-    aimTag: 'AIM FULL PRO',
-    aim: {
-      aimColor: '#ff006e', aimSize: 55, aimThick: 3, aimStyle: 'full',
-      lockColor: '#ff006e', lockRadius: 700, lockSpeed: 20, lockLine: true,
-      neckColor: '#ff006e', neckOffset: -15, neckSpeed: 18,
-      beep: true, growl: true
-    }
+  codm: {
+    icon: '💣', name: 'Call of Duty', code: 'CODM',
+    stats: { accuracy: 96, speed: 90, neck: 88, range: 380, headshot: 85, recoil: 87 },
+    aim: { aimColor: '#00d4ff', aimSize: 44, aimThick: 2, aimStyle: 'cross',
+      lockColor: '#00d4ff', lockRadius: 550, lockSpeed: 15, lockLine: true,
+      neckColor: '#00d4ff', neckOffset: -15, neckSpeed: 14, beep: true, growl: true },
+    config: { "game": "Call of Duty Mobile", "package": "com.activision.callofduty.shooter",
+      "aim": { "fov": 380, "sensitivity": 95, "smooth": 0.30 },
+      "lock": { "mode": "closest", "bone": "neck-head", "delay": 0.04 },
+      "recoil": { "control": 0.87, "pattern": "tactical" } }
   },
-  {
-    id: 'head',
-    icon: '💀',
-    name: 'HEAD 🔥',
-    desc: 'Aim đầu — lock cao, siêu chính xác',
-    profile: 'HEAD',
-    aimTag: 'AIM HEAD',
-    aim: {
-      aimColor: '#ffb300', aimSize: 45, aimThick: 2, aimStyle: 'cross',
-      lockColor: '#ffb300', lockRadius: 550, lockSpeed: 16, lockLine: true,
-      neckColor: '#ffb300', neckOffset: -25, neckSpeed: 15,
-      beep: true, growl: true
-    }
-  },
-  {
-    id: 'nextdns',
-    icon: '🛡️',
-    name: 'NextDNS',
-    desc: 'Bảo mật, chống lag, aim nhẹ',
-    profile: 'NextDNS',
-    aimTag: 'AIM BẢO MẬT',
-    aim: {
-      aimColor: '#7c4dff', aimSize: 35, aimThick: 2, aimStyle: 'circle',
-      lockColor: '#7c4dff', lockRadius: 300, lockSpeed: 6, lockLine: false,
-      neckColor: '#7c4dff', neckOffset: -10, neckSpeed: 8,
-      beep: false, growl: true
-    }
-  },
-  {
-    id: 'sensitouch',
-    icon: '👆',
-    name: 'Sensi Touch ⚡',
-    desc: 'Cảm ứng nhạy, aim cực nhanh',
-    profile: 'SensiTouch',
-    aimTag: 'AIM SIÊU NHẠY',
-    aim: {
-      aimColor: '#ff9100', aimSize: 42, aimThick: 2, aimStyle: 'dot',
-      lockColor: '#ff9100', lockRadius: 500, lockSpeed: 20, lockLine: true,
-      neckColor: '#ff9100', neckOffset: -13, neckSpeed: 20,
-      beep: true, growl: true
-    }
+  custom: {
+    icon: '⚙️', name: 'Custom', code: 'CUSTOM',
+    stats: { accuracy: 100, speed: 100, neck: 100, range: 800, headshot: 100, recoil: 100 },
+    aim: { aimColor: '#c44dff', aimSize: 50, aimThick: 3, aimStyle: 'full',
+      lockColor: '#c44dff', lockRadius: 800, lockSpeed: 20, lockLine: true,
+      neckColor: '#c44dff', neckOffset: -20, neckSpeed: 20, beep: true, growl: true },
+    config: { "game": "Custom Mode", "package": "*",
+      "aim": { "fov": 800, "sensitivity": 100, "smooth": 0.10 },
+      "lock": { "mode": "aggressive", "bone": "any", "delay": 0.01 },
+      "recoil": { "control": 1.0, "pattern": "smart" } }
   }
+};
+
+var currentGame = 'freefire';
+
+var DNS_PROFILES = [
+  { id: 'auto', icon: '⌨️', name: 'Tự động', desc: 'DNS mặc định hệ thống',
+    profile: null, aimTag: 'AIM Gốc',
+    aim: { aimColor: '#ff003c', aimSize: 40, aimThick: 2, aimStyle: 'cross',
+      lockColor: '#00ffea', lockRadius: 400, lockSpeed: 8, lockLine: true,
+      neckColor: '#ffb300', neckOffset: -12, neckSpeed: 10, beep: true, growl: true } },
+  { id: 'aimbot', icon: '🎯', name: 'Aimbot ⚡', desc: 'Auto-aim cực nhạy',
+    profile: 'Aimbot', aimTag: 'AIM LOCK CỰC MẠNH',
+    aim: { aimColor: '#ff1744', aimSize: 50, aimThick: 3, aimStyle: 'full',
+      lockColor: '#ff1744', lockRadius: 600, lockSpeed: 18, lockLine: true,
+      neckColor: '#ff1744', neckOffset: -10, neckSpeed: 16, beep: true, growl: true } },
+  { id: 'dpi1200', icon: '🎮', name: 'DPI 1200 👶', desc: 'Tâm to, dễ nhìn',
+    profile: 'DPI1200', aimTag: 'AIM SIZE LỚN',
+    aim: { aimColor: '#00e676', aimSize: 60, aimThick: 3, aimStyle: 'dot',
+      lockColor: '#00e676', lockRadius: 500, lockSpeed: 10, lockLine: false,
+      neckColor: '#00e676', neckOffset: -14, neckSpeed: 10, beep: true, growl: false } },
+  { id: 'fps90', icon: '⚡', name: 'FPS 90 📱', desc: 'Tâm mỏng, lock mượt',
+    profile: 'FPS90', aimTag: 'AIM MƯỢT',
+    aim: { aimColor: '#00d4ff', aimSize: 30, aimThick: 1, aimStyle: 'circle',
+      lockColor: '#00d4ff', lockRadius: 350, lockSpeed: 14, lockLine: true,
+      neckColor: '#00d4ff', neckOffset: -12, neckSpeed: 14, beep: false, growl: false } },
+  { id: 'fullsettings', icon: '🔥', name: 'Full Settings DNS ✅', desc: 'Full AIM mạnh',
+    profile: 'FullSettings', aimTag: 'AIM FULL PRO',
+    aim: { aimColor: '#ff006e', aimSize: 55, aimThick: 3, aimStyle: 'full',
+      lockColor: '#ff006e', lockRadius: 700, lockSpeed: 20, lockLine: true,
+      neckColor: '#ff006e', neckOffset: -15, neckSpeed: 18, beep: true, growl: true } },
+  { id: 'head', icon: '💀', name: 'HEAD 🔥', desc: 'Aim đầu — siêu chính xác',
+    profile: 'HEAD', aimTag: 'AIM HEAD',
+    aim: { aimColor: '#ffb300', aimSize: 45, aimThick: 2, aimStyle: 'cross',
+      lockColor: '#ffb300', lockRadius: 550, lockSpeed: 16, lockLine: true,
+      neckColor: '#ffb300', neckOffset: -25, neckSpeed: 15, beep: true, growl: true } },
+  { id: 'nextdns', icon: '🛡️', name: 'NextDNS', desc: 'Bảo mật, chống lag',
+    profile: 'NextDNS', aimTag: 'AIM BẢO MẬT',
+    aim: { aimColor: '#7c4dff', aimSize: 35, aimThick: 2, aimStyle: 'circle',
+      lockColor: '#7c4dff', lockRadius: 300, lockSpeed: 6, lockLine: false,
+      neckColor: '#7c4dff', neckOffset: -10, neckSpeed: 8, beep: false, growl: true } },
+  { id: 'sensitouch', icon: '👆', name: 'Sensi Touch ⚡', desc: 'Cảm ứng nhạy, aim nhanh',
+    profile: 'SensiTouch', aimTag: 'AIM SIÊU NHẠY',
+    aim: { aimColor: '#ff9100', aimSize: 42, aimThick: 2, aimStyle: 'dot',
+      lockColor: '#ff9100', lockRadius: 500, lockSpeed: 20, lockLine: true,
+      neckColor: '#ff9100', neckOffset: -13, neckSpeed: 20, beep: true, growl: true } }
 ];
 
-const DNS_SERVERS = {
+var DNS_SERVERS = {
   'Aimbot':       { primary: '1.1.1.1',       secondary: '1.0.0.1' },
   'DPI1200':      { primary: '8.8.8.8',       secondary: '8.8.4.4' },
   'FPS90':        { primary: '9.9.9.9',       secondary: '149.112.112.112' },
@@ -1124,41 +1139,38 @@ const DNS_SERVERS = {
   'SensiTouch':   { primary: '185.228.168.9', secondary: '185.228.169.9' }
 };
 
-let selectedDNS = 'head';
+var selectedDNS = 'head';
 
-/* ============ LOCAL STORAGE ============ */
-const LS = {
+var LS = {
   get: function(k, d) {
     if (d === undefined) d = null;
-    try {
-      const v = localStorage.getItem(k);
-      return v === null ? d : JSON.parse(v);
-    } catch(e) { return d; }
+    try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); }
+    catch(e) { return d; }
   },
   set: function(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} },
   del: function(k) { try { localStorage.removeItem(k); } catch(e) {} }
 };
 
-/* ============ AUDIO ============ */
-let audioCtx = null;
-let masterVolume = 0.7;
+/* AUDIO */
+var audioCtx = null;
+var masterVolume = 0.7;
 
 function initAudio() {
   if (!audioCtx) {
     try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-    catch(e) { console.warn('Audio không hỗ trợ'); }
+    catch(e) {}
   }
   if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
 }
 
 function playBeep() {
-  const cb = document.getElementById('beepOn');
+  var cb = document.getElementById('beepOn');
   if (cb && !cb.checked) return;
   initAudio(); if (!audioCtx) return;
-  const now = audioCtx.currentTime;
+  var now = audioCtx.currentTime;
   [0, 0.12].forEach(function(offset, i) {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
     osc.type = 'square';
     osc.frequency.setValueAtTime(i === 0 ? 880 : 1200, now + offset);
     gain.gain.setValueAtTime(0.0001, now + offset);
@@ -1170,15 +1182,14 @@ function playBeep() {
 }
 
 function playGrowl() {
-  const cb = document.getElementById('growlOn');
+  var cb = document.getElementById('growlOn');
   if (cb && !cb.checked) return;
   initAudio(); if (!audioCtx) return;
-  const now = audioCtx.currentTime; const dur = 1.2;
-  const osc1 = audioCtx.createOscillator();
-  const osc2 = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  const filter = audioCtx.createBiquadFilter();
-
+  var now = audioCtx.currentTime; var dur = 1.2;
+  var osc1 = audioCtx.createOscillator();
+  var osc2 = audioCtx.createOscillator();
+  var gain = audioCtx.createGain();
+  var filter = audioCtx.createBiquadFilter();
   osc1.type = 'sawtooth';
   osc1.frequency.setValueAtTime(70, now);
   osc1.frequency.exponentialRampToValueAtTime(45, now + dur);
@@ -1191,8 +1202,8 @@ function playGrowl() {
   filter.Q.value = 4;
   gain.gain.setValueAtTime(0.0001, now);
   gain.gain.exponentialRampToValueAtTime(0.35 * masterVolume, now + 0.08);
-  for (let t = 0.08; t < dur; t += 0.08) {
-    const wobble = 0.28 + Math.sin(t * 30) * 0.08;
+  for (var t = 0.08; t < dur; t += 0.08) {
+    var wobble = 0.28 + Math.sin(t * 30) * 0.08;
     gain.gain.exponentialRampToValueAtTime(Math.max(0.05, wobble) * masterVolume, now + t);
   }
   gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
@@ -1203,15 +1214,14 @@ function playGrowl() {
 }
 
 function playNeckGrowl() {
-  const cb = document.getElementById('growlOn');
+  var cb = document.getElementById('growlOn');
   if (cb && !cb.checked) return;
   initAudio(); if (!audioCtx) return;
-  const now = audioCtx.currentTime; const dur = 1.4;
-  const osc1 = audioCtx.createOscillator();
-  const osc2 = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  const filter = audioCtx.createBiquadFilter();
-
+  var now = audioCtx.currentTime; var dur = 1.4;
+  var osc1 = audioCtx.createOscillator();
+  var osc2 = audioCtx.createOscillator();
+  var gain = audioCtx.createGain();
+  var filter = audioCtx.createBiquadFilter();
   osc1.type = 'sawtooth';
   osc1.frequency.setValueAtTime(90, now);
   osc1.frequency.exponentialRampToValueAtTime(55, now + dur);
@@ -1224,8 +1234,8 @@ function playNeckGrowl() {
   filter.Q.value = 6;
   gain.gain.setValueAtTime(0.0001, now);
   gain.gain.exponentialRampToValueAtTime(0.4 * masterVolume, now + 0.1);
-  for (let t = 0.1; t < dur; t += 0.06) {
-    const wobble = 0.32 + Math.sin(t * 40) * 0.1;
+  for (var t = 0.1; t < dur; t += 0.06) {
+    var wobble = 0.32 + Math.sin(t * 40) * 0.1;
     gain.gain.exponentialRampToValueAtTime(Math.max(0.08, wobble) * masterVolume, now + t);
   }
   gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
@@ -1239,9 +1249,9 @@ function playActivateSound() { playBeep(); setTimeout(playGrowl, 350); }
 
 function playErrorSound() {
   initAudio(); if (!audioCtx) return;
-  const now = audioCtx.currentTime;
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
+  var now = audioCtx.currentTime;
+  var osc = audioCtx.createOscillator();
+  var gain = audioCtx.createGain();
   osc.type = 'sawtooth';
   osc.frequency.setValueAtTime(220, now);
   osc.frequency.exponentialRampToValueAtTime(80, now + 0.35);
@@ -1253,9 +1263,9 @@ function playErrorSound() {
 
 function playShutdownSound() {
   initAudio(); if (!audioCtx) return;
-  const now = audioCtx.currentTime;
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
+  var now = audioCtx.currentTime;
+  var osc = audioCtx.createOscillator();
+  var gain = audioCtx.createGain();
   osc.type = 'sine';
   osc.frequency.setValueAtTime(600, now);
   osc.frequency.exponentialRampToValueAtTime(100, now + 0.8);
@@ -1267,9 +1277,9 @@ function playShutdownSound() {
 
 function playLockSound() {
   initAudio(); if (!audioCtx) return;
-  const now = audioCtx.currentTime;
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
+  var now = audioCtx.currentTime;
+  var osc = audioCtx.createOscillator();
+  var gain = audioCtx.createGain();
   osc.type = 'triangle';
   osc.frequency.setValueAtTime(1400, now);
   osc.frequency.exponentialRampToValueAtTime(2200, now + 0.08);
@@ -1282,10 +1292,10 @@ function playLockSound() {
 
 function playNeckLockSound() {
   initAudio(); if (!audioCtx) return;
-  const now = audioCtx.currentTime;
+  var now = audioCtx.currentTime;
   [1100, 1500].forEach(function(f, i) {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
     osc.type = 'triangle';
     osc.frequency.setValueAtTime(f, now + i * 0.07);
     gain.gain.setValueAtTime(0.0001, now + i * 0.07);
@@ -1297,7 +1307,7 @@ function playNeckLockSound() {
 }
 
 function updateVolume() {
-  const v = +document.getElementById('volRange').value;
+  var v = +document.getElementById('volRange').value;
   masterVolume = v / 100;
   document.getElementById('volVal').innerText = v;
   document.getElementById('volQuick').value = v;
@@ -1310,9 +1320,9 @@ function quickVol(v) {
   document.getElementById('volQuickVal').innerText = v;
 }
 
-/* ============ DEVICE + KEY ============ */
+/* DEVICE + KEY */
 function getDeviceId() {
-  let id = LS.get('ff_device_id');
+  var id = LS.get('ff_device_id');
   if (!id) {
     id = 'DEV-' + Math.random().toString(36).slice(2,10).toUpperCase() +
          '-' + Date.now().toString(36).toUpperCase();
@@ -1322,29 +1332,31 @@ function getDeviceId() {
 }
 
 function validateKey(input) {
-  const key = input.trim().toUpperCase();
+  var key = input.trim().toUpperCase();
   if (!key) return { ok: false, msg: 'Vui lòng nhập KEY!' };
   if (!/^REG-[A-Z0-9]{2,4}-[A-Z0-9]{4}-[A-Z0-9]{4}-FF$/.test(key)) {
     return { ok: false, msg: 'Sai định dạng! Key phải bắt đầu REG... kết thúc FF' };
   }
-  for (const type of ['weekly','monthly','permanent']) {
-    const idx = KEY_DB[type].indexOf(key);
+  var types = ['weekly','monthly','permanent'];
+  for (var i = 0; i < types.length; i++) {
+    var type = types[i];
+    var idx = KEY_DB[type].indexOf(key);
     if (idx !== -1) {
       KEY_DB[type].splice(idx, 1);
-      const now = Date.now();
-      const DURATION = { weekly: 7*24*3600*1000, monthly: 30*24*3600*1000, permanent: -1 };
-      const dur = DURATION[type];
-      const info = { key, type, activated: now, expires: dur === -1 ? -1 : now + dur };
+      var now = Date.now();
+      var DURATION = { weekly: 7*24*3600*1000, monthly: 30*24*3600*1000, permanent: -1 };
+      var dur = DURATION[type];
+      var info = { key: key, type: type, activated: now, expires: dur === -1 ? -1 : now + dur };
       LS.set('ff_key_info', info);
-      return { ok: true, info };
+      return { ok: true, info: info };
     }
   }
   return { ok: false, msg: 'KEY không hợp lệ hoặc đã được sử dụng!' };
 }
 
-let currentKeyTab = 'weekly';
+var currentKeyTab = 'weekly';
 function toggleKeyList() {
-  const w = document.getElementById('keyListWrap');
+  var w = document.getElementById('keyListWrap');
   w.classList.toggle('show');
   if (w.classList.contains('show')) showKeyTab(currentKeyTab, null);
 }
@@ -1354,15 +1366,14 @@ function showKeyTab(type, btn) {
   if (btn) {
     btn.classList.add('active');
   } else {
-    const idx = ['weekly','monthly','permanent'].indexOf(type);
-    const tabs = document.querySelectorAll('.keyTabs button');
+    var idx = ['weekly','monthly','permanent'].indexOf(type);
+    var tabs = document.querySelectorAll('.keyTabs button');
     if (tabs[idx]) tabs[idx].classList.add('active');
   }
-
-  const list = document.getElementById('keyList');
+  var list = document.getElementById('keyList');
   list.innerHTML = '';
   KEY_DB[type].forEach(function(key) {
-    const div = document.createElement('div');
+    var div = document.createElement('div');
     div.className = 'keyItem';
     div.innerHTML = '<span>' + key + '</span><span class="copyHint">click để dùng</span>';
     div.onclick = function() {
@@ -1376,25 +1387,150 @@ function showKeyTab(type, btn) {
   }
 }
 
-/* ============ TOAST ============ */
-let toastT = null;
+/* TOAST */
+var toastT = null;
 function showToast(msg) {
-  const t = document.getElementById('toast');
+  var t = document.getElementById('toast');
   t.innerText = msg;
   t.classList.add('show');
   clearTimeout(toastT);
   toastT = setTimeout(function() { t.classList.remove('show'); }, 2200);
 }
 
-/* ===================================================
-   📡 DNS UI + ÁP DỤNG AIM RIÊNG
-   =================================================== */
+/* AIM DATA GAME UI */
+function renderGameTabs() {
+  var tabs = document.getElementById('gameTabs');
+  if (!tabs) return;
+  tabs.innerHTML = '';
+  Object.keys(GAME_AIM_DATA).forEach(function(key) {
+    var g = GAME_AIM_DATA[key];
+    var btn = document.createElement('button');
+    btn.className = key === currentGame ? 'active' : '';
+    btn.innerHTML = g.icon + ' ' + g.name;
+    btn.onclick = function() { switchGame(key); };
+    tabs.appendChild(btn);
+  });
+}
+
+function switchGame(key) {
+  if (!GAME_AIM_DATA[key]) return;
+  currentGame = key;
+  renderGameTabs();
+  renderGameStats();
+  renderAimCode();
+  playBeep();
+  var g = GAME_AIM_DATA[key];
+  showToast(g.icon + ' Đang xem: ' + g.name);
+  LS.set('ff_current_game', key);
+}
+
+function renderGameStats() {
+  var g = GAME_AIM_DATA[currentGame];
+  if (!g) return;
+  var stats = document.getElementById('gameStats');
+  stats.innerHTML = '';
+  var items = [
+    { label: 'Độ chính xác', value: g.stats.accuracy + '%' },
+    { label: 'Tốc độ lock', value: g.stats.speed + '%' },
+    { label: 'Ổn định neck', value: g.stats.neck + '%' },
+    { label: 'Tầm aim (FOV)', value: g.stats.range + 'px' },
+    { label: 'Headshot rate', value: g.stats.headshot + '%' },
+    { label: 'Kiểm soát recoil', value: g.stats.recoil + '%' }
+  ];
+  items.forEach(function(it) {
+    var box = document.createElement('div');
+    box.className = 'statBox';
+    box.innerHTML =
+      '<div class="label">' + it.label + '</div>' +
+      '<div class="value">' + it.value + '</div>';
+    stats.appendChild(box);
+  });
+  document.getElementById('accVal').innerText = g.stats.accuracy + '%';
+  document.getElementById('spdVal').innerText = g.stats.speed + '%';
+  document.getElementById('nckVal').innerText = g.stats.neck + '%';
+  document.getElementById('accBar').style.width = g.stats.accuracy + '%';
+  document.getElementById('spdBar').style.width = g.stats.speed + '%';
+  document.getElementById('nckBar').style.width = g.stats.neck + '%';
+}
+
+function renderAimCode() {
+  var g = GAME_AIM_DATA[currentGame];
+  if (!g) return;
+  var box = document.getElementById('aimCodeBox');
+  var obj = {
+    "//": "AIM DATA GAME - " + g.name,
+    "game": g.config.game,
+    "package": g.config.package,
+    "aim": g.config.aim,
+    "lock": g.config.lock,
+    "recoil": g.config.recoil,
+    "ui": {
+      "aimColor": g.aim.aimColor,
+      "aimSize": g.aim.aimSize,
+      "aimStyle": g.aim.aimStyle,
+      "lockColor": g.aim.lockColor,
+      "lockRadius": g.aim.lockRadius,
+      "lockSpeed": g.aim.lockSpeed,
+      "neckOffset": g.aim.neckOffset,
+      "sound": { "beep": g.aim.beep, "growl": g.aim.growl }
+    }
+  };
+  box.innerText = JSON.stringify(obj, null, 2);
+}
+
+function injectAimData() {
+  var g = GAME_AIM_DATA[currentGame];
+  if (!g) return;
+  initAudio();
+  playBeep();
+  setTimeout(playGrowl, 300);
+  applyAimProfile(g.aim);
+  showToast('⚡ Đã áp dụng AIM DATA: ' + g.name);
+}
+
+function copyAimData() {
+  var g = GAME_AIM_DATA[currentGame];
+  if (!g) return;
+  var text = document.getElementById('aimCodeBox').innerText;
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function() {
+        showToast('📋 Đã copy JSON: ' + g.name);
+        playBeep();
+      });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('📋 Đã copy JSON: ' + g.name);
+      playBeep();
+    }
+  } catch(e) { showToast('❌ Không copy được'); }
+}
+
+function testAimData() {
+  initAudio();
+  playBeep();
+  setTimeout(playGrowl, 300);
+  showToast('🎯 Đang test AIM cho: ' + GAME_AIM_DATA[currentGame].name);
+  spawnTarget();
+  if (!aimlockOn) {
+    document.getElementById('aimlockToggle').checked = true;
+    toggleAimlock();
+  }
+  setTimeout(function() { showToast('✅ Test xong! Kiểm tra mục tiêu'); }, 2500);
+}
+
+/* DNS */
 function renderDNSList() {
-  const list = document.getElementById('dnsList');
+  var list = document.getElementById('dnsList');
   if (!list) return;
   list.innerHTML = '';
   DNS_PROFILES.forEach(function(p) {
-    const item = document.createElement('div');
+    var item = document.createElement('div');
     item.className = 'dnsItem' + (selectedDNS === p.id ? ' active' : '');
     item.onclick = function() { selectDNS(p.id); };
     item.innerHTML =
@@ -1412,9 +1548,9 @@ function renderDNSList() {
 }
 
 function updateDnsBanner() {
-  const banner = document.getElementById('dnsActiveBanner');
+  var banner = document.getElementById('dnsActiveBanner');
   if (!banner) return;
-  const p = DNS_PROFILES.find(function(x) { return x.id === selectedDNS; });
+  var p = DNS_PROFILES.filter(function(x) { return x.id === selectedDNS; })[0];
   if (p && p.id !== 'auto') {
     banner.classList.add('show');
     banner.innerText = '📡 DNS đang chọn: ' + p.name + ' → ' + p.aimTag;
@@ -1426,7 +1562,7 @@ function updateDnsBanner() {
 function selectDNS(id) {
   selectedDNS = id;
   renderDNSList();
-  const p = DNS_PROFILES.find(function(x) { return x.id === id; });
+  var p = DNS_PROFILES.filter(function(x) { return x.id === id; })[0];
   if (p) {
     showToast('📡 Chọn: ' + p.name + ' | ' + p.aimTag);
     playBeep();
@@ -1436,37 +1572,28 @@ function selectDNS(id) {
 
 function generateUUID() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0;
-    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    var r = Math.random() * 16 | 0;
+    var v = c === 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16).toUpperCase();
   });
 }
 
-/* 🌟 HÀM CHÍNH: Áp dụng AIM riêng của DNS đang chọn */
 function applyDNS() {
-  const p = DNS_PROFILES.find(function(x) { return x.id === selectedDNS; });
+  var p = DNS_PROFILES.filter(function(x) { return x.id === selectedDNS; })[0];
   if (!p) return;
-
   initAudio();
   playBeep();
   setTimeout(playGrowl, 300);
-
-  // 🎯 Áp dụng bộ AIM riêng của DNS này vào giao diện + biến
   applyAimProfile(p.aim);
-
   showToast('🎯 Đã áp dụng AIM: ' + p.aimTag);
 
-  // Nếu là DNS thật (không phải auto) thì tải file .mobileconfig
   if (p.id === 'auto') {
-    setTimeout(function() {
-      showToast('🔄 DNS ở chế độ TỰ ĐỘNG');
-    }, 1200);
+    setTimeout(function() { showToast('🔄 DNS ở chế độ TỰ ĐỘNG'); }, 1200);
     return;
   }
 
-  const servers = DNS_SERVERS[p.profile] || DNS_SERVERS['Aimbot'];
-
-  const mobileconfig =
+  var servers = DNS_SERVERS[p.profile] || DNS_SERVERS['Aimbot'];
+  var mobileconfig =
 '<?xml version="1.0" encoding="UTF-8"?>\n' +
 '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n' +
 '<plist version="1.0">\n' +
@@ -1518,23 +1645,19 @@ function applyDNS() {
 '</plist>';
 
   try {
-    const blob = new Blob([mobileconfig], { type: 'application/x-apple-aspen-config' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    var blob = new Blob([mobileconfig], { type: 'application/x-apple-aspen-config' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
     a.href = url;
     a.download = 'REG_FF_DNS_' + p.profile + '.mobileconfig';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     setTimeout(function() { URL.revokeObjectURL(url); }, 5000);
-  } catch(e) {
-    console.error(e);
-  }
+  } catch(e) { console.error(e); }
 }
 
-/* 🌟 Áp dụng cấu hình AIM vào tất cả thành phần */
 function applyAimProfile(aim) {
-  // Cập nhật inputs
   document.getElementById('aimColor').value    = aim.aimColor;
   document.getElementById('aimSize').value     = aim.aimSize;
   document.getElementById('aimThick').value    = aim.aimThick;
@@ -1549,7 +1672,6 @@ function applyAimProfile(aim) {
   document.getElementById('beepOn').checked    = aim.beep;
   document.getElementById('growlOn').checked   = aim.growl;
 
-  // Cập nhật biến cấu hình
   lockCfg.color    = aim.lockColor;
   lockCfg.radius   = aim.lockRadius;
   lockCfg.speed    = aim.lockSpeed;
@@ -1559,7 +1681,6 @@ function applyAimProfile(aim) {
   neckCfg.offsetY = aim.neckOffset;
   neckCfg.speed   = aim.neckSpeed;
 
-  // Cập nhật UI hiển thị
   document.getElementById('sizeVal').innerText = aim.aimSize;
   document.getElementById('thickVal').innerText = aim.aimThick;
   document.getElementById('lockRadiusVal').innerText = aim.lockRadius;
@@ -1567,14 +1688,10 @@ function applyAimProfile(aim) {
   document.getElementById('neckOffsetVal').innerText = aim.neckOffset;
   document.getElementById('neckSpeedVal').innerText = aim.neckSpeed;
 
-  // Áp dụng vào overlay
   updateAim();
   updateLockColor();
   updateNeckColor();
-  updateNeckOffset();
-  updateNeckSpeed();
 
-  // Lưu vào localStorage
   LS.set('ff_aim_cfg', {
     color: aim.aimColor, size: aim.aimSize, thick: aim.aimThick, style: aim.aimStyle,
     lockColor: aim.lockColor, lockRadius: aim.lockRadius, lockSpeed: aim.lockSpeed, lockLine: aim.lockLine,
@@ -1587,24 +1704,22 @@ function resetDNS() {
   selectedDNS = 'auto';
   renderDNSList();
   LS.del('ff_dns_selected');
-
-  // Áp dụng AIM gốc
-  const autoP = DNS_PROFILES.find(function(x) { return x.id === 'auto'; });
+  var autoP = DNS_PROFILES.filter(function(x) { return x.id === 'auto'; })[0];
   if (autoP) applyAimProfile(autoP.aim);
-
   showToast('🔄 Đã reset DNS + AIM về mặc định');
 }
 
-/* ============ LAUNCH FF ============ */
+/* LAUNCH FF */
 function launchFF(type) {
   initAudio();
   playBeep();
   setTimeout(playGrowl, 300);
-
   if (type === 'max') {
+    switchGame('ffmax');
     showToast('🔥 Đang khởi chạy FREE FIRE MAX...');
     tryLaunch(['ffmax://', 'freefiremax://', 'android://com.dts.freefiremax'], 'Free Fire MAX');
   } else {
+    switchGame('freefire');
     showToast('🎮 Đang khởi chạy FREE FIRE...');
     tryLaunch(['ff://', 'freefire://', 'android://com.dts.freefireth'], 'Free Fire');
   }
@@ -1612,21 +1727,21 @@ function launchFF(type) {
 
 function tryLaunch(uris, name) {
   setTimeout(function() {
-    const ok = confirm(
+    var ok = confirm(
       '🚀 ĐANG KHỞI CHẠY: ' + name + '\n\n' +
       'Trên Web app, không thể mở game trực tiếp.\n' +
       'Trên app Android/Python, sẽ dùng lệnh:\n' + uris[0] + '\n\n' +
       'Nhấn OK để thử mở bằng deep link.'
     );
     if (!ok) return;
-    let idx = 0;
-    const tryNext = function() {
+    var idx = 0;
+    var tryNext = function() {
       if (idx >= uris.length) {
         showToast('❌ Không mở được game. Vui lòng mở thủ công.');
         return;
       }
       try {
-        const a = document.createElement('a');
+        var a = document.createElement('a');
         a.href = uris[idx++];
         a.target = '_blank';
         a.click();
@@ -1637,9 +1752,9 @@ function tryLaunch(uris, name) {
   }, 500);
 }
 
-/* ============ SESSION ============ */
-let sessionKey = null;
-let timerInt = null;
+/* SESSION */
+var sessionKey = null;
+var timerInt = null;
 
 function startSession(info) {
   sessionKey = info;
@@ -1652,6 +1767,9 @@ function startSession(info) {
   startOverlay();
   startTimer();
   renderDNSList();
+  renderGameTabs();
+  renderGameStats();
+  renderAimCode();
 }
 
 function startTimer() {
@@ -1661,16 +1779,16 @@ function startTimer() {
 }
 function tickTimer() {
   if (!sessionKey) return;
-  const el = document.getElementById('timer');
+  var el = document.getElementById('timer');
   if (sessionKey.expires === -1) {
     el.innerText = '⏱ VĨNH VIỄN';
     el.classList.remove('warn');
     return;
   }
-  const remain = Math.max(0, sessionKey.expires - Date.now());
-  const h = Math.floor(remain / 3600000);
-  const m = Math.floor((remain % 3600000) / 60000);
-  const s = Math.floor((remain % 60000) / 1000);
+  var remain = Math.max(0, sessionKey.expires - Date.now());
+  var h = Math.floor(remain / 3600000);
+  var m = Math.floor((remain % 3600000) / 60000);
+  var s = Math.floor((remain % 60000) / 1000);
   el.innerText = '⏱ ' + pad(h) + ':' + pad(m) + ':' + pad(s);
   if (remain < 60000) el.classList.add('warn');
   if (remain <= 0) expireSession();
@@ -1693,8 +1811,8 @@ function expireSession() {
   }, 1800);
 }
 
-/* ============ AIM ============ */
-let aimOn = true;
+/* AIM */
+var aimOn = true;
 function startOverlay() {
   aimOn = true;
   document.getElementById('aimOverlay').classList.add('show');
@@ -1710,20 +1828,20 @@ function toggleAim() {
   showToast(aimOn ? '🎯 AIM: BẬT' : '🎯 AIM: TẮT');
 }
 function updateAim() {
-  const color = document.getElementById('aimColor').value;
-  const size  = document.getElementById('aimSize').value;
-  const thick = document.getElementById('aimThick').value;
-  const style = document.getElementById('aimStyle').value;
+  var color = document.getElementById('aimColor').value;
+  var size  = document.getElementById('aimSize').value;
+  var thick = document.getElementById('aimThick').value;
+  var style = document.getElementById('aimStyle').value;
   document.getElementById('sizeVal').innerText = size;
   document.getElementById('thickVal').innerText = thick;
 
-  const ov = document.getElementById('aimOverlay');
+  var ov = document.getElementById('aimOverlay');
   ov.style.width = size + 'px';
   ov.style.height = size + 'px';
   ov.style.filter = 'drop-shadow(0 0 6px ' + color + ')';
 
-  const svg = document.getElementById('aimSvg');
-  let shapes = '';
+  var svg = document.getElementById('aimSvg');
+  var shapes = '';
   if (style === 'cross' || style === 'full') {
     shapes +=
       '<line x1="2"  y1="20" x2="14" y2="20" stroke="' + color + '" stroke-width="' + thick + '" stroke-linecap="round"/>' +
@@ -1738,19 +1856,19 @@ function updateAim() {
   svg.innerHTML = shapes;
 }
 
-/* ============ AIMLOCK ============ */
-let aimlockOn = false;
-let lockAnimRAF = null;
-let lockCfg = { color: '#00ffea', radius: 400, speed: 8, showLine: true };
-let target = { x: null, y: null, el: null, active: false, vx: 0, vy: 0 };
+/* AIMLOCK */
+var aimlockOn = false;
+var lockAnimRAF = null;
+var lockCfg = { color: '#00ffea', radius: 400, speed: 8, showLine: true };
+var target = { x: null, y: null, el: null, active: false, vx: 0, vy: 0 };
 function center() { return { x: window.innerWidth / 2, y: window.innerHeight / 2 }; }
 
 function spawnTarget() {
   target.el = document.getElementById('target1');
-  const cx = window.innerWidth / 2;
-  const cy = window.innerHeight / 2;
-  const rangeX = window.innerWidth * 0.35;
-  const rangeY = window.innerHeight * 0.35;
+  var cx = window.innerWidth / 2;
+  var cy = window.innerHeight / 2;
+  var rangeX = window.innerWidth * 0.35;
+  var rangeY = window.innerHeight * 0.35;
   target.x = cx + (Math.random() * 2 - 1) * rangeX;
   target.y = cy + (Math.random() * 2 - 1) * rangeY;
   target.vx = (Math.random() * 2 - 1) * 2.5;
@@ -1765,10 +1883,9 @@ function spawnTarget() {
 
 function toggleAimlock() {
   aimlockOn = document.getElementById('aimlockToggle').checked;
-  const dot = document.getElementById('lockDot');
-  const txt = document.getElementById('lockStatusText');
-  const card = document.getElementById('aimlockCard');
-
+  var dot = document.getElementById('lockDot');
+  var txt = document.getElementById('lockStatusText');
+  var card = document.getElementById('aimlockCard');
   if (aimlockOn) {
     dot.classList.add('on');
     txt.innerText = 'TRẠNG THÁI: ĐANG KHOÁ';
@@ -1792,17 +1909,17 @@ function toggleAimlock() {
 
 function stopAimlock() {
   aimlockOn = false;
-  const t = document.getElementById('aimlockToggle');
+  var t = document.getElementById('aimlockToggle');
   if (t) t.checked = false;
-  const dot = document.getElementById('lockDot');
+  var dot = document.getElementById('lockDot');
   if (dot) dot.classList.remove('on');
-  const st = document.getElementById('lockStatusText');
+  var st = document.getElementById('lockStatusText');
   if (st) st.innerText = 'TRẠNG THÁI: TẮT';
-  const card = document.getElementById('aimlockCard');
+  var card = document.getElementById('aimlockCard');
   if (card) card.classList.remove('active');
-  const ov = document.getElementById('aimlockOverlay');
+  var ov = document.getElementById('aimlockOverlay');
   if (ov) ov.classList.remove('show');
-  const ll = document.getElementById('lockLine');
+  var ll = document.getElementById('lockLine');
   if (ll) ll.classList.remove('show');
   if (target.el) target.el.classList.remove('show');
   target.active = false;
@@ -1811,7 +1928,7 @@ function stopAimlock() {
 
 function startLockLoop() {
   if (lockAnimRAF) cancelAnimationFrame(lockAnimRAF);
-  const loop = function() {
+  var loop = function() {
     if (!aimlockOn) return;
     updateTargetMotion();
     updateAimlock();
@@ -1827,7 +1944,7 @@ function updateTargetMotion() {
   if (!target.active || !target.el) return;
   target.x += target.vx;
   target.y += target.vy;
-  const margin = 30;
+  var margin = 30;
   if (target.x < margin || target.x > window.innerWidth - margin) target.vx *= -1;
   if (target.y < margin + 60 || target.y > window.innerHeight - margin) target.vy *= -1;
   target.x = Math.max(margin, Math.min(window.innerWidth - margin, target.x));
@@ -1838,20 +1955,20 @@ function updateTargetMotion() {
 
 function updateAimlock() {
   if (!aimlockOn) return;
-  const c = center();
-  const overlay = document.getElementById('aimlockOverlay');
-  const lineWrap = document.getElementById('lockLine');
-  const lineEl = document.getElementById('lockLineEl');
-  let tx = c.x, ty = c.y;
+  var c = center();
+  var overlay = document.getElementById('aimlockOverlay');
+  var lineWrap = document.getElementById('lockLine');
+  var lineEl = document.getElementById('lockLineEl');
+  var tx = c.x, ty = c.y;
 
   if (target.active) {
-    const dx = target.x - c.x;
-    const dy = target.y - c.y;
-    const dist = Math.hypot(dx, dy);
+    var dx = target.x - c.x;
+    var dy = target.y - c.y;
+    var dist = Math.hypot(dx, dy);
     if (dist <= lockCfg.radius) {
-      const t = Math.min(1, lockCfg.speed / 20);
-      const curX = parseFloat(overlay.dataset.cx || c.x);
-      const curY = parseFloat(overlay.dataset.cy || c.y);
+      var t = Math.min(1, lockCfg.speed / 20);
+      var curX = parseFloat(overlay.dataset.cx || c.x);
+      var curY = parseFloat(overlay.dataset.cy || c.y);
       tx = curX + (target.x - curX) * t;
       ty = curY + (target.y - curY) * t;
       overlay.dataset.cx = tx; overlay.dataset.cy = ty;
@@ -1902,18 +2019,18 @@ function updateLockSpeed() {
   document.getElementById('lockSpeedVal').innerText = lockCfg.speed;
 }
 
-/* ============ AIMNECK ============ */
-let aimneckOn = false;
-let neckAnimRAF = null;
-let neckCfg = { color: '#ffb300', offsetY: -12, speed: 10 };
-let neckTarget = { x: null, y: null, el: null, active: false, vx: 0, vy: 0 };
+/* AIMNECK */
+var aimneckOn = false;
+var neckAnimRAF = null;
+var neckCfg = { color: '#ffb300', offsetY: -12, speed: 10 };
+var neckTarget = { x: null, y: null, el: null, active: false, vx: 0, vy: 0 };
 
 function spawnNeckTarget() {
   neckTarget.el = document.getElementById('neckTarget1');
-  const cx = window.innerWidth / 2;
-  const cy = window.innerHeight / 2;
-  const rangeX = window.innerWidth * 0.35;
-  const rangeY = window.innerHeight * 0.35;
+  var cx = window.innerWidth / 2;
+  var cy = window.innerHeight / 2;
+  var rangeX = window.innerWidth * 0.35;
+  var rangeY = window.innerHeight * 0.35;
   neckTarget.x = cx + (Math.random() * 2 - 1) * rangeX;
   neckTarget.y = cy + (Math.random() * 2 - 1) * rangeY;
   neckTarget.vx = (Math.random() * 2 - 1) * 2;
@@ -1928,10 +2045,9 @@ function spawnNeckTarget() {
 
 function toggleAimneck() {
   aimneckOn = document.getElementById('aimneckToggle').checked;
-  const dot = document.getElementById('neckDot');
-  const txt = document.getElementById('neckStatusText');
-  const card = document.getElementById('aimneckCard');
-
+  var dot = document.getElementById('neckDot');
+  var txt = document.getElementById('neckStatusText');
+  var card = document.getElementById('aimneckCard');
   if (aimneckOn) {
     dot.classList.add('neck-on');
     txt.innerText = 'TRẠNG THÁI: ĐANG NGẮM CỔ';
@@ -1954,15 +2070,15 @@ function toggleAimneck() {
 
 function stopAimneck() {
   aimneckOn = false;
-  const t = document.getElementById('aimneckToggle');
+  var t = document.getElementById('aimneckToggle');
   if (t) t.checked = false;
-  const dot = document.getElementById('neckDot');
+  var dot = document.getElementById('neckDot');
   if (dot) dot.classList.remove('neck-on');
-  const st = document.getElementById('neckStatusText');
+  var st = document.getElementById('neckStatusText');
   if (st) st.innerText = 'TRẠNG THÁI: TẮT';
-  const card = document.getElementById('aimneckCard');
+  var card = document.getElementById('aimneckCard');
   if (card) card.classList.remove('active');
-  const ov = document.getElementById('aimneckOverlay');
+  var ov = document.getElementById('aimneckOverlay');
   if (ov) ov.classList.remove('show');
   if (neckTarget.el) neckTarget.el.classList.remove('show');
   neckTarget.active = false;
@@ -1971,7 +2087,7 @@ function stopAimneck() {
 
 function startNeckLoop() {
   if (neckAnimRAF) cancelAnimationFrame(neckAnimRAF);
-  const loop = function() {
+  var loop = function() {
     if (!aimneckOn) return;
     updateNeckTargetMotion();
     updateAimneck();
@@ -1987,7 +2103,7 @@ function updateNeckTargetMotion() {
   if (!neckTarget.active || !neckTarget.el) return;
   neckTarget.x += neckTarget.vx;
   neckTarget.y += neckTarget.vy;
-  const margin = 30;
+  var margin = 30;
   if (neckTarget.x < margin || neckTarget.x > window.innerWidth - margin) neckTarget.vx *= -1;
   if (neckTarget.y < margin + 60 || neckTarget.y > window.innerHeight - margin) neckTarget.vy *= -1;
   neckTarget.x = Math.max(margin, Math.min(window.innerWidth - margin, neckTarget.x));
@@ -1998,24 +2114,24 @@ function updateNeckTargetMotion() {
 
 function updateAimneck() {
   if (!aimneckOn) return;
-  const overlay = document.getElementById('aimneckOverlay');
+  var overlay = document.getElementById('aimneckOverlay');
   if (neckTarget.active) {
-    const neckX = neckTarget.x;
-    const neckY = neckTarget.y + neckCfg.offsetY;
-    const t = Math.min(1, neckCfg.speed / 20);
-    const curX = parseFloat(overlay.dataset.cx || neckX);
-    const curY = parseFloat(overlay.dataset.cy || neckY);
-    const tx = curX + (neckX - curX) * t;
-    const ty = curY + (neckY - curY) * t;
+    var neckX = neckTarget.x;
+    var neckY = neckTarget.y + neckCfg.offsetY;
+    var t = Math.min(1, neckCfg.speed / 20);
+    var curX = parseFloat(overlay.dataset.cx || neckX);
+    var curY = parseFloat(overlay.dataset.cy || neckY);
+    var tx = curX + (neckX - curX) * t;
+    var ty = curY + (neckY - curY) * t;
     overlay.dataset.cx = tx; overlay.dataset.cy = ty;
     overlay.style.left = tx + 'px';
     overlay.style.top  = ty + 'px';
-    const dist = Math.hypot(neckTarget.x - window.innerWidth/2,
-                            neckTarget.y - window.innerHeight/2);
+    var dist = Math.hypot(neckTarget.x - window.innerWidth/2,
+                          neckTarget.y - window.innerHeight/2);
     document.getElementById('neckInfo').innerText =
       '🦴 Đang ngắm CỔ (' + Math.round(dist) + 'px) • Offset Y: ' + neckCfg.offsetY;
   } else {
-    const c = center();
+    var c = center();
     overlay.dataset.cx = c.x; overlay.dataset.cy = c.y;
     overlay.style.left = c.x + 'px';
     overlay.style.top  = c.y + 'px';
@@ -2040,12 +2156,12 @@ function updateNeckSpeed() {
   document.getElementById('neckSpeedVal').innerText = neckCfg.speed;
 }
 
-/* ============ SETTINGS ============ */
+/* SETTINGS */
 function openSettings() { document.getElementById('settingsPanel').classList.add('open'); }
 function closeSettings(){ document.getElementById('settingsPanel').classList.remove('open'); }
 
 function applySettings() {
-  const cfg = {
+  var cfg = {
     color: document.getElementById('aimColor').value,
     size:  document.getElementById('aimSize').value,
     thick: document.getElementById('aimThick').value,
@@ -2075,7 +2191,7 @@ function applySettings() {
 }
 
 function loadSettings() {
-  const cfg = LS.get('ff_aim_cfg');
+  var cfg = LS.get('ff_aim_cfg');
   if (!cfg) return;
   if (cfg.color) document.getElementById('aimColor').value = cfg.color;
   if (cfg.size)  document.getElementById('aimSize').value  = cfg.size;
@@ -2089,7 +2205,7 @@ function loadSettings() {
     document.getElementById('volQuickVal').innerText = cfg.vol;
     masterVolume = cfg.vol / 100;
   }
-  if (cfg.beep !== undefined)  document.getElementById('beepOn').checked  = cfg.beep;
+  if (cfg.beep !== undefined) document.getElementById('beepOn').checked  = cfg.beep;
   if (cfg.growl !== undefined) document.getElementById('growlOn').checked = cfg.growl;
   if (cfg.lockColor)  { document.getElementById('lockColor').value = cfg.lockColor; lockCfg.color = cfg.lockColor; }
   if (cfg.lockRadius) { document.getElementById('lockRadius').value = cfg.lockRadius;
@@ -2112,7 +2228,7 @@ function loadSettings() {
   updateNeckColor();
 }
 
-/* ============ DEVICE ============ */
+/* DEVICE */
 function clearDevice() {
   if (confirm('Xoá liên kết thiết bị và đăng xuất?')) {
     LS.del('ff_key_info');
@@ -2120,12 +2236,12 @@ function clearDevice() {
   }
 }
 
-/* ============ ACTIVATE ============ */
+/* ACTIVATE */
 function activateKey() {
   initAudio();
-  const input = document.getElementById('keyInput').value;
-  const msg = document.getElementById('keyMsg');
-  const res = validateKey(input);
+  var input = document.getElementById('keyInput').value;
+  var msg = document.getElementById('keyMsg');
+  var res = validateKey(input);
   if (!res.ok) {
     msg.className = 'msg error';
     msg.innerText = '❌ ' + res.msg;
@@ -2138,11 +2254,11 @@ function activateKey() {
   setTimeout(function() { startSession(res.info); }, 900);
 }
 
-/* ============ LOADING ============ */
-let progress = 0;
-const fillEl = document.getElementById('progressFillEl');
-const pctEl  = document.getElementById('loadPercentEl');
-const loadingInt = setInterval(function() {
+/* LOADING */
+var progress = 0;
+var fillEl = document.getElementById('progressFillEl');
+var pctEl  = document.getElementById('loadPercentEl');
+var loadingInt = setInterval(function() {
   progress += Math.random() * 14;
   if (progress >= 100) progress = 100;
   fillEl.style.width = progress + '%';
@@ -2156,20 +2272,22 @@ const loadingInt = setInterval(function() {
   }
 }, 130);
 
-/* ============ BOOT ============ */
+/* BOOT */
 function bootApp() {
   loadSettings();
 
-  const savedDns = LS.get('ff_dns_selected');
+  var savedGame = LS.get('ff_current_game');
+  if (savedGame && GAME_AIM_DATA[savedGame]) currentGame = savedGame;
+
+  var savedDns = LS.get('ff_dns_selected');
   if (savedDns) {
     selectedDNS = savedDns;
-    // Áp dụng AIM của DNS đã lưu
-    const savedP = DNS_PROFILES.find(function(x) { return x.id === savedDns; });
+    var savedP = DNS_PROFILES.filter(function(x) { return x.id === savedDns; })[0];
     if (savedP && savedP.id !== 'auto') applyAimProfile(savedP.aim);
   }
   renderDNSList();
 
-  const saved = LS.get('ff_key_info');
+  var saved = LS.get('ff_key_info');
   if (saved && saved.key) {
     if (saved.expires === -1 || saved.expires > Date.now()) {
       startSession(saved);
@@ -2192,12 +2310,8 @@ window.addEventListener('resize', function() {
   if (aimneckOn) updateAimneck();
 });
 
-console.log('%c⚡ REG FILE FF v1.4.0', 'color:#ff4dd2;font-size:20px;font-weight:bold;');
-console.log('%c🎯 Mỗi DNS có bộ AIM riêng!', 'color:#00ffea;font-weight:bold;font-size:14px;');
-console.log('%c📋 Danh sách DNS + AIM:', 'color:#4d9fff;font-weight:bold;');
-DNS_PROFILES.forEach(function(p) {
-  console.log('  ' + p.icon + ' ' + p.name + ' → ' + p.aimTag);
-});
+console.log('%c⚡ REG FILE FF v1.5.1 (FIXED)', 'color:#ff4dd2;font-size:20px;font-weight:bold;');
+console.log('%c📊 AIM DATA GAME ready!', 'color:#c44dff;font-weight:bold;font-size:14px;');
 </script>
 
 </body>
