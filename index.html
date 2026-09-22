@@ -1,1256 +1,2204 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HEADLOCK V2 - App</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 420px;
-            height: 100vh;
-            max-height: 900px;
-            background: #0d0d1a;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 0 40px rgba(138, 43, 226, 0.3);
-            border-radius: 20px;
-        }
-
-        /* ============ MÀN HÌNH LOADING ============ */
-        .loading-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #0d0d1a;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-
-        .loading-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .loading-spinner {
-            width: 70px;
-            height: 70px;
-            border: 5px solid rgba(168, 85, 247, 0.2);
-            border-top: 5px solid #a855f7;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 25px;
-            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            font-size: 16px;
-            font-weight: 700;
-            color: #d946ef;
-            letter-spacing: 2px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-
-        .loading-subtext {
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 25px;
-        }
-
-        .loading-bar-container {
-            width: 200px;
-            height: 6px;
-            background-color: #2a2a3a;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .loading-bar-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(to right, #a855f7, #d946ef);
-            border-radius: 3px;
-            transition: width 0.3s ease;
-            box-shadow: 0 0 10px rgba(217, 70, 239, 0.6);
-        }
-
-        .loading-percent {
-            font-size: 14px;
-            color: #a855f7;
-            font-weight: 700;
-            margin-top: 10px;
-        }
-
-        /* ============ LOCK SCREEN ============ */
-        .lock-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #0d0d1a;
-            z-index: 999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 30px;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-
-        .lock-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .lock-logo {
-            font-size: 42px;
-            font-weight: 900;
-            letter-spacing: 4px;
-            background: linear-gradient(to right, #a855f7, #d946ef);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-
-        .lock-subtitle {
-            font-size: 14px;
-            color: #888;
-            margin-bottom: 40px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .lock-card {
-            width: 100%;
-            background: rgba(26, 11, 46, 0.8);
-            border-radius: 20px;
-            padding: 25px;
-            border: 1px solid #3a1f5c;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .lock-card h3 {
-            font-size: 18px;
-            color: #d946ef;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .lock-card p {
-            font-size: 13px;
-            color: #aaa;
-            margin-bottom: 20px;
-            text-align: center;
-            line-height: 1.5;
-        }
-
-        .lock-input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .lock-input-group input {
-            padding: 16px;
-            border-radius: 14px;
-            border: 1px solid #3a1f5c;
-            background: rgba(0, 0, 0, 0.4);
-            color: #fff;
-            font-size: 15px;
-            outline: none;
-            text-align: center;
-            font-family: monospace;
-            letter-spacing: 1px;
-        }
-
-        .lock-input-group input:focus {
-            border-color: #a855f7;
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
-        }
-
-        .btn-unlock {
-            background: linear-gradient(to right, #7c3aed, #c026d3);
-            color: #fff;
-            border: none;
-            padding: 16px;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.2s;
-            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
-        }
-
-        .btn-unlock:active {
-            transform: scale(0.97);
-        }
-
-        /* ============ STATUS BAR ============ */
-        .status-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            font-size: 11px;
-            font-weight: 600;
-            color: #fff;
-            background: #0d0d1a;
-            z-index: 100;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            gap: 5px;
-        }
-
-        .status-left {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .status-center {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .ping-display {
-            color: #22c55e;
-            font-weight: 700;
-            font-size: 11px;
-            min-width: 50px;
-            text-align: center;
-        }
-
-        .ping-display.warning { color: #fbbf24; }
-        .ping-display.danger { color: #ef4444; }
-
-        .time-display {
-            color: #d946ef;
-            font-weight: 700;
-            font-size: 11px;
-            min-width: 70px;
-            text-align: center;
-        }
-
-        .status-icons {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-        }
-
-        /* ============ APP HEADER ============ */
-        .app-header {
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #0d0d1a;
-            z-index: 99;
-        }
-
-        .app-header .logo {
-            font-size: 22px;
-            font-weight: 900;
-            letter-spacing: 2px;
-            background: linear-gradient(to right, #a855f7, #d946ef);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .app-header .user-icon {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background: rgba(168, 85, 247, 0.2);
-            border: 1px solid #a855f7;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        /* ============ MAIN CONTENT ============ */
-        .app-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 0 20px 80px 20px;
-            scroll-behavior: smooth;
-        }
-
-        .app-content::-webkit-scrollbar {
-            display: none;
-        }
-
-        .page {
-            display: none;
-            animation: slideUp 0.3s ease;
-            padding-top: 10px;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ============ CARD ============ */
-        .card {
-            background: linear-gradient(135deg, #1a0b2e 0%, #131320 100%);
-            border-radius: 18px;
-            padding: 20px;
-            border: 1px solid #3a1f5c;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-            margin-bottom: 15px;
-        }
-
-        .card-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #d946ef;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .card-desc {
-            font-size: 13px;
-            color: #999;
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-
-        /* ============ FEATURE CARD ============ */
-        .features-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-            margin-top: 10px;
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(168, 85, 247, 0.2);
-            border-radius: 16px;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .feature-card.active-feature {
-            border-color: #a855f7;
-            background: rgba(168, 85, 247, 0.05);
-        }
-
-        .feature-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-            font-weight: 600;
-            color: #e0d0ff;
-        }
-
-        .feature-header .feature-name {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .feature-header .feature-icon {
-            font-size: 18px;
-        }
-
-        /* ============ TOGGLE SWITCH ============ */
-        .toggle-switch {
-            position: relative;
-            width: 44px;
-            height: 24px;
-            background-color: #2a2a3a;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            flex-shrink: 0;
-        }
-
-        .toggle-switch.active {
-            background-color: #a855f7;
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 20px;
-            height: 20px;
-            background-color: #fff;
-            border-radius: 50%;
-            transition: transform 0.3s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .toggle-switch.active::after {
-            transform: translateX(20px);
-        }
-
-        /* ============ SLIDER ============ */
-        .slider-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 11px;
-            color: #888;
-            padding: 0 5px;
-        }
-
-        .slider-bar {
-            flex: 1;
-            height: 6px;
-            background-color: #2a2a3a;
-            border-radius: 3px;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .slider-fill {
-            height: 100%;
-            background: linear-gradient(to right, #a855f7, #d946ef);
-            border-radius: 3px;
-            width: 75%;
-            pointer-events: none;
-        }
-
-        .slider-thumb {
-            position: absolute;
-            top: 50%;
-            left: 75%;
-            transform: translate(-50%, -50%);
-            width: 18px;
-            height: 18px;
-            background-color: #fff;
-            border-radius: 50%;
-            box-shadow: 0 0 8px rgba(217, 70, 239, 0.8);
-            border: 2px solid #a855f7;
-            cursor: grab;
-            pointer-events: none;
-        }
-
-        .slider-value {
-            min-width: 35px;
-            text-align: right;
-            color: #d946ef;
-            font-weight: 700;
-            font-size: 12px;
-        }
-
-        /* ============ AIM BUTTONS ============ */
-        .aim-buttons {
-            display: flex;
-            gap: 8px;
-            margin-top: 5px;
-        }
-
-        .aim-btn {
-            flex: 1;
-            padding: 8px 10px;
-            border-radius: 10px;
-            border: 1px solid #3a1f5c;
-            background: rgba(0, 0, 0, 0.3);
-            color: #aaa;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
-        }
-
-        .aim-btn.active {
-            background: linear-gradient(to right, #7c3aed, #c026d3);
-            color: #fff;
-            border-color: #a855f7;
-            box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
-        }
-
-        .aim-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* ============ BOTTOM NAV ============ */
-        .bottom-nav {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 10px 10px 20px 10px;
-            background: rgba(13, 13, 26, 0.95);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            z-index: 100;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            background: none;
-            border: none;
-            color: #666;
-            font-size: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            padding: 5px 15px;
-            border-radius: 12px;
-            transition: all 0.3s;
-            flex: 1;
-        }
-
-        .nav-item .nav-icon {
-            font-size: 22px;
-            transition: transform 0.3s;
-        }
-
-        .nav-item.active {
-            color: #d946ef;
-        }
-
-        .nav-item.active .nav-icon {
-            transform: translateY(-3px);
-            filter: drop-shadow(0 0 8px rgba(217, 70, 239, 0.6));
-        }
-
-        /* ============ TOAST ============ */
-        .toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #22c55e;
-            color: #fff;
-            padding: 14px 25px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 14px;
-            box-shadow: 0 5px 20px rgba(34, 197, 94, 0.5);
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            z-index: 1100;
-            white-space: nowrap;
-            max-width: 90%;
-            text-align: center;
-        }
-
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
-
-        .toast.error {
-            background: #ef4444;
-            box-shadow: 0 5px 20px rgba(239, 68, 68, 0.5);
-        }
-        
-        .toast.info {
-            background: #3b82f6;
-            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.5);
-        }
-
-        /* ============ HERO ============ */
-        .hero-section {
-            text-align: center;
-            padding: 20px 0 30px 0;
-        }
-
-        .hero-title {
-            font-size: 32px;
-            font-weight: 900;
-            background: linear-gradient(to right, #a855f7, #d946ef);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
-        }
-
-        .hero-subtitle {
-            font-size: 14px;
-            color: #888;
-            margin-bottom: 25px;
-        }
-
-        /* ============ GUIDE ============ */
-        .guide-list {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .guide-list li {
-            font-size: 13px;
-            color: #ccc;
-            margin-bottom: 10px;
-            display: flex;
-            gap: 10px;
-            align-items: flex-start;
-        }
-        
-        .guide-list li span {
-            color: #a855f7;
-            font-weight: bold;
-        }
-
-        /* ============ KEY BADGE ============ */
-        .key-badge {
-            display: inline-block;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .badge-week { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
-        .badge-month { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-        .badge-forever { background: rgba(217, 70, 239, 0.2); color: #e879f9; border: 1px solid rgba(217, 70, 239, 0.3); }
-
-        /* ============ TIME WARNING ============ */
-        .time-warning {
-            color: #ef4444 !important;
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REG FILE FF</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif; }
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a001f 0%, #4b0033 100%);
+  color: #ffe6ff;
+  user-select: none;
+}
+
+/* LOADING */
+#loadingBar {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #1a001f, #4b0033);
+  z-index: 9999; transition: opacity .5s ease;
+}
+#loadingBar.hidden { opacity: 0; pointer-events: none; }
+.loadBox {
+  width: 340px; padding: 26px 22px;
+  background: rgba(42, 0, 51, .9);
+  border: 2px solid #ff4dd2;
+  border-radius: 14px;
+  box-shadow: 0 0 40px rgba(255, 77, 210, .7);
+  text-align: center;
+  animation: pulseBox 2s ease-in-out infinite;
+}
+@keyframes pulseBox {
+  0%, 100% { box-shadow: 0 0 40px rgba(255, 77, 210, .7); }
+  50%      { box-shadow: 0 0 60px rgba(162, 0, 255, .9); }
+}
+.spinner {
+  width: 46px; height: 46px;
+  border: 4px solid rgba(255, 77, 210, .3);
+  border-top-color: #ff4dd2; border-radius: 50%;
+  margin: 0 auto 14px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loadText {
+  color: #ffb3e6; font-weight: bold;
+  margin-bottom: 14px; font-size: 14px; letter-spacing: 1px;
+}
+.progress {
+  height: 10px; background: #2a0033;
+  border-radius: 8px; overflow: hidden;
+  border: 1px solid #ff4dd2;
+  box-shadow: inset 0 0 8px rgba(0,0,0,.6);
+}
+.progressFill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, #ff006e, #a200ff, #ff006e);
+  background-size: 200% 100%;
+  animation: slide 1.4s linear infinite;
+  transition: width .18s ease;
+}
+@keyframes slide {
+  0%   { background-position: 0% 0; }
+  100% { background-position: 200% 0; }
+}
+.loadPercent {
+  margin-top: 10px; font-size: 13px;
+  color: #ff80e0; font-weight: bold;
+}
+
+/* KEY PAGE */
+#keyPage {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100; transition: opacity .4s;
+}
+#keyPage.hidden { opacity: 0; pointer-events: none; }
+.keyCard {
+  width: 460px; padding: 34px 28px;
+  background: rgba(42, 0, 51, .92);
+  border: 2px solid #ff4dd2;
+  border-radius: 18px;
+  box-shadow: 0 0 50px rgba(255, 77, 210, .6);
+  text-align: center;
+  animation: fadeUp .5s ease;
+  max-height: 95vh; overflow-y: auto;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.keyCard h1 {
+  font-size: 30px; margin-bottom: 6px;
+  background: linear-gradient(90deg, #ff4dd2, #a200ff, #ff4dd2);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 3s linear infinite;
+}
+@keyframes shine { to { background-position: 200% center; } }
+.keyCard .sub {
+  font-size: 13px; color: #d9a6ff;
+  margin-bottom: 22px; letter-spacing: 1px;
+}
+#keyInput {
+  width: 100%; padding: 14px 16px;
+  background: #2a0033;
+  border: 2px solid #ff4dd2;
+  border-radius: 12px; color: #fff;
+  font-size: 17px; text-align: center;
+  letter-spacing: 3px; font-weight: bold;
+  outline: none; transition: .25s;
+  text-transform: uppercase;
+}
+#keyInput::placeholder { color: #6b3d7a; letter-spacing: 2px; }
+#keyInput:focus {
+  border-color: #ff80e0;
+  box-shadow: 0 0 20px rgba(255, 77, 210, .8);
+}
+.keyCard button.mainBtn {
+  width: 100%; margin-top: 16px; padding: 14px;
+  background: linear-gradient(90deg, #ff006e, #a200ff);
+  border: none; border-radius: 12px;
+  color: #fff; font-size: 16px; font-weight: bold;
+  letter-spacing: 2px; cursor: pointer;
+  transition: .2s;
+  box-shadow: 0 0 20px rgba(255, 0, 110, .5);
+}
+.keyCard button.mainBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(255, 0, 110, .8);
+}
+.keyCard .note {
+  margin-top: 16px; font-size: 11px;
+  color: #b380d9; line-height: 1.6;
+}
+.msg {
+  margin-top: 12px; padding: 9px;
+  border-radius: 8px; font-size: 13px;
+  font-weight: bold; display: none;
+}
+.msg.error   { background: rgba(255,0,60,.15); color: #ff4d6d; border: 1px solid #ff4d6d; display: block; }
+.msg.success { background: rgba(0,255,120,.12); color: #4dff9e; border: 1px solid #4dff9e; display: block; }
+
+.toggleKeys {
+  margin-top: 14px;
+  background: transparent;
+  border: 1px dashed #ff4dd2;
+  color: #ff80e0;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  width: 100%;
+  transition: .2s;
+}
+.toggleKeys:hover { background: rgba(255,77,210,.1); }
+.keyListWrap {
+  display: none;
+  margin-top: 12px;
+  max-height: 260px;
+  overflow-y: auto;
+  background: #1a001f;
+  border: 1px solid #ff4dd2;
+  border-radius: 10px;
+  padding: 8px;
+  text-align: left;
+}
+.keyListWrap.show { display: block; }
+.keyTabs { display: flex; gap: 6px; margin-bottom: 8px; }
+.keyTabs button {
+  flex: 1; padding: 6px;
+  background: #2a0033;
+  border: 1px solid #ff4dd2;
+  color: #d9a6ff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 11px; font-weight: bold;
+  transition: .2s;
+}
+.keyTabs button.active {
+  background: linear-gradient(90deg, #ff006e, #a200ff);
+  color: #fff;
+}
+.keyList { display: grid; grid-template-columns: 1fr; gap: 4px; }
+.keyItem {
+  background: rgba(42, 0, 51, .6);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: 'Courier New', monospace;
+  color: #ffb3e6;
+  display: flex; justify-content: space-between; align-items: center;
+  border-left: 3px solid #ff4dd2;
+  cursor: pointer; transition: .15s;
+}
+.keyItem:hover { background: rgba(255,77,210,.2); transform: translateX(3px); }
+.keyItem .copyHint { font-size: 10px; color: #b380d9; }
+
+/* APP */
+#app {
+  position: fixed; inset: 0;
+  display: none; flex-direction: column; z-index: 50;
+}
+#app.show { display: flex; }
+.topbar {
+  padding: 12px 18px;
+  background: rgba(42, 0, 51, .95);
+  border-bottom: 2px solid #ff4dd2;
+  display: flex; justify-content: space-between; align-items: center;
+  box-shadow: 0 4px 20px rgba(255, 77, 210, .35);
+}
+.topbar .brand {
+  font-size: 20px; font-weight: bold;
+  background: linear-gradient(90deg, #ff4dd2, #a200ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.topbar .timer {
+  font-size: 14px; font-weight: bold;
+  color: #ffb3e6; padding: 6px 14px;
+  background: rgba(255, 77, 210, .12);
+  border: 1px solid #ff4dd2;
+  border-radius: 8px; letter-spacing: 1px;
+}
+.topbar .timer.warn { color: #ff4d6d; border-color: #ff4d6d; animation: blink 1s infinite; }
+@keyframes blink { 50% { opacity: .4; } }
+.content { flex: 1; padding: 24px; overflow-y: auto; }
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px; max-width: 1100px; margin: 0 auto;
+}
+.card {
+  background: rgba(42, 0, 51, .85);
+  border: 2px solid #ff4dd2;
+  border-radius: 16px; padding: 22px;
+  box-shadow: 0 0 22px rgba(255, 77, 210, .3);
+  transition: .25s;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(255, 77, 210, .6);
+}
+.card h3 { color: #ff4dd2; margin-bottom: 12px; font-size: 17px; letter-spacing: 1px; }
+.card p {
+  color: #d9a6ff; font-size: 13px;
+  margin-bottom: 14px; line-height: 1.5; word-break: break-all;
+}
+.card button {
+  width: 100%; padding: 11px;
+  background: linear-gradient(90deg, #ff006e, #a200ff);
+  border: none; border-radius: 10px;
+  color: #fff; font-weight: bold;
+  cursor: pointer; transition: .2s; letter-spacing: 1px;
+}
+.card button:hover { opacity: .85; transform: translateY(-2px); }
+
+/* AIMLOCK */
+.card.aimlock-card {
+  border-color: #00ffea;
+  box-shadow: 0 0 25px rgba(0, 255, 234, .4);
+  background: linear-gradient(135deg, rgba(42, 0, 51, .9) 0%, rgba(0, 60, 70, .5) 100%);
+}
+.card.aimlock-card h3 { color: #00ffea; text-shadow: 0 0 10px #00ffea; }
+.card.aimlock-card button { background: linear-gradient(90deg, #00c9b7, #00ffea); color: #001a1f; }
+.card.aimlock-card.active { animation: aimGlow 1.5s ease-in-out infinite; }
+@keyframes aimGlow {
+  0%, 100% { box-shadow: 0 0 25px rgba(0, 255, 234, .4); }
+  50%      { box-shadow: 0 0 45px rgba(0, 255, 234, .9), 0 0 70px rgba(0, 255, 234, .5); }
+}
+
+/* AIMNECK */
+.card.aimneck-card {
+  border-color: #ffb300;
+  box-shadow: 0 0 25px rgba(255, 179, 0, .4);
+  background: linear-gradient(135deg, rgba(42, 0, 51, .9) 0%, rgba(70, 40, 0, .5) 100%);
+}
+.card.aimneck-card h3 { color: #ffb300; text-shadow: 0 0 10px #ffb300; }
+.card.aimneck-card button { background: linear-gradient(90deg, #ff8c00, #ffb300); color: #1a0f00; }
+.card.aimneck-card.active { animation: neckGlow 1.5s ease-in-out infinite; }
+@keyframes neckGlow {
+  0%, 100% { box-shadow: 0 0 25px rgba(255, 179, 0, .4); }
+  50%      { box-shadow: 0 0 45px rgba(255, 179, 0, .9), 0 0 70px rgba(255, 140, 0, .5); }
+}
+
+/* LAUNCH */
+.card.launch-card {
+  border-color: #00ff5c;
+  box-shadow: 0 0 25px rgba(0, 255, 92, .4);
+  background: linear-gradient(135deg, rgba(42, 0, 51, .9) 0%, rgba(0, 70, 20, .5) 100%);
+}
+.card.launch-card h3 { color: #00ff5c; text-shadow: 0 0 10px #00ff5c; }
+.launchBtns { display: flex; flex-direction: column; gap: 8px; }
+.btnFF {
+  padding: 12px; border: none; border-radius: 10px;
+  font-weight: bold; cursor: pointer;
+  letter-spacing: 1px; transition: .2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btnFFMax {
+  background: linear-gradient(90deg, #ff1744, #ff5252);
+  color: #fff; box-shadow: 0 0 15px rgba(255, 23, 68, .6);
+}
+.btnFFMax:hover { transform: translateY(-2px); box-shadow: 0 0 25px rgba(255, 23, 68, .9); }
+.btnFFNormal {
+  background: linear-gradient(90deg, #00c853, #00e676);
+  color: #003d13; box-shadow: 0 0 15px rgba(0, 200, 83, .6);
+}
+.btnFFNormal:hover { transform: translateY(-2px); box-shadow: 0 0 25px rgba(0, 200, 83, .9); }
+
+/* DNS */
+.card.dns-card {
+  border-color: #4d9fff;
+  box-shadow: 0 0 25px rgba(77, 159, 255, .4);
+  background: linear-gradient(135deg, rgba(42, 0, 51, .9) 0%, rgba(0, 30, 70, .5) 100%);
+  grid-column: 1 / -1;
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+}
+.card.dns-card h3 { color: #4d9fff; text-shadow: 0 0 10px #4d9fff; }
+
+.dnsWrap {
+  background: #0f0f14;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-top: 10px;
+  border: 1px solid #2a2a35;
+}
+.dnsHeader {
+  padding: 14px 16px;
+  color: #b0b0c0;
+  font-size: 12px;
+  line-height: 1.5;
+  border-bottom: 1px solid #2a2a35;
+  background: #16161d;
+}
+.dnsSectionTitle {
+  padding: 12px 16px 8px;
+  color: #8a8a99;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.dnsItem {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid #1e1e26;
+  cursor: pointer;
+  transition: background .15s;
+  gap: 14px;
+}
+.dnsItem:hover { background: #1c1c24; }
+.dnsItem:last-child { border-bottom: none; }
+.dnsItem.active { background: rgba(77, 159, 255, .08); }
+
+.dnsIcon {
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  background: #2a2a35;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+  transition: .2s;
+}
+.dnsItem.active .dnsIcon { background: linear-gradient(135deg, #4d9fff, #00d4ff); }
+
+.dnsInfo { flex: 1; text-align: left; min-width: 0; }
+.dnsName {
+  font-size: 15px;
+  color: #e8e8f0;
+  font-weight: 500;
+  margin-bottom: 3px;
+  display: flex; align-items: center; gap: 6px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.dnsDesc {
+  font-size: 12px;
+  color: #6a6a80;
+  font-style: italic;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.dnsCheck {
+  width: 24px; height: 24px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  color: #4d9fff;
+  opacity: 0;
+  transition: .2s;
+}
+.dnsItem.active .dnsCheck { opacity: 1; }
+
+/* Tag AIM hiển thị trong DNS item */
+.dnsAimTag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: bold;
+  background: rgba(255, 77, 210, .15);
+  color: #ff80e0;
+  border: 1px solid rgba(255, 77, 210, .4);
+  white-space: nowrap;
+}
+.dnsItem.active .dnsAimTag {
+  background: rgba(0, 255, 234, .15);
+  color: #00ffea;
+  border-color: rgba(0, 255, 234, .5);
+}
+
+.dnsBtnRow {
+  display: flex; gap: 8px; margin-top: 12px;
+}
+.dnsBtnRow button { flex: 1; }
+.btnDnsApply {
+  background: linear-gradient(90deg, #4d9fff, #00d4ff) !important;
+  color: #001a33 !important;
+}
+.btnDnsReset {
+  background: linear-gradient(90deg, #6a6a80, #8a8a99) !important;
+  color: #fff !important;
+}
+
+/* Banner hiển thị DNS đang dùng */
+.dnsActiveBanner {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(0, 255, 234, .08);
+  border: 1px solid #00ffea;
+  border-radius: 10px;
+  font-size: 12px;
+  color: #00ffea;
+  text-align: center;
+  font-weight: bold;
+  display: none;
+}
+.dnsActiveBanner.show { display: block; }
+
+.aimStatus {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 12px; padding: 6px 10px;
+  background: rgba(0, 255, 234, .08);
+  border-radius: 8px;
+  font-size: 12px; font-weight: bold;
+  color: #00ffea;
+}
+.aimStatus.neck {
+  background: rgba(255, 179, 0, .08);
+  color: #ffb300;
+}
+.dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: #ff4d6d; box-shadow: 0 0 8px #ff4d6d;
+}
+.dot.on {
+  background: #00ffea; box-shadow: 0 0 12px #00ffea;
+  animation: blinkDot .8s infinite;
+}
+.dot.neck-on {
+  background: #ffb300; box-shadow: 0 0 12px #ffb300;
+  animation: blinkDot .8s infinite;
+}
+@keyframes blinkDot { 50% { opacity: .4; } }
+
+.switch { position: relative; display: inline-block;
+          width: 54px; height: 28px; margin-left: 8px; vertical-align: middle; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute; inset: 0;
+  background: #2a0033;
+  border: 2px solid #ff4dd2;
+  border-radius: 28px; cursor: pointer; transition: .3s;
+}
+.slider:before {
+  content: ""; position: absolute;
+  height: 18px; width: 18px; left: 3px; top: 3px;
+  background: #ff4dd2; border-radius: 50%; transition: .3s;
+}
+input:checked + .slider { background: #a200ff; }
+input:checked + .slider:before { transform: translateX(26px); background: #fff; }
+
+/* OVERLAYS */
+#aimOverlay {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px; height: 40px;
+  pointer-events: none; z-index: 999;
+  display: none;
+}
+#aimOverlay.show { display: block; }
+
+#aimlockOverlay {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px; height: 60px;
+  pointer-events: none; z-index: 998;
+  display: none;
+}
+#aimlockOverlay.show { display: block; }
+#aimlockOverlay svg { animation: lockSpin 3s linear infinite; }
+@keyframes lockSpin { to { transform: rotate(360deg); } }
+
+#aimneckOverlay {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70px; height: 70px;
+  pointer-events: none; z-index: 998;
+  display: none;
+}
+#aimneckOverlay.show { display: block; }
+#aimneckOverlay svg { animation: neckPulse 1.2s ease-in-out infinite; }
+@keyframes neckPulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.15); }
+}
+
+.target {
+  position: fixed; width: 40px; height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,0,60,.9) 0%,
+                                       rgba(255,0,60,.2) 60%, transparent 70%);
+  border: 2px solid #ff003c;
+  pointer-events: none; z-index: 997;
+  display: none;
+  box-shadow: 0 0 25px #ff003c, 0 0 50px rgba(255,0,60,.5);
+}
+.target.show { display: block; }
+.target::before {
+  content: '';
+  position: absolute; inset: 8px;
+  border-radius: 50%; border: 2px solid #fff;
+  animation: targetPulse 1s infinite;
+}
+@keyframes targetPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.3); opacity: .5; }
+}
+
+.neckTarget {
+  position: fixed; width: 30px; height: 30px;
+  border-radius: 4px;
+  border: 2px dashed #ffb300;
+  background: rgba(255, 179, 0, .15);
+  pointer-events: none; z-index: 997;
+  display: none;
+  box-shadow: 0 0 20px #ffb300;
+}
+.neckTarget.show { display: block; }
+.neckTarget::after {
+  content: '🦴 NECK';
+  position: absolute; top: -20px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px; font-weight: bold;
+  color: #ffb300; white-space: nowrap;
+  text-shadow: 0 0 6px #ffb300;
+}
+
+#lockLine {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; z-index: 996;
+  display: none;
+}
+#lockLine.show { display: block; }
+
+/* SETTINGS */
+#settingsPanel {
+  position: fixed; top: 0; right: -420px;
+  width: 400px; height: 100vh;
+  background: rgba(26, 0, 31, .98);
+  border-left: 2px solid #ff4dd2;
+  box-shadow: -10px 0 40px rgba(255, 77, 210, .5);
+  z-index: 1000; transition: right .35s ease;
+  padding: 24px; overflow-y: auto;
+}
+#settingsPanel.open { right: 0; }
+#settingsPanel h2 {
+  color: #ff4dd2; margin-bottom: 20px;
+  font-size: 20px; letter-spacing: 1px;
+  border-bottom: 1px solid #ff4dd2;
+  padding-bottom: 10px;
+}
+.settingRow {
+  display: flex; justify-content: space-between;
+  align-items: center; padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 77, 210, .15);
+}
+.settingRow label { color: #d9a6ff; font-size: 14px; }
+.settingRow input[type=color] {
+  width: 50px; height: 32px; border: none;
+  background: transparent; cursor: pointer;
+}
+.settingRow input[type=range] { width: 140px; accent-color: #ff4dd2; }
+.settingRow .val { color: #ff80e0; font-weight: bold; min-width: 30px; text-align: right; }
+.closeBtn {
+  position: absolute; top: 16px; right: 16px;
+  width: 32px; height: 32px;
+  background: #ff006e; border: none;
+  border-radius: 50%; color: #fff;
+  font-size: 16px; cursor: pointer;
+}
+
+#toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  padding: 12px 26px;
+  background: rgba(42, 0, 51, .95);
+  border: 2px solid #ff4dd2;
+  border-radius: 30px;
+  color: #ffe6ff; font-weight: bold; font-size: 13px;
+  box-shadow: 0 0 25px rgba(255, 77, 210, .6);
+  transition: transform .35s ease, opacity .35s;
+  opacity: 0; z-index: 2000;
+  pointer-events: none;
+}
+#toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+#audioCtrl {
+  position: fixed; bottom: 16px; right: 16px;
+  background: rgba(42, 0, 51, .9);
+  border: 2px solid #ff4dd2;
+  border-radius: 12px;
+  padding: 10px 14px;
+  z-index: 1500;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: 0 0 20px rgba(255, 77, 210, .5);
+}
+#audioCtrl span { color: #ff80e0; font-size: 13px; font-weight: bold; }
+#audioCtrl input[type=range] { width: 100px; accent-color: #ff4dd2; }
+#audioCtrl button {
+  background: #ff006e; border: none;
+  border-radius: 6px; padding: 5px 10px;
+  color: #fff; font-weight: bold;
+  cursor: pointer; font-size: 12px;
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #1a001f; }
+::-webkit-scrollbar-thumb { background: #ff4dd2; border-radius: 8px; }
+</style>
 </head>
 <body>
 
-    <div class="app-container">
-        
-        <!-- ============ MÀN HÌNH LOADING ============ -->
-        <div id="loading-screen" class="loading-screen hidden">
-            <div class="loading-spinner"></div>
-            <div class="loading-text">Đang Kết Nối</div>
-            <div class="loading-subtext">Vui lòng chờ trong giây lát...</div>
-            <div class="loading-bar-container">
-                <div id="loading-bar-fill" class="loading-bar-fill"></div>
-            </div>
-            <div id="loading-percent" class="loading-percent">0%</div>
+<!-- LOADING -->
+<div id="loadingBar">
+  <div class="loadBox">
+    <div class="spinner"></div>
+    <div class="loadText">⚡ ĐANG ĐỌC FILE REG FILE FF...</div>
+    <div class="progress"><div class="progressFill" id="progressFillEl"></div></div>
+    <div class="loadPercent" id="loadPercentEl">0%</div>
+  </div>
+</div>
+
+<!-- KEY PAGE -->
+<div id="keyPage" class="hidden">
+  <div class="keyCard">
+    <h1>🔒 REG FILE FF</h1>
+    <div class="sub">NHẬP KEY ĐỂ KÍCH HOẠT</div>
+    <input id="keyInput" type="text" placeholder="REG-XX-XXXX-XXXX-FF" maxlength="24" autocomplete="off">
+    <button class="mainBtn" onclick="activateKey()">⚡ KÍCH HOẠT</button>
+    <div class="msg" id="keyMsg"></div>
+    <button class="toggleKeys" onclick="toggleKeyList()">📋 XEM DANH SÁCH KEY CÓ SẴN</button>
+    <div class="keyListWrap" id="keyListWrap">
+      <div class="keyTabs">
+        <button class="active" onclick="showKeyTab('weekly', this)">WK (7 ngày)</button>
+        <button onclick="showKeyTab('monthly', this)">MN (30 ngày)</button>
+        <button onclick="showKeyTab('permanent', this)">PM (Vĩnh viễn)</button>
+      </div>
+      <div class="keyList" id="keyList"></div>
+    </div>
+    <div class="note">
+      • Key Tuần (REG-WK-...-FF) — 7 ngày<br>
+      • Key Tháng (REG-MN-...-FF) — 30 ngày<br>
+      • Key Vĩnh Viễn (REG-PM-...-FF) — Không giới hạn<br>
+      • Mỗi key chỉ dùng được 1 lần
+    </div>
+  </div>
+</div>
+
+<!-- APP PAGE -->
+<div id="app">
+  <div class="topbar">
+    <div class="brand">REG FILE FF</div>
+    <div class="timer" id="timer">--:--:--</div>
+  </div>
+
+  <div class="content">
+    <div class="cards">
+
+      <div class="card launch-card">
+        <h3>🚀 KHỞI CHẠY FREE FIRE</h3>
+        <p>Mở game trực tiếp từ app</p>
+        <div class="launchBtns">
+          <button class="btnFF btnFFMax" onclick="launchFF('max')">🔥 FF MAX</button>
+          <button class="btnFF btnFFNormal" onclick="launchFF('normal')">🎮 FF THƯỜNG</button>
         </div>
+      </div>
 
-        <!-- ============ LOCK SCREEN ============ -->
-        <div id="lock-screen" class="lock-screen">
-            <div class="lock-logo">HEADLOCK</div>
-            <div class="lock-subtitle">V2 - GALAXY</div>
-            
-            <div class="lock-card">
-                <h3>🔐 Nhập Key Để Vào App</h3>
-                <p>Vui lòng nhập Key hợp lệ để truy cập HEADLOCK V2.</p>
-                <div class="lock-input-group">
-                    <input type="text" id="lock-key-input" placeholder="HEAD-XXXX-XXXX-XXXX-FF" autocomplete="off">
-                    <button class="btn-unlock" onclick="unlockApp()">🔓 Mở Khóa</button>
-                </div>
-            </div>
+      <div class="card dns-card">
+        <h3>📡 CẤU HÌNH DNS</h3>
+        <p>Mỗi DNS có bộ AIM riêng (màu, lock, neck, âm thanh)</p>
+        <div class="dnsWrap">
+          <div class="dnsHeader">
+            Proxy DNS hoặc máy chủ DNS được chọn có thể theo dõi và ghi lại tên và địa chỉ của các trang web mà bạn truy cập, cũng như các máy chủ mạng mà bạn kết nối vào.
+          </div>
+          <div class="dnsSectionTitle">CÀI ĐẶT PROXY DNS VÀ DNS</div>
+          <div id="dnsList"></div>
         </div>
-
-        <!-- ============ STATUS BAR ============ -->
-        <div class="status-bar">
-            <div class="status-left">
-                <span>📶</span>
-                <span>🛜</span>
-            </div>
-            <div class="status-center">
-                <span id="ping-display" class="ping-display">-- ms</span>
-                <span id="time-display" class="time-display">--:--:--</span>
-            </div>
-            <div class="status-icons">
-                <span>🔋 27%</span>
-            </div>
+        <div class="dnsActiveBanner" id="dnsActiveBanner"></div>
+        <div class="dnsBtnRow">
+          <button class="btnDnsApply" onclick="applyDNS()">✅ ÁP DỤNG DNS + AIM</button>
+          <button class="btnDnsReset" onclick="resetDNS()">🔄 RESET</button>
         </div>
+      </div>
 
-        <!-- ============ APP HEADER ============ -->
-        <div class="app-header">
-            <div class="logo">HEADLOCK</div>
-            <div class="user-icon">👤</div>
+      <div class="card">
+        <h3>🎯 AIM VIRTUAL</h3>
+        <p>Tâm ảo crosshair hiển thị trên màn hình</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="color:#d9a6ff;font-size:13px;">Bật / Tắt</span>
+          <label class="switch">
+            <input type="checkbox" id="aimToggle" checked onchange="toggleAim()">
+            <span class="slider"></span>
+          </label>
         </div>
+      </div>
 
-        <!-- ============ MAIN CONTENT ============ -->
-        <div class="app-content">
-
-            <!-- HOME PAGE -->
-            <div id="page-home" class="page active">
-                <div class="hero-section">
-                    <div class="hero-title">HEADLOCK V2</div>
-                    <div class="hero-subtitle">Giải pháp tối ưu hóa game Free Fire</div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-title">✨ Toàn Bộ Tính Năng</div>
-                    <div class="features-grid">
-                        
-                        <!-- Fix Lag -->
-                        <div class="feature-card active-feature">
-                            <div class="feature-header">
-                                <div class="feature-name"><span class="feature-icon">🚀</span> Fix Lag Chơi Game</div>
-                                <div class="toggle-switch active" onclick="toggleFeature(this)"></div>
-                            </div>
-                            <div class="slider-container">
-                                <span>0%</span>
-                                <div class="slider-bar" onmousedown="startDrag(event, this)" ontouchstart="startDrag(event, this)">
-                                    <div class="slider-fill" style="width: 90%;"></div>
-                                    <div class="slider-thumb" style="left: 90%;"></div>
-                                </div>
-                                <span class="slider-value">90%</span>
-                            </div>
-                        </div>
-
-                        <!-- Tâm Ảo -->
-                        <div class="feature-card active-feature">
-                            <div class="feature-header">
-                                <div class="feature-name"><span class="feature-icon">👁️</span> Tâm Ảo (Visual)</div>
-                                <div class="toggle-switch active" onclick="toggleFeature(this)"></div>
-                            </div>
-                            <div class="slider-container">
-                                <span>0%</span>
-                                <div class="slider-bar" onmousedown="startDrag(event, this)" ontouchstart="startDrag(event, this)">
-                                    <div class="slider-fill" style="width: 85%;"></div>
-                                    <div class="slider-thumb" style="left: 85%;"></div>
-                                </div>
-                                <span class="slider-value">85%</span>
-                            </div>
-                        </div>
-
-                        <!-- Aim Lock -->
-                        <div class="feature-card active-feature" id="aimlock-card">
-                            <div class="feature-header">
-                                <div class="feature-name"><span class="feature-icon">🎯</span> Aim Lock</div>
-                                <div class="toggle-switch active" id="aimlock-toggle" onclick="toggleFeature(this)"></div>
-                            </div>
-                            <div class="slider-container">
-                                <span>0%</span>
-                                <div class="slider-bar" onmousedown="startDrag(event, this)" ontouchstart="startDrag(event, this)">
-                                    <div class="slider-fill" style="width: 98%;"></div>
-                                    <div class="slider-thumb" style="left: 98%;"></div>
-                                </div>
-                                <span class="slider-value">98%</span>
-                            </div>
-                            <div class="aim-buttons">
-                                <button class="aim-btn" onclick="setAim(this, 'Đầu')">Aim Đầu</button>
-                                <button class="aim-btn" onclick="setAim(this, 'Ngực')">Aim Ngực</button>
-                                <button class="aim-btn active" onclick="setAim(this, 'Tự Động')">Tự Động</button>
-                            </div>
-                        </div>
-
-                        <!-- Aim Đầu -->
-                        <div class="feature-card active-feature" id="aimdau-card">
-                            <div class="feature-header">
-                                <div class="feature-name"><span class="feature-icon">💀</span> Aim Đầu</div>
-                                <div class="toggle-switch active" id="aimdau-toggle" onclick="toggleFeature(this)"></div>
-                            </div>
-                            <div class="slider-container">
-                                <span>0%</span>
-                                <div class="slider-bar" onmousedown="startDrag(event, this)" ontouchstart="startDrag(event, this)">
-                                    <div class="slider-fill" style="width: 100%;"></div>
-                                    <div class="slider-thumb" style="left: 100%;"></div>
-                                </div>
-                                <span class="slider-value">100%</span>
-                            </div>
-                            <div class="aim-buttons">
-                                <button class="aim-btn active" onclick="setAim(this, 'Đầu')">Bật Aim Đầu</button>
-                                <button class="aim-btn" onclick="setAim(this, 'Tắt')">Tắt</button>
-                            </div>
-                        </div>
-
-                        <!-- Chạy Gầm -->
-                        <div class="feature-card active-feature" id="chaygam-card">
-                            <div class="feature-header">
-                                <div class="feature-name"><span class="feature-icon">🏃</span> Chạy Gầm (Speed)</div>
-                                <div class="toggle-switch active" id="chaygam-toggle" onclick="toggleFeature(this)"></div>
-                            </div>
-                            <div class="slider-container">
-                                <span>0%</span>
-                                <div class="slider-bar" onmousedown="startDrag(event, this)" ontouchstart="startDrag(event, this)">
-                                    <div class="slider-fill" style="width: 75%;"></div>
-                                    <div class="slider-thumb" style="left: 75%;"></div>
-                                </div>
-                                <span class="slider-value">75%</span>
-                            </div>
-                            <div class="aim-buttons">
-                                <button class="aim-btn" onclick="setSpeed(this, 'Chậm')">Chậm</button>
-                                <button class="aim-btn active" onclick="setSpeed(this, 'Vừa')">Vừa</button>
-                                <button class="aim-btn" onclick="setSpeed(this, 'Nhanh')">Nhanh</button>
-                            </div>
-                        </div>
-
-                        <!-- Bypass Anti-Cheat -->
-                        <div class="feature-card active-feature">
-                            <div class="feature-header">
-                                <div class="feature-name"><span class="feature-icon">🛡️</span> Bypass Anti-Cheat</div>
-                                <div class="toggle-switch active" onclick="toggleFeature(this)"></div>
-                            </div>
-                            <div class="slider-container">
-                                <span>0%</span>
-                                <div class="slider-bar" onmousedown="startDrag(event, this)" ontouchstart="startDrag(event, this)">
-                                    <div class="slider-fill" style="width: 100%;"></div>
-                                    <div class="slider-thumb" style="left: 100%;"></div>
-                                </div>
-                                <span class="slider-value">100%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-title">📖 Hướng Dẫn Sử Dụng</div>
-                    <ul class="guide-list">
-                        <li><span>1.</span> Nhập Key hợp lệ ở màn hình khóa để vào App.</li>
-                        <li><span>2.</span> Chờ màn hình Loading kết nối xong.</li>
-                        <li><span>3.</span> Các tính năng Aim và Chạy Gầm sẽ tự động bật.</li>
-                        <li><span>4.</span> Theo dõi Ping và thời gian còn lại trên thanh trạng thái.</li>
-                        <li><span>5.</span> Khi hết thời gian, App sẽ tự động khóa lại.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- STORE PAGE -->
-            <div id="page-store" class="page">
-                <div class="card">
-                    <div class="card-title">🔑 Kho Key</div>
-                    <div class="card-desc">Hệ thống Key đã được tích hợp sẵn. Vui lòng nhập Key ở màn hình khóa khi mở App.</div>
-                    <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
-                        <span class="key-badge badge-week">10 Key Tuần</span>
-                        <span class="key-badge badge-month">20 Key Tháng</span>
-                        <span class="key-badge badge-forever">20 Key Vĩnh Viễn</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- FEATURES PAGE -->
-            <div id="page-features" class="page">
-                <div class="card">
-                    <div class="card-title">⚙️ Tính Năng</div>
-                    <div class="card-desc">Vui lòng xem danh sách tính năng ở Trang Chủ.</div>
-                </div>
-            </div>
-
-            <!-- ACTIVATE PAGE -->
-            <div id="page-activate" class="page">
-                <div class="card">
-                    <div class="card-title">🔐 Nhập Key</div>
-                    <div class="card-desc">Vui lòng nhập Key ở màn hình khóa khi mở App.</div>
-                </div>
-            </div>
-
+      <div class="card aimlock-card" id="aimlockCard">
+        <h3>🔒 AIMLOCK PRO</h3>
+        <div class="aimStatus">
+          <span class="dot" id="lockDot"></span>
+          <span id="lockStatusText">TRẠNG THÁI: TẮT</span>
         </div>
-
-        <!-- ============ BOTTOM NAV ============ -->
-        <div class="bottom-nav">
-            <button class="nav-item active" onclick="switchPage('page-home', this)">
-                <span class="nav-icon">🏠</span>
-                <span>Trang Chủ</span>
-            </button>
-            <button class="nav-item" onclick="switchPage('page-store', this)">
-                <span class="nav-icon">🔑</span>
-                <span>Kho Key</span>
-            </button>
-            <button class="nav-item" onclick="switchPage('page-features', this)">
-                <span class="nav-icon">⚙️</span>
-                <span>Tính Năng</span>
-            </button>
-            <button class="nav-item" onclick="switchPage('page-activate', this)">
-                <span class="nav-icon">🔐</span>
-                <span>Nhập Key</span>
-            </button>
+        <p id="lockTargetInfo">Mục tiêu: Chưa khoá</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <span style="color:#d9a6ff;font-size:13px;">Bật / Tắt Lock</span>
+          <label class="switch">
+            <input type="checkbox" id="aimlockToggle" onchange="toggleAimlock()">
+            <span class="slider"></span>
+          </label>
         </div>
+        <button onclick="spawnTarget()">🎯 TẠO MỤC TIÊU ẢO</button>
+      </div>
+
+      <div class="card aimneck-card" id="aimneckCard">
+        <h3>🦴 AIMNECK</h3>
+        <div class="aimStatus neck">
+          <span class="dot" id="neckDot"></span>
+          <span id="neckStatusText">TRẠNG THÁI: TẮT</span>
+        </div>
+        <p id="neckInfo">Điểm ngắm: Cổ (Neck)</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <span style="color:#ffb300;font-size:13px;">Bật / Tắt Neck</span>
+          <label class="switch">
+            <input type="checkbox" id="aimneckToggle" onchange="toggleAimneck()">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <button onclick="spawnNeckTarget()">🦴 TẠO MỤC TIÊU CỔ</button>
+      </div>
+
+      <div class="card">
+        <h3>🔑 THÔNG TIN KEY</h3>
+        <p id="keyInfoBox">Đang tải...</p>
+      </div>
+
+      <div class="card">
+        <h3>⚙️ CÀI ĐẶT</h3>
+        <p>Cấp quyền tâm ảo & tùy chỉnh hiển thị</p>
+        <button onclick="openSettings()">MỞ CÀI ĐẶT</button>
+      </div>
+
+      <div class="card">
+        <h3>🔊 ÂM THANH</h3>
+        <p>Tiếng kêu (beep) + Gầm (growl) khi kích hoạt</p>
+        <button onclick="playBeep();setTimeout(playGrowl,500);">🔔 TEST ÂM THANH</button>
+      </div>
+
+      <div class="card">
+        <h3>📱 THIẾT BỊ</h3>
+        <p id="deviceInfo">Device ID: --</p>
+        <button onclick="clearDevice()">XOÁ LIÊN KẾT</button>
+      </div>
 
     </div>
+  </div>
+</div>
 
-    <!-- ============ TOAST ============ -->
-    <div id="toast" class="toast">Thông báo</div>
+<div id="aimOverlay">
+  <svg width="40" height="40" viewBox="0 0 40 40" id="aimSvg">
+    <line x1="4" y1="20" x2="14" y2="20" stroke="#ff003c" stroke-width="2"/>
+    <line x1="26" y1="20" x2="36" y2="20" stroke="#ff003c" stroke-width="2"/>
+    <line x1="20" y1="4" x2="20" y2="14" stroke="#ff003c" stroke-width="2"/>
+    <line x1="20" y1="26" x2="20" y2="36" stroke="#ff003c" stroke-width="2"/>
+    <circle cx="20" cy="20" r="5" fill="none" stroke="#ff003c" stroke-width="1.5"/>
+    <circle cx="20" cy="20" r="1.5" fill="#ff003c"/>
+  </svg>
+</div>
 
-    <script>
-        // ==========================================
-        // DANH SÁCH KEY HỢP LỆ
-        // ==========================================
-        const WEEK_KEYS = [
-            "HEAD-WK01-A1B2-C3D4-FF", "HEAD-WK02-E5F6-G7H8-FF", "HEAD-WK03-I9J0-K1L2-FF",
-            "HEAD-WK04-M3N4-O5P6-FF", "HEAD-WK05-Q7R8-S9T0-FF", "HEAD-WK06-U1V2-W3X4-FF",
-            "HEAD-WK07-Y5Z6-A7B8-FF", "HEAD-WK08-C9D0-E1F2-FF", "HEAD-WK09-G3H4-I5J6-FF",
-            "HEAD-WK10-K7L8-M9N0-FF"
-        ];
+<div id="aimlockOverlay">
+  <svg width="60" height="60" viewBox="0 0 60 60">
+    <circle cx="30" cy="30" r="26" fill="none" stroke="#00ffea" stroke-width="2" stroke-dasharray="8 6"/>
+    <circle cx="30" cy="30" r="18" fill="none" stroke="#00ffea" stroke-width="1.5" opacity=".7"/>
+    <line x1="30" y1="2" x2="30" y2="14" stroke="#00ffea" stroke-width="2"/>
+    <line x1="30" y1="46" x2="30" y2="58" stroke="#00ffea" stroke-width="2"/>
+    <line x1="2" y1="30" x2="14" y2="30" stroke="#00ffea" stroke-width="2"/>
+    <line x1="46" y1="30" x2="58" y2="30" stroke="#00ffea" stroke-width="2"/>
+    <circle cx="30" cy="30" r="2" fill="#00ffea"/>
+  </svg>
+</div>
 
-        const MONTH_KEYS = [
-            "HEAD-MT01-A1B2-C3D4-FF", "HEAD-MT02-E5F6-G7H8-FF", "HEAD-MT03-I9J0-K1L2-FF",
-            "HEAD-MT04-M3N4-O5P6-FF", "HEAD-MT05-Q7R8-S9T0-FF", "HEAD-MT06-U1V2-W3X4-FF",
-            "HEAD-MT07-Y5Z6-A7B8-FF", "HEAD-MT08-C9D0-E1F2-FF", "HEAD-MT09-G3H4-I5J6-FF",
-            "HEAD-MT10-K7L8-M9N0-FF", "HEAD-MT11-O1P2-Q3R4-FF", "HEAD-MT12-S5T6-U7V8-FF",
-            "HEAD-MT13-W9X0-Y1Z2-FF", "HEAD-MT14-A3B4-C5D6-FF", "HEAD-MT15-E7F8-G9H0-FF",
-            "HEAD-MT16-I1J2-K3L4-FF", "HEAD-MT17-M5N6-O7P8-FF", "HEAD-MT18-Q9R0-S1T2-FF",
-            "HEAD-MT19-U3V4-W5X6-FF", "HEAD-MT20-Y7Z8-A9B0-FF"
-        ];
+<div id="aimneckOverlay">
+  <svg width="70" height="70" viewBox="0 0 70 70">
+    <rect x="15" y="25" width="40" height="20" fill="none" stroke="#ffb300" stroke-width="2.5" rx="4"/>
+    <line x1="10" y1="35" x2="15" y2="35" stroke="#ffb300" stroke-width="2.5"/>
+    <line x1="55" y1="35" x2="60" y2="35" stroke="#ffb300" stroke-width="2.5"/>
+    <circle cx="35" cy="35" r="4" fill="#ffb300"/>
+    <circle cx="35" cy="35" r="10" fill="none" stroke="#ffb300" stroke-width="1" opacity=".5"/>
+    <text x="35" y="18" text-anchor="middle" fill="#ffb300" font-size="9" font-weight="bold">NECK</text>
+  </svg>
+</div>
 
-        const FOREVER_KEYS = [
-            "HEAD-FV01-A1B2-C3D4-FF", "HEAD-FV02-E5F6-G7H8-FF", "HEAD-FV03-I9J0-K1L2-FF",
-            "HEAD-FV04-M3N4-O5P6-FF", "HEAD-FV05-Q7R8-S9T0-FF", "HEAD-FV06-U1V2-W3X4-FF",
-            "HEAD-FV07-Y5Z6-A7B8-FF", "HEAD-FV08-C9D0-E1F2-FF", "HEAD-FV09-G3H4-I5J6-FF",
-            "HEAD-FV10-K7L8-M9N0-FF", "HEAD-FV11-O1P2-Q3R4-FF", "HEAD-FV12-S5T6-U7V8-FF",
-            "HEAD-FV13-W9X0-Y1Z2-FF", "HEAD-FV14-A3B4-C5D6-FF", "HEAD-FV15-E7F8-G9H0-FF",
-            "HEAD-FV16-I1J2-K3L4-FF", "HEAD-FV17-M5N6-O7P8-FF", "HEAD-FV18-Q9R0-S1T2-FF",
-            "HEAD-FV19-U3V4-W5X6-FF", "HEAD-FV20-Y7Z8-A9B0-FF"
-        ];
+<div class="target" id="target1"></div>
+<div class="neckTarget" id="neckTarget1"></div>
 
-        const ALL_VALID_KEYS = [...WEEK_KEYS, ...MONTH_KEYS, ...FOREVER_KEYS];
+<svg id="lockLine">
+  <line id="lockLineEl" x1="0" y1="0" x2="0" y2="0"
+        stroke="#00ffea" stroke-width="1.5" stroke-dasharray="6 4" opacity=".6"/>
+</svg>
 
-        // ==========================================
-        // BIẾN TOÀN CỤC
-        // ==========================================
-        let pingInterval = null;
-        let countdownInterval = null;
-        let currentKeyType = null;
-        let keyExpiryTime = null;
+<div id="settingsPanel">
+  <button class="closeBtn" onclick="closeSettings()">✕</button>
+  <h2>⚙️ CÀI ĐẶT AIM</h2>
 
-        // ==========================================
-        // UNLOCK APP + HIỂN THỊ LOADING
-        // ==========================================
-        function unlockApp() {
-            const input = document.getElementById('lock-key-input');
-            const key = input.value.trim().toUpperCase();
+  <div class="settingRow">
+    <label>Màu tâm ảo</label>
+    <input type="color" id="aimColor" value="#ff003c" onchange="updateAim()">
+  </div>
+  <div class="settingRow">
+    <label>Kích thước</label>
+    <input type="range" id="aimSize" min="10" max="80" value="40" oninput="updateAim()">
+    <span class="val" id="sizeVal">40</span>
+  </div>
+  <div class="settingRow">
+    <label>Độ dày</label>
+    <input type="range" id="aimThick" min="1" max="6" value="2" oninput="updateAim()">
+    <span class="val" id="thickVal">2</span>
+  </div>
+  <div class="settingRow">
+    <label>Kiểu tâm</label>
+    <select id="aimStyle" onchange="updateAim()"
+      style="background:#2a0033;color:#ff80e0;border:1px solid #ff4dd2;
+             padding:6px 10px;border-radius:6px;outline:none;">
+      <option value="cross">Chữ thập</option>
+      <option value="dot">Chấm tròn</option>
+      <option value="circle">Vòng tròn</option>
+      <option value="full">Đầy đủ</option>
+    </select>
+  </div>
+  <div class="settingRow">
+    <label>Hiện tâm ảo</label>
+    <label class="switch">
+      <input type="checkbox" id="aimToggle2" checked onchange="toggleAim()">
+      <span class="slider"></span>
+    </label>
+  </div>
 
-            if (!key) {
-                showToast('Vui lòng nhập Key!', 'error');
-                return;
-            }
+  <h2 style="margin-top:24px;">🔒 AIMLOCK</h2>
+  <div class="settingRow">
+    <label>Màu lock</label>
+    <input type="color" id="lockColor" value="#00ffea" onchange="updateLockColor()">
+  </div>
+  <div class="settingRow">
+    <label>Bán kính lock</label>
+    <input type="range" id="lockRadius" min="100" max="800" value="400" oninput="updateLockRadius()">
+    <span class="val" id="lockRadiusVal">400</span>
+  </div>
+  <div class="settingRow">
+    <label>Tốc độ lock</label>
+    <input type="range" id="lockSpeed" min="1" max="20" value="8" oninput="updateLockSpeed()">
+    <span class="val" id="lockSpeedVal">8</span>
+  </div>
+  <div class="settingRow">
+    <label>Hiện line lock</label>
+    <label class="switch">
+      <input type="checkbox" id="lockLineOn" checked onchange="updateLockColor()">
+      <span class="slider"></span>
+    </label>
+  </div>
 
-            if (ALL_VALID_KEYS.includes(key)) {
-                document.getElementById('lock-screen').classList.add('hidden');
-                
-                // Xác định loại Key và thời gian
-                if (WEEK_KEYS.includes(key)) {
-                    currentKeyType = "week";
-                    keyExpiryTime = Date.now() + (7 * 24 * 60 * 60 * 1000); // 7 ngày
-                } else if (MONTH_KEYS.includes(key)) {
-                    currentKeyType = "month";
-                    keyExpiryTime = Date.now() + (30 * 24 * 60 * 60 * 1000); // 30 ngày
-                } else if (FOREVER_KEYS.includes(key)) {
-                    currentKeyType = "forever";
-                    keyExpiryTime = null; // Vĩnh viễn
-                }
-                
-                showLoadingScreen();
-                input.value = '';
-            } else {
-                showToast('❌ Key không hợp lệ! Vui lòng kiểm tra lại.', 'error');
-            }
-        }
+  <h2 style="margin-top:24px;">🦴 AIMNECK</h2>
+  <div class="settingRow">
+    <label>Màu neck</label>
+    <input type="color" id="neckColor" value="#ffb300" onchange="updateNeckColor()">
+  </div>
+  <div class="settingRow">
+    <label>Bù trục Y</label>
+    <input type="range" id="neckOffsetY" min="-40" max="40" value="-12" oninput="updateNeckOffset()">
+    <span class="val" id="neckOffsetVal">-12</span>
+  </div>
+  <div class="settingRow">
+    <label>Tốc độ neck</label>
+    <input type="range" id="neckSpeed" min="1" max="20" value="10" oninput="updateNeckSpeed()">
+    <span class="val" id="neckSpeedVal">10</span>
+  </div>
 
-        // ==========================================
-        // HÀM HIỂN THỊ LOADING
-        // ==========================================
-        function showLoadingScreen() {
-            const loadingScreen = document.getElementById('loading-screen');
-            const loadingBarFill = document.getElementById('loading-bar-fill');
-            const loadingPercent = document.getElementById('loading-percent');
-            
-            loadingBarFill.style.width = '0%';
-            loadingPercent.textContent = '0%';
-            
-            loadingScreen.classList.remove('hidden');
-            
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += Math.floor(Math.random() * 15) + 5;
-                if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(interval);
-                    
-                    setTimeout(() => {
-                        loadingScreen.classList.add('hidden');
-                        autoActivateFeatures();
-                        startPingSimulation();
-                        startCountdown();
-                        
-                        let keyTypeText = currentKeyType === 'week' ? 'Key Tuần (7 Ngày)' :
-                                         currentKeyType === 'month' ? 'Key Tháng (30 Ngày)' : 'Key Vĩnh Viễn';
-                        showToast(`🎉 Kích hoạt thành công! (${keyTypeText})`, 'success');
-                        
-                    }, 300);
-                }
-                loadingBarFill.style.width = progress + '%';
-                loadingPercent.textContent = progress + '%';
-            }, 150);
-        }
+  <h2 style="margin-top:24px;">🔊 ÂM THANH</h2>
+  <div class="settingRow">
+    <label>Âm lượng</label>
+    <input type="range" id="volRange" min="0" max="100" value="70" oninput="updateVolume()">
+    <span class="val" id="volVal">70</span>
+  </div>
+  <div class="settingRow">
+    <label>Tiếng kêu (Beep)</label>
+    <label class="switch">
+      <input type="checkbox" id="beepOn" checked>
+      <span class="slider"></span>
+    </label>
+  </div>
+  <div class="settingRow">
+    <label>Tiếng gầm (Growl)</label>
+    <label class="switch">
+      <input type="checkbox" id="growlOn" checked>
+      <span class="slider"></span>
+    </label>
+  </div>
 
-        // ==========================================
-        // TỰ ĐỘNG KÍCH HOẠT AIM + CHẠY GẦM
-        // ==========================================
-        function autoActivateFeatures() {
-            const aimlockToggle = document.getElementById('aimlock-toggle');
-            if (aimlockToggle && !aimlockToggle.classList.contains('active')) {
-                aimlockToggle.classList.add('active');
-                aimlockToggle.closest('.feature-card').classList.add('active-feature');
-            }
-            
-            const aimdauToggle = document.getElementById('aimdau-toggle');
-            if (aimdauToggle && !aimdauToggle.classList.contains('active')) {
-                aimdauToggle.classList.add('active');
-                aimdauToggle.closest('.feature-card').classList.add('active-feature');
-            }
-            
-            const chaygamToggle = document.getElementById('chaygam-toggle');
-            if (chaygamToggle && !chaygamToggle.classList.contains('active')) {
-                chaygamToggle.classList.add('active');
-                chaygamToggle.closest('.feature-card').classList.add('active-feature');
-            }
-        }
+  <button onclick="applySettings()"
+    style="width:100%;margin-top:24px;padding:12px;
+           background:linear-gradient(90deg,#ff006e,#a200ff);
+           border:none;border-radius:10px;color:#fff;
+           font-weight:bold;cursor:pointer;letter-spacing:1px;">
+    💾 LƯU CÀI ĐẶT
+  </button>
+</div>
 
-        // ==========================================
-        // PING GIẢ LẬP
-        // ==========================================
-        function startPingSimulation() {
-            if (pingInterval) clearInterval(pingInterval);
-            
-            const pingDisplay = document.getElementById('ping-display');
-            
-            function updatePing() {
-                const ping = Math.floor(Math.random() * 40) + 20; // 20-60ms
-                pingDisplay.textContent = ping + ' ms';
-                
-                // Đổi màu theo mức ping
-                pingDisplay.classList.remove('warning', 'danger');
-                if (ping > 50) {
-                    pingDisplay.classList.add('danger');
-                } else if (ping > 40) {
-                    pingDisplay.classList.add('warning');
-                }
-            }
-            
-            updatePing();
-            pingInterval = setInterval(updatePing, 2000); // Cập nhật mỗi 2 giây
-        }
+<div id="audioCtrl">
+  <span>🔊</span>
+  <input type="range" id="volQuick" min="0" max="100" value="70" oninput="quickVol(this.value)">
+  <span id="volQuickVal">70</span>
+  <button onclick="playBeep();setTimeout(playGrowl,500);">TEST</button>
+</div>
 
-        // ==========================================
-        // ĐẾM NGƯỢC THỜI GIAN KEY
-        // ==========================================
-        function startCountdown() {
-            if (countdownInterval) clearInterval(countdownInterval);
-            
-            const timeDisplay = document.getElementById('time-display');
-            
-            if (currentKeyType === 'forever') {
-                timeDisplay.textContent = '∞ Vĩnh Viễn';
-                timeDisplay.style.color = '#e879f9';
-                return;
-            }
-            
-            function updateCountdown() {
-                if (!keyExpiryTime) {
-                    timeDisplay.textContent = '∞';
-                    return;
-                }
-                
-                const now = Date.now();
-                const remaining = keyExpiryTime - now;
-                
-                if (remaining <= 0) {
-                    // Hết hạn
-                    clearInterval(countdownInterval);
-                    clearInterval(pingInterval);
-                    timeDisplay.textContent = '00:00:00';
-                    timeDisplay.classList.add('time-warning');
-                    
-                    // Khóa lại App
-                    setTimeout(() => {
-                        document.getElementById('lock-screen').classList.remove('hidden');
-                        showToast('⏰ Key đã hết hạn! Vui lòng nhập Key mới.', 'error');
-                        
-                        // Reset các biến
-                        currentKeyType = null;
-                        keyExpiryTime = null;
-                        timeDisplay.classList.remove('time-warning');
-                        timeDisplay.textContent = '--:--:--';
-                        timeDisplay.style.color = '#d946ef';
-                        
-                        // Tắt các tính năng
-                        document.querySelectorAll('.toggle-switch').forEach(t => t.classList.remove('active'));
-                        document.querySelectorAll('.feature-card').forEach(c => c.classList.remove('active-feature'));
-                        
-                    }, 1000);
-                    return;
-                }
-                
-                // Tính toán giờ, phút, giây
-                const totalSeconds = Math.floor(remaining / 1000);
-                const days = Math.floor(totalSeconds / 86400);
-                const hours = Math.floor((totalSeconds % 86400) / 3600);
-                const minutes = Math.floor((totalSeconds % 3600) / 60);
-                const seconds = totalSeconds % 60;
-                
-                let displayText = '';
-                if (days > 0) {
-                    displayText = `${days}d ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-                } else {
-                    displayText = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-                }
-                
-                timeDisplay.textContent = displayText;
-                
-                // Cảnh báo khi còn dưới 1 giờ
-                if (remaining < 3600000) {
-                    timeDisplay.classList.add('time-warning');
-                } else {
-                    timeDisplay.classList.remove('time-warning');
-                }
-            }
-            
-            updateCountdown();
-            countdownInterval = setInterval(updateCountdown, 1000);
-        }
+<div id="toast">Thông báo</div>
 
-        document.getElementById('lock-key-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') unlockApp();
-        });
+<script>
+/* ===================================================
+   REG FILE FF v1.4.0
+   - Mỗi DNS có bộ AIM riêng
+   - Bỏ "Nghiem.iOS - Config"
+   =================================================== */
 
-        // ==========================================
-        // CHUYỂN TRANG
-        // ==========================================
-        function switchPage(pageId, btnElement) {
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
+/* ============ KEY DATABASE ============ */
+const KEY_DB_ORIGINAL = {
+  weekly: [
+    "REG-WK-A1B2-C3D4-FF","REG-WK-E5F6-G7H8-FF","REG-WK-I9J0-K1L2-FF",
+    "REG-WK-M3N4-O5P6-FF","REG-WK-Q7R8-S9T0-FF","REG-WK-U1V2-W3X4-FF",
+    "REG-WK-Y5Z6-AA7B-FF","REG-WK-CC8D-EE9F-FF","REG-WK-GG0H-II1J-FF",
+    "REG-WK-KK2L-MM3N-FF","REG-WK-OO4P-QQ5R-FF","REG-WK-SS6T-UU7V-FF",
+    "REG-WK-WW8X-YY9Z-FF","REG-WK-BA1C-BD2E-FF","REG-WK-BF3G-BH4I-FF",
+    "REG-WK-BJ5K-BL6M-FF","REG-WK-BN7O-BP8Q-FF","REG-WK-BR9S-BT0U-FF",
+    "REG-WK-BV1W-BX2Y-FF","REG-WK-BZ3A-CB4C-FF","REG-WK-CD5E-CF6G-FF",
+    "REG-WK-CH7I-CJ8K-FF","REG-WK-CL9M-CN0O-FF","REG-WK-CP1Q-CR2S-FF",
+    "REG-WK-CT3U-CV4W-FF","REG-WK-CX5Y-CZ6A-FF","REG-WK-DB7C-DD8E-FF",
+    "REG-WK-DF9G-DH0I-FF","REG-WK-DJ1K-DL2M-FF","REG-WK-DN3O-DP4Q-FF"
+  ],
+  monthly: [
+    "REG-MN-F1G2-H3I4-FF","REG-MN-J5K6-L7M8-FF","REG-MN-N9O0-P1Q2-FF",
+    "REG-MN-R3S4-T5U6-FF","REG-MN-V7W8-X9Y0-FF","REG-MN-Z1A2-B3C4-FF",
+    "REG-MN-D5E6-F7G8-FF","REG-MN-H9I0-J1K2-FF","REG-MN-L3M4-N5O6-FF",
+    "REG-MN-P7Q8-R9S0-FF","REG-MN-T1U2-V3W4-FF","REG-MN-X5Y6-Z7A8-FF",
+    "REG-MN-B9C0-D1E2-FF","REG-MN-F3G4-H5I6-FF","REG-MN-J7K8-L9M0-FF",
+    "REG-MN-N1O2-P3Q4-FF","REG-MN-R5S6-T7U8-FF","REG-MN-V9W0-X1Y2-FF",
+    "REG-MN-Z3A4-B5C6-FF","REG-MN-D7E8-F9G0-FF","REG-MN-H1I2-J3K4-FF",
+    "REG-MN-L5M6-N7O8-FF","REG-MN-P9Q0-R1S2-FF","REG-MN-T3U4-V5W6-FF",
+    "REG-MN-X7Y8-Z9A0-FF","REG-MN-B1C2-D3E4-FF","REG-MN-F5G6-H7I8-FF",
+    "REG-MN-J9K0-L1M2-FF","REG-MN-N3O4-P5Q6-FF","REG-MN-R7S8-T9U0-FF"
+  ],
+  permanent: [
+    "REG-PM-V1V2-V3V4-FF","REG-PM-V5V6-V7V8-FF","REG-PM-V9V0-V1V2-FF",
+    "REG-PM-W3W4-W5W6-FF","REG-PM-W7W8-W9W0-FF","REG-PM-X1X2-X3X4-FF",
+    "REG-PM-X5X6-X7X8-FF","REG-PM-X9X0-X1X2-FF","REG-PM-Y3Y4-Y5Y6-FF",
+    "REG-PM-Y7Y8-Y9Y0-FF","REG-PM-Z1Z2-Z3Z4-FF","REG-PM-Z5Z6-Z7Z8-FF",
+    "REG-PM-A9B0-C1D2-FF","REG-PM-E3F4-G5H6-FF","REG-PM-I7J8-K9L0-FF",
+    "REG-PM-M1N2-O3P4-FF","REG-PM-Q5R6-S7T8-FF","REG-PM-U9V0-W1X2-FF",
+    "REG-PM-Y3Z4-A5B6-FF","REG-PM-C7D8-E9F0-FF","REG-PM-G1H2-I3J4-FF",
+    "REG-PM-K5L6-M7N8-FF","REG-PM-O9P0-Q1R2-FF","REG-PM-S3T4-U5V6-FF",
+    "REG-PM-W7X8-Y9Z0-FF","REG-PM-A1B2-C3D4-FF","REG-PM-E5F6-G7H8-FF",
+    "REG-PM-I9J0-K1L2-FF","REG-PM-M3N4-O5P6-FF","REG-PM-Q7R8-S9T0-FF"
+  ]
+};
+const KEY_DB = JSON.parse(JSON.stringify(KEY_DB_ORIGINAL));
 
-            if (btnElement) {
-                document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
-                btnElement.classList.add('active');
-            }
-            document.querySelector('.app-content').scrollTop = 0;
-        }
+/* ===================================================
+   📡 DNS PROFILES + AIM CONFIG RIÊNG CHO TỪNG DNS
+   =================================================== */
+const DNS_PROFILES = [
+  {
+    id: 'auto',
+    icon: '⌨️',
+    name: 'Tự động',
+    desc: 'DNS mặc định hệ thống',
+    profile: null,
+    aimTag: 'AIM Gốc',
+    aim: {
+      aimColor: '#ff003c', aimSize: 40, aimThick: 2, aimStyle: 'cross',
+      lockColor: '#00ffea', lockRadius: 400, lockSpeed: 8, lockLine: true,
+      neckColor: '#ffb300', neckOffset: -12, neckSpeed: 10,
+      beep: true, growl: true
+    }
+  },
+  {
+    id: 'aimbot',
+    icon: '🎯',
+    name: 'Aimbot ⚡',
+    desc: 'Auto-aim cực nhạy, lock nhanh',
+    profile: 'Aimbot',
+    aimTag: 'AIM LOCK CỰC MẠNH',
+    aim: {
+      aimColor: '#ff1744', aimSize: 50, aimThick: 3, aimStyle: 'full',
+      lockColor: '#ff1744', lockRadius: 600, lockSpeed: 18, lockLine: true,
+      neckColor: '#ff1744', neckOffset: -10, neckSpeed: 16,
+      beep: true, growl: true
+    }
+  },
+  {
+    id: 'dpi1200',
+    icon: '🎮',
+    name: 'DPI 1200 👶',
+    desc: 'Tâm to, dễ nhìn, ổn định',
+    profile: 'DPI1200',
+    aimTag: 'AIM SIZE LỚN',
+    aim: {
+      aimColor: '#00e676', aimSize: 60, aimThick: 3, aimStyle: 'dot',
+      lockColor: '#00e676', lockRadius: 500, lockSpeed: 10, lockLine: false,
+      neckColor: '#00e676', neckOffset: -14, neckSpeed: 10,
+      beep: true, growl: false
+    }
+  },
+  {
+    id: 'fps90',
+    icon: '⚡',
+    name: 'FPS 90 📱',
+    desc: 'Tâm mỏng, lock mượt, không gầm',
+    profile: 'FPS90',
+    aimTag: 'AIM MƯỢT',
+    aim: {
+      aimColor: '#00d4ff', aimSize: 30, aimThick: 1, aimStyle: 'circle',
+      lockColor: '#00d4ff', lockRadius: 350, lockSpeed: 14, lockLine: true,
+      neckColor: '#00d4ff', neckOffset: -12, neckSpeed: 14,
+      beep: false, growl: false
+    }
+  },
+  {
+    id: 'fullsettings',
+    icon: '🔥',
+    name: 'Full Settings DNS ✅',
+    desc: 'Full AIM: lock + neck + growl mạnh',
+    profile: 'FullSettings',
+    aimTag: 'AIM FULL PRO',
+    aim: {
+      aimColor: '#ff006e', aimSize: 55, aimThick: 3, aimStyle: 'full',
+      lockColor: '#ff006e', lockRadius: 700, lockSpeed: 20, lockLine: true,
+      neckColor: '#ff006e', neckOffset: -15, neckSpeed: 18,
+      beep: true, growl: true
+    }
+  },
+  {
+    id: 'head',
+    icon: '💀',
+    name: 'HEAD 🔥',
+    desc: 'Aim đầu — lock cao, siêu chính xác',
+    profile: 'HEAD',
+    aimTag: 'AIM HEAD',
+    aim: {
+      aimColor: '#ffb300', aimSize: 45, aimThick: 2, aimStyle: 'cross',
+      lockColor: '#ffb300', lockRadius: 550, lockSpeed: 16, lockLine: true,
+      neckColor: '#ffb300', neckOffset: -25, neckSpeed: 15,
+      beep: true, growl: true
+    }
+  },
+  {
+    id: 'nextdns',
+    icon: '🛡️',
+    name: 'NextDNS',
+    desc: 'Bảo mật, chống lag, aim nhẹ',
+    profile: 'NextDNS',
+    aimTag: 'AIM BẢO MẬT',
+    aim: {
+      aimColor: '#7c4dff', aimSize: 35, aimThick: 2, aimStyle: 'circle',
+      lockColor: '#7c4dff', lockRadius: 300, lockSpeed: 6, lockLine: false,
+      neckColor: '#7c4dff', neckOffset: -10, neckSpeed: 8,
+      beep: false, growl: true
+    }
+  },
+  {
+    id: 'sensitouch',
+    icon: '👆',
+    name: 'Sensi Touch ⚡',
+    desc: 'Cảm ứng nhạy, aim cực nhanh',
+    profile: 'SensiTouch',
+    aimTag: 'AIM SIÊU NHẠY',
+    aim: {
+      aimColor: '#ff9100', aimSize: 42, aimThick: 2, aimStyle: 'dot',
+      lockColor: '#ff9100', lockRadius: 500, lockSpeed: 20, lockLine: true,
+      neckColor: '#ff9100', neckOffset: -13, neckSpeed: 20,
+      beep: true, growl: true
+    }
+  }
+];
 
-        // ==========================================
-        // TOGGLE FEATURE
-        // ==========================================
-        function toggleFeature(element) {
-            element.classList.toggle('active');
-            const isActive = element.classList.contains('active');
-            const card = element.closest('.feature-card');
-            const featureName = card.querySelector('.feature-name').textContent.trim();
-            
-            if (isActive) card.classList.add('active-feature');
-            else card.classList.remove('active-feature');
-            
-            showToast(`${featureName}: ${isActive ? 'BẬT' : 'TẮT'}`, isActive ? 'success' : 'info');
-        }
+const DNS_SERVERS = {
+  'Aimbot':       { primary: '1.1.1.1',       secondary: '1.0.0.1' },
+  'DPI1200':      { primary: '8.8.8.8',       secondary: '8.8.4.4' },
+  'FPS90':        { primary: '9.9.9.9',       secondary: '149.112.112.112' },
+  'FullSettings': { primary: '1.1.1.1',       secondary: '8.8.8.8' },
+  'HEAD':         { primary: '76.76.2.0',     secondary: '76.76.10.0' },
+  'NextDNS':      { primary: '45.90.28.0',    secondary: '45.90.30.0' },
+  'SensiTouch':   { primary: '185.228.168.9', secondary: '185.228.169.9' }
+};
 
-        // ==========================================
-        // SLIDER KÉO ĐƯỢC
-        // ==========================================
-        function startDrag(event, sliderBar) {
-            event.preventDefault();
-            const fill = sliderBar.querySelector('.slider-fill');
-            const thumb = sliderBar.querySelector('.slider-thumb');
-            const valueDisplay = sliderBar.closest('.slider-container').querySelector('.slider-value');
+let selectedDNS = 'head';
 
-            function updateSlider(clientX) {
-                const rect = sliderBar.getBoundingClientRect();
-                let percentage = ((clientX - rect.left) / rect.width) * 100;
-                percentage = Math.max(0, Math.min(100, percentage));
-                
-                fill.style.width = percentage + '%';
-                thumb.style.left = percentage + '%';
-                valueDisplay.textContent = Math.round(percentage) + '%';
-            }
+/* ============ LOCAL STORAGE ============ */
+const LS = {
+  get: function(k, d) {
+    if (d === undefined) d = null;
+    try {
+      const v = localStorage.getItem(k);
+      return v === null ? d : JSON.parse(v);
+    } catch(e) { return d; }
+  },
+  set: function(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} },
+  del: function(k) { try { localStorage.removeItem(k); } catch(e) {} }
+};
 
-            function onMouseMove(e) { updateSlider(e.clientX); }
-            function onTouchMove(e) { updateSlider(e.touches[0].clientX); }
+/* ============ AUDIO ============ */
+let audioCtx = null;
+let masterVolume = 0.7;
 
-            function stopDrag() {
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', stopDrag);
-                document.removeEventListener('touchmove', onTouchMove);
-                document.removeEventListener('touchend', stopDrag);
-            }
+function initAudio() {
+  if (!audioCtx) {
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    catch(e) { console.warn('Audio không hỗ trợ'); }
+  }
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}
 
-            updateSlider(event.clientX || event.touches[0].clientX);
-            
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', stopDrag);
-            document.addEventListener('touchmove', onTouchMove, { passive: false });
-            document.addEventListener('touchend', stopDrag);
-        }
+function playBeep() {
+  const cb = document.getElementById('beepOn');
+  if (cb && !cb.checked) return;
+  initAudio(); if (!audioCtx) return;
+  const now = audioCtx.currentTime;
+  [0, 0.12].forEach(function(offset, i) {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(i === 0 ? 880 : 1200, now + offset);
+    gain.gain.setValueAtTime(0.0001, now + offset);
+    gain.gain.exponentialRampToValueAtTime(0.25 * masterVolume, now + offset + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + offset + 0.1);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(now + offset); osc.stop(now + offset + 0.12);
+  });
+}
 
-        // ==========================================
-        // AIM BUTTONS
-        // ==========================================
-        function setAim(element, mode) {
-            const container = element.parentElement;
-            container.querySelectorAll('.aim-btn').forEach(btn => btn.classList.remove('active'));
-            element.classList.add('active');
-            showToast(`🎯 Đã chọn chế độ Aim: ${mode}`, 'info');
-        }
+function playGrowl() {
+  const cb = document.getElementById('growlOn');
+  if (cb && !cb.checked) return;
+  initAudio(); if (!audioCtx) return;
+  const now = audioCtx.currentTime; const dur = 1.2;
+  const osc1 = audioCtx.createOscillator();
+  const osc2 = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  const filter = audioCtx.createBiquadFilter();
 
-        // ==========================================
-        // SPEED BUTTONS (Chạy Gầm)
-        // ==========================================
-        function setSpeed(element, speed) {
-            const container = element.parentElement;
-            container.querySelectorAll('.aim-btn').forEach(btn => btn.classList.remove('active'));
-            element.classList.add('active');
-            showToast(`🏃 Đã chọn tốc độ chạy gầm: ${speed}`, 'info');
-        }
+  osc1.type = 'sawtooth';
+  osc1.frequency.setValueAtTime(70, now);
+  osc1.frequency.exponentialRampToValueAtTime(45, now + dur);
+  osc2.type = 'square';
+  osc2.frequency.setValueAtTime(35, now);
+  osc2.frequency.exponentialRampToValueAtTime(28, now + dur);
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(400, now);
+  filter.frequency.exponentialRampToValueAtTime(180, now + dur);
+  filter.Q.value = 4;
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.35 * masterVolume, now + 0.08);
+  for (let t = 0.08; t < dur; t += 0.08) {
+    const wobble = 0.28 + Math.sin(t * 30) * 0.08;
+    gain.gain.exponentialRampToValueAtTime(Math.max(0.05, wobble) * masterVolume, now + t);
+  }
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+  osc1.connect(filter); osc2.connect(filter);
+  filter.connect(gain).connect(audioCtx.destination);
+  osc1.start(now); osc2.start(now);
+  osc1.stop(now + dur); osc2.stop(now + dur);
+}
 
-        // ==========================================
-        // TOAST
-        // ==========================================
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = `toast ${type}`;
-            toast.classList.add('show');
-            
-            setTimeout(() => toast.classList.remove('show'), 2500);
-        }
-    </script>
+function playNeckGrowl() {
+  const cb = document.getElementById('growlOn');
+  if (cb && !cb.checked) return;
+  initAudio(); if (!audioCtx) return;
+  const now = audioCtx.currentTime; const dur = 1.4;
+  const osc1 = audioCtx.createOscillator();
+  const osc2 = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  const filter = audioCtx.createBiquadFilter();
+
+  osc1.type = 'sawtooth';
+  osc1.frequency.setValueAtTime(90, now);
+  osc1.frequency.exponentialRampToValueAtTime(55, now + dur);
+  osc2.type = 'triangle';
+  osc2.frequency.setValueAtTime(50, now);
+  osc2.frequency.exponentialRampToValueAtTime(38, now + dur);
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(500, now);
+  filter.frequency.exponentialRampToValueAtTime(150, now + dur);
+  filter.Q.value = 6;
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.4 * masterVolume, now + 0.1);
+  for (let t = 0.1; t < dur; t += 0.06) {
+    const wobble = 0.32 + Math.sin(t * 40) * 0.1;
+    gain.gain.exponentialRampToValueAtTime(Math.max(0.08, wobble) * masterVolume, now + t);
+  }
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+  osc1.connect(filter); osc2.connect(filter);
+  filter.connect(gain).connect(audioCtx.destination);
+  osc1.start(now); osc2.start(now);
+  osc1.stop(now + dur); osc2.stop(now + dur);
+}
+
+function playActivateSound() { playBeep(); setTimeout(playGrowl, 350); }
+
+function playErrorSound() {
+  initAudio(); if (!audioCtx) return;
+  const now = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'sawtooth';
+  osc.frequency.setValueAtTime(220, now);
+  osc.frequency.exponentialRampToValueAtTime(80, now + 0.35);
+  gain.gain.setValueAtTime(0.25 * masterVolume, now);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+  osc.connect(gain).connect(audioCtx.destination);
+  osc.start(now); osc.stop(now + 0.4);
+}
+
+function playShutdownSound() {
+  initAudio(); if (!audioCtx) return;
+  const now = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(600, now);
+  osc.frequency.exponentialRampToValueAtTime(100, now + 0.8);
+  gain.gain.setValueAtTime(0.3 * masterVolume, now);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
+  osc.connect(gain).connect(audioCtx.destination);
+  osc.start(now); osc.stop(now + 0.85);
+}
+
+function playLockSound() {
+  initAudio(); if (!audioCtx) return;
+  const now = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(1400, now);
+  osc.frequency.exponentialRampToValueAtTime(2200, now + 0.08);
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.18 * masterVolume, now + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.1);
+  osc.connect(gain).connect(audioCtx.destination);
+  osc.start(now); osc.stop(now + 0.12);
+}
+
+function playNeckLockSound() {
+  initAudio(); if (!audioCtx) return;
+  const now = audioCtx.currentTime;
+  [1100, 1500].forEach(function(f, i) {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(f, now + i * 0.07);
+    gain.gain.setValueAtTime(0.0001, now + i * 0.07);
+    gain.gain.exponentialRampToValueAtTime(0.2 * masterVolume, now + i * 0.07 + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.07 + 0.09);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(now + i * 0.07); osc.stop(now + i * 0.07 + 0.1);
+  });
+}
+
+function updateVolume() {
+  const v = +document.getElementById('volRange').value;
+  masterVolume = v / 100;
+  document.getElementById('volVal').innerText = v;
+  document.getElementById('volQuick').value = v;
+  document.getElementById('volQuickVal').innerText = v;
+}
+function quickVol(v) {
+  masterVolume = v / 100;
+  document.getElementById('volRange').value = v;
+  document.getElementById('volVal').innerText = v;
+  document.getElementById('volQuickVal').innerText = v;
+}
+
+/* ============ DEVICE + KEY ============ */
+function getDeviceId() {
+  let id = LS.get('ff_device_id');
+  if (!id) {
+    id = 'DEV-' + Math.random().toString(36).slice(2,10).toUpperCase() +
+         '-' + Date.now().toString(36).toUpperCase();
+    LS.set('ff_device_id', id);
+  }
+  return id;
+}
+
+function validateKey(input) {
+  const key = input.trim().toUpperCase();
+  if (!key) return { ok: false, msg: 'Vui lòng nhập KEY!' };
+  if (!/^REG-[A-Z0-9]{2,4}-[A-Z0-9]{4}-[A-Z0-9]{4}-FF$/.test(key)) {
+    return { ok: false, msg: 'Sai định dạng! Key phải bắt đầu REG... kết thúc FF' };
+  }
+  for (const type of ['weekly','monthly','permanent']) {
+    const idx = KEY_DB[type].indexOf(key);
+    if (idx !== -1) {
+      KEY_DB[type].splice(idx, 1);
+      const now = Date.now();
+      const DURATION = { weekly: 7*24*3600*1000, monthly: 30*24*3600*1000, permanent: -1 };
+      const dur = DURATION[type];
+      const info = { key, type, activated: now, expires: dur === -1 ? -1 : now + dur };
+      LS.set('ff_key_info', info);
+      return { ok: true, info };
+    }
+  }
+  return { ok: false, msg: 'KEY không hợp lệ hoặc đã được sử dụng!' };
+}
+
+let currentKeyTab = 'weekly';
+function toggleKeyList() {
+  const w = document.getElementById('keyListWrap');
+  w.classList.toggle('show');
+  if (w.classList.contains('show')) showKeyTab(currentKeyTab, null);
+}
+function showKeyTab(type, btn) {
+  currentKeyTab = type;
+  document.querySelectorAll('.keyTabs button').forEach(function(b) { b.classList.remove('active'); });
+  if (btn) {
+    btn.classList.add('active');
+  } else {
+    const idx = ['weekly','monthly','permanent'].indexOf(type);
+    const tabs = document.querySelectorAll('.keyTabs button');
+    if (tabs[idx]) tabs[idx].classList.add('active');
+  }
+
+  const list = document.getElementById('keyList');
+  list.innerHTML = '';
+  KEY_DB[type].forEach(function(key) {
+    const div = document.createElement('div');
+    div.className = 'keyItem';
+    div.innerHTML = '<span>' + key + '</span><span class="copyHint">click để dùng</span>';
+    div.onclick = function() {
+      document.getElementById('keyInput').value = key;
+      showToast('📋 Đã chọn key! Bấm KÍCH HOẠT');
+    };
+    list.appendChild(div);
+  });
+  if (KEY_DB[type].length === 0) {
+    list.innerHTML = '<div style="text-align:center;color:#b380d9;padding:20px;">Hết key loại này rồi!</div>';
+  }
+}
+
+/* ============ TOAST ============ */
+let toastT = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.innerText = msg;
+  t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(function() { t.classList.remove('show'); }, 2200);
+}
+
+/* ===================================================
+   📡 DNS UI + ÁP DỤNG AIM RIÊNG
+   =================================================== */
+function renderDNSList() {
+  const list = document.getElementById('dnsList');
+  if (!list) return;
+  list.innerHTML = '';
+  DNS_PROFILES.forEach(function(p) {
+    const item = document.createElement('div');
+    item.className = 'dnsItem' + (selectedDNS === p.id ? ' active' : '');
+    item.onclick = function() { selectDNS(p.id); };
+    item.innerHTML =
+      '<div class="dnsIcon">' + p.icon + '</div>' +
+      '<div class="dnsInfo">' +
+        '<div class="dnsName">' + p.name +
+          ' <span class="dnsAimTag">' + p.aimTag + '</span>' +
+        '</div>' +
+        (p.desc ? '<div class="dnsDesc">' + p.desc + '</div>' : '') +
+      '</div>' +
+      '<div class="dnsCheck">✓</div>';
+    list.appendChild(item);
+  });
+  updateDnsBanner();
+}
+
+function updateDnsBanner() {
+  const banner = document.getElementById('dnsActiveBanner');
+  if (!banner) return;
+  const p = DNS_PROFILES.find(function(x) { return x.id === selectedDNS; });
+  if (p && p.id !== 'auto') {
+    banner.classList.add('show');
+    banner.innerText = '📡 DNS đang chọn: ' + p.name + ' → ' + p.aimTag;
+  } else {
+    banner.classList.remove('show');
+  }
+}
+
+function selectDNS(id) {
+  selectedDNS = id;
+  renderDNSList();
+  const p = DNS_PROFILES.find(function(x) { return x.id === id; });
+  if (p) {
+    showToast('📡 Chọn: ' + p.name + ' | ' + p.aimTag);
+    playBeep();
+    LS.set('ff_dns_selected', id);
+  }
+}
+
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16).toUpperCase();
+  });
+}
+
+/* 🌟 HÀM CHÍNH: Áp dụng AIM riêng của DNS đang chọn */
+function applyDNS() {
+  const p = DNS_PROFILES.find(function(x) { return x.id === selectedDNS; });
+  if (!p) return;
+
+  initAudio();
+  playBeep();
+  setTimeout(playGrowl, 300);
+
+  // 🎯 Áp dụng bộ AIM riêng của DNS này vào giao diện + biến
+  applyAimProfile(p.aim);
+
+  showToast('🎯 Đã áp dụng AIM: ' + p.aimTag);
+
+  // Nếu là DNS thật (không phải auto) thì tải file .mobileconfig
+  if (p.id === 'auto') {
+    setTimeout(function() {
+      showToast('🔄 DNS ở chế độ TỰ ĐỘNG');
+    }, 1200);
+    return;
+  }
+
+  const servers = DNS_SERVERS[p.profile] || DNS_SERVERS['Aimbot'];
+
+  const mobileconfig =
+'<?xml version="1.0" encoding="UTF-8"?>\n' +
+'<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n' +
+'<plist version="1.0">\n' +
+'<dict>\n' +
+'  <key>PayloadContent</key>\n' +
+'  <array>\n' +
+'    <dict>\n' +
+'      <key>DNSSettings</key>\n' +
+'      <dict>\n' +
+'        <key>DNSProtocol</key>\n' +
+'        <string>HTTPS</string>\n' +
+'        <key>ServerURL</key>\n' +
+'        <string>https://' + servers.primary + '/dns-query</string>\n' +
+'        <key>ServerAddresses</key>\n' +
+'        <array>\n' +
+'          <string>' + servers.primary + '</string>\n' +
+'          <string>' + servers.secondary + '</string>\n' +
+'        </array>\n' +
+'      </dict>\n' +
+'      <key>PayloadDescription</key>\n' +
+'      <string>REG FILE FF - ' + p.name + '</string>\n' +
+'      <key>PayloadDisplayName</key>\n' +
+'      <string>' + p.name + '</string>\n' +
+'      <key>PayloadIdentifier</key>\n' +
+'      <string>com.regfileff.dns.' + p.id + '</string>\n' +
+'      <key>PayloadType</key>\n' +
+'      <string>com.apple.dnsSettings.managed</string>\n' +
+'      <key>PayloadUUID</key>\n' +
+'      <string>' + generateUUID() + '</string>\n' +
+'      <key>PayloadVersion</key>\n' +
+'      <integer>1</integer>\n' +
+'    </dict>\n' +
+'  </array>\n' +
+'  <key>PayloadDisplayName</key>\n' +
+'  <string>REG FILE FF - ' + p.name + '</string>\n' +
+'  <key>PayloadIdentifier</key>\n' +
+'  <string>com.regfileff.config</string>\n' +
+'  <key>PayloadOrganization</key>\n' +
+'  <string>REG FILE FF</string>\n' +
+'  <key>PayloadRemovalDisallowed</key>\n' +
+'  <false/>\n' +
+'  <key>PayloadType</key>\n' +
+'  <string>Configuration</string>\n' +
+'  <key>PayloadUUID</key>\n' +
+'  <string>' + generateUUID() + '</string>\n' +
+'  <key>PayloadVersion</key>\n' +
+'  <integer>1</integer>\n' +
+'</dict>\n' +
+'</plist>';
+
+  try {
+    const blob = new Blob([mobileconfig], { type: 'application/x-apple-aspen-config' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'REG_FF_DNS_' + p.profile + '.mobileconfig';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function() { URL.revokeObjectURL(url); }, 5000);
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+/* 🌟 Áp dụng cấu hình AIM vào tất cả thành phần */
+function applyAimProfile(aim) {
+  // Cập nhật inputs
+  document.getElementById('aimColor').value    = aim.aimColor;
+  document.getElementById('aimSize').value     = aim.aimSize;
+  document.getElementById('aimThick').value    = aim.aimThick;
+  document.getElementById('aimStyle').value    = aim.aimStyle;
+  document.getElementById('lockColor').value   = aim.lockColor;
+  document.getElementById('lockRadius').value  = aim.lockRadius;
+  document.getElementById('lockSpeed').value   = aim.lockSpeed;
+  document.getElementById('lockLineOn').checked = aim.lockLine;
+  document.getElementById('neckColor').value   = aim.neckColor;
+  document.getElementById('neckOffsetY').value = aim.neckOffset;
+  document.getElementById('neckSpeed').value   = aim.neckSpeed;
+  document.getElementById('beepOn').checked    = aim.beep;
+  document.getElementById('growlOn').checked   = aim.growl;
+
+  // Cập nhật biến cấu hình
+  lockCfg.color    = aim.lockColor;
+  lockCfg.radius   = aim.lockRadius;
+  lockCfg.speed    = aim.lockSpeed;
+  lockCfg.showLine = aim.lockLine;
+
+  neckCfg.color   = aim.neckColor;
+  neckCfg.offsetY = aim.neckOffset;
+  neckCfg.speed   = aim.neckSpeed;
+
+  // Cập nhật UI hiển thị
+  document.getElementById('sizeVal').innerText = aim.aimSize;
+  document.getElementById('thickVal').innerText = aim.aimThick;
+  document.getElementById('lockRadiusVal').innerText = aim.lockRadius;
+  document.getElementById('lockSpeedVal').innerText = aim.lockSpeed;
+  document.getElementById('neckOffsetVal').innerText = aim.neckOffset;
+  document.getElementById('neckSpeedVal').innerText = aim.neckSpeed;
+
+  // Áp dụng vào overlay
+  updateAim();
+  updateLockColor();
+  updateNeckColor();
+  updateNeckOffset();
+  updateNeckSpeed();
+
+  // Lưu vào localStorage
+  LS.set('ff_aim_cfg', {
+    color: aim.aimColor, size: aim.aimSize, thick: aim.aimThick, style: aim.aimStyle,
+    lockColor: aim.lockColor, lockRadius: aim.lockRadius, lockSpeed: aim.lockSpeed, lockLine: aim.lockLine,
+    neckColor: aim.neckColor, neckOffset: aim.neckOffset, neckSpeed: aim.neckSpeed,
+    beep: aim.beep, growl: aim.growl
+  });
+}
+
+function resetDNS() {
+  selectedDNS = 'auto';
+  renderDNSList();
+  LS.del('ff_dns_selected');
+
+  // Áp dụng AIM gốc
+  const autoP = DNS_PROFILES.find(function(x) { return x.id === 'auto'; });
+  if (autoP) applyAimProfile(autoP.aim);
+
+  showToast('🔄 Đã reset DNS + AIM về mặc định');
+}
+
+/* ============ LAUNCH FF ============ */
+function launchFF(type) {
+  initAudio();
+  playBeep();
+  setTimeout(playGrowl, 300);
+
+  if (type === 'max') {
+    showToast('🔥 Đang khởi chạy FREE FIRE MAX...');
+    tryLaunch(['ffmax://', 'freefiremax://', 'android://com.dts.freefiremax'], 'Free Fire MAX');
+  } else {
+    showToast('🎮 Đang khởi chạy FREE FIRE...');
+    tryLaunch(['ff://', 'freefire://', 'android://com.dts.freefireth'], 'Free Fire');
+  }
+}
+
+function tryLaunch(uris, name) {
+  setTimeout(function() {
+    const ok = confirm(
+      '🚀 ĐANG KHỞI CHẠY: ' + name + '\n\n' +
+      'Trên Web app, không thể mở game trực tiếp.\n' +
+      'Trên app Android/Python, sẽ dùng lệnh:\n' + uris[0] + '\n\n' +
+      'Nhấn OK để thử mở bằng deep link.'
+    );
+    if (!ok) return;
+    let idx = 0;
+    const tryNext = function() {
+      if (idx >= uris.length) {
+        showToast('❌ Không mở được game. Vui lòng mở thủ công.');
+        return;
+      }
+      try {
+        const a = document.createElement('a');
+        a.href = uris[idx++];
+        a.target = '_blank';
+        a.click();
+        setTimeout(tryNext, 800);
+      } catch(e) { tryNext(); }
+    };
+    tryNext();
+  }, 500);
+}
+
+/* ============ SESSION ============ */
+let sessionKey = null;
+let timerInt = null;
+
+function startSession(info) {
+  sessionKey = info;
+  document.getElementById('keyPage').classList.add('hidden');
+  document.getElementById('app').classList.add('show');
+  document.getElementById('keyInfoBox').innerText =
+    '🔑 Key: ' + info.key + '\nLoại: ' + info.type.toUpperCase();
+  document.getElementById('deviceInfo').innerText = 'Device ID: ' + getDeviceId();
+  showToast('✅ Kích hoạt thành công!');
+  startOverlay();
+  startTimer();
+  renderDNSList();
+}
+
+function startTimer() {
+  if (timerInt) clearInterval(timerInt);
+  tickTimer();
+  timerInt = setInterval(tickTimer, 1000);
+}
+function tickTimer() {
+  if (!sessionKey) return;
+  const el = document.getElementById('timer');
+  if (sessionKey.expires === -1) {
+    el.innerText = '⏱ VĨNH VIỄN';
+    el.classList.remove('warn');
+    return;
+  }
+  const remain = Math.max(0, sessionKey.expires - Date.now());
+  const h = Math.floor(remain / 3600000);
+  const m = Math.floor((remain % 3600000) / 60000);
+  const s = Math.floor((remain % 60000) / 1000);
+  el.innerText = '⏱ ' + pad(h) + ':' + pad(m) + ':' + pad(s);
+  if (remain < 60000) el.classList.add('warn');
+  if (remain <= 0) expireSession();
+}
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function expireSession() {
+  if (timerInt) clearInterval(timerInt);
+  stopOverlay();
+  stopAimlock();
+  stopAimneck();
+  playShutdownSound();
+  showToast('⚠️ KEY đã hết hạn! App sẽ tự đóng...');
+  setTimeout(function() {
+    LS.del('ff_key_info');
+    document.getElementById('app').classList.remove('show');
+    document.getElementById('keyPage').classList.remove('hidden');
+    document.getElementById('keyInput').value = '';
+    document.getElementById('keyInput').focus();
+  }, 1800);
+}
+
+/* ============ AIM ============ */
+let aimOn = true;
+function startOverlay() {
+  aimOn = true;
+  document.getElementById('aimOverlay').classList.add('show');
+  updateAim();
+  playGrowl();
+}
+function stopOverlay() { document.getElementById('aimOverlay').classList.remove('show'); }
+function toggleAim() {
+  aimOn = !aimOn;
+  document.getElementById('aimToggle').checked = aimOn;
+  document.getElementById('aimToggle2').checked = aimOn;
+  if (aimOn) startOverlay(); else stopOverlay();
+  showToast(aimOn ? '🎯 AIM: BẬT' : '🎯 AIM: TẮT');
+}
+function updateAim() {
+  const color = document.getElementById('aimColor').value;
+  const size  = document.getElementById('aimSize').value;
+  const thick = document.getElementById('aimThick').value;
+  const style = document.getElementById('aimStyle').value;
+  document.getElementById('sizeVal').innerText = size;
+  document.getElementById('thickVal').innerText = thick;
+
+  const ov = document.getElementById('aimOverlay');
+  ov.style.width = size + 'px';
+  ov.style.height = size + 'px';
+  ov.style.filter = 'drop-shadow(0 0 6px ' + color + ')';
+
+  const svg = document.getElementById('aimSvg');
+  let shapes = '';
+  if (style === 'cross' || style === 'full') {
+    shapes +=
+      '<line x1="2"  y1="20" x2="14" y2="20" stroke="' + color + '" stroke-width="' + thick + '" stroke-linecap="round"/>' +
+      '<line x1="26" y1="20" x2="38" y2="20" stroke="' + color + '" stroke-width="' + thick + '" stroke-linecap="round"/>' +
+      '<line x1="20" y1="2"  x2="20" y2="14" stroke="' + color + '" stroke-width="' + thick + '" stroke-linecap="round"/>' +
+      '<line x1="20" y1="26" x2="20" y2="38" stroke="' + color + '" stroke-width="' + thick + '" stroke-linecap="round"/>';
+  }
+  if (style === 'dot') shapes += '<circle cx="20" cy="20" r="' + (parseInt(thick)+1) + '" fill="' + color + '"/>';
+  if (style === 'circle' || style === 'full')
+    shapes += '<circle cx="20" cy="20" r="7" fill="none" stroke="' + color + '" stroke-width="' + thick + '"/>';
+  if (style === 'full') shapes += '<circle cx="20" cy="20" r="1.5" fill="' + color + '"/>';
+  svg.innerHTML = shapes;
+}
+
+/* ============ AIMLOCK ============ */
+let aimlockOn = false;
+let lockAnimRAF = null;
+let lockCfg = { color: '#00ffea', radius: 400, speed: 8, showLine: true };
+let target = { x: null, y: null, el: null, active: false, vx: 0, vy: 0 };
+function center() { return { x: window.innerWidth / 2, y: window.innerHeight / 2 }; }
+
+function spawnTarget() {
+  target.el = document.getElementById('target1');
+  const cx = window.innerWidth / 2;
+  const cy = window.innerHeight / 2;
+  const rangeX = window.innerWidth * 0.35;
+  const rangeY = window.innerHeight * 0.35;
+  target.x = cx + (Math.random() * 2 - 1) * rangeX;
+  target.y = cy + (Math.random() * 2 - 1) * rangeY;
+  target.vx = (Math.random() * 2 - 1) * 2.5;
+  target.vy = (Math.random() * 2 - 1) * 2.5;
+  target.active = true;
+  target.el.style.left = (target.x - 20) + 'px';
+  target.el.style.top  = (target.y - 20) + 'px';
+  target.el.classList.add('show');
+  playLockSound();
+  showToast('🎯 Đã tạo mục tiêu ảo!');
+}
+
+function toggleAimlock() {
+  aimlockOn = document.getElementById('aimlockToggle').checked;
+  const dot = document.getElementById('lockDot');
+  const txt = document.getElementById('lockStatusText');
+  const card = document.getElementById('aimlockCard');
+
+  if (aimlockOn) {
+    dot.classList.add('on');
+    txt.innerText = 'TRẠNG THÁI: ĐANG KHOÁ';
+    card.classList.add('active');
+    document.getElementById('aimlockOverlay').classList.add('show');
+    showToast('🔒 AIMLOCK: BẬT');
+    playGrowl();
+    if (!target.active) spawnTarget();
+    startLockLoop();
+  } else {
+    dot.classList.remove('on');
+    txt.innerText = 'TRẠNG THÁI: TẮT';
+    card.classList.remove('active');
+    document.getElementById('aimlockOverlay').classList.remove('show');
+    document.getElementById('lockLine').classList.remove('show');
+    document.getElementById('lockTargetInfo').innerText = 'Mục tiêu: Chưa khoá';
+    showToast('🔒 AIMLOCK: TẮT');
+    stopLockLoop();
+  }
+}
+
+function stopAimlock() {
+  aimlockOn = false;
+  const t = document.getElementById('aimlockToggle');
+  if (t) t.checked = false;
+  const dot = document.getElementById('lockDot');
+  if (dot) dot.classList.remove('on');
+  const st = document.getElementById('lockStatusText');
+  if (st) st.innerText = 'TRẠNG THÁI: TẮT';
+  const card = document.getElementById('aimlockCard');
+  if (card) card.classList.remove('active');
+  const ov = document.getElementById('aimlockOverlay');
+  if (ov) ov.classList.remove('show');
+  const ll = document.getElementById('lockLine');
+  if (ll) ll.classList.remove('show');
+  if (target.el) target.el.classList.remove('show');
+  target.active = false;
+  stopLockLoop();
+}
+
+function startLockLoop() {
+  if (lockAnimRAF) cancelAnimationFrame(lockAnimRAF);
+  const loop = function() {
+    if (!aimlockOn) return;
+    updateTargetMotion();
+    updateAimlock();
+    lockAnimRAF = requestAnimationFrame(loop);
+  };
+  loop();
+}
+function stopLockLoop() {
+  if (lockAnimRAF) { cancelAnimationFrame(lockAnimRAF); lockAnimRAF = null; }
+}
+
+function updateTargetMotion() {
+  if (!target.active || !target.el) return;
+  target.x += target.vx;
+  target.y += target.vy;
+  const margin = 30;
+  if (target.x < margin || target.x > window.innerWidth - margin) target.vx *= -1;
+  if (target.y < margin + 60 || target.y > window.innerHeight - margin) target.vy *= -1;
+  target.x = Math.max(margin, Math.min(window.innerWidth - margin, target.x));
+  target.y = Math.max(margin + 60, Math.min(window.innerHeight - margin, target.y));
+  target.el.style.left = (target.x - 20) + 'px';
+  target.el.style.top  = (target.y - 20) + 'px';
+}
+
+function updateAimlock() {
+  if (!aimlockOn) return;
+  const c = center();
+  const overlay = document.getElementById('aimlockOverlay');
+  const lineWrap = document.getElementById('lockLine');
+  const lineEl = document.getElementById('lockLineEl');
+  let tx = c.x, ty = c.y;
+
+  if (target.active) {
+    const dx = target.x - c.x;
+    const dy = target.y - c.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist <= lockCfg.radius) {
+      const t = Math.min(1, lockCfg.speed / 20);
+      const curX = parseFloat(overlay.dataset.cx || c.x);
+      const curY = parseFloat(overlay.dataset.cy || c.y);
+      tx = curX + (target.x - curX) * t;
+      ty = curY + (target.y - curY) * t;
+      overlay.dataset.cx = tx; overlay.dataset.cy = ty;
+      if (lockCfg.showLine) {
+        lineWrap.classList.add('show');
+        lineEl.setAttribute('x1', c.x);
+        lineEl.setAttribute('y1', c.y);
+        lineEl.setAttribute('x2', target.x);
+        lineEl.setAttribute('y2', target.y);
+        lineEl.setAttribute('stroke', lockCfg.color);
+      } else {
+        lineWrap.classList.remove('show');
+      }
+      document.getElementById('lockTargetInfo').innerText =
+        '🎯 Mục tiêu: LOCKED (' + Math.round(dist) + 'px)';
+    } else {
+      overlay.dataset.cx = c.x; overlay.dataset.cy = c.y;
+      tx = c.x; ty = c.y;
+      lineWrap.classList.remove('show');
+      document.getElementById('lockTargetInfo').innerText =
+        'Mục tiêu: Ngoài tầm (' + Math.round(dist) + 'px)';
+    }
+  } else {
+    overlay.dataset.cx = c.x; overlay.dataset.cy = c.y;
+    tx = c.x; ty = c.y;
+    document.getElementById('lockTargetInfo').innerText = 'Mục tiêu: Chưa có';
+  }
+  overlay.style.left = tx + 'px';
+  overlay.style.top  = ty + 'px';
+}
+
+function updateLockColor() {
+  lockCfg.color = document.getElementById('lockColor').value;
+  lockCfg.showLine = document.getElementById('lockLineOn').checked;
+  document.querySelectorAll('#aimlockOverlay svg *').forEach(function(el) {
+    el.setAttribute('stroke', lockCfg.color);
+    if (el.tagName === 'circle' && el.getAttribute('r') === '2') {
+      el.setAttribute('fill', lockCfg.color);
+    }
+  });
+}
+function updateLockRadius() {
+  lockCfg.radius = +document.getElementById('lockRadius').value;
+  document.getElementById('lockRadiusVal').innerText = lockCfg.radius;
+}
+function updateLockSpeed() {
+  lockCfg.speed = +document.getElementById('lockSpeed').value;
+  document.getElementById('lockSpeedVal').innerText = lockCfg.speed;
+}
+
+/* ============ AIMNECK ============ */
+let aimneckOn = false;
+let neckAnimRAF = null;
+let neckCfg = { color: '#ffb300', offsetY: -12, speed: 10 };
+let neckTarget = { x: null, y: null, el: null, active: false, vx: 0, vy: 0 };
+
+function spawnNeckTarget() {
+  neckTarget.el = document.getElementById('neckTarget1');
+  const cx = window.innerWidth / 2;
+  const cy = window.innerHeight / 2;
+  const rangeX = window.innerWidth * 0.35;
+  const rangeY = window.innerHeight * 0.35;
+  neckTarget.x = cx + (Math.random() * 2 - 1) * rangeX;
+  neckTarget.y = cy + (Math.random() * 2 - 1) * rangeY;
+  neckTarget.vx = (Math.random() * 2 - 1) * 2;
+  neckTarget.vy = (Math.random() * 2 - 1) * 2;
+  neckTarget.active = true;
+  neckTarget.el.style.left = (neckTarget.x - 15) + 'px';
+  neckTarget.el.style.top  = (neckTarget.y - 15) + 'px';
+  neckTarget.el.classList.add('show');
+  playNeckLockSound();
+  showToast('🦴 Đã tạo mục tiêu cổ!');
+}
+
+function toggleAimneck() {
+  aimneckOn = document.getElementById('aimneckToggle').checked;
+  const dot = document.getElementById('neckDot');
+  const txt = document.getElementById('neckStatusText');
+  const card = document.getElementById('aimneckCard');
+
+  if (aimneckOn) {
+    dot.classList.add('neck-on');
+    txt.innerText = 'TRẠNG THÁI: ĐANG NGẮM CỔ';
+    card.classList.add('active');
+    document.getElementById('aimneckOverlay').classList.add('show');
+    showToast('🦴 AIMNECK: BẬT');
+    playNeckGrowl();
+    if (!neckTarget.active) spawnNeckTarget();
+    startNeckLoop();
+  } else {
+    dot.classList.remove('neck-on');
+    txt.innerText = 'TRẠNG THÁI: TẮT';
+    card.classList.remove('active');
+    document.getElementById('aimneckOverlay').classList.remove('show');
+    document.getElementById('neckInfo').innerText = 'Điểm ngắm: Cổ (Neck)';
+    showToast('🦴 AIMNECK: TẮT');
+    stopNeckLoop();
+  }
+}
+
+function stopAimneck() {
+  aimneckOn = false;
+  const t = document.getElementById('aimneckToggle');
+  if (t) t.checked = false;
+  const dot = document.getElementById('neckDot');
+  if (dot) dot.classList.remove('neck-on');
+  const st = document.getElementById('neckStatusText');
+  if (st) st.innerText = 'TRẠNG THÁI: TẮT';
+  const card = document.getElementById('aimneckCard');
+  if (card) card.classList.remove('active');
+  const ov = document.getElementById('aimneckOverlay');
+  if (ov) ov.classList.remove('show');
+  if (neckTarget.el) neckTarget.el.classList.remove('show');
+  neckTarget.active = false;
+  stopNeckLoop();
+}
+
+function startNeckLoop() {
+  if (neckAnimRAF) cancelAnimationFrame(neckAnimRAF);
+  const loop = function() {
+    if (!aimneckOn) return;
+    updateNeckTargetMotion();
+    updateAimneck();
+    neckAnimRAF = requestAnimationFrame(loop);
+  };
+  loop();
+}
+function stopNeckLoop() {
+  if (neckAnimRAF) { cancelAnimationFrame(neckAnimRAF); neckAnimRAF = null; }
+}
+
+function updateNeckTargetMotion() {
+  if (!neckTarget.active || !neckTarget.el) return;
+  neckTarget.x += neckTarget.vx;
+  neckTarget.y += neckTarget.vy;
+  const margin = 30;
+  if (neckTarget.x < margin || neckTarget.x > window.innerWidth - margin) neckTarget.vx *= -1;
+  if (neckTarget.y < margin + 60 || neckTarget.y > window.innerHeight - margin) neckTarget.vy *= -1;
+  neckTarget.x = Math.max(margin, Math.min(window.innerWidth - margin, neckTarget.x));
+  neckTarget.y = Math.max(margin + 60, Math.min(window.innerHeight - margin, neckTarget.y));
+  neckTarget.el.style.left = (neckTarget.x - 15) + 'px';
+  neckTarget.el.style.top  = (neckTarget.y - 15) + 'px';
+}
+
+function updateAimneck() {
+  if (!aimneckOn) return;
+  const overlay = document.getElementById('aimneckOverlay');
+  if (neckTarget.active) {
+    const neckX = neckTarget.x;
+    const neckY = neckTarget.y + neckCfg.offsetY;
+    const t = Math.min(1, neckCfg.speed / 20);
+    const curX = parseFloat(overlay.dataset.cx || neckX);
+    const curY = parseFloat(overlay.dataset.cy || neckY);
+    const tx = curX + (neckX - curX) * t;
+    const ty = curY + (neckY - curY) * t;
+    overlay.dataset.cx = tx; overlay.dataset.cy = ty;
+    overlay.style.left = tx + 'px';
+    overlay.style.top  = ty + 'px';
+    const dist = Math.hypot(neckTarget.x - window.innerWidth/2,
+                            neckTarget.y - window.innerHeight/2);
+    document.getElementById('neckInfo').innerText =
+      '🦴 Đang ngắm CỔ (' + Math.round(dist) + 'px) • Offset Y: ' + neckCfg.offsetY;
+  } else {
+    const c = center();
+    overlay.dataset.cx = c.x; overlay.dataset.cy = c.y;
+    overlay.style.left = c.x + 'px';
+    overlay.style.top  = c.y + 'px';
+    document.getElementById('neckInfo').innerText = '🦴 Chưa có mục tiêu';
+  }
+}
+
+function updateNeckColor() {
+  neckCfg.color = document.getElementById('neckColor').value;
+  document.querySelectorAll('#aimneckOverlay svg *').forEach(function(el) {
+    if (el.tagName !== 'text') el.setAttribute('stroke', neckCfg.color);
+    if (el.tagName === 'circle') el.setAttribute('fill', neckCfg.color);
+    if (el.tagName === 'text')  el.setAttribute('fill', neckCfg.color);
+  });
+}
+function updateNeckOffset() {
+  neckCfg.offsetY = +document.getElementById('neckOffsetY').value;
+  document.getElementById('neckOffsetVal').innerText = neckCfg.offsetY;
+}
+function updateNeckSpeed() {
+  neckCfg.speed = +document.getElementById('neckSpeed').value;
+  document.getElementById('neckSpeedVal').innerText = neckCfg.speed;
+}
+
+/* ============ SETTINGS ============ */
+function openSettings() { document.getElementById('settingsPanel').classList.add('open'); }
+function closeSettings(){ document.getElementById('settingsPanel').classList.remove('open'); }
+
+function applySettings() {
+  const cfg = {
+    color: document.getElementById('aimColor').value,
+    size:  document.getElementById('aimSize').value,
+    thick: document.getElementById('aimThick').value,
+    style: document.getElementById('aimStyle').value,
+    on:    document.getElementById('aimToggle2').checked,
+    vol:   document.getElementById('volRange').value,
+    beep:  document.getElementById('beepOn').checked,
+    growl: document.getElementById('growlOn').checked,
+    lockColor:  document.getElementById('lockColor').value,
+    lockRadius: document.getElementById('lockRadius').value,
+    lockSpeed:  document.getElementById('lockSpeed').value,
+    lockLine:   document.getElementById('lockLineOn').checked,
+    neckColor:  document.getElementById('neckColor').value,
+    neckOffset: document.getElementById('neckOffsetY').value,
+    neckSpeed:  document.getElementById('neckSpeed').value
+  };
+  LS.set('ff_aim_cfg', cfg);
+  updateAim();
+  updateLockColor();
+  updateLockRadius();
+  updateLockSpeed();
+  updateNeckColor();
+  updateNeckOffset();
+  updateNeckSpeed();
+  closeSettings();
+  showToast('💾 Đã lưu cài đặt');
+}
+
+function loadSettings() {
+  const cfg = LS.get('ff_aim_cfg');
+  if (!cfg) return;
+  if (cfg.color) document.getElementById('aimColor').value = cfg.color;
+  if (cfg.size)  document.getElementById('aimSize').value  = cfg.size;
+  if (cfg.thick) document.getElementById('aimThick').value = cfg.thick;
+  if (cfg.style) document.getElementById('aimStyle').value = cfg.style;
+  document.getElementById('aimToggle').checked  = cfg.on !== false;
+  document.getElementById('aimToggle2').checked = cfg.on !== false;
+  if (cfg.vol !== undefined) {
+    document.getElementById('volRange').value = cfg.vol;
+    document.getElementById('volQuick').value = cfg.vol;
+    document.getElementById('volQuickVal').innerText = cfg.vol;
+    masterVolume = cfg.vol / 100;
+  }
+  if (cfg.beep !== undefined)  document.getElementById('beepOn').checked  = cfg.beep;
+  if (cfg.growl !== undefined) document.getElementById('growlOn').checked = cfg.growl;
+  if (cfg.lockColor)  { document.getElementById('lockColor').value = cfg.lockColor; lockCfg.color = cfg.lockColor; }
+  if (cfg.lockRadius) { document.getElementById('lockRadius').value = cfg.lockRadius;
+                        document.getElementById('lockRadiusVal').innerText = cfg.lockRadius;
+                        lockCfg.radius = +cfg.lockRadius; }
+  if (cfg.lockSpeed)  { document.getElementById('lockSpeed').value = cfg.lockSpeed;
+                        document.getElementById('lockSpeedVal').innerText = cfg.lockSpeed;
+                        lockCfg.speed = +cfg.lockSpeed; }
+  if (cfg.lockLine !== undefined) { document.getElementById('lockLineOn').checked = cfg.lockLine; lockCfg.showLine = cfg.lockLine; }
+  if (cfg.neckColor)  { document.getElementById('neckColor').value = cfg.neckColor; neckCfg.color = cfg.neckColor; }
+  if (cfg.neckOffset) { document.getElementById('neckOffsetY').value = cfg.neckOffset;
+                        document.getElementById('neckOffsetVal').innerText = cfg.neckOffset;
+                        neckCfg.offsetY = +cfg.neckOffset; }
+  if (cfg.neckSpeed)  { document.getElementById('neckSpeed').value = cfg.neckSpeed;
+                        document.getElementById('neckSpeedVal').innerText = cfg.neckSpeed;
+                        neckCfg.speed = +cfg.neckSpeed; }
+  aimOn = cfg.on !== false;
+  updateAim();
+  updateLockColor();
+  updateNeckColor();
+}
+
+/* ============ DEVICE ============ */
+function clearDevice() {
+  if (confirm('Xoá liên kết thiết bị và đăng xuất?')) {
+    LS.del('ff_key_info');
+    location.reload();
+  }
+}
+
+/* ============ ACTIVATE ============ */
+function activateKey() {
+  initAudio();
+  const input = document.getElementById('keyInput').value;
+  const msg = document.getElementById('keyMsg');
+  const res = validateKey(input);
+  if (!res.ok) {
+    msg.className = 'msg error';
+    msg.innerText = '❌ ' + res.msg;
+    playErrorSound();
+    return;
+  }
+  msg.className = 'msg success';
+  msg.innerText = '✅ Kích hoạt thành công!';
+  playActivateSound();
+  setTimeout(function() { startSession(res.info); }, 900);
+}
+
+/* ============ LOADING ============ */
+let progress = 0;
+const fillEl = document.getElementById('progressFillEl');
+const pctEl  = document.getElementById('loadPercentEl');
+const loadingInt = setInterval(function() {
+  progress += Math.random() * 14;
+  if (progress >= 100) progress = 100;
+  fillEl.style.width = progress + '%';
+  pctEl.innerText = Math.floor(progress) + '%';
+  if (progress === 100) {
+    clearInterval(loadingInt);
+    setTimeout(function() {
+      document.getElementById('loadingBar').classList.add('hidden');
+      bootApp();
+    }, 400);
+  }
+}, 130);
+
+/* ============ BOOT ============ */
+function bootApp() {
+  loadSettings();
+
+  const savedDns = LS.get('ff_dns_selected');
+  if (savedDns) {
+    selectedDNS = savedDns;
+    // Áp dụng AIM của DNS đã lưu
+    const savedP = DNS_PROFILES.find(function(x) { return x.id === savedDns; });
+    if (savedP && savedP.id !== 'auto') applyAimProfile(savedP.aim);
+  }
+  renderDNSList();
+
+  const saved = LS.get('ff_key_info');
+  if (saved && saved.key) {
+    if (saved.expires === -1 || saved.expires > Date.now()) {
+      startSession(saved);
+      setTimeout(function() { playBeep(); setTimeout(playGrowl, 400); }, 300);
+      return;
+    } else {
+      LS.del('ff_key_info');
+    }
+  }
+  document.getElementById('keyPage').classList.remove('hidden');
+  setTimeout(function() { document.getElementById('keyInput').focus(); }, 300);
+}
+
+document.getElementById('keyInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') activateKey();
+});
+
+window.addEventListener('resize', function() {
+  if (aimlockOn) updateAimlock();
+  if (aimneckOn) updateAimneck();
+});
+
+console.log('%c⚡ REG FILE FF v1.4.0', 'color:#ff4dd2;font-size:20px;font-weight:bold;');
+console.log('%c🎯 Mỗi DNS có bộ AIM riêng!', 'color:#00ffea;font-weight:bold;font-size:14px;');
+console.log('%c📋 Danh sách DNS + AIM:', 'color:#4d9fff;font-weight:bold;');
+DNS_PROFILES.forEach(function(p) {
+  console.log('  ' + p.icon + ' ' + p.name + ' → ' + p.aimTag);
+});
+</script>
+
 </body>
 </html>
