@@ -3,1689 +3,1006 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🔐 PROXY FF - KEY + AIM</title>
+    <title>HEADLOCK V2 - App</title>
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a0a;
-            color: #fff;
-            min-height: 100vh;
+            background-color: #000;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            transition: 0.5s;
+            min-height: 100vh;
+            overflow: hidden;
         }
-        .bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0a 100%);
-        }
-        .bg .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.1;
-            animation: floatOrb 20s infinite ease-in-out;
-        }
-        .bg .orb:nth-child(1) { width: 400px; height: 400px; background: #ff3b30; top: -100px; right: -100px; }
-        .bg .orb:nth-child(2) { width: 300px; height: 300px; background: #ff6b00; bottom: -50px; left: -50px; animation-delay: -5s; }
-        .bg .orb:nth-child(3) { width: 200px; height: 200px; background: #64b5f6; top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -10s; }
-        @keyframes floatOrb { 0%,100% { transform: translate(0,0) scale(1); } 25% { transform: translate(50px,-50px) scale(1.1); } 50% { transform: translate(-30px,30px) scale(0.9); } 75% { transform: translate(20px,-20px) scale(1.05); } }
 
-        .container {
+        .app-container {
             width: 100%;
             max-width: 420px;
-            background: rgba(20, 20, 20, 0.92);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 28px 20px;
-            border: 1px solid rgba(255, 59, 48, 0.15);
-            box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+            height: 100vh;
+            max-height: 900px;
+            background: #0d0d1a;
             position: relative;
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
-            transition: 0.5s;
-        }
-
-        .header {
-            text-align: center;
-            padding-bottom: 18px;
-            border-bottom: 1px solid rgba(42, 42, 42, 0.3);
-            margin-bottom: 18px;
-        }
-        .header .logo {
-            font-size: 26px;
-            font-weight: 700;
-            color: #ff3b30;
-        }
-        .header .logo span { color: #fff; }
-        .header .sub {
-            font-size: 13px;
-            color: #888;
-            margin-top: 4px;
-        }
-        .header .sub strong { color: #fff; }
-        .header .status-bar {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            padding: 6px 14px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            font-size: 12px;
-        }
-        .header .status-bar .server { color: #4caf50; font-weight: 600; }
-        .header .status-bar .server::before { content: "● "; }
-        .header .status-bar .count { color: #666; }
-
-        /* ===== KEY ===== */
-        .key-section .label {
-            font-size: 14px;
-            color: #888;
-            margin-bottom: 10px;
-        }
-        .key-section .input-group {
-            display: flex;
-            gap: 10px;
-        }
-        .key-section .input-group input {
-            flex: 1;
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 1px solid rgba(42,42,42,0.5);
-            background: rgba(0,0,0,0.3);
-            color: #ffcc00;
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            outline: none;
-            font-family: 'Courier New', monospace;
-            text-transform: uppercase;
-        }
-        .key-section .input-group input:focus { border-color: #ff3b30; }
-        .key-section .input-group input::placeholder {
-            color: #444;
-            font-weight: 400;
-            letter-spacing: 0;
-            text-transform: none;
-        }
-        .key-section .input-group .btn-login {
-            padding: 12px 20px;
-            border-radius: 12px;
-            border: none;
-            background: linear-gradient(135deg, #ff3b30, #ff6b00);
-            color: #fff;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: 0.3s;
-            white-space: nowrap;
-        }
-        .key-section .input-group .btn-login:hover { transform: scale(1.02); }
-        .key-section .key-status {
-            margin-top: 10px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            display: none;
-        }
-        .key-section .key-status.valid {
-            display: block;
-            background: rgba(76,175,80,0.12);
-            color: #4caf50;
-            border: 1px solid rgba(76,175,80,0.2);
-        }
-        .key-section .key-status.invalid {
-            display: block;
-            background: rgba(255,59,48,0.12);
-            color: #ff3b30;
-            border: 1px solid rgba(255,59,48,0.2);
-        }
-        .key-section .key-status.success {
-            display: block;
-            background: rgba(76,175,80,0.15);
-            color: #4caf50;
-            border: 1px solid rgba(76,175,80,0.3);
-            animation: pulse 1s infinite;
-        }
-        .key-section .key-status.expired {
-            display: block;
-            background: rgba(255,107,0,0.12);
-            color: #ff6b00;
-            border: 1px solid rgba(255,107,0,0.2);
-        }
-        .key-section .key-status.device-used {
-            display: block;
-            background: rgba(255,59,48,0.15);
-            color: #ff3b30;
-            border: 1px solid rgba(255,59,48,0.3);
-        }
-        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
-
-        .key-section .links {
-            margin-top: 12px;
-            display: flex;
-            justify-content: center;
-        }
-        .key-section .links .link {
-            font-size: 13px;
-            color: #64b5f6;
-            cursor: pointer;
-            transition: 0.3s;
-            padding: 8px 20px;
-            border-radius: 10px;
-            background: rgba(100,181,246,0.1);
-            border: 1px solid rgba(100,181,246,0.2);
-            text-align: center;
-        }
-        .key-section .links .link:hover {
-            background: rgba(100,181,246,0.2);
-            color: #90caf9;
-        }
-
-        .info-section {
-            margin-top: 16px;
-            padding-top: 14px;
-            border-top: 1px solid rgba(42,42,42,0.3);
-        }
-        .info-section .info-item {
-            display: flex;
-            gap: 10px;
-            padding: 4px 0;
-            font-size: 12px;
-            color: #666;
-        }
-        .info-section .info-item .icon { font-size: 14px; flex-shrink: 0; }
-        .info-section .info-item .text { color: #888; }
-        .info-section .info-item .text strong { color: #fff; }
-        .info-section .info-item .text .highlight { color: #ff6b00; }
-
-        /* ===== APP ===== */
-        .app-page {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-        .app-page.show { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .app-page .app-header { text-align: center; padding-bottom: 14px; border-bottom: 1px solid rgba(42,42,42,0.3); margin-bottom: 14px; }
-        .app-page .app-header .logo { font-size: 24px; font-weight: 700; color: #ff3b30; }
-        .app-page .app-header .logo span { color: #fff; }
-        .app-page .app-header .sub { font-size: 12px; color: #888; margin-top: 2px; }
-        .app-page .app-header .key-info { margin-top: 6px; font-size: 11px; color: #4caf50; background: rgba(76,175,80,0.1); padding: 2px 14px; border-radius: 20px; display: inline-block; border: 1px solid rgba(76,175,80,0.2); }
-        .app-page .app-header .device-info {
-            margin-top: 4px;
-            font-size: 10px;
-            color: #888;
-            background: rgba(0,0,0,0.2);
-            padding: 2px 12px;
+            box-shadow: 0 0 40px rgba(138, 43, 226, 0.3);
             border-radius: 20px;
-            display: inline-block;
         }
 
-        .app-page .status-bar {
-            background: rgba(0,0,0,0.3);
-            border-radius: 10px;
-            padding: 8px 12px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 4px;
-            font-size: 12px;
-        }
-        .app-page .status-bar .left { display: flex; align-items: center; gap: 6px; }
-        .app-page .status-bar .dot { width: 8px; height: 8px; border-radius: 50%; background: #4caf50; }
-        .app-page .status-bar .right { display: flex; gap: 10px; flex-wrap: wrap; }
-        .app-page .status-bar .right .count { color: #4caf50; font-weight: 600; }
-        .app-page .status-bar .right .mode-active { color: #ff6b00; font-weight: 600; }
-        .app-page .status-bar .right .time-remain { color: #64b5f6; font-weight: 600; }
-        .app-page .status-bar .right .device-id { color: #888; font-size: 10px; }
-        .app-page .status-bar .right .dpi-display { color: #ffcc00; font-weight: 600; font-size: 11px; }
-
-        /* ===== DPI SETTINGS ===== */
-        .dpi-section {
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 10px;
-            border: 1px solid rgba(42,42,42,0.3);
-        }
-        .dpi-section .dpi-title {
-            font-size: 13px;
-            color: #888;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .dpi-section .dpi-title .current-dpi {
-            color: #ffcc00;
-            font-weight: 700;
-            font-size: 16px;
-        }
-        .dpi-section .dpi-slider {
-            width: 100%;
-            height: 6px;
-            -webkit-appearance: none;
-            background: linear-gradient(90deg, #2a2a2a, #ff6b00);
-            border-radius: 10px;
-            outline: none;
-            transition: 0.3s;
-        }
-        .dpi-section .dpi-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ff3b30, #ff6b00);
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(255,107,0,0.3);
-        }
-        .dpi-section .dpi-presets {
-            display: flex;
-            gap: 6px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-        .dpi-section .dpi-presets .preset {
-            padding: 4px 12px;
-            border-radius: 20px;
-            border: 1px solid rgba(42,42,42,0.5);
-            background: rgba(0,0,0,0.3);
-            color: #888;
-            font-size: 11px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .dpi-section .dpi-presets .preset:hover {
-            border-color: #ff6b00;
-            color: #fff;
-        }
-        .dpi-section .dpi-presets .preset.active {
-            border-color: #ff6b00;
-            color: #ffcc00;
-            background: rgba(255,107,0,0.1);
-        }
-        .dpi-section .dpi-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-        }
-        .dpi-section .dpi-actions .btn {
-            flex: 1;
-            padding: 8px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 600;
-            font-size: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .dpi-section .dpi-actions .btn-apply {
-            background: linear-gradient(135deg, #4caf50, #2e7d32);
-            color: #fff;
-        }
-        .dpi-section .dpi-actions .btn-apply:hover { transform: scale(1.02); }
-        .dpi-section .dpi-actions .btn-reset {
-            background: rgba(42,42,42,0.5);
-            color: #fff;
-        }
-        .dpi-section .dpi-actions .btn-reset:hover { background: rgba(58,58,58,0.5); }
-
-        /* ===== TABS ===== */
-        .app-page .tabs {
-            display: flex; gap: 6px; padding: 0 0 10px 0; overflow-x: auto;
-        }
-        .app-page .tabs::-webkit-scrollbar { display: none; }
-        .app-page .tabs .tab {
-            padding: 5px 14px; border-radius: 20px; background: rgba(26,26,26,0.6); color: #888; font-size: 12px; white-space: nowrap; cursor: pointer; border: 1px solid transparent; transition: 0.3s;
-        }
-        .app-page .tabs .tab.active { background: rgba(255,59,48,0.8); color: #fff; border-color: #ff3b30; }
-
-        .app-page .mode-card {
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 8px;
-            border-left: 4px solid rgba(42,42,42,0.5);
-            border: 1px solid rgba(42,42,42,0.3);
-            transition: 0.3s;
-        }
-        .app-page .mode-card.active { border-left-color: #4caf50; background: rgba(26,42,26,0.3); border-color: rgba(76,175,80,0.3); }
-        .app-page .mode-card .card-top { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
-        .app-page .mode-card .info { flex: 1; min-width: 120px; }
-        .app-page .mode-card .mode-tag { font-size: 10px; color: #ff3b30; font-weight: 600; text-transform: uppercase; }
-        .app-page .mode-card .mode-name { font-size: 15px; font-weight: 700; margin: 2px 0; color: #fff; }
-        .app-page .mode-card .mode-desc { color: #aaa; font-size: 12px; }
-        .app-page .mode-card .mode-meta { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
-        .app-page .mode-card .mode-meta .tag { background: rgba(42,42,42,0.5); padding: 1px 8px; border-radius: 20px; font-size: 9px; color: #ccc; }
-        .app-page .mode-card .mode-meta .tag.headshot { background: rgba(255,107,0,0.3); color: #ff6b00; font-weight: 700; }
-
-        .app-page .mode-card .right-side { display: flex; align-items: center; gap: 8px; }
-        .app-page .mode-card .status { text-align: right; min-width: 60px; }
-        .app-page .mode-card .status .status-label { font-size: 11px; font-weight: 600; }
-        .app-page .mode-card .status .status-label.off { color: #555; }
-        .app-page .mode-card .status .status-label.on { color: #4caf50; }
-        .app-page .mode-card .status .status-detail { font-size: 9px; color: #666; }
-
-        .app-page .toggle {
-            position: relative; width: 38px; height: 22px;
-            background: rgba(42,42,42,0.6);
-            border-radius: 50px; cursor: pointer;
-            transition: 0.3s; flex-shrink: 0;
-        }
-        .app-page .toggle.active { background: #4caf50; }
-        .app-page .toggle .slider {
-            position: absolute; top: 2px; left: 2px;
-            width: 18px; height: 18px; background: #fff;
-            border-radius: 50%; transition: 0.3s;
-        }
-        .app-page .toggle.active .slider { left: 18px; }
-
-        .app-page .btn-download {
-            margin-top: 8px;
-            padding: 6px 12px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 600;
-            font-size: 11px;
-            cursor: pointer;
-            background: linear-gradient(135deg, #2196f3, #1565c0);
-            color: #fff;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-        .app-page .btn-download:hover { transform: scale(1.02); }
-        .app-page .btn-download:disabled { opacity: 0.4; cursor: not-allowed; }
-
-        .app-page .config-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
-        .app-page .config-actions .btn {
-            padding: 6px 12px; border-radius: 8px; border: none; font-weight: 600; font-size: 11px; cursor: pointer; transition: 0.3s; flex: 1; min-width: 70px;
-        }
-        .btn-primary { background: #ff3b30; color: #fff; }
-        .btn-primary:hover { background: #e0352b; }
-        .btn-success { background: #4caf50; color: #fff; }
-        .btn-success:hover { background: #3d8b40; }
-        .btn-secondary { background: rgba(42,42,42,0.5); color: #fff; }
-        .btn-secondary:hover { background: rgba(58,58,58,0.5); }
-
-        .app-page .logout-btn {
-            width: 100%; margin-top: 10px; padding: 8px; border-radius: 10px; border: none;
-            background: rgba(255,59,48,0.15); color: #ff3b30; font-weight: 600; font-size: 12px; cursor: pointer;
-            border: 1px solid rgba(255,59,48,0.2);
-        }
-        .app-page .logout-btn:hover { background: rgba(255,59,48,0.25); }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(42,42,42,0.95);
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-size: 13px;
-            display: none;
-            z-index: 9999;
-            border: 1px solid #ff3b30;
-            text-align: center;
-            max-width: 90%;
-            backdrop-filter: blur(20px);
-        }
-        .toast.show { display: block; }
-
-        .loading-overlay {
-            position: fixed;
+        /* ============ MÀN HÌNH LOADING ============ */
+        .loading-screen {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(10px);
-            z-index: 9998;
-            display: none;
+            background: #0d0d1a;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
-            gap: 20px;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
         }
-        .loading-overlay.show { display: flex; }
-        .loading-overlay .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255,255,255,0.1);
-            border-top: 4px solid #ff3b30;
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-spinner {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(168, 85, 247, 0.2);
+            border-top: 5px solid #a855f7;
             border-radius: 50%;
             animation: spin 1s linear infinite;
+            margin-bottom: 25px;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .loading-overlay .loading-text { font-size: 15px; color: #fff; animation: pulse 1s infinite; }
-        .loading-overlay .loading-progress { width: 200px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
-        .loading-overlay .loading-progress .bar { height: 100%; background: linear-gradient(90deg, #ff3b30, #ff6b00); border-radius: 10px; transition: width 0.3s; width: 0%; }
 
-        .floating-menu {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            z-index: 999;
-            display: none;
-            flex-direction: column;
-            gap: 10px;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-        .floating-menu.show { display: flex; }
-        .floating-menu .menu-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+
+        .loading-text {
+            font-size: 16px;
+            font-weight: 700;
+            color: #d946ef;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .loading-subtext {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 25px;
+        }
+
+        .loading-bar-container {
+            width: 200px;
+            height: 6px;
+            background-color: #2a2a3a;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .loading-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #a855f7, #d946ef);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(217, 70, 239, 0.6);
+        }
+
+        .loading-percent {
+            font-size: 14px;
+            color: #a855f7;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        /* ============ LOCK SCREEN ============ */
+        .lock-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0d0d1a;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .lock-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .lock-logo {
+            font-size: 42px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            background: linear-gradient(to right, #a855f7, #d946ef);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .lock-subtitle {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .lock-card {
+            width: 100%;
+            background: rgba(26, 11, 46, 0.8);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid #3a1f5c;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .lock-card h3 {
+            font-size: 18px;
+            color: #d946ef;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .lock-card p {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .lock-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .lock-input-group input {
+            padding: 16px;
+            border-radius: 14px;
+            border: 1px solid #3a1f5c;
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            text-align: center;
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+
+        .lock-input-group input:focus {
+            border-color: #a855f7;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+        }
+
+        .btn-unlock {
+            background: linear-gradient(to right, #7c3aed, #c026d3);
+            color: #fff;
             border: none;
-            font-size: 20px;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
             cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+        }
+
+        .btn-unlock:active {
+            transform: scale(0.97);
+        }
+
+        /* ============ STATUS BAR ============ */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #fff;
+            background: #0d0d1a;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            gap: 5px;
+        }
+
+        .status-left {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .status-center {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .ping-display {
+            color: #22c55e;
+            font-weight: 700;
+            font-size: 11px;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .ping-display.warning { color: #fbbf24; }
+        .ping-display.danger { color: #ef4444; }
+
+        .time-display {
+            color: #d946ef;
+            font-weight: 700;
+            font-size: 11px;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        /* ============ APP HEADER ============ */
+        .app-header {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0d0d1a;
+            z-index: 99;
+        }
+
+        .app-header .logo {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #a855f7, #d946ef);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .app-header .user-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(168, 85, 247, 0.2);
+            border: 1px solid #a855f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* ============ MAIN CONTENT ============ */
+        .app-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px 80px 20px;
+            scroll-behavior: smooth;
+        }
+
+        .app-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        .page {
+            display: none;
+            animation: slideUp 0.3s ease;
+            padding-top: 10px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============ CARD ============ */
+        .card {
+            background: linear-gradient(135deg, #1a0b2e 0%, #131320 100%);
+            border-radius: 18px;
+            padding: 20px;
+            border: 1px solid #3a1f5c;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #d946ef;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        /* ============ FEATURE CARD ============ */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card.active-feature {
+            border-color: #a855f7;
+            background: rgba(168, 85, 247, 0.05);
+        }
+
+        .feature-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #e0d0ff;
+        }
+
+        .feature-header .feature-name {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 10px;
         }
-        .floating-menu .menu-btn:hover { transform: scale(1.1); }
-        .floating-menu .menu-btn.aim { background: linear-gradient(135deg, #ff3b30, #ff6b00); color: #fff; }
-        .floating-menu .menu-btn.aim.active { background: #4caf50; animation: pulse 0.5s infinite; }
-        .floating-menu .menu-btn.stop { background: #2a2a2a; color: #fff; }
-        .floating-menu .menu-btn.status { background: #1a3a5a; color: #64b5f6; }
-        .floating-menu .menu-btn.dpi { background: linear-gradient(135deg, #9b59b6, #6c3483); color: #fff; }
 
-        @media (max-width: 480px) {
-            .container { padding: 16px; }
-            .key-section .input-group { flex-direction: column; }
-            .key-section .input-group .btn-login { width: 100%; }
-            .floating-menu { bottom: 70px; right: 10px; }
-            .floating-menu .menu-btn { width: 44px; height: 44px; font-size: 18px; }
-            .dpi-section .dpi-presets { justify-content: center; }
+        .feature-header .feature-icon {
+            font-size: 18px;
         }
+
+        /* ============ TOGGLE SWITCH ============ */
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background-color: #2a2a3a;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch.active {
+            background-color: #a855f7;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background-color: #fff;
+            border-radius: 50%;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
+
+        /* ============ SLIDER ============ */
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 11px;
+            color: #888;
+            padding: 0 5px;
+        }
+
+        .slider-bar {
+            flex: 1;
+            height: 6px;
+            background-color: #2a2a3a;
+            border-radius: 3px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .slider-fill {
+            height: 100%;
+            background: linear-gradient(to right, #a855f7, #d946ef);
+            border-radius: 3px;
+            width: 75%;
+            pointer-events: none;
+        }
+
+        .slider-thumb {
+            position: absolute;
+            top: 50%;
+            left: 75%;
+            transform: translate(-50%, -50%);
+            width: 18px;
+            height: 18px;
+            background-color: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(217, 70, 239, 0.8);
+            border: 2px solid #a855f7;
+            cursor: grab;
+            pointer-events: none;
+        }
+
+        .slider-value {
+            min-width: 35px;
+            text-align: right;
+            color: #d946ef;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        /* ============ AIM BUTTONS ============ */
+        .aim-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .aim-btn {
+            flex: 1;
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1px solid #3a1f5c;
+            background: rgba(0, 0, 0, 0.3);
+            color: #aaa;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .aim-btn.active {
+            background: linear-gradient(to right, #7c3aed, #c026d3);
+            color: #fff;
+            border-color: #a855f7;
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+        }
+
+        .aim-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ============ BOTTOM NAV ============ */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 5px 20px 5px;
+            background: rgba(13, 13, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 9px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 5px 8px;
+            border-radius: 12px;
+            transition: all 0.3s;
+            flex: 1;
+        }
+
+        .nav-item .nav-icon {
+            font-size: 20px;
+            transition: transform 0.3s;
+        }
+
+        .nav-item.active {
+            color: #d946ef;
+        }
+
+        .nav-item.active .nav-icon {
+            transform: translateY(-3px);
+            filter: drop-shadow(0 0 8px rgba(217, 70, 239, 0.6));
+        }
+
+        /* ============ TOAST ============ */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #22c55e;
+            color: #fff;
+            padding: 14px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 5px 20px rgba(34, 197, 94, 0.5);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 1100;
+            white-space: nowrap;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast.error {
+            background: #ef4444;
+            box-shadow: 0 5px 20px rgba(239, 68, 68, 0.5);
+        }
+        
+        .toast.info {
+            background: #3b82f6;
+            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.5);
+        }
+
+        /* ============ HERO ============ */
+        .hero-section {
+            text-align: center;
+            padding: 20px 0 30px 0;
+        }
+
+        .hero-title {
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(to right, #a855f7, #d946ef);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .hero-subtitle {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 25px;
+        }
+
+        /* ============ GUIDE ============ */
+        .guide-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .guide-list li {
+            font-size: 13px;
+            color: #ccc;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        
+        .guide-list li span {
+            color: #a855f7;
+            font-weight: bold;
+        }
+
+        /* ============ KEY BADGE ============ */
+        .key-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-week { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .badge-month { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .badge-forever { background: rgba(217, 70, 239, 0.2); color: #e879f9; border: 1px solid rgba(217, 70, 239, 0.3); }
+
+        /* ============ TIME WARNING ============ */
+        .time-warning {
+            color: #ef4444 !important;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ============ STATS ============ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 900;
+            color: #d946ef;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ============ LOGS ============ */
+        .log-list {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .log-item {
+            font-size: 12px;
+            color: #ccc;
+            padding: 8px 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .log-item .log-time {
+            color: #888;
+            font-size: 10px;
+        }
+
+        /* ============ SETTINGS ============ */
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-label {
+            font-size: 14px;
+            color: #e0d0ff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .setting-label .setting-icon {
+            font-size: 18px;
+        }
+
+        /* ============ LIGHT MODE ============ */
+        .light-mode {
+            background: #f0f0f5 !important;
+        }
+
+        .light-mode .app-container {
+            background: #ffffff;
+        }
+
+        .light-mode .status-bar,
+        .light-mode .app-header {
+            background: #ffffff;
+            color: #333;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .light-mode .app-header .logo {
+            background: linear-gradient(to right, #7c3aed, #c026d3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .light-mode .card {
+            background: #f8f8ff;
+            border-color: #e0e0e0;
+        }
+
+        .light-mode .feature-card {
+            background: #ffffff;
+            border-color: #e0e0e0;
+        }
+
+        .light-mode .feature-card.active-feature {
+            background: #f3e8ff;
+            border-color: #a855f7;
+        }
+
+        .light-mode .card-title,
+        .light-mode .feature-header {
+            color: #7c3aed;
+        }
+
+        .light-mode .feature-header .feature-name {
+            color: #333;
+        }
+
+        .light-mode .card-desc,
+        .light-mode .guide-list li {
+            color: #666;
+        }
+
+        .light-mode .bottom-nav {
+            background: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .light-mode .nav-item {
+            color: #999;
+        }
+
+        .light-mode .nav-item.active {
+            color: #7c3aed;
+        }
+
+        .light-mode .lock-screen {
+            background: #ffffff;
+        }
+
+        .light-mode .lock-card {
+            background: #f8f8ff;
+            border-color: #e0e0e0;
+        }
+
+        .light-mode .lock-card h3 {
+            color: #7c3aed;
+        }
+
+        .light-mode .lock-card p {
+            color: #666;
+        }
+
+        .light-mode .lock-input-group input {
+            background: #ffffff;
+            color: #333;
+            border-color: #e0e0e0;
+        }
+
+        .light-mode .loading-screen {
+            background: #ffffff;
+        }
+
+        .light-mode .loading-text {
+            color: #7c3aed;
+        }
+
+        .light-mode .loading-subtext {
+            color: #666;
+        }
+
     </style>
 </head>
 <body>
 
-    <div class="bg">
-        <div class="orb"></div>
-        <div class="orb"></div>
-        <div class="orb"></div>
-    </div>
-
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="spinner"></div>
-        <div class="loading-text" id="loadingText">🚀 Đang khởi tạo...</div>
-        <div class="loading-progress"><div class="bar" id="loadingBar"></div></div>
-    </div>
-
-    <div class="floating-menu" id="floatingMenu">
-        <button class="menu-btn aim" id="btnAim" onclick="toggleAim()">🎯</button>
-        <button class="menu-btn dpi" onclick="toggleDpiSettings()">📐</button>
-        <button class="menu-btn status" onclick="getStatus()">📊</button>
-        <button class="menu-btn stop" onclick="stopAll()">⏹</button>
-    </div>
-
-    <div class="toast" id="toast"></div>
-
-    <!-- ===== TRANG KEY ===== -->
-    <div class="container" id="keyPage">
-        <div class="header">
-            <div class="logo">🔐 PROXY <span>FF</span></div>
-            <div class="sub"><strong>AIMLOCK SUPER 4.5</strong></div>
-            <div class="status-bar">
-                <span class="server">Server: Đã kết nối</span>
-                <span class="count">1 lần</span>
+    <div class="app-container" id="app-container">
+        
+        <!-- ============ MÀN HÌNH LOADING ============ -->
+        <div id="loading-screen" class="loading-screen hidden">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Đang Kết Nối</div>
+            <div class="loading-subtext">Vui lòng chờ trong giây lát...</div>
+            <div class="loading-bar-container">
+                <div id="loading-bar-fill" class="loading-bar-fill"></div>
             </div>
+            <div id="loading-percent" class="loading-percent">0%</div>
         </div>
 
-        <div class="key-section">
-            <div class="label">🔑 Key đăng nhập</div>
-            <div class="input-group">
-                <input type="text" id="keyInput" placeholder="PROXY-XXXX-XXXX-XXXX-XXXX-FF">
-                <button class="btn-login" onclick="login()">Đăng Nhập</button>
-            </div>
-            <div class="key-status" id="keyStatus"></div>
-            <div class="links">
-                <span class="link" onclick="getFreeKey()">🔗 Mở trang lấy key free</span>
-            </div>
-        </div>
-
-        <div class="info-section">
-            <div class="info-item">
-                <span class="icon">📌</span>
-                <span class="text">Tạo short-link lấy key free theo thiết bị</span>
-            </div>
-            <div class="info-item">
-                <span class="icon">⏳</span>
-                <span class="text">Key free <strong>5 giờ</strong> và chỉ dùng trên <strong>1 thiết bị</strong></span>
-            </div>
-            <div class="info-item">
-                <span class="icon">✅</span>
-                <span class="text">Key Free Cho Từng Thiết Bị và <strong class="highlight">Ổn Định</strong></span>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== TRANG APP ===== -->
-    <div class="container app-page" id="appPage">
-        <div class="app-header">
-            <div class="logo">🎯 PROXY <span>FF</span></div>
-            <div class="sub">AIMLOCK SUPER 4.5 • Đã kích hoạt</div>
-            <div class="key-info" id="appKeyDisplay">🔑 --</div>
-            <div class="device-info" id="deviceDisplay">📱 Thiết bị: --</div>
-        </div>
-
-        <div class="status-bar">
-            <div class="left">
-                <span class="dot"></span>
-                <span>✅ Đã kết nối</span>
-            </div>
-            <div class="right">
-                <span>⚡ <span class="count" id="activeCount">0</span></span>
-                <span class="mode-active" id="modeActive">⬜ Chưa chọn</span>
-                <span class="time-remain" id="timeRemain">⏳ --</span>
-                <span class="device-id" id="deviceIdDisplay"></span>
-                <span class="dpi-display" id="dpiDisplay">📐 DPI: 0</span>
-            </div>
-        </div>
-
-        <!-- ===== DPI SETTINGS ===== -->
-        <div class="dpi-section" id="dpiSection">
-            <div class="dpi-title">
-                <span>📐 ĐIỀU CHỈNH DPI</span>
-                <span class="current-dpi" id="currentDpi">160</span>
-            </div>
-            <input type="range" class="dpi-slider" id="dpiSlider" min="100" max="400" step="10" value="160">
-            <div class="dpi-presets">
-                <span class="preset" onclick="setDpi(120)">📱 120</span>
-                <span class="preset active" onclick="setDpi(160)">📱 160</span>
-                <span class="preset" onclick="setDpi(200)">📱 200</span>
-                <span class="preset" onclick="setDpi(240)">📱 240</span>
-                <span class="preset" onclick="setDpi(320)">📱 320</span>
-                <span class="preset" onclick="setDpi(400)">📱 400</span>
-            </div>
-            <div class="dpi-actions">
-                <button class="btn btn-apply" onclick="applyDpi()">✅ Áp dụng DPI</button>
-                <button class="btn btn-reset" onclick="resetDpi()">🔄 Reset</button>
-            </div>
-        </div>
-
-        <div class="tabs" id="tabs">
-            <span class="tab active" data-filter="all">🔥 Tất cả</span>
-            <span class="tab" data-filter="co">🎯 Cổ</span>
-            <span class="tab" data-filter="dau">🎯 Đầu</span>
-            <span class="tab" data-filter="tren">🔥 Trên đầu</span>
-        </div>
-
-        <div id="cardContainer"></div>
-
-        <div class="config-actions">
-            <button class="btn btn-primary" onclick="downloadAllConfigs()">📥 Tải tất cả</button>
-            <button class="btn btn-success" onclick="activateAll()">🚀 Kích hoạt</button>
-            <button class="btn btn-secondary" onclick="exportJSON()">📤 Xuất JSON</button>
-        </div>
-
-        <div style="margin-top:10px;padding:8px 12px;background:rgba(0,0,0,0.2);border-radius:8px;border:1px solid rgba(42,42,42,0.3);">
-            <div style="display:flex;justify-content:space-between;font-size:11px;color:#888;flex-wrap:wrap;gap:4px;">
-                <span>🔑 Key: <span id="currentKeyDisplay" style="color:#ffcc00;">--</span></span>
-                <span>⏳ Còn lại: <span id="timeRemaining" style="color:#4caf50;">--</span></span>
-                <span>📐 DPI: <span id="dpiStatusDisplay" style="color:#64b5f6;">160</span></span>
-            </div>
-        </div>
-
-        <button class="logout-btn" onclick="logout()">🔄 Đăng xuất</button>
-    </div>
-
-    <script>
-        // ============================================================
-        // DPI SETTINGS
-        // ============================================================
-        let currentDpi = parseInt(localStorage.getItem('proxy_ff_dpi')) || 160;
-        let dpiSectionVisible = false;
-
-        // Cập nhật hiển thị DPI
-        function updateDpiDisplay() {
-            document.getElementById('currentDpi').textContent = currentDpi;
-            document.getElementById('dpiDisplay').textContent = '📐 DPI: ' + currentDpi;
-            document.getElementById('dpiStatusDisplay').textContent = currentDpi;
-            document.getElementById('dpiSlider').value = currentDpi;
+        <!-- ============ LOCK SCREEN ============ -->
+        <div id="lock-screen" class="lock-screen">
+            <div class="lock-logo">HEADLOCK</div>
+            <div class="lock-subtitle">V2 - GALAXY</div>
             
-            // Cập nhật preset active
-            document.querySelectorAll('.dpi-presets .preset').forEach(el => {
-                el.classList.toggle('active', parseInt(el.textContent) === currentDpi);
-            });
-        }
-
-        // Set DPI từ preset
-        function setDpi(value) {
-            currentDpi = value;
-            updateDpiDisplay();
-            showToast('📐 Đã chọn DPI: ' + value);
-        }
-
-        // Áp dụng DPI
-        function applyDpi() {
-            const value = parseInt(document.getElementById('dpiSlider').value);
-            currentDpi = value;
-            localStorage.setItem('proxy_ff_dpi', currentDpi);
-            
-            // Áp dụng DPI vào body (scale)
-            const scale = currentDpi / 160;
-            document.body.style.transform = `scale(${scale})`;
-            document.body.style.transformOrigin = 'center center';
-            
-            updateDpiDisplay();
-            playSound('click');
-            showToast('✅ Đã áp dụng DPI: ' + currentDpi);
-            
-            // Cập nhật AIM theo DPI
-            updateAimByDpi();
-            
-            // Lưu vào config
-            saveDpiToConfig(currentDpi);
-        }
-
-        // Reset DPI về mặc định
-        function resetDpi() {
-            currentDpi = 160;
-            localStorage.setItem('proxy_ff_dpi', currentDpi);
-            document.body.style.transform = 'scale(1)';
-            document.body.style.transformOrigin = 'center center';
-            updateDpiDisplay();
-            playSound('click');
-            showToast('🔄 Đã reset DPI về 160');
-            updateAimByDpi();
-        }
-
-        // Cập nhật AIM theo DPI
-        function updateAimByDpi() {
-            const factor = currentDpi / 160;
-            aimModes.forEach(mode => {
-                // Điều chỉnh độ nhạy theo DPI
-                const baseSensitivity = mode.aim.sensitivity / 1.0;
-                mode.aim.sensitivity = Math.round((baseSensitivity * factor) * 10) / 10;
-                // Điều chỉnh góc aim
-                mode.aim.aimAngle = Math.round(mode.aim.aimAngle * factor);
-                // Điều chỉnh FOV
-                mode.aim.fov = Math.round(mode.aim.fov * factor);
-            });
-            renderCards();
-            console.log('🎯 AIM đã điều chỉnh theo DPI:', currentDpi);
-        }
-
-        // Lưu DPI vào config
-        function saveDpiToConfig(dpi) {
-            const config = {
-                dpi: dpi,
-                device: deviceId,
-                timestamp: Date.now()
-            };
-            localStorage.setItem('proxy_ff_dpi_config', JSON.stringify(config));
-        }
-
-        // Toggle hiển thị DPI settings
-        function toggleDpiSettings() {
-            const section = document.getElementById('dpiSection');
-            dpiSectionVisible = !dpiSectionVisible;
-            section.style.display = dpiSectionVisible ? 'block' : 'none';
-            if (dpiSectionVisible) {
-                updateDpiDisplay();
-                showToast('📐 Mở cài đặt DPI');
-            } else {
-                showToast('📐 Đóng cài đặt DPI');
-            }
-        }
-
-        // ============================================================
-        // KEY DATA
-        // ============================================================
-        const keys5h = [
-            'PROXY-A6EB-B66C-2470-5DA3-FF',
-            'PROXY-F7DC-C77D-3581-6EB4-FF',
-            'PROXY-G8ED-D88E-4692-7FC5-FF',
-            'PROXY-H9FE-E99F-57A3-8GD6-FF',
-            'PROXY-I0GF-F00G-68B4-9HE7-FF'
-        ];
-
-        const keys7d = [
-            'PROXY-J1HG-G11H-79C5-0IF8-FF',
-            'PROXY-K2IH-H22I-80D6-1JG9-FF',
-            'PROXY-L3JI-I33J-91E7-2KH0-FF',
-            'PROXY-M4KJ-J44K-02F8-3LI1-FF',
-            'PROXY-N5LK-K55L-13G9-4MJ2-FF',
-            'PROXY-O6ML-L66M-24H0-5NK3-FF',
-            'PROXY-P7NM-M77N-35I1-6OL4-FF',
-            'PROXY-Q8ON-N88O-46J2-7PM5-FF',
-            'PROXY-R9PO-O99P-57K3-8QN6-FF',
-            'PROXY-S0QP-P00Q-68L4-9RO7-FF'
-        ];
-
-        const keys30d = [
-            'PROXY-T1RQ-Q11R-79M5-0SP8-FF',
-            'PROXY-U2SR-R22S-80N6-1TQ9-FF',
-            'PROXY-V3TS-S33T-91O7-2UR0-FF',
-            'PROXY-W4UT-T44U-02P8-3VS1-FF',
-            'PROXY-X5VU-U55V-13Q9-4WT2-FF',
-            'PROXY-Y6WV-V66W-24R0-5XU3-FF',
-            'PROXY-Z7XW-W77X-35S1-6YV4-FF',
-            'PROXY-A8YX-X88Y-46T2-7ZW5-FF',
-            'PROXY-B9ZY-Y99Z-57U3-8AX6-FF',
-            'PROXY-C0AZ-Z00A-68V4-9BY7-FF'
-        ];
-
-        const allKeys = [...keys5h, ...keys7d, ...keys30d];
-
-        // ============================================================
-        // DEVICE ID
-        // ============================================================
-        function getDeviceId() {
-            let deviceId = localStorage.getItem('proxy_ff_device_id');
-            if (!deviceId) {
-                const ua = navigator.userAgent;
-                let deviceName = 'iPhone';
-                if (ua.includes('iPhone')) deviceName = 'iPhone';
-                else if (ua.includes('iPad')) deviceName = 'iPad';
-                else if (ua.includes('Android')) deviceName = 'Android';
-                else deviceName = 'Unknown';
-                const randomId = Math.random().toString(36).substr(2, 8).toUpperCase();
-                deviceId = deviceName + '-' + randomId;
-                localStorage.setItem('proxy_ff_device_id', deviceId);
-            }
-            return deviceId;
-        }
-
-        const deviceId = getDeviceId();
-
-        // ============================================================
-        // KEY MANAGEMENT
-        // ============================================================
-        function getKeyData() {
-            try {
-                return JSON.parse(localStorage.getItem('proxy_ff_keys_data') || '{}');
-            } catch {
-                return {};
-            }
-        }
-
-        function saveKeyData(data) {
-            localStorage.setItem('proxy_ff_keys_data', JSON.stringify(data));
-        }
-
-        function isKeyUsedOnOtherDevice(key) {
-            const keyData = getKeyData();
-            if (!keyData[key]) return false;
-            return keyData[key].deviceId !== deviceId;
-        }
-
-        function getKeyDevice(key) {
-            const keyData = getKeyData();
-            return keyData[key] || null;
-        }
-
-        function registerKey(key, duration) {
-            const keyData = getKeyData();
-            keyData[key] = {
-                deviceId: deviceId,
-                usedAt: Date.now(),
-                duration: duration,
-                expiresAt: Date.now() + (duration * 60 * 60 * 1000)
-            };
-            saveKeyData(keyData);
-        }
-
-        // ============================================================
-        // AIM MODES
-        // ============================================================
-        const aimModes = [{
-            id: 1,
-            type: 'co',
-            name: 'AIM Cổ',
-            icon: '🎯',
-            desc: 'Nhắm vào vùng cổ - Ghim chặt, ít lộ',
-            tags: ['VIP', 'GHIM', 'AUTO'],
-            active: false,
-            aim: {
-                region: 'Cổ (1.2x)',
-                sensitivity: 1.8,
-                aimAngle: 20,
-                headshotRate: 82,
-                recoilComp: 78,
-                autoLock: true,
-                fov: 130,
-                smoothness: 90,
-                accuracy: 85,
-                sticky: 92
-            },
-            weapon: {
-                m4: { name: 'M4A1', headshot: 82, recoil: 72, accuracy: 87 },
-                ak: { name: 'AK47', headshot: 87, recoil: 62, accuracy: 77 },
-                awm: { name: 'AWM', headshot: 92, recoil: 93, accuracy: 97 },
-                m1887: { name: 'M1887', headshot: 90, recoil: 97, accuracy: 72 },
-                mp40: { name: 'MP40', headshot: 77, recoil: 52, accuracy: 82 },
-                ump: { name: 'UMP', headshot: 80, recoil: 47, accuracy: 84 }
-            }
-        }, {
-            id: 2,
-            type: 'dau',
-            name: 'AIM Đầu',
-            icon: '🎯',
-            desc: 'Nhắm vào vùng đầu - Headshot cao',
-            tags: ['VIP', 'HEADSHOT', 'AUTO', 'PRO'],
-            active: false,
-            aim: {
-                region: 'Đầu (1.0x)',
-                sensitivity: 1.6,
-                aimAngle: 12,
-                headshotRate: 90,
-                recoilComp: 65,
-                autoLock: true,
-                fov: 115,
-                smoothness: 85,
-                accuracy: 92,
-                sticky: 88
-            },
-            weapon: {
-                m4: { name: 'M4A1', headshot: 88, recoil: 60, accuracy: 82 },
-                ak: { name: 'AK47', headshot: 92, recoil: 52, accuracy: 72 },
-                awm: { name: 'AWM', headshot: 96, recoil: 88, accuracy: 95 },
-                m1887: { name: 'M1887', headshot: 94, recoil: 92, accuracy: 68 },
-                mp40: { name: 'MP40', headshot: 82, recoil: 45, accuracy: 78 },
-                ump: { name: 'UMP', headshot: 85, recoil: 40, accuracy: 80 }
-            }
-        }, {
-            id: 3,
-            type: 'tren',
-            name: 'AIM Trên đầu',
-            icon: '🔥',
-            desc: 'Nhắm trên đầu - Headshot siêu chuẩn, bám chặt',
-            tags: ['VIP', 'HEADSHOT', 'AUTO', 'PRO', 'GHIM'],
-            active: false,
-            aim: {
-                region: 'Trên đầu (0.8x)',
-                sensitivity: 1.4,
-                aimAngle: 8,
-                headshotRate: 95,
-                recoilComp: 55,
-                autoLock: true,
-                fov: 105,
-                smoothness: 78,
-                accuracy: 97,
-                sticky: 95
-            },
-            weapon: {
-                m4: { name: 'M4A1', headshot: 92, recoil: 55, accuracy: 80 },
-                ak: { name: 'AK47', headshot: 95, recoil: 48, accuracy: 70 },
-                awm: { name: 'AWM', headshot: 98, recoil: 85, accuracy: 96 },
-                m1887: { name: 'M1887', headshot: 96, recoil: 90, accuracy: 65 },
-                mp40: { name: 'MP40', headshot: 88, recoil: 42, accuracy: 75 },
-                ump: { name: 'UMP', headshot: 90, recoil: 38, accuracy: 78 }
-            }
-        }];
-
-        let currentKey = null;
-        let loginTime = null;
-        let timerInterval = null;
-        let currentIOS = '16.6';
-        let currentFilter = 'all';
-        let aimRunning = false;
-        let aimInterval = null;
-
-        // ============================================================
-        // ÂM THANH
-        // ============================================================
-        let audioCtx = null;
-
-        function initAudio() {
-            if (!audioCtx) audioCtx = new(window.AudioContext || window.webkitAudioContext)();
-        }
-
-        function playSound(type) {
-            try {
-                initAudio();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                switch (type) {
-                    case 'on':
-                        osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-                        osc.frequency.linearRampToValueAtTime(880, audioCtx.currentTime + 0.1);
-                        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.15);
-                        osc.start(audioCtx.currentTime);
-                        osc.stop(audioCtx.currentTime + 0.15);
-                        break;
-                    case 'off':
-                        osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-                        osc.frequency.linearRampToValueAtTime(220, audioCtx.currentTime + 0.1);
-                        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.15);
-                        osc.start(audioCtx.currentTime);
-                        osc.stop(audioCtx.currentTime + 0.15);
-                        break;
-                    case 'click':
-                        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-                        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.05);
-                        osc.start(audioCtx.currentTime);
-                        osc.stop(audioCtx.currentTime + 0.05);
-                        break;
-                    case 'activate':
-                        for (let i = 0; i < 3; i++) {
-                            const o = audioCtx.createOscillator();
-                            const g = audioCtx.createGain();
-                            o.connect(g);
-                            g.connect(audioCtx.destination);
-                            o.frequency.setValueAtTime(600 + i * 200, audioCtx.currentTime + i * 0.1);
-                            g.gain.setValueAtTime(0.2, audioCtx.currentTime + i * 0.1);
-                            g.gain.linearRampToValueAtTime(0, audioCtx.currentTime + i * 0.1 + 0.08);
-                            o.start(audioCtx.currentTime + i * 0.1);
-                            o.stop(audioCtx.currentTime + i * 0.1 + 0.08);
-                        }
-                        break;
-                    case 'stopall':
-                        osc.frequency.setValueAtTime(550, audioCtx.currentTime);
-                        osc.frequency.linearRampToValueAtTime(80, audioCtx.currentTime + 0.5);
-                        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-                        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
-                        osc.start(audioCtx.currentTime);
-                        osc.stop(audioCtx.currentTime + 0.5);
-                        break;
-                    default:
-                        osc.frequency.setValueAtTime(500, audioCtx.currentTime);
-                        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1);
-                        osc.start(audioCtx.currentTime);
-                        osc.stop(audioCtx.currentTime + 0.1);
-                }
-            } catch(e) { console.log('Sound error:', e); }
-        }
-
-        // ============================================================
-        // LOGIN
-        // ============================================================
-        function login() {
-            const input = document.getElementById('keyInput');
-            const key = input.value.trim().toUpperCase();
-            const statusEl = document.getElementById('keyStatus');
-
-            if (!key) {
-                statusEl.className = 'key-status invalid';
-                statusEl.textContent = '❌ Vui lòng nhập key!';
-                showToast('❌ Vui lòng nhập key!');
-                return;
-            }
-
-            if (!allKeys.includes(key)) {
-                statusEl.className = 'key-status invalid';
-                statusEl.textContent = '❌ Key không hợp lệ!';
-                showToast('❌ Key không tồn tại!');
-                return;
-            }
-
-            if (isKeyUsedOnOtherDevice(key)) {
-                const keyData = getKeyDevice(key);
-                statusEl.className = 'key-status device-used';
-                statusEl.textContent = `❌ Key đã được sử dụng trên thiết bị: ${keyData ? keyData.deviceId : 'khác'}`;
-                showToast(`❌ Key đã được sử dụng trên thiết bị khác!`);
-                return;
-            }
-
-            const keyData = getKeyDevice(key);
-            if (keyData) {
-                const elapsed = (Date.now() - keyData.usedAt) / (1000 * 60 * 60);
-                if (elapsed >= keyData.duration) {
-                    statusEl.className = 'key-status expired';
-                    statusEl.textContent = `⏰ Key đã hết hạn!`;
-                    showToast('⏰ Key đã hết hạn!');
-                    return;
-                }
-            }
-
-            let duration = 5;
-            if (keys7d.includes(key)) duration = 168;
-            if (keys30d.includes(key)) duration = 720;
-
-            registerKey(key, duration);
-
-            currentKey = key;
-            loginTime = Date.now();
-
-            localStorage.setItem('proxy_ff_key', JSON.stringify({
-                key: key,
-                loginTime: loginTime,
-                duration: duration,
-                deviceId: deviceId
-            }));
-
-            statusEl.className = 'key-status success';
-            statusEl.textContent = '✅ Key hợp lệ! Đang chuyển sang app...';
-            playSound('activate');
-
-            setTimeout(() => {
-                document.getElementById('keyPage').style.display = 'none';
-                document.getElementById('appPage').classList.add('show');
-                document.getElementById('appKeyDisplay').textContent = '🔑 ' + key;
-                document.getElementById('currentKeyDisplay').textContent = key;
-                document.getElementById('deviceDisplay').textContent = '📱 Thiết bị: ' + deviceId;
-                document.getElementById('deviceIdDisplay').textContent = '🆔 ' + deviceId;
-                document.getElementById('dpiSection').style.display = 'block';
-                updateDpiDisplay();
-                renderCards();
-                startTimer(duration);
-                updateTimeRemaining();
-                document.getElementById('floatingMenu').classList.add('show');
-                showToast('✅ Đăng nhập thành công!');
-            }, 1000);
-        }
-
-        // ============================================================
-        // GET FREE KEY
-        // ============================================================
-        function getFreeKey() {
-            const keyData = getKeyData();
-            const available = keys5h.filter(k => !keyData[k]);
-            if (available.length > 0) {
-                const key = available[0];
-                document.getElementById('keyInput').value = key;
-                showToast('🎯 Key free: ' + key);
-                document.getElementById('keyStatus').className = 'key-status';
-                document.getElementById('keyStatus').textContent = '';
-                setTimeout(login, 500);
-            } else {
-                showToast('❌ Hiện không còn key free 5 giờ!');
-            }
-        }
-
-        // ============================================================
-        // LOGOUT
-        // ============================================================
-        function logout() {
-            if (currentKey) {
-                currentKey = null;
-                loginTime = null;
-                localStorage.removeItem('proxy_ff_key');
-                document.getElementById('keyInput').value = '';
-                document.getElementById('keyStatus').className = 'key-status';
-                document.getElementById('keyStatus').textContent = '';
-                document.getElementById('keyPage').style.display = 'block';
-                document.getElementById('appPage').classList.remove('show');
-                document.getElementById('floatingMenu').classList.remove('show');
-                if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
-                document.getElementById('timeRemaining').textContent = '--';
-                document.getElementById('timeRemain').textContent = '⏳ --';
-                showToast('🔄 Đã đăng xuất!');
-            } else {
-                showToast('ℹ️ Chưa có key để đăng xuất!');
-            }
-        }
-
-        // ============================================================
-        // TIMER
-        // ============================================================
-        function startTimer(duration) {
-            if (timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(() => updateTimeRemaining(duration), 1000);
-        }
-
-        function updateTimeRemaining(duration) {
-            if (!currentKey || !loginTime) {
-                document.getElementById('timeRemaining').textContent = '--';
-                document.getElementById('timeRemain').textContent = '⏳ --';
-                return;
-            }
-
-            const saved = localStorage.getItem('proxy_ff_key');
-            let dur = duration || 5;
-            if (saved) {
-                try {
-                    const data = JSON.parse(saved);
-                    if (data.duration) dur = data.duration;
-                } catch(e) {}
-            }
-
-            const elapsed = (Date.now() - loginTime) / (1000 * 60 * 60);
-            const remaining = Math.max(0, dur - elapsed);
-
-            if (remaining <= 0) {
-                document.getElementById('timeRemaining').textContent = '⏰ Hết hạn';
-                document.getElementById('timeRemaining').style.color = '#ff3b30';
-                document.getElementById('timeRemain').textContent = '⏰ Hết hạn';
-                document.getElementById('timeRemain').style.color = '#ff3b30';
-                logout();
-                showToast('⏰ Key đã hết hạn! Vui lòng nhập key mới.');
-                return;
-            }
-
-            const hours = Math.floor(remaining);
-            const minutes = Math.floor((remaining - hours) * 60);
-            const seconds = Math.floor(((remaining - hours) * 60 - minutes) * 60);
-
-            let display = '';
-            if (hours >= 24) {
-                const days = Math.floor(hours / 24);
-                const remainHours = hours % 24;
-                display = `${days} ngày ${remainHours}h ${minutes}m ${seconds}s`;
-            } else {
-                display = `${hours}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
-            }
-
-            document.getElementById('timeRemaining').textContent = display;
-            document.getElementById('timeRemaining').style.color = remaining < 1 ? '#ff6b00' : '#4caf50';
-            document.getElementById('timeRemain').textContent = '⏳ ' + display;
-            document.getElementById('timeRemain').style.color = remaining < 1 ? '#ff6b00' : '#64b5f6';
-        }
-
-        // ============================================================
-        // RENDER CARDS
-        // ============================================================
-        function renderCards() {
-            const container = document.getElementById('cardContainer');
-            let filtered = aimModes;
-            if (currentFilter !== 'all') {
-                filtered = filtered.filter(m => m.type === currentFilter);
-            }
-
-            container.innerHTML = filtered.map(m => `
-                <div class="mode-card ${m.active ? 'active' : ''}" data-id="${m.id}">
-                    <div class="card-top">
-                        <div class="info">
-                            <div class="mode-tag">${m.icon} ${m.name}</div>
-                            <div class="mode-name">${m.name}</div>
-                            <div class="mode-desc">${m.desc}</div>
-                            <div class="mode-meta">
-                                ${m.tags.map(t => `<span class="tag ${t.toLowerCase() === 'headshot' ? 'headshot' : ''} ${t.toLowerCase() === 'ghim' ? 'ghim' : ''}">${t}</span>`).join('')}
-                                <span class="tag">🎯 ${m.aim.headshotRate}%</span>
-                                <span class="tag">📐 DPI ${currentDpi}</span>
-                            </div>
-                        </div>
-                        <div class="right-side">
-                            <div class="status">
-                                <div class="status-label ${m.active ? 'on' : 'off'}">
-                                    ${m.active ? '✅ Đang chạy' : '⛔ Đã tắt'}
-                                </div>
-                                <div class="status-detail ${m.active ? 'on' : ''}">
-                                    ${m.active ? `🎯 ${m.aim.headshotRate}%` : 'Nhấn bật'}
-                                </div>
-                            </div>
-                            <div class="toggle ${m.active ? 'active' : ''}" onclick="toggleMode(${m.id})">
-                                <div class="slider"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="aim-data" id="aimData-${m.id}" style="margin-top:8px;display:${m.active ? 'block' : 'none'};">
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;font-size:11px;background:rgba(0,0,0,0.2);padding:8px;border-radius:6px;">
-                            <div><span style="color:#888;">Vùng aim:</span> <span style="color:#ffcc00;">${m.aim.region}</span></div>
-                            <div><span style="color:#888;">Độ nhạy:</span> <span style="color:#ffcc00;">${m.aim.sensitivity}x</span></div>
-                            <div><span style="color:#888;">Headshot:</span> <span style="color:#ff6b00;">${m.aim.headshotRate}%</span></div>
-                            <div><span style="color:#888;">Độ mượt:</span> <span style="color:#64b5f6;">${m.aim.smoothness}%</span></div>
-                            <div><span style="color:#888;">Độ chính xác:</span> <span style="color:#9b59b6;">${m.aim.accuracy}%</span></div>
-                            <div><span style="color:#888;">Độ bám:</span> <span style="color:#4caf50;">${m.aim.sticky}%</span></div>
-                            <div><span style="color:#888;">DPI:</span> <span style="color:#ffcc00;">${currentDpi}</span></div>
-                        </div>
-                        <button class="btn-download" onclick="downloadMobileConfig(${m.id})">
-                            📥 Tải MobileConfig - ${m.name}
-                        </button>
-                    </div>
+            <div class="lock-card">
+                <h3>🔐 Nhập Key Để Vào App</h3>
+                <p>Vui lòng nhập Key hợp lệ để truy cập HEADLOCK V2.</p>
+                <div class="lock-input-group">
+                    <input type="text" id="lock-key-input" placeholder="HEAD-XXXX-XXXX-XXXX-FF" autocomplete="off">
+                    <button class="btn-unlock" onclick="unlockApp()">🔓 Mở Khóa</button>
                 </div>
-            `).join('');
+            </div>
+        </div>
 
-            updateStatusBar();
-        }
+        <!-- ============ STATUS BAR ============ -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span>📶</span>
+                <span>🛜</span>
+            </div>
+            <div class="status-center">
+                <span id="ping-display" class="ping-display">-- ms</span>
+                <span id="time-display" class="time-display">--:--:--</span>
+            </div>
+            <div class="status-icons">
+                <span>🔋 27%</span>
+            </div>
+        </div>
 
-        // ============================================================
-        // TOGGLE MODE
-        // ============================================================
-        function toggleMode(id) {
-            if (!currentKey) { showToast('❌ Vui lòng đăng nhập trước!'); return; }
-            const mode = aimModes.find(m => m.id === id);
-            if (!mode) return;
+        <!-- ============ APP HEADER ============ -->
+        <div class="app-header">
+            <div class="logo">HEADLOCK</div>
+            <div class="user-icon" onclick="logout()">👤</div>
+        </div>
 
-            mode.active = !mode.active;
+        <!-- ============ MAIN CONTENT ============ -->
+        <div class="app-content">
 
-            const card = document.querySelector(`.mode-card[data-id="${id}"]`);
-            const toggle = card.querySelector('.toggle');
-            const statusLabel = card.querySelector('.status-label');
-            const statusDetail = card.querySelector('.status-detail');
-            const aimData = document.getElementById(`aimData-${id}`);
+            <!-- HOME PAGE -->
+            <div id="page-home" class="page active">
+                <div class="hero-section">
+                    <div class="hero-title">HEADLOCK V2</div>
+                    <div class="hero-subtitle">Giải pháp tối ưu hóa game Free Fire</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">✨ Toàn Bộ Tính Năng</div>
+                    <div class="features-grid">
+                        
+                        <!-- Fix Lag -->
+                        <div class="feature-card active-feature">
+                            <div class="feature-header">
+                                <div class="feature-name"><span class="feature-icon">🚀</span> Fix Lag Chơi Game</div>
+                                <div class="toggle-switch active" onclick="toggleFeature(this, 'Fix Lag')"></div>
+                            </div>
+                            <div class="slider-container">
+                                <span>0%</span>
+                                <div class="slider-bar" onmousedown="startDrag(event, this)" ontouchstart="startDrag(event, this)">
+                                    <div class="slider-fill" style="width: 90%;"></div>
+                                    <div class="slider-thumb" style="left: 90%;"></div>
+                                </div>
+                                <span class="slider-value">90%</span>
+                            </div>
+                        </div>
 
-            if (mode.active) {
-                card.classList.add('active');
-                toggle.classList.add('active');
-                statusLabel.className = 'status-label on';
-                statusLabel.textContent = '✅ Đang chạy';
-                statusDetail.className = 'status-detail on';
-                statusDetail.textContent = `🎯 ${mode.aim.headshotRate}%`;
-                aimData.style.display = 'block';
-                playSound('on');
-                showToast(`✅ Đã bật: ${mode.name}`);
-                document.getElementById('modeActive').textContent = `▶️ ${mode.name}`;
-                document.getElementById('modeActive').style.color = '#4caf50';
-                document.getElementById('floatingMenu').classList.add('show');
-            } else {
-                card.classList.remove('active');
-                toggle.classList.remove('active');
-                statusLabel.className = 'status-label off';
-                statusLabel.textContent = '⛔ Đã tắt';
-                statusDetail.className = 'status-detail';
-                statusDetail.textContent = 'Nhấn bật';
-                aimData.style.display = 'none';
-                playSound('off');
-                showToast(`⛔ Đã tắt: ${mode.name}`);
-                const active = aimModes.filter(m => m.active);
-                if (active.length === 0) {
-                    document.getElementById('modeActive').textContent = '⬜ Chưa chọn';
-                    document.getElementById('modeActive').style.color = '#888';
-                    document.getElementById('floatingMenu').classList.remove('show');
-                }
-            }
-            updateStatusBar();
-        }
+                        <!-- Tâm Ảo -->
+                        <div class="feature-card active-feature">
+                            <div class="feature-header">
+                                <div class="feature-name"><span class="feature-icon">👁️</span> Tâm Ảo (Visual)</div>
+                                <div class="toggle-switch active" onclick="toggleFeature(this, 'Tâm Ảo')"></div>
+                            </div>
+                            <div class="slider-container">
+                                <span>0%</span>
+                                <div class="slider-bar" onmousedown="startDrag(event, this)" ontouchstart="startDrag(event, this)">
+                                    <div class="slider-fill" style="width: 85%;"></div>
+                                    <div class="slider-thumb" style="left: 85%;"></div>
+                                </div>
+                                <span class="slider-value">85%</span>
+                            </div>
+                        </div>
 
-        function updateStatusBar() {
-            const active = aimModes.filter(m => m.active);
-            document.getElementById('activeCount').textContent = active.length;
-        }
+                        <!-- Aim Lock -->
+                        <div class="feature-card active-feature" id="aimlock-card">
+                            <div class="feature-header">
+                                <div class="feature-name"><span class="feature-icon">🎯</span> Aim Lock</div>
+                                <div class="toggle-switch active" id="aimlock-toggle" onclick="toggleFeature(this, 'Aim Lock')"></div>
+                            </div>
+                            <div class="slider-container">
+                                <span>0%</span>
+                                <div class="slider-bar" onmousedown="startDrag(event, this)" ontouchstart="startDrag(event, this)">
+                                    <div class="slider-fill" style="width: 98%;"></div>
+                                    <div class="slider-thumb" style="left: 98%;"></div>
+                                </div>
+                                <span class="slider-value">98%</span>
+                            </div>
+                            <div class="aim-buttons">
+                                <button class="aim-btn" onclick="setAim(this, 'Đầu')">Aim Đầu</button>
+                                <button class="aim-btn" onclick="setAim(this, 'Ngực')">Aim Ngực</button>
+                                <button class="aim-btn active" onclick="setAim(this, 'Tự Động')">Tự Động</button>
+                            </div>
+                        </div>
 
-        // ============================================================
-        // DOWNLOAD MOBILECONFIG
-        // ============================================================
-        function downloadMobileConfig(id) {
-            const mode = aimModes.find(m => m.id === id);
-            if (!mode || !mode.active) {
-                showToast('❌ Vui lòng bật chế độ trước!');
-                return;
-            }
+                        <!-- Aim Đầu -->
+                        <div class="feature-card active-feature" id="aimdau-card">
+                            <div class="feature-header">
+                                <div class="feature-name"><span class="feature-icon">💀</span> Aim Đầu</div>
+                                <div class="toggle-switch active" id="aimdau-toggle" onclick="toggleFeature(this, 'Aim Đầu')"></div>
+                            </div>
+                            <div class="slider-container">
+                                <span>0%</span>
+                                <div class="slider-bar" onmousedown="startDrag(event, this)" ontouchstart="startDrag(event, this)">
+                                    <div class="slider-fill" style="width: 100%;"></div>
+                                    <div class="slider-thumb" style="left: 100%;"></div>
+                                </div>
+                                <span class="slider-value">100%</span>
+                            </div>
+                            <div class="aim-buttons">
+                                <button class="aim-btn active" onclick="setAim(this, 'Đầu')">Bật Aim Đầu</button>
+                                <button class="aim-btn" onclick="setAim(this, 'Tắt')">Tắt</button>
+                            </div>
+                        </div>
 
-            const xml = generateMobileConfig(mode);
-            const blob = new Blob([xml], { type: 'application/x-apple-aspen-config' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `proxy_ff_${mode.type}_ios${currentIOS}_${Date.now()}.mobileconfig`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            playSound('click');
-            showToast(`📥 Đã tải ${mode.name} về máy!`);
-        }
+                        <!-- Chạy Gầm -->
+                        <div class="feature-card active-feature" id="chaygam-card">
+                            <div class="feature-header">
+                                <div class="feature-name"><span class="feature-icon">🏃</span> Chạy Gầm (Speed)</div>
+                                <div class="toggle-switch active" id="chaygam-toggle" onclick="toggleFeature(this, 'Chạy Gầm')"></div>
+                            </div>
+                            <div class="slider-container">
+                                <span>0%</span>
+                                <div class="slider-bar" onmousedown="startDrag(event, this)" ontouchstart="startDrag(event, this)">
+                                    <div class="slider-fill" style="width: 75%;"></div>
+                                    <div class="slider-thumb" style="left: 75%;"></div>
+                                </div>
+                                <span class="slider-value">75%</span>
+                            </div>
+                            <div class="aim-buttons">
+                                <button class="aim-btn" onclick="setSpeed(this, 'Chậm')">Chậm</button>
+                                <button class="aim-btn active" onclick="setSpeed(this, 'Vừa')">Vừa</button>
+                                <button class="aim-btn" onclick="setSpeed(this, 'Nhanh')">Nhanh</button>
+                            </div>
+                        </div>
 
-        function generateMobileConfig(mode) {
-            const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-                const r = Math.random() * 16 | 0;
-                return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-            });
-            return `<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>PayloadContent</key>
-    <array>
-        <dict>
-            <key>PayloadDescription</key>
-            <string>Proxy FF - ${mode.name} - DPI ${currentDpi}</string>
-            <key>PayloadDisplayName</key>
-            <string>${mode.icon} ${mode.name}</string>
-            <key>PayloadIdentifier</key>
-            <string>com.proxy.ff.${mode.type}.${uuid}</string>
-            <key>PayloadType</key>
-            <string>com.apple.webClip</string>
-            <key>PayloadUUID</key>
-            <string>${uuid}</string>
-            <key>PayloadVersion</key>
-            <integer>1</integer>
-            <key>URL</key>
-            <string>http://192.168.1.8:8080/proxy/${mode.type}?dpi=${currentDpi}</string>
-            <key>IsRemovable</key>
-            <true/>
-            <key>Label</key>
-            <string>${mode.icon} ${mode.name}</string>
-        </dict>
-    </array>
-    <key>PayloadDescription</key>
-    <string>Proxy FF - ${mode.name} - DPI ${currentDpi}</string>
-    <key>PayloadDisplayName</key>
-    <string>Proxy FF</string>
-    <key>PayloadIdentifier</key>
-    <string>com.proxy.ff.${mode.type}.config</string>
-    <key>PayloadOrganization</key>
-    <string>Proxy FF</string>
-    <key>PayloadType</key>
-    <string>Configuration</string>
-    <key>PayloadUUID</key>
-    <string>${uuid}</string>
-    <key>PayloadVersion</key>
-    <integer>1</integer>
-</dict>
-</plist>`;
-        }
-
-        function downloadAllConfigs() {
-            const active = aimModes.filter(m => m.active);
-            if (active.length === 0) { showToast('❌ Vui lòng bật ít nhất 1 chế độ!'); return; }
-            active.forEach(m => setTimeout(() => downloadMobileConfig(m.id), 500 * active.indexOf(m)));
-            showToast(`📥 Đang tải ${active.length} cấu hình...`);
-        }
-
-        // ============================================================
-        // ACTIVATE ALL
-        // ============================================================
-        function activateAll() {
-            if (!currentKey) { showToast('❌ Vui lòng đăng nhập trước!'); return; }
-            const inactive = aimModes.filter(m => !m.active);
-            if (inactive.length === 0) { showToast('✅ Tất cả đã được bật!'); return; }
-
-            const loading = document.getElementById('loadingOverlay');
-            const bar = document.getElementById('loadingBar');
-            const text = document.getElementById('loadingText');
-            loading.classList.add('show');
-            bar.style.width = '0%';
-            text.textContent = '🚀 Đang kích hoạt...';
-
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 20;
-                bar.style.width = progress + '%';
-                if (progress < 40) text.textContent = '⚡ Đang áp dụng AIM...';
-                else if (progress < 80) text.textContent = '🎯 Đang khóa mục tiêu...';
-                else text.textContent = '✅ Hoàn tất!';
-
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        loading.classList.remove('show');
-                        inactive.forEach(m => {
-                            m.active = true;
-                            const card = document.querySelector(`.mode-card[data-id="${m.id}"]`);
-                            if (card) {
-                                card.classList.add('active');
-                                card.querySelector('.toggle').classList.add('active');
-                                card.querySelector('.status-label').className = 'status-label on';
-                                card.querySelector('.status-label').textContent = '✅ Đang chạy';
-                                card.querySelector('.status-detail').className = 'status-detail on';
-                                card.querySelector('.status-detail').textContent = `🎯 ${m.aim.headshotRate}%`;
-                                document.getElementById(`aimData-${m.id}`).style.display = 'block';
-                            }
-                        });
-                        playSound('activate');
-                        updateStatusBar();
-                        document.getElementById('modeActive').textContent = `▶️ ${aimModes.filter(m => m.active).map(m => m.name).join(', ')}`;
-                        document.getElementById('modeActive').style.color = '#4caf50';
-                        document.getElementById('floatingMenu').classList.add('show');
-                        showToast(`✅ Đã bật tất cả ${inactive.length} chế độ!`);
-                    }, 500);
-                }
-            }, 300);
-        }
-
-        // ============================================================
-        // FLOATING MENU
-        // ============================================================
-        function toggleAim() {
-            const btn = document.getElementById('btnAim');
-            const menu = document.getElementById('floatingMenu');
-            const loading = document.getElementById('loadingOverlay');
-            const bar = document.getElementById('loadingBar');
-            const text = document.getElementById('loadingText');
-
-            if (!currentKey) { showToast('❌ Vui lòng đăng nhập trước!'); return; }
-
-            if (!aimRunning) {
-                const active = aimModes.filter(m => m.active);
-                if (active.length === 0) { showToast('❌ Vui lòng bật ít nhất 1 chế độ!'); return; }
-
-                aimRunning = true;
-                btn.classList.add('active');
-                loading.classList.add('show');
-                bar.style.width = '0%';
-                text.textContent = '🚀 Đang khởi tạo AIM...';
-
-                let progress = 0;
-                const interval = setInterval(() => {
-                    progress += Math.random() * 10 + 5;
-                    if (progress > 100) progress = 100;
-                    bar.style.width = progress + '%';
-                    if (progress < 30) text.textContent = '🔍 Đang tìm mục tiêu...';
-                    else if (progress < 60) text.textContent = '🎯 Đang khóa mục tiêu...';
-                    else if (progress < 90) text.textContent = '⚡ Đang áp dụng AIM...';
-                    else text.textContent = '✅ AIM đã sẵn sàng!';
-
-                    if (progress >= 100) {
-                        clearInterval(interval);
-                        setTimeout(() => {
-                            loading.classList.remove('show');
-                            menu.classList.add('show');
-                            playSound('on');
-                            showToast('🎯 AIM đã bật!');
-                            document.getElementById('modeActive').textContent = '▶️ AIM PRO';
-                            document.getElementById('modeActive').style.color = '#4caf50';
-                            aimInterval = setInterval(autoShoot, 3000);
-                        }, 500);
-                    }
-                }, 200);
-            } else {
-                aimRunning = false;
-                btn.classList.remove('active');
-                if (aimInterval) { clearInterval(aimInterval); aimInterval = null; }
-                menu.classList.remove('show');
-                playSound('off');
-                showToast('⛔ Đã tắt AIM');
-                document.getElementById('modeActive').textContent = '⬜ Chưa chọn';
-                document.getElementById('modeActive').style.color = '#888';
-            }
-        }
-
-        function autoShoot() {
-            const active = aimModes.filter(m => m.active);
-            if (active.length > 0 && aimRunning) {
-                const mode = active[0];
-                if (Math.random() * 100 < mode.aim.headshotRate) {
-                    showToast('💥 HEADSHOT! +100');
-                    playSound('click');
-                } else {
-                    showToast('🔫 Bắn trúng! +30');
-                }
-            }
-        }
-
-        function getStatus() {
-            const active = aimModes.filter(m => m.active);
-            showToast(`📊 Trạng thái:\n- Key: ${currentKey || 'Chưa có'}\n- Thiết bị: ${deviceId}\n- DPI: ${currentDpi}\n- AIM: ${aimRunning ? '✅ Đang chạy' : '⛔ Tắt'}\n- Proxy: ${active.length} chế độ`);
-        }
-
-        function stopAll() {
-            const menu = document.getElementById('floatingMenu');
-            const btn = document.getElementById('btnAim');
-            if (aimRunning) {
-                aimRunning = false;
-                btn.classList.remove('active');
-                if (aimInterval) { clearInterval(aimInterval); aimInterval = null; }
-            }
-            menu.classList.remove('show');
-
-            aimModes.forEach(m => {
-                if (m.active) {
-                    m.active = false;
-                    const card = document.querySelector(`.mode-card[data-id="${m.id}"]`);
-                    if (card) {
-                        card.classList.remove('active');
-                        card.querySelector('.toggle').classList.remove('active');
-                        card.querySelector('.status-label').className = 'status-label off';
-                        card.querySelector('.status-label').textContent = '⛔ Đã tắt';
-                        card.querySelector('.status-detail').className = 'status-detail';
-                        card.querySelector('.status-detail').textContent = 'Nhấn bật';
-                        document.getElementById(`aimData-${m.id}`).style.display = 'none';
-                    }
-                }
-            });
-
-            document.getElementById('activeCount').textContent = '0';
-            document.getElementById('modeActive').textContent = '⬜ Chưa chọn';
-            document.getElementById('modeActive').style.color = '#888';
-            playSound('stopall');
-            showToast('⏹ Đã dừng tất cả!');
-        }
-
-        // ============================================================
-        // EXPORT JSON
-        // ============================================================
-        function exportJSON() {
-            if (!currentKey) { showToast('❌ Vui lòng đăng nhập trước!'); return; }
-            const data = {
-                key: currentKey,
-                device_id: deviceId,
-                dpi: currentDpi,
-                ios_version: currentIOS,
-                modes: aimModes,
-                active_count: aimModes.filter(m => m.active).length,
-                aim_running: aimRunning,
-                exported_at: new Date().toISOString()
-            };
-            const json = JSON.stringify(data, null, 2);
-            const blob = new Blob([json], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `proxy_ff_dpi${currentDpi}_ios${currentIOS}_${Date.now()}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            playSound('click');
-            showToast('📤 Đã xuất JSON!');
-        }
-
-        // ============================================================
-        // TOAST
-        // ============================================================
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.classList.add('show');
-            clearTimeout(t._timeout);
-            t._timeout = setTimeout(() => t.classList.remove('show'), 3000);
-        }
-
-        // ============================================================
-        // EVENTS
-        // ============================================================
-        document.getElementById('keyInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') login();
-        });
-
-        // DPI Slider
-        document.getElementById('dpiSlider').addEventListener('input', function() {
-            const value = parseInt(this.value);
-            document.getElementById('currentDpi').textContent = value;
-            document.querySelectorAll('.dpi-presets .preset').forEach(el => {
-                el.classList.toggle('active', parseInt(el.textContent) === value);
-            });
-        });
-
-        // DPI Presets
-        document.querySelectorAll('.dpi-presets .preset').forEach(el => {
-            el.addEventListener('click', function() {
-                const value = parseInt(this.textContent);
-                document.getElementById('dpiSlider').value = value;
-                document.getElementById('currentDpi').textContent = value;
-                document.querySelectorAll('.dpi-presets .preset').forEach(p => p.classList.remove('active'));
-                this.classList.add('active');
-                showToast('📐 Đã chọn DPI: ' + value);
-            });
-        });
-
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                currentFilter = this.dataset.filter;
-                renderCards();
-            });
-        });
-
-        // ============================================================
-        // INIT
-        // ============================================================
-        document.addEventListener('click', initAudio, { once: true });
-        document.addEventListener('touchstart', initAudio, { once: true });
-
-        // DPI init
-        document.getElementById('dpiSection').style.display = 'none';
-        updateDpiDisplay();
-
-        document.getElementById('deviceIdDisplay').textContent = '🆔 ' + deviceId;
-
-        // Khôi phục key
-        const saved = localStorage.getItem('proxy_ff_key');
-        if (saved) {
-            try {
-                const data = JSON.parse(saved);
-                const key = data.key;
-                if (allKeys.includes(key)) {
-                    const keyData = getKeyDevice(key);
-                    if (keyData && keyData.deviceId === deviceId) {
-                        const elapsed = (Date.now() - keyData.usedAt) / (1000 * 60 * 60);
-                        if (elapsed < keyData.duration) {
-                            currentKey = key;
-                            loginTime = data.loginTime;
-                            document.getElementById('keyInput').value = currentKey;
-                            document.getElementById('keyPage').style.display = 'none';
-                            document.getElementById('appPage').classList.add('show');
-                            document.getElementById('appKeyDisplay').textContent = '🔑 ' + currentKey;
-                            document.getElementById('currentKeyDisplay').textContent = currentKey;
-                            document.getElementById('deviceDisplay').textContent = '📱 Thiết bị: ' + deviceId;
-                            document.getElementById('dpiSection').style.display = 'block';
-                            renderCards();
-                            startTimer(data.duration || 5);
-                            updateTimeRemaining();
-                            document.getElementById('floatingMenu').classList.add('show');
-                            showToast('✅ Đã khôi phục key!');
-                        } else {
-                            localStorage.removeItem('proxy_ff_key');
-                            showToast('⏰ Key đã hết hạn!');
-                        }
-                    } else if (keyData && keyData.deviceId !== deviceId) {
-                        localStorage.removeItem('proxy_ff_key');
-                        showToast('❌ Key đã được sử dụng trên thiết bị khác!');
-                    } else {
-                        localStorage.removeItem('proxy_ff_key');
-                    }
-                } else {
-                    localStorage.removeItem('proxy_ff_key');
-                }
-            } catch(e) {
-                localStorage.removeItem('proxy_ff_key');
-            }
-        }
-
-        // Tự động áp dụng DPI nếu có
-        if (currentDpi !== 160) {
-            const scale = currentDpi / 160;
-            document.body.style.transform = `scale(${scale})`;
-            document.body.style.transformOrigin = 'center center';
-            updateAimByDpi();
-        }
-
-        console.log('🔐 PROXY FF - KEY + AIM + DPI');
-        console.log('📱 Thiết bị ID:', deviceId);
-        console.log('📐 DPI hiện tại:', currentDpi);
-        console.log('🎯 3 chế độ: Cổ - Đầu - Trên đầu');
-    </script>
-
-</body>
-</html>
+                        <!-- Bypass Anti-Cheat -->
+                        <div class="feature-card active-feature">
+                            <div class="feature-header">
+                                <div class="feature-name"><span class="feature-icon">🛡️</span> Bypass Anti-Cheat</div>
+                                <div class="toggle-switch active
