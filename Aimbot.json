@@ -1,185 +1,136 @@
 {
   "config_info": {
-    "name": "AIMBOT FF — NEXA STRIKE",
-    "version": "7.1",
+    "name": "AIMLOCK — DÍNH ĐẦU TỐI ĐA",
+    "version": "9.9 GOD HEAD",
     "game": "Free Fire",
     "updated": "2026-09-27",
-    "status": "active",
-    "author": "NEXA SYSTEM"
+    "status": "HEAD LOCK MAX"
   },
 
-  "aimbot": {
+  "aimlock_core": {
     "enable": true,
-    "mode": "aggressive",
-    "aim_strength": 1.85,
-    "auto_lock": true,
-    "auto_snap_head": true,
+    "mode": "head_only_lock",
+    "aim_strength": 3.0,
+    "auto_lock_head": true,
     "stick_forever": true,
     "never_lose_target": true,
     "predict_movement": true,
-    "prediction_strength": 1.6,
+    "prediction_strength": 3.0,
+    "fov_radius": 90,
     "aim_delay_ms": 0,
-    "smoothness": 0.15,
-    "fov_radius": 55,
-    "fov_visual": false,
-    "max_distance_m": 180,
+    "smoothness": 0.0,
+    "max_distance_m": 500,
     "visible_only": true,
-    "auto_switch_target": true
+    "lock_first_target_only": true,
+    "auto_switch_target": false
   },
 
   "head_lock": {
     "priority": 1,
-    "offset_y": -0.05,
+    "target_part": "head",
+    "offset_y": 0.0,
     "auto_correct": true,
-    "tightness": 1.9,
-    "follow_speed": 4.2,
+    "tightness": 3.0,
+    "follow_speed": 10.0,
     "jump_adjust": true,
-    "jump_offset_boost": 1.4,
+    "jump_boost": 3.0,
     "crouch_adjust": true,
-    "crouch_offset": -0.12
+    "crouch_offset": 0.0,
+    "force_center_head": true,
+    "lock_skull_only": true,
+    "no_neck_no_body": true,
+    "zero_deviation": true,
+    "stick_through_movement": true,
+    "stick_through_jump": true,
+    "reconnect_in_1ms": true
+  },
+
+  "stick_forever": {
+    "enable": true,
+    "stick_when_cover": false,
+    "stick_when_jump": true,
+    "stick_when_run": true,
+    "stick_when_crouch": true,
+    "stick_after_fire": true,
+    "hold_lock_force": 3.0
   },
 
   "swipe_trigger": {
     "enable": true,
     "any_swipe": true,
-    "sensitivity": 2.2,
-    "min_distance_px": 5,
+    "sensitivity": 3.0,
+    "min_px": 1,
     "instant_lock": true,
     "lock_on_touch": true,
-    "hold_stick": true,
-    "fire_on_lock": false
+    "lock_until_death": true
   },
 
-  "recoil_control": {
+  "recoil_fix": {
     "enable": true,
-    "global_strength": 0.98,
-    "vertical_compensate": true,
-    "horizontal_compensate": true,
-    "shake_reduction": 0.95,
-    "drift_correction": 0.97
+    "vertical_compensate": 1.0,
+    "horizontal_compensate": 1.0,
+    "zero_recoil": true
   },
 
   "sensitivity": {
-    "base": 100,
-    "aim": 96,
-    "red_dot": 92,
-    "scope_2x": 88,
-    "scope_4x": 78,
-    "sniper": 65,
-    "free_look": 100,
-    "dpi_boost": 1200
+    "base": 250,
+    "aim": 250,
+    "red_dot": 250,
+    "scope_2x": 250,
+    "scope_4x": 250,
+    "sniper": 250,
+    "dpi_boost": 3000
   },
 
   "weapons": {
     "shotgun": {
       "M1014": {
-        "sensi": 135,
-        "head_boost": 2.2,
-        "stick_force": 1.0,
-        "close_range_lock": true,
-        "fov_boost": 1.35
+        "sensi": 250,
+        "head_boost": 5.0,
+        "stick_force": 3.0
       },
       "M1887": {
-        "sensi": 140,
-        "head_boost": 2.5,
-        "stick_force": 1.0,
-        "close_range_lock": true,
-        "fov_boost": 1.5
+        "sensi": 250,
+        "head_boost": 5.5,
+        "stick_force": 3.0
       }
     },
     "smg": {
-      "UMP": {
-        "sensi": 125,
-        "head_boost": 1.8,
-        "stick_force": 0.96,
-        "recoil_strength": 0.9
-      },
       "MP40": {
-        "sensi": 130,
-        "head_boost": 1.9,
-        "stick_force": 0.97,
-        "recoil_strength": 0.92
+        "sensi": 250,
+        "head_boost": 4.5,
+        "stick_force": 3.0
       },
       "VECTOR": {
-        "sensi": 128,
-        "head_boost": 2.0,
-        "stick_force": 0.98,
-        "recoil_strength": 0.95
+        "sensi": 250,
+        "head_boost": 4.8,
+        "stick_force": 3.0
       }
     },
     "rifle": {
       "AK": {
-        "sensi": 115,
-        "head_boost": 2.1,
-        "stick_force": 0.98,
-        "recoil_strength": 0.98
+        "sensi": 250,
+        "head_boost": 5.0,
+        "stick_force": 3.0
       },
       "M4A1": {
-        "sensi": 118,
-        "head_boost": 2.0,
-        "stick_force": 0.97,
-        "recoil_strength": 0.92
-      },
-      "SCAR": {
-        "sensi": 112,
-        "head_boost": 1.9,
-        "stick_force": 0.95,
-        "recoil_strength": 0.88
-      },
-      "GROZA": {
-        "sensi": 120,
-        "head_boost": 2.2,
-        "stick_force": 0.98,
-        "recoil_strength": 0.96
+        "sensi": 250,
+        "head_boost": 4.8,
+        "stick_force": 3.0
       }
     },
     "sniper": {
       "AWM": {
-        "sensi": 72,
-        "head_boost": 3.5,
-        "stick_force": 1.0,
-        "one_shot_lock": true,
-        "instant_snap": true,
-        "fov_narrow": 30
-      },
-      "M82B": {
-        "sensi": 68,
-        "head_boost": 3.2,
-        "stick_force": 1.0,
-        "one_shot_lock": true
-      }
-    },
-    "pistol": {
-      "DEAGLE": {
-        "sensi": 90,
-        "head_boost": 2.8,
-        "stick_force": 1.0,
-        "one_shot_lock": true
+        "sensi": 250,
+        "head_boost": 6.0,
+        "stick_force": 3.0
       }
     }
   },
 
-  "anti_detect": {
-    "humanize_movement": 0.1,
-    "random_offset_px": 2,
-    "avoid_perfect_center": true,
-    "delay_variation_ms": 5,
-    "recoil_pattern_natural": true
-  },
-
-  "visual": {
-    "target_outline": true,
-    "outline_color": "#FF0033",
-    "outline_thickness": 3,
-    "pulse_when_locked": true,
-    "show_distance": true,
-    "crosshair_color": "#FF0033",
-    "crosshair_lock_color": "#FFFFFF"
-  },
-
   "dns_aim_link": {
-    "primary": "10.10.34.1",
-    "secondary": "1.1.1.1",
+    "primary": "1.1.1.1",
+    "secondary": "8.8.8.8",
     "config_url": "https://raw.githubusercontent.com/mton3702-source/Proxy/refs/heads/main/Aimbot.json"
   }
 }
