@@ -1,136 +1,55 @@
 {
-  "config_info": {
-    "name": "AIMLOCK — DÍNH ĐẦU TỐI ĐA",
-    "version": "9.9 GOD HEAD",
-    "game": "Free Fire",
-    "updated": "2026-09-27",
-    "status": "HEAD LOCK MAX"
+  "enabled": true,
+
+  "detection": {
+    "maxRange": 500.0,
+    "fovAngle": 90.0,
+    "requireLineOfSight": true,
+    "ignoreTeammates": true,
+    "ignoreDeadTargets": true,
+    "ignoreBehindWalls": false,
+    "updateRate": 100
   },
 
-  "aimlock_core": {
-    "enable": true,
-    "mode": "head_only_lock",
-    "aim_strength": 3.0,
-    "auto_lock_head": true,
-    "stick_forever": true,
-    "never_lose_target": true,
-    "predict_movement": true,
-    "prediction_strength": 3.0,
-    "fov_radius": 90,
-    "aim_delay_ms": 0,
-    "smoothness": 0.0,
-    "max_distance_m": 500,
-    "visible_only": true,
-    "lock_first_target_only": true,
-    "auto_switch_target": false
-  },
-
-  "head_lock": {
-    "priority": 1,
-    "target_part": "head",
-    "offset_y": 0.0,
-    "auto_correct": true,
-    "tightness": 3.0,
-    "follow_speed": 10.0,
-    "jump_adjust": true,
-    "jump_boost": 3.0,
-    "crouch_adjust": true,
-    "crouch_offset": 0.0,
-    "force_center_head": true,
-    "lock_skull_only": true,
-    "no_neck_no_body": true,
-    "zero_deviation": true,
-    "stick_through_movement": true,
-    "stick_through_jump": true,
-    "reconnect_in_1ms": true
-  },
-
-  "stick_forever": {
-    "enable": true,
-    "stick_when_cover": false,
-    "stick_when_jump": true,
-    "stick_when_run": true,
-    "stick_when_crouch": true,
-    "stick_after_fire": true,
-    "hold_lock_force": 3.0
-  },
-
-  "swipe_trigger": {
-    "enable": true,
-    "any_swipe": true,
-    "sensitivity": 3.0,
-    "min_px": 1,
-    "instant_lock": true,
-    "lock_on_touch": true,
-    "lock_until_death": true
-  },
-
-  "recoil_fix": {
-    "enable": true,
-    "vertical_compensate": 1.0,
-    "horizontal_compensate": 1.0,
-    "zero_recoil": true
-  },
-
-  "sensitivity": {
-    "base": 250,
-    "aim": 250,
-    "red_dot": 250,
-    "scope_2x": 250,
-    "scope_4x": 250,
-    "sniper": 250,
-    "dpi_boost": 3000
-  },
-
-  "weapons": {
-    "shotgun": {
-      "M1014": {
-        "sensi": 250,
-        "head_boost": 5.0,
-        "stick_force": 3.0
-      },
-      "M1887": {
-        "sensi": 250,
-        "head_boost": 5.5,
-        "stick_force": 3.0
-      }
-    },
-    "smg": {
-      "MP40": {
-        "sensi": 250,
-        "head_boost": 4.5,
-        "stick_force": 3.0
-      },
-      "VECTOR": {
-        "sensi": 250,
-        "head_boost": 4.8,
-        "stick_force": 3.0
-      }
-    },
-    "rifle": {
-      "AK": {
-        "sensi": 250,
-        "head_boost": 5.0,
-        "stick_force": 3.0
-      },
-      "M4A1": {
-        "sensi": 250,
-        "head_boost": 4.8,
-        "stick_force": 3.0
-      }
-    },
-    "sniper": {
-      "AWM": {
-        "sensi": 250,
-        "head_boost": 6.0,
-        "stick_force": 3.0
-      }
+  "tracking": {
+    "enabled": true,
+    "strength": 1.0,
+    "smoothing": 0.0,
+    "maxTurnSpeed": 999.0,
+    "minTurnSpeed": 100.0,
+    "leadTarget": {
+      "enabled": true,
+      "predictionTime": 0.25,
+      "maxLeadDistance": 10.0
     }
   },
 
-  "dns_aim_link": {
-    "primary": "1.1.1.1",
-    "secondary": "8.8.8.8",
-    "config_url": "https://raw.githubusercontent.com/mton3702-source/Proxy/refs/heads/main/Aimbot.json"
+  "stickiness": {
+    "enabled": true,
+    "radius": 25.0,
+    "strength": 1.0,
+    "breakoutForce": 999.0,
+    "decayTime": 999.0
+  },
+
+  "verticalControl": {
+    "multiplierY": 1.0,
+    "multiplierX": 1.0,
+    "maxVerticalAssist": 999.0
+  },
+
+  "adsMode": {
+    "enabled": true,
+    "multiplyStrength": 2.0,
+    "multiplyFov": 1.0,
+    "reducedSmoothing": 0.0
+  },
+
+  "headOnly": {
+    "enabled": true,
+    "offsetY": -0.05,
+    "forceCenter": true,
+    "ignoreBody": true,
+    "ignoreNeck": true
   }
 }
