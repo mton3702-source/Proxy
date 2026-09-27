@@ -120,11 +120,19 @@
   .dot { width: 7px; height: 7px; border-radius: 50%; background: #00ff88;
     box-shadow: 0 0 8px #00ff88; animation: blink 1.5s infinite; }
   @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-  .header-right { text-align: right; }
+  .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
   .ping-value { font-family: 'Courier New', monospace; font-size: 17px;
     font-weight: 800; color: #00ff88; line-height: 1.1; }
   .ping-label { font-size: 9px; color: rgba(255, 200, 255, 0.5);
     letter-spacing: 2px; margin-top: 2px; }
+  .sound-toggle-inline {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 0, 80, 0.35);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; cursor: pointer; transition: all 0.2s;
+  }
+  .sound-toggle-inline:active { transform: scale(0.9); }
+  .sound-toggle-inline.muted { opacity: 0.5; }
   .time-box { padding: 9px 14px;
     background: linear-gradient(90deg, rgba(255, 0, 80, 0.15), rgba(155, 48, 255, 0.15));
     border: 1px solid rgba(255, 0, 80, 0.3); border-radius: 10px;
@@ -206,6 +214,7 @@
     cursor: pointer; transition: all 0.3s; display: flex;
     flex-direction: column; align-items: center; gap: 3px; }
   .btn-ff:active { transform: scale(0.96); }
+  .btn-ff:disabled { opacity: 0.5; cursor: not-allowed; }
   .btn-ff-normal { background: linear-gradient(90deg, #4a0080, #9B30FF);
     box-shadow: 0 6px 20px rgba(155, 48, 255, 0.5); }
   .btn-ff-maxx { background: linear-gradient(90deg, #FF0040, #FF6600);
@@ -267,7 +276,7 @@
   .toast.success { border-color: #00ff88; box-shadow: 0 0 30px rgba(0, 255, 136, 0.4); }
   .toast.error { border-color: #FF0040; }
 
-  /* LOADING OVERLAY (cài DNS) */
+  /* LOADING OVERLAY */
   .loading-overlay { position: fixed; inset: 0; background: rgba(10, 0, 20, 0.92);
     backdrop-filter: blur(10px); display: none; flex-direction: column;
     align-items: center; justify-content: center; z-index: 300; gap: 16px; }
@@ -276,12 +285,48 @@
     border: 4px solid rgba(255, 0, 80, 0.15); border-top-color: #FF0040;
     border-right-color: #9B30FF; border-radius: 50%; animation: spin 0.9s linear infinite; }
   .loading-text { font-size: 14px; color: #FF00FF; font-weight: 700;
-    letter-spacing: 1.5px; text-shadow: 0 0 15px rgba(255, 0, 255, 0.5); }
+    letter-spacing: 1.5px; text-shadow: 0 0 15px rgba(255, 0, 255, 0.5); text-align: center; padding: 0 20px; }
   .loading-bar { width: 240px; height: 5px; background: rgba(255, 255, 255, 0.08);
     border-radius: 5px; overflow: hidden; margin-top: 8px; }
   .loading-bar-fill { height: 100%;
     background: linear-gradient(90deg, #FF0040, #FF00FF); width: 0%;
     transition: width 0.3s; border-radius: 5px; box-shadow: 0 0 15px #FF0040; }
+
+  /* EXPIRED SCREEN */
+  #expiredScreen {
+    position: fixed; inset: 0; z-index: 2000;
+    background: linear-gradient(135deg, #4a0000 0%, #9B30FF 50%, #1a0033 100%);
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    padding: 30px; text-align: center;
+  }
+  #expiredScreen.show { display: flex; animation: fadeIn 0.5s; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .expired-icon { font-size: 90px; margin-bottom: 20px;
+    animation: shakeIcon 0.6s infinite; }
+  @keyframes shakeIcon { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-10deg); } 75% { transform: rotate(10deg); } }
+  .expired-title { font-size: 28px; font-weight: 900; letter-spacing: 3px;
+    background: linear-gradient(90deg, #FF0040, #FF00FF);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; margin-bottom: 10px; }
+  .expired-sub { font-size: 14px; color: rgba(255, 200, 255, 0.85);
+    margin-bottom: 30px; line-height: 1.6; max-width: 320px; }
+  .expired-btn { padding: 14px 40px; border: none; border-radius: 12px;
+    background: linear-gradient(90deg, #FF0040, #9B30FF); color: #fff;
+    font-size: 14px; font-weight: 800; letter-spacing: 1.5px;
+    cursor: pointer; box-shadow: 0 8px 30px rgba(255, 0, 80, 0.5); }
+  .expired-btn:active { transform: scale(0.97); }
+
+  /* SOUND TOGGLE (AUTH) */
+  .sound-toggle {
+    position: absolute; top: 14px; right: 16px;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5); border: 1.5px solid rgba(255, 0, 80, 0.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; cursor: pointer; z-index: 20;
+    backdrop-filter: blur(10px); transition: all 0.2s;
+  }
+  .sound-toggle:active { transform: scale(0.9); }
+  .sound-toggle.muted { opacity: 0.5; border-color: rgba(255, 255, 255, 0.2); }
 </style>
 </head>
 <body>
@@ -297,11 +342,12 @@
   </div>
 
   <div id="authScreen">
+    <div class="sound-toggle" id="soundToggleAuth" onclick="toggleSound()">🔊</div>
     <div class="logo-wrap"><div class="logo-circle">🔒</div></div>
     <div class="app-name">X LOCK</div>
     <div class="app-sub">DNS MAXX FF PREMIUM</div>
     <div class="input-label">KEY BẢN QUYỀN</div>
-    <input type="text" id="keyInput" class="key-input" placeholder="LOCK_XXXXX_FF" autocomplete="off" spellcheck="false">
+    <input type="text" id="keyInput" class="key-input" placeholder="XLK-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false">
     <div class="error-msg" id="errorMsg"></div>
     <button class="btn-activate" id="btnActivate" onclick="validateKey()">
       <div class="spinner" id="spinner"></div>
@@ -318,6 +364,7 @@
           <div class="header-status"><div class="dot"></div><span id="keyTypeLabel">ĐANG HOẠT ĐỘNG</span></div>
         </div>
         <div class="header-right">
+          <div class="sound-toggle-inline" id="soundToggleMain" onclick="toggleSound()">🔊</div>
           <div class="ping-value" id="pingValue">-- ms</div>
           <div class="ping-label">PING</div>
         </div>
@@ -329,10 +376,10 @@
     </div>
     <div class="dns-list" id="dnsList"></div>
     <div class="ff-buttons">
-      <button class="btn-ff btn-ff-normal" onclick="activateFF('normal')">
+      <button class="btn-ff btn-ff-normal" id="btnFFNormal" onclick="activateFF('normal')">
         <div class="btn-ff-icon">⚡</div><div>FF THƯỜNG</div>
       </button>
-      <button class="btn-ff btn-ff-maxx" onclick="activateFF('maxx')">
+      <button class="btn-ff btn-ff-maxx" id="btnFFMaxx" onclick="activateFF('maxx')">
         <div class="btn-ff-icon">🔥</div><div>FF MAXX</div>
       </button>
     </div>
@@ -396,24 +443,214 @@
   <div class="toast" id="toast"></div>
 </div>
 
+<div id="expiredScreen">
+  <div class="expired-icon">🔒</div>
+  <div class="expired-title">KEY ĐÃ HẾT HẠN</div>
+  <div class="expired-sub">Thời gian sử dụng key đã kết thúc.<br>Vui lòng liên hệ admin để gia hạn key mới.</div>
+  <button class="expired-btn" onclick="location.reload()">🔄 KHỞI ĐỘNG LẠI</button>
+</div>
+
 <script>
-const VALID_KEYS = {
-  "LOCK_TUAN_A1B2_FF":  { type: "week",    label: "KEY TUẦN",     duration: 7 * 24 * 3600 },
-  "LOCK_TUAN_C3D4_FF":  { type: "week",    label: "KEY TUẦN",     duration: 7 * 24 * 3600 },
-  "LOCK_TUAN_E5F6_FF":  { type: "week",    label: "KEY TUẦN",     duration: 7 * 24 * 3600 },
-  "LOCK_TUAN_G7H8_FF":  { type: "week",    label: "KEY TUẦN",     duration: 7 * 24 * 3600 },
-  "LOCK_TUAN_I9J0_FF":  { type: "week",    label: "KEY TUẦN",     duration: 7 * 24 * 3600 },
-  "LOCK_THANG_K1L2_FF": { type: "month",   label: "KEY THÁNG",    duration: 30 * 24 * 3600 },
-  "LOCK_THANG_M3N4_FF": { type: "month",   label: "KEY THÁNG",    duration: 30 * 24 * 3600 },
-  "LOCK_THANG_O5P6_FF": { type: "month",   label: "KEY THÁNG",    duration: 30 * 24 * 3600 },
-  "LOCK_THANG_Q7R8_FF": { type: "month",   label: "KEY THÁNG",    duration: 30 * 24 * 3600 },
-  "LOCK_THANG_S9T0_FF": { type: "month",   label: "KEY THÁNG",    duration: 30 * 24 * 3600 },
-  "LOCK_VIP_U1V2_FF":   { type: "forever", label: "KEY VĨNH VIỄN", duration: null },
-  "LOCK_VIP_W3X4_FF":   { type: "forever", label: "KEY VĨNH VIỄN", duration: null },
-  "LOCK_VIP_Y5Z6_FF":   { type: "forever", label: "KEY VĨNH VIỄN", duration: null },
-  "LOCK_VIP_A7B8_FF":   { type: "forever", label: "KEY VĨNH VIỄN", duration: null },
-  "LOCK_VIP_C9D0_FF":   { type: "forever", label: "KEY VĨNH VIỄN", duration: null }
+/* =========================================================
+   X LOCK — DNS MAXX FF
+   Config AIMBOT: https://raw.githubusercontent.com/mton3702-source/Proxy/refs/heads/main/Aimbot.json
+   ========================================================= */
+
+const CONFIG_URL = "https://raw.githubusercontent.com/mton3702-source/Proxy/refs/heads/main/Aimbot.json";
+
+/* =========================================================
+   HỆ THỐNG ÂM THANH — Web Audio API (không cần file mp3)
+   ========================================================= */
+const SoundFX = {
+  ctx: null,
+  muted: localStorage.getItem("xlock_muted") === "1",
+
+  init() {
+    if (this.ctx) return;
+    try {
+      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    } catch (e) {
+      console.warn("Web Audio API không được hỗ trợ");
+    }
+  },
+
+  unlock() {
+    this.init();
+    if (this.ctx && this.ctx.state === "suspended") {
+      this.ctx.resume();
+    }
+  },
+
+  playTone({ freq = 440, duration = 0.15, type = "sine", volume = 0.15, slideTo = null } = {}) {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now);
+      if (slideTo !== null) {
+        osc.frequency.exponentialRampToValueAtTime(slideTo, now + duration);
+      }
+
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(volume, now + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + duration + 0.05);
+    } catch (e) {}
+  },
+
+  /* 🔊 CHỌN DNS — "ting" 3 nốt tăng */
+  playSelect() {
+    this.playTone({ freq: 880,  duration: 0.08, type: "sine",     volume: 0.12 });
+    setTimeout(() => this.playTone({ freq: 1320, duration: 0.10, type: "sine",     volume: 0.14 }), 50);
+    setTimeout(() => this.playTone({ freq: 1760, duration: 0.18, type: "triangle", volume: 0.10 }), 110);
+  },
+
+  /* 🔊 BỎ CHỌN DNS — "tock" trượt xuống */
+  playDeselect() {
+    this.playTone({ freq: 660, duration: 0.12, type: "sine", volume: 0.10, slideTo: 400 });
+  },
+
+  /* 🔊 MỞ RỘNG (giữ nguyên selected) — sweep nhẹ */
+  playOpen() {
+    this.playTone({ freq: 700, duration: 0.10, type: "sine", volume: 0.09, slideTo: 1200 });
+  },
+
+  /* 🔊 NHẤN NÚT — click đôi */
+  playClick() {
+    this.playTone({ freq: 1200, duration: 0.04, type: "square", volume: 0.07 });
+    this.playTone({ freq: 800,  duration: 0.07, type: "sine",   volume: 0.10 });
+  },
+
+  /* 🔊 THÀNH CÔNG — chime 3 nốt (C-E-G) */
+  playSuccess() {
+    [523, 659, 784].forEach((f, i) => {
+      setTimeout(() => this.playTone({ freq: f, duration: 0.18, type: "triangle", volume: 0.14 }), i * 85);
+    });
+  },
+
+  /* 🔊 LỖI — buzz 2 nốt trầm */
+  playError() {
+    this.playTone({ freq: 220, duration: 0.14, type: "sawtooth", volume: 0.11 });
+    setTimeout(() => this.playTone({ freq: 165, duration: 0.22, type: "sawtooth", volume: 0.11 }), 120);
+  },
+
+  /* 🔊 KÍCH HOẠT KEY — epic rise */
+  playActivate() {
+    this.playTone({ freq: 400, duration: 0.35, type: "sawtooth", volume: 0.11, slideTo: 1400 });
+    setTimeout(() => this.playTone({ freq: 800, duration: 0.30, type: "triangle", volume: 0.13, slideTo: 1600 }), 180);
+    setTimeout(() => {
+      this.playTone({ freq: 1046, duration: 0.35, type: "sine", volume: 0.16 });
+      this.playTone({ freq: 1568, duration: 0.35, type: "sine", volume: 0.10 });
+    }, 380);
+  },
+
+  /* 🔊 BẬT FF — power surge */
+  playFF() {
+    this.playTone({ freq: 150, duration: 0.45, type: "sawtooth", volume: 0.10, slideTo: 900 });
+    setTimeout(() => this.playTone({ freq: 600, duration: 0.22, type: "square", volume: 0.07 }), 180);
+    setTimeout(() => this.playTone({ freq: 1200, duration: 0.28, type: "triangle", volume: 0.12 }), 350);
+  },
+
+  /* 🔊 CẢNH BÁO (key sắp hết) — beep đôi */
+  playWarning() {
+    this.playTone({ freq: 880, duration: 0.18, type: "square", volume: 0.09 });
+    setTimeout(() => this.playTone({ freq: 880, duration: 0.18, type: "square", volume: 0.09 }), 240);
+  },
+
+  /* 🔊 HẾT HẠN — alarm 3 lần */
+  playExpired() {
+    for (let i = 0; i < 3; i++) {
+      setTimeout(() => {
+        this.playTone({ freq: 440, duration: 0.15, type: "square", volume: 0.13 });
+        setTimeout(() => this.playTone({ freq: 330, duration: 0.15, type: "square", volume: 0.13 }), 160);
+      }, i * 350);
+    }
+  },
+
+  /* 🔊 TOAST — pop theo loại */
+  playToast(type = "") {
+    if (type === "success") {
+      this.playTone({ freq: 1000, duration: 0.10, type: "sine", volume: 0.09, slideTo: 1500 });
+    } else if (type === "error") {
+      this.playTone({ freq: 400, duration: 0.13, type: "sawtooth", volume: 0.09, slideTo: 200 });
+    } else {
+      this.playTone({ freq: 800, duration: 0.07, type: "sine", volume: 0.07 });
+    }
+  },
+
+  toggle() {
+    this.muted = !this.muted;
+    localStorage.setItem("xlock_muted", this.muted ? "1" : "0");
+    updateSoundToggleUI();
+    if (!this.muted) {
+      this.unlock();
+      this.playTone({ freq: 1200, duration: 0.09, type: "sine", volume: 0.11 });
+      setTimeout(() => this.playTone({ freq: 1600, duration: 0.13, type: "sine", volume: 0.11 }), 70);
+    }
+  }
 };
+
+function toggleSound() {
+  SoundFX.unlock();
+  SoundFX.toggle();
+  showToast(SoundFX.muted ? "🔇 Đã tắt âm thanh" : "🔊 Đã bật âm thanh", "");
+}
+
+function updateSoundToggleUI() {
+  const icon = SoundFX.muted ? "🔇" : "🔊";
+  const auth = document.getElementById("soundToggleAuth");
+  const main = document.getElementById("soundToggleMain");
+  if (auth) { auth.textContent = icon; auth.classList.toggle("muted", SoundFX.muted); }
+  if (main) { main.textContent = icon; main.classList.toggle("muted", SoundFX.muted); }
+}
+
+/* =========================================================
+   HỆ THỐNG KEY
+   ========================================================= */
+const KEY_DATABASE = {
+  "XLK-N7K2-9PQR-4MZW": { label: "KEY TUẦN",     duration: 7 * 24 * 3600, tier: "WEEK" },
+  "XLK-A3F8-L5VX-2QHN": { label: "KEY TUẦN",     duration: 7 * 24 * 3600, tier: "WEEK" },
+  "XLK-T6B1-R9CZ-8YKD": { label: "KEY TUẦN",     duration: 7 * 24 * 3600, tier: "WEEK" },
+  "XLK-M4X7-D2WJ-6FPS": { label: "KEY TUẦN",     duration: 7 * 24 * 3600, tier: "WEEK" },
+  "XLK-H8Z3-V1NQ-5TRE": { label: "KEY TUẦN",     duration: 7 * 24 * 3600, tier: "WEEK" },
+  "XLK-P2W9-K7YM-3BGA": { label: "KEY THÁNG",    duration: 30 * 24 * 3600, tier: "MONTH" },
+  "XLK-C5R1-Z8XQ-4NVD": { label: "KEY THÁNG",    duration: 30 * 24 * 3600, tier: "MONTH" },
+  "XLK-F9T6-Y3BJ-7HWM": { label: "KEY THÁNG",    duration: 30 * 24 * 3600, tier: "MONTH" },
+  "XLK-Q4G2-M8VP-1KXC": { label: "KEY THÁNG",    duration: 30 * 24 * 3600, tier: "MONTH" },
+  "XLK-W7J5-N1RT-9ZFB": { label: "KEY THÁNG",    duration: 30 * 24 * 3600, tier: "MONTH" },
+  "XLK-V1P8-K4XM-2QWZ": { label: "KEY VĨNH VIỄN", duration: null,          tier: "VIP" },
+  "XLK-Z3N6-T9YB-5RGC": { label: "KEY VĨNH VIỄN", duration: null,          tier: "VIP" },
+  "XLK-B8L2-W5KD-7FXH": { label: "KEY VĨNH VIỄN", duration: null,          tier: "VIP" },
+  "XLK-D4Q9-J1VN-6MPT": { label: "KEY VĨNH VIỄN", duration: null,          tier: "VIP" },
+  "XLK-R6X3-C8ZF-4HNW": { label: "KEY VĨNH VIỄN", duration: null,          tier: "VIP" }
+};
+
+function isValidKeyFormat(key) {
+  return /^XLK-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(key);
+}
+
+function hashKey(key) {
+  let hash = 0;
+  const salt = "XLOCK_2026_SALT_v3_" + DEVICE_ID;
+  const str = key + salt;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return "H_" + Math.abs(hash).toString(36).toUpperCase();
+}
 
 let DNS_LIST = [
   { id: "auto", name: "Tự động", icon: "✨", color: "#888888", sub: "Hệ thống", installed: false, aim: null, dns: null },
@@ -457,9 +694,12 @@ let state = {
   activated: false, currentKey: null, keyType: null, expiryTime: null,
   selectedDNS: "HEAD 🔥", expandedDNS: null,
   editingAimDNS: null, editingDnsDNS: null,
-  ping: 0, timeTimer: null, pingTimer: null
+  ping: 0, timeTimer: null, pingTimer: null, appClosed: false
 };
 
+let AIMBOT_CONFIG = null;
+
+/* ===================== DEVICE ID ===================== */
 function getDeviceID() {
   let id = localStorage.getItem("xlock_device_id");
   if (!id) {
@@ -472,17 +712,39 @@ function getDeviceID() {
 const DEVICE_ID = getDeviceID();
 document.getElementById("deviceInfo").textContent = "Device: " + DEVICE_ID;
 
+/* ===================== HELPERS ===================== */
 function showError(msg) { const el = document.getElementById("errorMsg"); el.textContent = msg; el.classList.add("show"); }
 function hideError() { document.getElementById("errorMsg").classList.remove("show"); }
 function showToast(msg, type = "") {
   const toast = document.getElementById("toast");
   toast.textContent = msg;
   toast.className = "toast show " + type;
+  SoundFX.playToast(type);
   clearTimeout(toast._timeout);
-  toast._timeout = setTimeout(() => toast.classList.remove("show"), 2200);
+  toast._timeout = setTimeout(() => toast.classList.remove("show"), 2400);
 }
 
-/* ===== LOADING SCREEN ===== */
+/* ===================== ĐÓNG APP KHI HẾT KEY ===================== */
+function closeApp() {
+  if (state.appClosed) return;
+  state.appClosed = true;
+
+  if (state.timeTimer) clearInterval(state.timeTimer);
+  if (state.pingTimer) clearInterval(state.pingTimer);
+
+  localStorage.removeItem("xlock_current_key");
+  localStorage.removeItem("xlock_expiry");
+  localStorage.removeItem("xlock_key_hash");
+
+  SoundFX.playExpired();
+
+  document.getElementById("expiredScreen").classList.add("show");
+  document.getElementById("mainScreen").style.display = "none";
+
+  console.log("🔒 KEY HẾT HẠN — APP ĐÃ ĐÓNG");
+}
+
+/* ===================== LOADING SCREEN ===================== */
 function showLoadingScreen(steps, onComplete) {
   const screen = document.getElementById("loadingScreen");
   const bar = document.getElementById("loadBarFill");
@@ -510,23 +772,19 @@ function showLoadingScreen(steps, onComplete) {
     if (progress >= 100) {
       clearInterval(interval);
       status.textContent = "Hoàn tất!";
-
       setTimeout(() => {
-        // ẨN loading
         screen.style.display = "none";
-
-        // HIỆN main
-        const main = document.getElementById("mainScreen");
-        main.style.display = "flex";
-
+        document.getElementById("mainScreen").style.display = "flex";
         if (onComplete) onComplete();
       }, 500);
     }
   }, 180);
 }
 
-/* ===== VALIDATE KEY ===== */
+/* ===================== VALIDATE KEY ===================== */
 function validateKey() {
+  SoundFX.unlock();
+
   const input = document.getElementById("keyInput");
   const key = input.value.trim().toUpperCase();
   const btn = document.getElementById("btnActivate");
@@ -535,35 +793,42 @@ function validateKey() {
 
   hideError();
 
-  if (!key) { showError("⚠️ Vui lòng nhập Key!"); return; }
-  if (!key.startsWith("LOCK") || !key.endsWith("FF")) {
-    showError("❌ Key phải bắt đầu LOCK và kết thúc FF!"); return;
+  if (!key) { showError("⚠️ Vui lòng nhập Key!"); SoundFX.playError(); return; }
+  if (!isValidKeyFormat(key)) {
+    showError("❌ Key không đúng định dạng XLK-XXXX-XXXX-XXXX!");
+    SoundFX.playError();
+    return;
   }
 
   btn.disabled = true;
-  btnText.textContent = "ĐANG KIỂM TRA...";
+  btnText.textContent = "ĐANG XÁC THỰC...";
   spinner.classList.add("show");
+  SoundFX.playClick();
 
   setTimeout(() => {
-    if (!VALID_KEYS[key]) {
+    if (!KEY_DATABASE[key]) {
       btn.disabled = false; btnText.textContent = "🔓 KÍCH HOẠT";
       spinner.classList.remove("show");
-      showError("❌ Key không hợp lệ!");
+      showError("❌ Key không hợp lệ hoặc đã bị thu hồi!");
+      SoundFX.playError();
       return;
     }
 
-    const savedDevice = localStorage.getItem("xlock_used_" + key);
-    if (savedDevice && savedDevice !== DEVICE_ID) {
+    const keyHash = hashKey(key);
+    const usedHash = localStorage.getItem("xlock_key_" + keyHash);
+    if (usedHash && usedHash !== DEVICE_ID) {
       btn.disabled = false; btnText.textContent = "🔓 KÍCH HOẠT";
       spinner.classList.remove("show");
-      showError("⚠️ Key đã dùng trên thiết bị khác!");
+      showError("⚠️ Key đã được dùng trên thiết bị khác!");
+      SoundFX.playError();
       return;
     }
 
-    localStorage.setItem("xlock_used_" + key, DEVICE_ID);
+    localStorage.setItem("xlock_key_" + keyHash, DEVICE_ID);
     localStorage.setItem("xlock_current_key", key);
+    localStorage.setItem("xlock_key_hash", keyHash);
 
-    const keyData = VALID_KEYS[key];
+    const keyData = KEY_DATABASE[key];
     state.activated = true;
     state.currentKey = key;
     state.keyType = keyData;
@@ -579,25 +844,26 @@ function validateKey() {
     btn.disabled = false; btnText.textContent = "🔓 KÍCH HOẠT";
     spinner.classList.remove("show");
 
+    SoundFX.playActivate();
+
     showLoadingScreen([
       "🔐 Đang xác thực key...",
       "📡 Đang kết nối server X LOCK...",
-      "🎯 Đang tải cấu hình AIM LOCK...",
+      "🎯 Đang tải cấu hình AIMBOT...",
       "🌐 Đang tải cấu hình DNS...",
       "✅ Kích hoạt thành công!"
     ], () => {
-      // Ẩn auth
       document.getElementById("authScreen").style.display = "none";
-
       document.getElementById("keyTypeLabel").textContent = keyData.label;
       renderDNSList();
       startTimers();
       showToast("🎉 Kích hoạt thành công!", "success");
+      fetchAimbotConfig().catch(() => {});
     });
   }, 1200);
 }
 
-/* ===== TIMERS ===== */
+/* ===================== TIMERS ===================== */
 function startTimers() {
   updateTime(); updatePing();
   if (state.timeTimer) clearInterval(state.timeTimer);
@@ -605,26 +871,45 @@ function startTimers() {
   state.timeTimer = setInterval(updateTime, 1000);
   state.pingTimer = setInterval(updatePing, 2000);
 }
+
+let lastWarningPlayed = 0;
 function updateTime() {
   const el = document.getElementById("timeValue");
   if (!el) return;
-  if (!state.expiryTime) { el.textContent = "∞ VĨNH VIỄN"; return; }
-  const remaining = state.expiryTime - Date.now();
-  if (remaining <= 0) {
-    el.textContent = "00:00:00";
-    setTimeout(() => {
-      document.body.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:linear-gradient(135deg,#4a0000,#9B30FF,#1a0033);color:#fff;font-family:sans-serif;text-align:center;padding:20px;"><div style="font-size:80px;margin-bottom:20px;">🔒</div><h1 style="font-size:28px;">KEY ĐÃ HẾT HẠN</h1><button onclick="location.reload()" style="margin-top:30px;padding:14px 30px;border:none;border-radius:12px;background:#000;color:#FF0040;font-weight:bold;cursor:pointer;">🔄 KHỞI ĐỘNG LẠI</button></div>`;
-    }, 500);
+
+  if (!state.expiryTime) {
+    el.textContent = "∞ VĨNH VIỄN";
     return;
   }
+
+  const remaining = state.expiryTime - Date.now();
+
+  if (remaining <= 0) {
+    el.textContent = "00:00:00";
+    closeApp();
+    return;
+  }
+
   const days = Math.floor(remaining / 86400000);
   const hours = Math.floor((remaining % 86400000) / 3600000);
   const minutes = Math.floor((remaining % 3600000) / 60000);
   const seconds = Math.floor((remaining % 60000) / 1000);
+
   if (days > 0) el.textContent = `${days}d ${hours}h ${minutes}m`;
   else el.textContent = `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+
+  // Cảnh báo âm thanh khi còn < 5 phút
+  if (remaining < 300000) {
+    const now = Date.now();
+    if (now - lastWarningPlayed > 60000) {
+      lastWarningPlayed = now;
+      SoundFX.playWarning();
+    }
+  }
 }
+
 function updatePing() {
+  if (state.appClosed) return;
   state.ping = Math.floor(Math.random() * 60) + 15;
   const el = document.getElementById("pingValue");
   if (!el) return;
@@ -634,7 +919,7 @@ function updatePing() {
   else el.style.color = "#FF0040";
 }
 
-/* ===== RENDER DNS ===== */
+/* ===================== RENDER DNS ===================== */
 function renderDNSList() {
   const container = document.getElementById("dnsList");
   if (!container) return;
@@ -693,12 +978,99 @@ function renderDNSList() {
 }
 
 function selectDNS(dns) {
-  state.selectedDNS = dns.name;
-  state.expandedDNS = state.expandedDNS === dns.id ? null : dns.id;
+  SoundFX.unlock();
+
+  const wasExpanded = state.expandedDNS === dns.id;
+  const wasSelected = state.selectedDNS === dns.name;
+
+  if (wasExpanded) {
+    state.expandedDNS = null;
+    SoundFX.playDeselect();
+  } else {
+    state.expandedDNS = dns.id;
+    if (!wasSelected) {
+      state.selectedDNS = dns.name;
+      SoundFX.playSelect();
+    } else {
+      SoundFX.playOpen();
+    }
+  }
+
   renderDNSList();
 }
 
-/* ===== INSTALL DNS (mobileconfig) ===== */
+/* ===================== FETCH AIMBOT CONFIG ===================== */
+async function fetchAimbotConfig() {
+  try {
+    showToast("📡 Đang tải cấu hình AIMBOT...", "");
+    const response = await fetch(CONFIG_URL, {
+      method: "GET",
+      headers: { "Accept": "application/json" },
+      cache: "no-cache"
+    });
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const config = await response.json();
+
+    if (!config || !config.aimbot || !config.head_lock) {
+      throw new Error("Cấu trúc JSON không hợp lệ");
+    }
+
+    AIMBOT_CONFIG = config;
+    localStorage.setItem("xlock_aimbot_config", JSON.stringify(config));
+
+    const info = config.config_info || {};
+    showToast(`✅ Đã tải: ${info.name || "AIMBOT"} v${info.version || "?"}`, "success");
+    console.log("🎯 AIMBOT CONFIG LOADED:", config);
+    return config;
+  } catch (error) {
+    console.error("❌ Lỗi tải config:", error);
+
+    const cached = localStorage.getItem("xlock_aimbot_config");
+    if (cached) {
+      try {
+        AIMBOT_CONFIG = JSON.parse(cached);
+        showToast("📦 Dùng config từ cache", "");
+        return AIMBOT_CONFIG;
+      } catch(e) {}
+    }
+    showToast(`❌ Lỗi tải config: ${error.message}`, "error");
+    return null;
+  }
+}
+
+/* ===================== APPLY AIMBOT CONFIG ===================== */
+function applyAimbotConfig(dns) {
+  if (!AIMBOT_CONFIG || !dns) return;
+
+  const ab = AIMBOT_CONFIG.aimbot || {};
+  const hl = AIMBOT_CONFIG.head_lock || {};
+  const sens = AIMBOT_CONFIG.sensitivity || {};
+  const dnsLink = AIMBOT_CONFIG.dns_aim_link || {};
+
+  dns.aim = {
+    sensi: String(sens.aim || dns.aim?.sensi || "100"),
+    range: String(ab.fov_radius || dns.aim?.range || "50"),
+    head: String(Math.abs(hl.offset_y || 0.05) * 100).substring(0, 4),
+    drag: String(hl.follow_speed || dns.aim?.drag || "2.5"),
+    smooth: String(ab.smoothness || dns.aim?.smooth || "1.0"),
+    trigger: dns.aim?.trigger || "LB",
+    server: dnsLink.primary || dns.aim?.server || "103.130.220.15"
+  };
+
+  if (dnsLink && dns.dns) {
+    if (dnsLink.primary) dns.dns.primary = dnsLink.primary;
+    if (dnsLink.secondary) dns.dns.secondary = dnsLink.secondary;
+  }
+
+  const info = AIMBOT_CONFIG.config_info || {};
+  dns.sub = `${info.name || "AIMBOT"} v${info.version || "?"}`;
+
+  console.log("🎯 Đã áp dụng AIMBOT config cho:", dns.name, dns.aim);
+}
+
+/* ===================== INSTALL DNS ===================== */
 function generateMobileConfig(dns) {
   function makeUUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
@@ -797,6 +1169,9 @@ function downloadMobileConfig(dns) {
 }
 
 function installDNS(dnsId) {
+  SoundFX.unlock();
+  SoundFX.playClick();
+
   const dns = DNS_LIST.find(d => d.id === dnsId);
   if (!dns || !dns.dns) { showToast("⚠️ Chưa có cấu hình DNS!", "error"); return; }
 
@@ -822,6 +1197,7 @@ function installDNS(dnsId) {
           dns.installed = true;
           saveDNSState();
           renderDNSList();
+          SoundFX.playSuccess();
           showIOSGuide(dns);
         }
       }, 400);
@@ -850,8 +1226,9 @@ function showIOSGuide(dns) {
   document.body.appendChild(guide);
 }
 
-/* ===== MODAL ===== */
+/* ===================== MODAL ===================== */
 function openAimModal(dnsId) {
+  SoundFX.unlock(); SoundFX.playClick();
   const dns = DNS_LIST.find(d => d.id === dnsId);
   if (!dns || !dns.aim) return;
   state.editingAimDNS = dnsId;
@@ -876,6 +1253,7 @@ function saveAimConfig() {
   showToast(`💾 Đã lưu AIM cho ${dns.name}`, "success");
 }
 function openDnsModal(dnsId) {
+  SoundFX.unlock(); SoundFX.playClick();
   const dns = DNS_LIST.find(d => d.id === dnsId);
   if (!dns || !dns.dns) return;
   state.editingDnsDNS = dnsId;
@@ -903,16 +1281,80 @@ function saveDNSConfig() {
   saveDNSState(); closeModal(); renderDNSList();
   showToast(`💾 Đã lưu DNS cho ${dns.name}`, "success");
 }
-function closeModal() { document.querySelectorAll(".modal-overlay").forEach(m => m.classList.remove("show")); }
-
-function activateFF(mode) {
-  const modeName = mode === "normal" ? "⚡ FF THƯỜNG" : "🔥 FF MAXX";
-  const dns = DNS_LIST.find(d => d.name === state.selectedDNS);
-  if (!dns) { showToast("⚠️ Chưa chọn DNS", "error"); return; }
-  if (dns.aim && !dns.installed) { showToast("📥 Hãy cài DNS vào máy trước!", "error"); return; }
-  showToast(`${modeName} đã bật - DNS: ${dns.name}`, "success");
+function closeModal() {
+  SoundFX.playClick();
+  document.querySelectorAll(".modal-overlay").forEach(m => m.classList.remove("show"));
 }
 
+/* ===================== ACTIVATE FF ===================== */
+async function activateFF(mode) {
+  SoundFX.unlock();
+  if (state.appClosed) return;
+
+  const modeName = mode === "normal" ? "⚡ FF THƯỜNG" : "🔥 FF MAXX";
+  const dns = DNS_LIST.find(d => d.name === state.selectedDNS);
+
+  if (!dns) { showToast("⚠️ Chưa chọn DNS", "error"); return; }
+  if (dns.aim && !dns.installed) {
+    showToast("📥 Hãy cài DNS vào máy trước!", "error");
+    SoundFX.playError();
+    return;
+  }
+
+  SoundFX.playFF();
+
+  const btnN = document.getElementById("btnFFNormal");
+  const btnM = document.getElementById("btnFFMaxx");
+  if (btnN) btnN.disabled = true;
+  if (btnM) btnM.disabled = true;
+
+  const overlay = document.getElementById("loadingOverlay");
+  const bar = document.getElementById("loadingBar");
+  const text = document.getElementById("loadingText");
+  overlay.style.display = "flex";
+  bar.style.width = "0%";
+  text.textContent = "📡 Đang tải cấu hình AIMBOT...";
+
+  const config = await fetchAimbotConfig();
+
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += Math.random() * 20 + 10;
+    if (progress >= 100) progress = 100;
+    bar.style.width = progress + "%";
+
+    if (progress >= 25 && progress < 55) text.textContent = "🎯 Đang áp dụng AIM...";
+    if (progress >= 55 && progress < 85) text.textContent = `🔥 Đang bật ${modeName}...`;
+    if (progress >= 85) text.textContent = "✅ Hoàn tất!";
+
+    if (progress >= 100) {
+      clearInterval(interval);
+      setTimeout(() => {
+        overlay.style.display = "none";
+        if (btnN) btnN.disabled = false;
+        if (btnM) btnM.disabled = false;
+
+        if (config) {
+          applyAimbotConfig(dns);
+          saveDNSState();
+          renderDNSList();
+
+          const info = config.config_info || {};
+          const ab = config.aimbot || {};
+          showToast(
+            `${modeName} ✅ ${info.name || "AIMBOT"} v${info.version || "?"} | Strength: ${ab.aim_strength || "?"}`,
+            "success"
+          );
+          console.log(`🔥 ${modeName} ACTIVATED`, config);
+        } else {
+          showToast(`${modeName} đã bật (offline) - DNS: ${dns.name}`, "");
+        }
+      }, 400);
+    }
+  }, 200);
+}
+
+/* ===================== SAVE / LOAD STATE ===================== */
 function saveDNSState() { localStorage.setItem("xlock_dns_list", JSON.stringify(DNS_LIST)); }
 function loadDNSState() {
   const saved = localStorage.getItem("xlock_dns_list");
@@ -924,17 +1366,34 @@ function loadDNSState() {
   }
 }
 
+/* ===================== INIT ===================== */
 window.addEventListener("DOMContentLoaded", () => {
+  updateSoundToggleUI();
+
   loadDNSState();
   renderDNSList();
+
+  document.body.addEventListener("touchstart", () => SoundFX.unlock(), { once: true });
+  document.body.addEventListener("click", () => SoundFX.unlock(), { once: true });
+
+  const cachedConfig = localStorage.getItem("xlock_aimbot_config");
+  if (cachedConfig) {
+    try { AIMBOT_CONFIG = JSON.parse(cachedConfig); } catch(e) {}
+  }
+  fetchAimbotConfig().catch(() => {});
 
   const savedKey = localStorage.getItem("xlock_current_key");
   const savedExpiry = localStorage.getItem("xlock_expiry");
 
-  if (savedKey && VALID_KEYS[savedKey]) {
-    const usedDevice = localStorage.getItem("xlock_used_" + savedKey);
-    if (usedDevice !== DEVICE_ID) { localStorage.removeItem("xlock_current_key"); return; }
-    const keyData = VALID_KEYS[savedKey];
+  if (savedKey && KEY_DATABASE[savedKey]) {
+    const keyHash = hashKey(savedKey);
+    const usedHash = localStorage.getItem("xlock_key_" + keyHash);
+    if (usedHash !== DEVICE_ID) {
+      localStorage.removeItem("xlock_current_key");
+      localStorage.removeItem("xlock_key_hash");
+      return;
+    }
+    const keyData = KEY_DATABASE[savedKey];
     const expiry = savedExpiry ? parseInt(savedExpiry) : null;
     if (keyData.duration === null || (expiry && expiry > Date.now())) {
       state.activated = true;
@@ -945,7 +1404,13 @@ window.addEventListener("DOMContentLoaded", () => {
       document.getElementById("mainScreen").style.display = "flex";
       document.getElementById("keyTypeLabel").textContent = keyData.label;
       renderDNSList(); startTimers();
-    } else localStorage.removeItem("xlock_current_key");
+    } else {
+      localStorage.removeItem("xlock_current_key");
+      localStorage.removeItem("xlock_expiry");
+      state.appClosed = true;
+      document.getElementById("authScreen").style.display = "none";
+      document.getElementById("expiredScreen").classList.add("show");
+    }
   }
 
   document.getElementById("keyInput").addEventListener("keydown", e => {
