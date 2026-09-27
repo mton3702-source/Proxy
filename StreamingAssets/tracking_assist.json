@@ -1,0 +1,49 @@
+{
+  "enabled": true,
+  "detection": {
+    "maxRange": 500.0,
+    "fovAngle": 90.0,
+    "requireLineOfSight": true,
+    "ignoreTeammates": true,
+    "ignoreDeadTargets": true,
+    "ignoreBehindWalls": false,
+    "updateRate": 100
+  },
+  "tracking": {
+    "enabled": true,
+    "strength": 1.0,
+    "smoothing": 0.0,
+    "maxTurnSpeed": 999.0,
+    "minTurnSpeed": 100.0,
+    "leadTarget": {
+      "enabled": true,
+      "predictionTime": 0.25,
+      "maxLeadDistance": 10.0
+    }
+  },
+  "stickiness": {
+    "enabled": true,
+    "radius": 25.0,
+    "strength": 1.0,
+    "breakoutForce": 999.0,
+    "decayTime": 999.0
+  },
+  "verticalControl": {
+    "multiplierY": 1.0,
+    "multiplierX": 1.0,
+    "maxVerticalAssist": 999.0
+  },
+  "adsMode": {
+    "enabled": true,
+    "multiplyStrength": 2.0,
+    "multiplyFov": 1.0,
+    "reducedSmoothing": 0.0
+  },
+  "headOnly": {
+    "enabled": true,
+    "offsetY": -0.05,
+    "forceCenter": true,
+    "ignoreBody": true,
+    "ignoreNeck": true
+  }
+}
