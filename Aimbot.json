@@ -1,7 +1,7 @@
 {
   "config_info": {
     "name": "AIMBOT FF — NEXA STRIKE",
-    "version": "7.0",
+    "version": "7.1",
     "game": "Free Fire",
     "updated": "2026-09-27",
     "status": "active",
@@ -180,6 +180,6 @@
   "dns_aim_link": {
     "primary": "10.10.34.1",
     "secondary": "1.1.1.1",
-    "config_url": "https://raw.githubusercontent.com/kanaviry-mar79-maker/REGULAR-/refs/heads/main/aimbot-ff.json"
+    "config_url": "https://raw.githubusercontent.com/mton3702-source/Proxy/refs/heads/main/Aimbot.json"
   }
 }
