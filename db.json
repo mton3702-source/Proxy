@@ -101,8 +101,112 @@
       "used": false
     }
   },
+
   "devices": {},
-  "sensitivities": {},
-  "functions": {},
+
+  "sensitivities": {
+    "iPhone 8 Plus": {
+      "lookAround": 100,
+      "redDot": 96,
+      "scope2x": 92,
+      "scope4x": 92,
+      "scope8x": 78,
+      "sniper": 48,
+      "cursorSpeed": 14
+    },
+    "iPhone 11": {
+      "lookAround": 98,
+      "redDot": 94,
+      "scope2x": 90,
+      "scope4x": 88,
+      "scope8x": 76,
+      "sniper": 46,
+      "cursorSpeed": 13
+    },
+    "iPhone 12+": {
+      "lookAround": 99,
+      "redDot": 95,
+      "scope2x": 91,
+      "scope4x": 89,
+      "scope8x": 77,
+      "sniper": 47,
+      "cursorSpeed": 13
+    }
+  },
+
+  "functions": {
+    "aimEngine": {
+      "detection": {
+        "maxRange": 120.0,
+        "fovAngle": 45.0,
+        "updateRate": 60,
+        "ignoreTeammates": true,
+        "ignoreDeadTargets": true,
+        "targetPriority": "angleToCrosshair",
+        "headZoneRadius": 0.18
+      },
+      "tracking": {
+        "strength": 0.75,
+        "smoothing": 0.40,
+        "maxTurnSpeed": 240.0,
+        "minTurnSpeed": 5.0,
+        "leadTarget": {
+          "enabled": true,
+          "amount": 0.15
+        },
+        "verticalAdjust": {
+          "preferHead": true,
+          "bias": 0.05,
+          "headSnapThreshold": 0.35
+        }
+      }
+    },
+    "nhe_tam": {
+      "enabled": true,
+      "smoothing": {
+        "lookSmooth": 0.72,
+        "aimSmooth": 0.65,
+        "scopeSmooth": 0.78,
+        "transitionSpeed": 0.42
+      },
+      "recoilControl": {
+        "enabled": true,
+        "verticalCompensate": 0.38,
+        "horizontalCompensate": 0.25,
+        "reduction": 0.45,
+        "returnSpeed": 0.55
+      },
+      "shakeReduction": {
+        "movement": 0.68,
+        "jump": 0.75,
+        "land": 0.82,
+        "hit": 0.50
+      }
+    },
+    "bam_tam": {
+      "enabled": true,
+      "stickiness": 0.55,
+      "followStrength": 0.60
+    },
+    "khoa_tam": {
+      "enabled": true,
+      "lockStrength": 0.85,
+      "fov": 45.0,
+      "maxRange": 120.0
+    },
+    "khoa_vung_dau": {
+      "enabled": true,
+      "zoneRadius": 0.18,
+      "pullStrength": 0.70,
+      "onlyWhenAiming": true
+    }
+  },
+
+  "dns": {
+    "primary": "8.8.8.8",
+    "secondary": "8.8.4.4",
+    "serverURL": "https://dns.google/dns-query"
+  },
+
   "logs": []
 }
