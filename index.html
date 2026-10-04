@@ -5,7 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SERENITY LOCK">
 <title>SERENITY LOCK</title>
+<link rel="apple-touch-icon" href="https://raw.githubusercontent.com/mton3702-source/Proxy/refs/heads/main/IMG_1378.jpeg">
+<link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/mton3702-source/Proxy/refs/heads/main/IMG_1378.jpeg">
+<link rel="apple-touch-icon" sizes="192x192" href="https://raw.githubusercontent.com/mton3702-source/Proxy/refs/heads/main/IMG_1378.jpeg">
+<link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/mton3702-source/Proxy/refs/heads/main/IMG_1378.jpeg">
 <style>
 :root{
   --gold:#FFD700;
@@ -374,7 +379,7 @@ function logout(){
 }
 
 /* ===================================================
-   ĐỌC QUERY ?fn= TỪ URL (khi mở từ icon mobileconfig)
+   ĐỌC QUERY ?fn= TỪ URL
 =================================================== */
 function readFnFromURL(){
   try{
@@ -396,7 +401,7 @@ function readFnFromURL(){
 }
 
 /* ===================================================
-   MỤC 1: MOBILECONFIG — CHUẨN APPLE 100%
+   MỤC 1: MOBILECONFIG
 =================================================== */
 document.querySelectorAll('.chk[data-fn]').forEach(el=>{
   el.addEventListener("click", ()=> el.classList.toggle("on"));
@@ -420,7 +425,6 @@ function esc(s){
     .replace(/"/g, "&quot;");
 }
 
-/* Xây XML theo ĐÚNG cấu trúc file mẫu đã cài được */
 function buildMobileConfigXML(){
   const rawName = $("mcName").value.trim() || "Serenity_Config";
   const name = rawName.replace(/[^A-Za-z0-9_\-]/g,'_');
@@ -433,7 +437,6 @@ function buildMobileConfigXML(){
   const safeDns1 = esc(dns1);
   const safeDns2 = esc(dns2);
 
-  /* ---------- PAYLOAD 1: DNS (đúng chuẩn file mẫu đã cài được) ---------- */
   const dnsPayload =
 '        <dict>\n' +
 '            <key>PayloadType</key>\n' +
@@ -460,8 +463,6 @@ function buildMobileConfigXML(){
 '            </dict>\n' +
 '        </dict>';
 
-  /* ---------- PAYLOAD 2: Web Clip (icon) — CHỈ khi URL bắt đầu https:// ---------- */
-  // Nhúng chức năng vào query string của URL
   let webPayload = "";
   if (url && /^https:\/\//i.test(url)){
     let finalUrl = url;
@@ -488,7 +489,6 @@ function buildMobileConfigXML(){
 '        </dict>';
   }
 
-  /* ---------- XML HOÀN CHỈNH — giống y file mẫu đã cài được ---------- */
   const xml =
 '<?xml version="1.0" encoding="UTF-8"?>\n' +
 '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n' +
@@ -517,11 +517,8 @@ dnsPayload + webPayload + '\n' +
 function createMobileConfig(){
   try {
     const result = buildMobileConfigXML();
-    console.log("=== MOBILECONFIG XML ===\n" + result.xml);
-
     const blob = new Blob([result.xml], {type:"application/x-apple-aspen-config"});
     const blobUrl = URL.createObjectURL(blob);
-
     const a = document.createElement("a");
     a.href = blobUrl;
     a.download = result.name + ".mobileconfig";
@@ -529,12 +526,10 @@ function createMobileConfig(){
     a.style.display = "none";
     document.body.appendChild(a);
     a.click();
-
     setTimeout(() => {
       try{ document.body.removeChild(a); }catch(e){}
       URL.revokeObjectURL(blobUrl);
     }, 3000);
-
     toast("✅ Đã tạo: " + result.name + ".mobileconfig");
   } catch(err){
     console.error(err);
@@ -547,17 +542,12 @@ function previewXML(){
     const result = buildMobileConfigXML();
     const w = window.open("", "_blank");
     if (!w){ toast("⚠️ Safari chặn popup — cho phép đi"); return; }
-    const safe = result.xml
-      .replace(/&/g,"&amp;")
-      .replace(/</g,"&lt;")
-      .replace(/>/g,"&gt;");
+    const safe = result.xml.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
     w.document.write(
-      "<!DOCTYPE html><html><head><meta charset='UTF-8'>" +
-      "<title>XML Preview</title>" +
+      "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>XML Preview</title>" +
       "<style>body{background:#000;color:#FFD700;font-family:monospace;padding:16px;font-size:11px;}" +
       "pre{white-space:pre-wrap;word-break:break-all;}</style></head><body>" +
-      "<h2>XML — " + result.name + "</h2>" +
-      "<pre>" + safe + "</pre></body></html>"
+      "<h2>XML — " + result.name + "</h2><pre>" + safe + "</pre></body></html>"
     );
     w.document.close();
   } catch(err){
