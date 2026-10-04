@@ -373,7 +373,7 @@ function logout(){
 }
 
 /* ===================================================
-   MỤC 1: MOBILECONFIG — FIXED FINAL
+   MỤC 1: MOBILECONFIG — CHUẨN APPLE
 =================================================== */
 document.querySelectorAll('.chk[data-fn]').forEach(el=>{
   el.addEventListener("click", ()=> el.classList.toggle("on"));
@@ -397,7 +397,7 @@ function esc(s){
     .replace(/"/g, "&quot;");
 }
 
-/* Tạo XML theo đúng chuẩn plist của Apple */
+/* Tạo XML chuẩn Apple plist */
 function buildMobileConfigXML(){
   const rawName = $("mcName").value.trim() || "Serenity_Config";
   const name = rawName.replace(/[^A-Za-z0-9_\-]/g,'_');
@@ -410,9 +410,8 @@ function buildMobileConfigXML(){
   const safeDns1 = esc(dns1);
   const safeDns2 = esc(dns2);
   const safeUrl  = esc(url);
-  const fnStr    = esc(fns.join(",") || "none");
 
-  /* ---------- Payload 1: DNS Settings ---------- */
+  /* ---------- Payload 1: DNS Settings (đúng chuẩn Apple) ---------- */
   const dnsPayload =
 '        <dict>\n' +
 '            <key>PayloadType</key>\n' +
@@ -424,7 +423,7 @@ function buildMobileConfigXML(){
 '            <key>PayloadVersion</key>\n' +
 '            <integer>1</integer>\n' +
 '            <key>PayloadDisplayName</key>\n' +
-'            <string>Serenity DNS</string>\n' +
+'            <string>SERENITY DNS</string>\n' +
 '            <key>DNSSettings</key>\n' +
 '            <dict>\n' +
 '                <key>DNSProtocol</key>\n' +
@@ -439,7 +438,7 @@ function buildMobileConfigXML(){
 '            </dict>\n' +
 '        </dict>';
 
-  /* ---------- Payload 2: Web Clip (nếu có URL https) ---------- */
+  /* ---------- Payload 2: Web Clip (icon app, chỉ khi có URL https) ---------- */
   let webPayload = "";
   if (url && /^https:\/\//i.test(url)){
     webPayload =
@@ -460,23 +459,34 @@ function buildMobileConfigXML(){
 '        </dict>';
   }
 
-  /* ---------- Payload 3: Functions ---------- */
-  const customPayload =
+  /* ---------- Payload 3: Proxy (chứa chức năng đã chọn - an toàn hơn) ---------- */
+  // Lưu ý: iOS không cho phép payload tự định nghĩa. Nên chỉ dùng 2 payload chuẩn.
+  // Các chức năng (Nhẹ Tâm/Bám Tâm...) sẽ được lưu trong query string của URL Web Clip.
+  let finalUrl = url;
+  if (url && fns.length > 0){
+    const sep = url.includes("?") ? "&" : "?";
+    finalUrl = url + sep + "fn=" + fns.join(",");
+  }
+  // rebuild web clip với URL có query chức năng
+  if (url && /^https:\/\//i.test(url)){
+    const safeFinalUrl = esc(finalUrl);
+    webPayload =
 '        ,\n' +
 '        <dict>\n' +
 '            <key>PayloadType</key>\n' +
-'            <string>com.serenity.functions</string>\n' +
+'            <string>com.apple.webClip.managed</string>\n' +
 '            <key>PayloadIdentifier</key>\n' +
-'            <string>com.serenity.fn.' + uuid() + '</string>\n' +
+'            <string>com.serenity.web.' + uuid() + '</string>\n' +
 '            <key>PayloadUUID</key>\n' +
 '            <string>' + uuid() + '</string>\n' +
 '            <key>PayloadVersion</key>\n' +
 '            <integer>1</integer>\n' +
 '            <key>PayloadDisplayName</key>\n' +
-'            <string>Serenity Functions</string>\n' +
-'            <key>Functions</key>\n' +
-'            <string>' + fnStr + '</string>\n' +
+'            <string>' + safeName + '</string>\n' +
+'            <key>URL</key>\n' +
+'            <string>' + safeFinalUrl + '</string>\n' +
 '        </dict>';
+  }
 
   /* ---------- XML hoàn chỉnh ---------- */
   const xml =
@@ -486,7 +496,7 @@ function buildMobileConfigXML(){
 '<dict>\n' +
 '    <key>PayloadContent</key>\n' +
 '    <array>\n' +
-dnsPayload + webPayload + customPayload + '\n' +
+dnsPayload + webPayload + '\n' +
 '    </array>\n' +
 '    <key>PayloadDisplayName</key>\n' +
 '    <string>' + safeName + '</string>\n' +
@@ -495,7 +505,7 @@ dnsPayload + webPayload + customPayload + '\n' +
 '    <key>PayloadUUID</key>\n' +
 '    <string>' + uuid() + '</string>\n' +
 '    <key>PayloadOrganization</key>\n' +
-'    <string>Serenity Lock</string>\n' +
+'    <string>SERENITY LOCK</string>\n' +
 '    <key>PayloadType</key>\n' +
 '    <string>Configuration</string>\n' +
 '    <key>PayloadVersion</key>\n' +
@@ -513,7 +523,6 @@ function createMobileConfig(){
     const result = buildMobileConfigXML();
     console.log("=== MOBILECONFIG XML ===");
     console.log(result.xml);
-    console.log("=== END ===");
 
     const blob = new Blob([result.xml], {type:"application/x-apple-aspen-config"});
     const blobUrl = URL.createObjectURL(blob);
