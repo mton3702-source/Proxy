@@ -108,28 +108,32 @@
     "version": "OB55+",
     "gamePackage": "com.dts.freefireth",
     "enabled": true,
+    "fpsTarget": 120,
     "optimization": {
       "reduceLag": true,
       "stabilizeFPS": true,
       "fixTouchDelay": true,
       "clearBackground": true,
-      "priorityBoost": true
+      "priorityBoost": true,
+      "disablePowerSaving": true,
+      "highPerformanceMode": true
     },
     "control": {
       "fireButtonPos": "bottomCenter",
       "fireButtonSize": 45,
-      "aimButtonHoldTime": 0.15,
+      "aimButtonHoldTime": 0.08,
       "shootDelayFix": true,
       "autoFireOnLock": false,
-      "dragSensitivity": 1.0
+      "dragSensitivity": 1.25,
+      "touchSamplingRate": 120
     },
     "weapon": {
-      "pistol": { "aimSpeed": 1.1, "recoilLevel": 1 },
-      "smg": { "aimSpeed": 1.0, "recoilLevel": 2 },
-      "shotgun": { "aimSpeed": 1.3, "recoilLevel": 3, "closeRangeOnly": true },
-      "ar": { "aimSpeed": 0.95, "recoilLevel": 4 },
-      "sniper": { "aimSpeed": 0.85, "recoilLevel": 5, "headOnly": true },
-      "c4": { "aimSpeed": 1.2, "recoilLevel": 0, "autoLock": true }
+      "pistol": { "aimSpeed": 1.35, "recoilLevel": 1 },
+      "smg": { "aimSpeed": 1.30, "recoilLevel": 2 },
+      "shotgun": { "aimSpeed": 1.50, "recoilLevel": 3, "closeRangeOnly": true },
+      "ar": { "aimSpeed": 1.20, "recoilLevel": 4 },
+      "sniper": { "aimSpeed": 1.15, "recoilLevel": 5, "headOnly": true },
+      "c4": { "aimSpeed": 1.40, "recoilLevel": 0, "autoLock": true }
     },
     "c4": {
       "autoDetonate": false,
@@ -148,80 +152,80 @@
 
   "sensitivities": {
     "iPhone 8": {
-      "lookAround": 95,
-      "redDot": 92,
-      "scope2x": 88,
-      "scope4x": 86,
-      "scope8x": 74,
-      "sniper": 45,
+      "lookAround": 105,
+      "redDot": 102,
+      "scope2x": 98,
+      "scope4x": 94,
+      "scope8x": 82,
+      "sniper": 52,
       "fireButtonSize": 44,
-      "cursorSpeed": 13
+      "cursorSpeed": 16
     },
     "iPhone 8 Plus": {
-      "lookAround": 100,
-      "redDot": 96,
-      "scope2x": 92,
-      "scope4x": 92,
-      "scope8x": 78,
-      "sniper": 48,
+      "lookAround": 110,
+      "redDot": 106,
+      "scope2x": 102,
+      "scope4x": 100,
+      "scope8x": 86,
+      "sniper": 55,
       "fireButtonSize": 45,
-      "cursorSpeed": 14
+      "cursorSpeed": 17
     },
     "iPhone 11": {
-      "lookAround": 98,
-      "redDot": 94,
-      "scope2x": 90,
-      "scope4x": 88,
-      "scope8x": 76,
-      "sniper": 46,
+      "lookAround": 108,
+      "redDot": 104,
+      "scope2x": 100,
+      "scope4x": 98,
+      "scope8x": 84,
+      "sniper": 53,
       "fireButtonSize": 45,
-      "cursorSpeed": 13
+      "cursorSpeed": 16
     },
     "iPhone 12+": {
-      "lookAround": 99,
-      "redDot": 95,
-      "scope2x": 91,
-      "scope4x": 89,
-      "scope8x": 77,
-      "sniper": 47,
+      "lookAround": 109,
+      "redDot": 105,
+      "scope2x": 101,
+      "scope4x": 99,
+      "scope8x": 85,
+      "sniper": 54,
       "fireButtonSize": 45,
-      "cursorSpeed": 13
+      "cursorSpeed": 16
     }
   },
 
   "functions": {
     "aimEngine": {
       "detection": {
-        "maxRange": 120.0,
-        "fovAngle": 45.0,
-        "updateRate": 60,
+        "maxRange": 150.0,
+        "fovAngle": 55.0,
+        "updateRate": 120,
         "ignoreTeammates": true,
         "ignoreDeadTargets": true,
         "targetPriority": "headFirst",
-        "headZoneRadius": 0.18,
-        "bodyZoneRadius": 0.35
+        "headZoneRadius": 0.22,
+        "bodyZoneRadius": 0.40
       },
       "tracking": {
-        "strength": 0.85,
-        "smoothing": 0.35,
-        "maxTurnSpeed": 260.0,
-        "minTurnSpeed": 3.0,
+        "strength": 0.95,
+        "smoothing": 0.22,
+        "maxTurnSpeed": 350.0,
+        "minTurnSpeed": 2.0,
         "leadTarget": {
           "enabled": true,
-          "amount": 0.18
+          "amount": 0.22
         },
         "verticalAdjust": {
           "preferHead": true,
-          "bias": 0.12,
-          "headSnapThreshold": 0.25
+          "bias": 0.18,
+          "headSnapThreshold": 0.15
         }
       },
       "headLock": {
         "enabled": true,
-        "mode": "strong",
-        "pullStrength": 0.90,
-        "snapSpeed": 0.75,
-        "stickinessDuration": 1.5,
+        "mode": "max",
+        "pullStrength": 0.98,
+        "snapSpeed": 0.92,
+        "stickinessDuration": 2.0,
         "reconnectOnMiss": true,
         "onlyWhenAiming": false
       }
@@ -229,54 +233,54 @@
     "nhe_tam": {
       "enabled": true,
       "smoothing": {
-        "lookSmooth": 0.72,
-        "aimSmooth": 0.65,
-        "scopeSmooth": 0.78,
-        "transitionSpeed": 0.42
+        "lookSmooth": 0.55,
+        "aimSmooth": 0.48,
+        "scopeSmooth": 0.60,
+        "transitionSpeed": 0.65
       },
       "recoilControl": {
         "enabled": true,
-        "verticalCompensate": 0.38,
-        "horizontalCompensate": 0.25,
-        "reduction": 0.45,
-        "returnSpeed": 0.55
+        "verticalCompensate": 0.50,
+        "horizontalCompensate": 0.35,
+        "reduction": 0.60,
+        "returnSpeed": 0.75
       },
       "shakeReduction": {
-        "movement": 0.68,
-        "jump": 0.75,
-        "land": 0.82,
-        "hit": 0.50
+        "movement": 0.50,
+        "jump": 0.60,
+        "land": 0.65,
+        "hit": 0.35
       }
     },
     "bam_tam": {
       "enabled": true,
-      "stickiness": 0.65,
-      "followStrength": 0.70,
-      "reconnectSpeed": 0.55
+      "stickiness": 0.85,
+      "followStrength": 0.90,
+      "reconnectSpeed": 0.75
     },
     "bam_dau": {
       "enabled": true,
       "priority": "highest",
-      "pullStrength": 0.90,
+      "pullStrength": 0.98,
       "snapImmediately": true,
       "keepOnTarget": true,
       "followMovement": true,
       "breakOnWall": true,
-      "minDistance": 5.0,
-      "maxDistance": 100.0,
-      "fovHead": 50.0
+      "minDistance": 3.0,
+      "maxDistance": 150.0,
+      "fovHead": 60.0
     },
     "khoa_tam": {
       "enabled": true,
-      "lockStrength": 0.85,
-      "fov": 45.0,
-      "maxRange": 120.0
+      "lockStrength": 0.95,
+      "fov": 55.0,
+      "maxRange": 150.0
     },
     "khoa_vung_dau": {
       "enabled": true,
-      "zoneRadius": 0.18,
-      "pullStrength": 0.70,
-      "onlyWhenAiming": true
+      "zoneRadius": 0.22,
+      "pullStrength": 0.92,
+      "onlyWhenAiming": false
     }
   },
 
