@@ -2,1422 +2,590 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>X LOCK - DNS MAXX FF</title>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>SERENITY LOCK</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent;
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif; }
-  html, body { background: #0a0010; height: 100%; overflow: hidden; color: #fff; -webkit-font-smoothing: antialiased; }
-  .app { max-width: 480px; margin: 0 auto; height: 100vh; position: relative; overflow: hidden; }
-
-  /* LOADING SCREEN */
-  #loadingScreen {
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg, #4a0000 0%, #6b0033 25%, #4a0080 60%, #1a0033 100%);
-    display: none; flex-direction: column; align-items: center; justify-content: center;
-    z-index: 999; padding: 30px;
-  }
-  .load-logo { width: 100px; height: 100px; border-radius: 50%;
-    background: rgba(10, 0, 20, 0.85); border: 2px solid rgba(255, 0, 80, 0.6);
-    display: flex; align-items: center; justify-content: center; font-size: 50px;
-    box-shadow: 0 0 50px rgba(255, 0, 80, 0.7); margin-bottom: 30px;
-    animation: pulse 1.2s ease-in-out infinite; }
-  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-  .load-title { font-size: 22px; font-weight: 900; letter-spacing: 3px;
-    background: linear-gradient(90deg, #FF0040, #FF00FF, #9B30FF);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text; margin-bottom: 12px; }
-  .load-status { font-size: 13px; color: rgba(255, 180, 220, 0.8);
-    letter-spacing: 1px; margin-bottom: 25px; min-height: 20px; text-align: center; }
-  .load-bar { width: 260px; height: 6px; background: rgba(255, 255, 255, 0.1);
-    border-radius: 6px; overflow: hidden; margin-bottom: 20px; }
-  .load-bar-fill { height: 100%; width: 0%;
-    background: linear-gradient(90deg, #FF0040, #FF00FF, #9B30FF);
-    border-radius: 6px; transition: width 0.25s ease; box-shadow: 0 0 15px #FF0040; }
-  .load-percent { font-family: 'Courier New', monospace; font-size: 15px;
-    font-weight: 800; color: #FF00FF; text-shadow: 0 0 15px rgba(255, 0, 255, 0.7); }
-
-  /* AUTH SCREEN */
-  #authScreen {
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg, #4a0000 0%, #6b0033 25%, #4a0080 60%, #1a0033 100%);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 30px; z-index: 10; transition: opacity 0.5s; overflow: hidden;
-  }
-  #authScreen::before { content: ''; position: absolute; width: 400px; height: 400px;
-    border-radius: 50%; background: radial-gradient(circle, rgba(255, 0, 80, 0.4), transparent 70%);
-    top: -100px; right: -100px; animation: floatLight 6s ease-in-out infinite; }
-  #authScreen::after { content: ''; position: absolute; width: 350px; height: 350px;
-    border-radius: 50%; background: radial-gradient(circle, rgba(155, 48, 255, 0.4), transparent 70%);
-    bottom: -100px; left: -100px; animation: floatLight 8s ease-in-out infinite reverse; }
-  @keyframes floatLight { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(30px,20px) scale(1.15); } }
-  .logo-wrap { position: relative; width: 130px; height: 130px;
-    display: flex; align-items: center; justify-content: center; margin-bottom: 20px; z-index: 1; }
-  .logo-wrap::before { content: ''; position: absolute; inset: -4px; border-radius: 50%;
-    background: conic-gradient(from 0deg, #FF0040, #FF00FF, #9B30FF, #FF0040);
-    animation: rotate 3s linear infinite; filter: blur(10px); opacity: 0.9; }
-  @keyframes rotate { to { transform: rotate(360deg); } }
-  .logo-circle { width: 118px; height: 118px; border-radius: 50%;
-    background: rgba(10, 0, 20, 0.85); backdrop-filter: blur(15px);
-    border: 2px solid rgba(255, 0, 80, 0.5); display: flex; align-items: center;
-    justify-content: center; font-size: 58px; position: relative; z-index: 1;
-    box-shadow: inset 0 0 30px rgba(255, 0, 80, 0.3); }
-  .app-name { font-size: 40px; font-weight: 900; letter-spacing: 5px;
-    background: linear-gradient(90deg, #FF0040 0%, #FF00FF 50%, #9B30FF 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text; text-shadow: 0 0 40px rgba(255, 0, 80, 0.6);
-    margin-bottom: 6px; z-index: 1; }
-  .app-sub { font-size: 12px; color: rgba(255, 200, 255, 0.7);
-    letter-spacing: 3px; margin-bottom: 35px; z-index: 1; }
-  .input-label { width: 100%; max-width: 340px; font-size: 11px;
-    font-weight: 700; letter-spacing: 2px; color: rgba(255, 150, 200, 0.8);
-    margin-bottom: 8px; z-index: 1; }
-  .key-input { width: 100%; max-width: 340px; padding: 16px 18px; border-radius: 14px;
-    border: 1.5px solid rgba(255, 0, 80, 0.4); background: rgba(20, 0, 30, 0.8);
-    color: #fff; font-family: 'Courier New', monospace; font-size: 15px;
-    font-weight: 700; letter-spacing: 1px; outline: none; transition: all 0.3s;
-    z-index: 1; backdrop-filter: blur(10px); }
-  .key-input::placeholder { color: rgba(255, 100, 180, 0.4); }
-  .key-input:focus { border-color: #FF0040; box-shadow: 0 0 30px rgba(255, 0, 80, 0.5); }
-  .error-msg { width: 100%; max-width: 340px; margin-top: 12px; padding: 10px 14px;
-    background: rgba(255, 0, 60, 0.2); border: 1px solid rgba(255, 0, 60, 0.5);
-    border-radius: 10px; font-size: 13px; text-align: center;
-    color: #FF6688; display: none; z-index: 1; }
-  .error-msg.show { display: block; animation: shake 0.4s; }
-  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
-  .btn-activate { width: 100%; max-width: 340px; margin-top: 20px; padding: 16px;
-    border-radius: 14px; border: none; background: linear-gradient(90deg, #FF0040, #9B30FF);
-    color: #fff; font-size: 15px; font-weight: 800; letter-spacing: 2px;
-    cursor: pointer; box-shadow: 0 8px 30px rgba(255, 0, 80, 0.5);
-    transition: all 0.3s; display: flex; align-items: center; justify-content: center;
-    gap: 10px; z-index: 1; }
-  .btn-activate:active { transform: scale(0.97); }
-  .btn-activate:disabled { opacity: 0.6; cursor: not-allowed; }
-  .spinner { width: 18px; height: 18px; border: 3px solid rgba(255, 255, 255, 0.3);
-    border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
-  .spinner.show { display: block; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .device-info { position: absolute; bottom: 20px; font-size: 10px;
-    color: rgba(255, 150, 200, 0.4); letter-spacing: 1px; z-index: 1; }
-
-  /* MAIN SCREEN */
-  #mainScreen {
-    position: absolute; inset: 0;
-    background: linear-gradient(180deg, #0a0010 0%, #1a0033 40%, #2d004d 75%, #4a0020 100%);
-    display: none; flex-direction: column; z-index: 5;
-  }
-  .header { padding: 16px 18px 14px; background: rgba(0, 0, 0, 0.35);
-    backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 0, 80, 0.15); flex-shrink: 0; }
-  .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-  .header-left { display: flex; flex-direction: column; gap: 4px; }
-  .header-title { font-size: 22px; font-weight: 900; letter-spacing: 4px;
-    background: linear-gradient(90deg, #FF0040, #FF00FF);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text; line-height: 1.1; }
-  .header-status { display: flex; align-items: center; gap: 6px;
-    font-size: 11px; font-weight: 600; color: rgba(255, 200, 255, 0.75); letter-spacing: 1px; }
-  .dot { width: 7px; height: 7px; border-radius: 50%; background: #00ff88;
-    box-shadow: 0 0 8px #00ff88; animation: blink 1.5s infinite; }
-  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-  .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-  .ping-value { font-family: 'Courier New', monospace; font-size: 17px;
-    font-weight: 800; color: #00ff88; line-height: 1.1; }
-  .ping-label { font-size: 9px; color: rgba(255, 200, 255, 0.5);
-    letter-spacing: 2px; margin-top: 2px; }
-  .sound-toggle-inline {
-    width: 30px; height: 30px; border-radius: 50%;
-    background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 0, 80, 0.35);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; cursor: pointer; transition: all 0.2s;
-  }
-  .sound-toggle-inline:active { transform: scale(0.9); }
-  .sound-toggle-inline.muted { opacity: 0.5; }
-  .time-box { padding: 9px 14px;
-    background: linear-gradient(90deg, rgba(255, 0, 80, 0.15), rgba(155, 48, 255, 0.15));
-    border: 1px solid rgba(255, 0, 80, 0.3); border-radius: 10px;
-    display: flex; justify-content: space-between; align-items: center; }
-  .time-label { font-size: 12px; color: rgba(255, 200, 255, 0.8);
-    display: flex; align-items: center; gap: 6px; }
-  .time-value { font-family: 'Courier New', monospace; font-size: 14px;
-    font-weight: 800; color: #FF00FF; text-shadow: 0 0 10px rgba(255, 0, 255, 0.5); }
-
-  .dns-list { flex: 1; overflow-y: auto; padding: 14px 14px 20px;
-    display: flex; flex-direction: column; gap: 10px; }
-  .dns-list::-webkit-scrollbar { width: 0; }
-
-  .dns-card { background: linear-gradient(135deg, rgba(60, 0, 80, 0.55), rgba(40, 0, 60, 0.45));
-    border: 1.5px solid rgba(255, 0, 80, 0.22); border-radius: 14px;
-    padding: 12px 14px; backdrop-filter: blur(15px); transition: all 0.25s; position: relative; }
-  .dns-card.selected { border-color: #FF0040;
-    box-shadow: 0 0 22px rgba(255, 0, 80, 0.4);
-    background: linear-gradient(135deg, rgba(90, 0, 110, 0.7), rgba(60, 0, 80, 0.6)); }
-  .dns-card.installed::after { content: '✓ CÀI'; position: absolute; top: 10px; right: 10px;
-    background: linear-gradient(90deg, #00ff88, #00cc66); color: #000;
-    font-size: 9px; font-weight: 900; padding: 3px 8px; border-radius: 6px; letter-spacing: 0.5px; }
-  .dns-row { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-  .dns-icon-box { width: 40px; height: 40px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 19px; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.08); }
-  .dns-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
-  .dns-name { font-size: 15px; font-weight: 700; color: #fff;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    display: flex; align-items: center; gap: 6px; }
-  .dns-name-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .dns-badge { display: inline-flex; align-items: center;
-    background: linear-gradient(90deg, #FF0040, #FF00FF); color: #fff;
-    font-size: 8px; font-weight: 900; padding: 2px 6px; border-radius: 4px;
-    letter-spacing: 0.3px; flex-shrink: 0; box-shadow: 0 0 8px rgba(255, 0, 80, 0.5); }
-  .dns-sub { font-size: 11px; color: rgba(255, 180, 220, 0.6);
-    font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .dns-check { font-size: 20px; color: #FF00FF; opacity: 0; transform: scale(0.5);
-    transition: all 0.25s; text-shadow: 0 0 10px #FF00FF; flex-shrink: 0; }
-  .dns-card.selected .dns-check { opacity: 1; transform: scale(1); }
-
-  .dns-details { display: none; margin-top: 12px; padding-top: 12px;
-    border-top: 1px dashed rgba(255, 0, 80, 0.25); }
-  .dns-card.selected .dns-details { display: block; animation: slideDown 0.3s ease; }
-  @keyframes slideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-  .detail-section { margin-bottom: 10px; }
-  .detail-title { font-size: 9px; font-weight: 800; color: rgba(255, 100, 180, 0.9);
-    letter-spacing: 1.5px; margin-bottom: 6px; padding-left: 8px; border-left: 2px solid #FF0040; }
-  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 10px;
-    padding: 8px 10px; background: rgba(0, 0, 0, 0.35); border-radius: 8px; }
-  .detail-item { display: flex; justify-content: space-between; align-items: center;
-    gap: 6px; font-size: 10px; padding: 2px 0; }
-  .detail-label { color: rgba(255, 150, 200, 0.7); white-space: nowrap; }
-  .detail-value { color: #FF00FF; font-family: 'Courier New', monospace;
-    font-weight: 700; white-space: nowrap; overflow: hidden;
-    text-overflow: ellipsis; max-width: 90px; text-align: right; }
-  .detail-grid.purple .detail-value { color: #9B30FF; }
-  .detail-grid.purple .detail-label { color: rgba(180, 150, 255, 0.7); }
-
-  .dns-actions { display: none; gap: 8px; margin-top: 12px; }
-  .dns-card.selected .dns-actions { display: flex; }
-  .btn-small { flex: 1; padding: 10px 8px; border: none; border-radius: 10px;
-    font-size: 11px; font-weight: 800; letter-spacing: 0.3px; cursor: pointer;
-    transition: all 0.2s; display: flex; align-items: center;
-    justify-content: center; gap: 4px; white-space: nowrap; }
-  .btn-small:active { transform: scale(0.96); }
-  .btn-install { background: linear-gradient(90deg, #FF0040, #9B30FF); color: #fff;
-    box-shadow: 0 4px 12px rgba(255, 0, 80, 0.4); }
-  .btn-install.installed { background: linear-gradient(90deg, #00ff88, #00cc66); color: #000;
-    box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3); }
-  .btn-config { background: rgba(155, 48, 255, 0.2); color: #FF00FF;
-    border: 1px solid rgba(255, 0, 255, 0.4); }
-
-  .ff-buttons { padding: 12px 14px 18px; background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(20px); display: flex; gap: 10px;
-    border-top: 1px solid rgba(255, 0, 80, 0.2); flex-shrink: 0; }
-  .btn-ff { flex: 1; padding: 13px 10px; border: none; border-radius: 13px;
-    color: #fff; font-size: 12.5px; font-weight: 800; letter-spacing: 1px;
-    cursor: pointer; transition: all 0.3s; display: flex;
-    flex-direction: column; align-items: center; gap: 3px; }
-  .btn-ff:active { transform: scale(0.96); }
-  .btn-ff:disabled { opacity: 0.5; cursor: not-allowed; }
-  .btn-ff-normal { background: linear-gradient(90deg, #4a0080, #9B30FF);
-    box-shadow: 0 6px 20px rgba(155, 48, 255, 0.5); }
-  .btn-ff-maxx { background: linear-gradient(90deg, #FF0040, #FF6600);
-    box-shadow: 0 6px 20px rgba(255, 0, 64, 0.5); }
-  .btn-ff-icon { font-size: 18px; }
-
-  /* MODAL */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(10, 0, 20, 0.85);
-    backdrop-filter: blur(6px); display: none; align-items: flex-end;
-    justify-content: center; z-index: 100; }
-  .modal-overlay.show { display: flex; }
-  .modal { width: 100%; max-width: 480px;
-    background: linear-gradient(180deg, #1a0033, #2d004d);
-    border-top-left-radius: 24px; border-top-right-radius: 24px;
-    padding: 18px 20px 28px; animation: slideUp 0.3s ease-out;
-    max-height: 92vh; overflow-y: auto; border-top: 2px solid #FF0040;
-    box-shadow: 0 -10px 40px rgba(255, 0, 80, 0.3); }
-  .modal::-webkit-scrollbar { width: 0; }
-  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-  .modal-handle { width: 40px; height: 4px;
-    background: linear-gradient(90deg, #FF0040, #9B30FF);
-    border-radius: 5px; margin: 0 auto 14px; }
-  .modal-title { font-size: 18px; font-weight: 800; margin-bottom: 4px;
-    background: linear-gradient(90deg, #FF0040, #FF00FF);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text; }
-  .modal-sub { font-size: 12px; color: rgba(255, 180, 220, 0.6); margin-bottom: 16px; }
-  .modal-section { font-size: 10px; font-weight: 800; color: rgba(255, 100, 180, 0.8);
-    letter-spacing: 2px; margin: 16px 0 8px; padding-left: 10px; border-left: 3px solid #FF0040; }
-  .modal-field { margin-bottom: 11px; }
-  .modal-label { display: block; font-size: 10px; color: rgba(255, 150, 200, 0.75);
-    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; font-weight: 700; }
-  .modal-input { width: 100%; padding: 11px 13px; background: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 0, 80, 0.25); border-radius: 10px; color: #fff;
-    font-size: 13.5px; font-family: 'Courier New', monospace; outline: none;
-    transition: border 0.2s; }
-  .modal-input:focus { border-color: #FF0040; box-shadow: 0 0 0 3px rgba(255, 0, 80, 0.2); }
-  .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
-  .btn-modal { flex: 1; padding: 13px; border-radius: 12px; border: none;
-    font-size: 13px; font-weight: 800; cursor: pointer; transition: all 0.2s;
-    display: flex; align-items: center; justify-content: center; gap: 6px; letter-spacing: 0.5px; }
-  .btn-modal:active { transform: scale(0.97); }
-  .btn-modal-cancel { background: rgba(255, 255, 255, 0.08); color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.15); }
-  .btn-modal-save { background: linear-gradient(90deg, #FF0040, #9B30FF); color: #fff;
-    box-shadow: 0 4px 20px rgba(255, 0, 80, 0.5); }
-
-  /* TOAST */
-  .toast { position: fixed; bottom: 100px; left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: rgba(20, 0, 30, 0.95); border: 1.5px solid #FF0040;
-    color: #fff; padding: 12px 22px; border-radius: 30px;
-    font-size: 13px; font-weight: 700; opacity: 0; transition: all 0.4s;
-    pointer-events: none; z-index: 200; white-space: nowrap; max-width: 90%;
-    overflow: hidden; text-overflow: ellipsis;
-    box-shadow: 0 0 30px rgba(255, 0, 80, 0.4); backdrop-filter: blur(15px); }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-  .toast.success { border-color: #00ff88; box-shadow: 0 0 30px rgba(0, 255, 136, 0.4); }
-  .toast.error { border-color: #FF0040; }
-
-  /* LOADING OVERLAY */
-  .loading-overlay { position: fixed; inset: 0; background: rgba(10, 0, 20, 0.92);
-    backdrop-filter: blur(10px); display: none; flex-direction: column;
-    align-items: center; justify-content: center; z-index: 300; gap: 16px; }
-  .loading-overlay.show { display: flex; }
-  .loading-spinner { width: 60px; height: 60px;
-    border: 4px solid rgba(255, 0, 80, 0.15); border-top-color: #FF0040;
-    border-right-color: #9B30FF; border-radius: 50%; animation: spin 0.9s linear infinite; }
-  .loading-text { font-size: 14px; color: #FF00FF; font-weight: 700;
-    letter-spacing: 1.5px; text-shadow: 0 0 15px rgba(255, 0, 255, 0.5); text-align: center; padding: 0 20px; }
-  .loading-bar { width: 240px; height: 5px; background: rgba(255, 255, 255, 0.08);
-    border-radius: 5px; overflow: hidden; margin-top: 8px; }
-  .loading-bar-fill { height: 100%;
-    background: linear-gradient(90deg, #FF0040, #FF00FF); width: 0%;
-    transition: width 0.3s; border-radius: 5px; box-shadow: 0 0 15px #FF0040; }
-
-  /* EXPIRED SCREEN */
-  #expiredScreen {
-    position: fixed; inset: 0; z-index: 2000;
-    background: linear-gradient(135deg, #4a0000 0%, #9B30FF 50%, #1a0033 100%);
-    display: none; flex-direction: column; align-items: center; justify-content: center;
-    padding: 30px; text-align: center;
-  }
-  #expiredScreen.show { display: flex; animation: fadeIn 0.5s; }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  .expired-icon { font-size: 90px; margin-bottom: 20px;
-    animation: shakeIcon 0.6s infinite; }
-  @keyframes shakeIcon { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-10deg); } 75% { transform: rotate(10deg); } }
-  .expired-title { font-size: 28px; font-weight: 900; letter-spacing: 3px;
-    background: linear-gradient(90deg, #FF0040, #FF00FF);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text; margin-bottom: 10px; }
-  .expired-sub { font-size: 14px; color: rgba(255, 200, 255, 0.85);
-    margin-bottom: 30px; line-height: 1.6; max-width: 320px; }
-  .expired-btn { padding: 14px 40px; border: none; border-radius: 12px;
-    background: linear-gradient(90deg, #FF0040, #9B30FF); color: #fff;
-    font-size: 14px; font-weight: 800; letter-spacing: 1.5px;
-    cursor: pointer; box-shadow: 0 8px 30px rgba(255, 0, 80, 0.5); }
-  .expired-btn:active { transform: scale(0.97); }
-
-  /* SOUND TOGGLE (AUTH) */
-  .sound-toggle {
-    position: absolute; top: 14px; right: 16px;
-    width: 36px; height: 36px; border-radius: 50%;
-    background: rgba(0, 0, 0, 0.5); border: 1.5px solid rgba(255, 0, 80, 0.4);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; cursor: pointer; z-index: 20;
-    backdrop-filter: blur(10px); transition: all 0.2s;
-  }
-  .sound-toggle:active { transform: scale(0.9); }
-  .sound-toggle.muted { opacity: 0.5; border-color: rgba(255, 255, 255, 0.2); }
+:root{
+  --gold:#FFD700;
+  --gold-2:#FFC300;
+  --gold-glow:rgba(255,215,0,.55);
+  --bg:#000;
+  --card:#0d0d0d;
+  --line:rgba(255,215,0,.25);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--gold);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",sans-serif;
+  min-height:100vh;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;
+  background:radial-gradient(circle at 50% 0%,rgba(255,215,0,.10),transparent 60%);
+  pointer-events:none;z-index:0}
+.app{position:relative;z-index:1;padding:20px 16px 40px;max-width:520px;margin:0 auto}
+h1{font-size:24px;letter-spacing:6px;text-align:center;margin:10px 0 4px;
+  background:linear-gradient(180deg,#FFF6B0,#FFD700 40%,#B8860B);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 12px var(--gold-glow));font-weight:900}
+.sub{text-align:center;font-size:11px;letter-spacing:3px;opacity:.65;margin-bottom:24px}
+.card{background:linear-gradient(180deg,#111,#050505);border:1px solid var(--line);
+  border-radius:18px;padding:18px;margin-bottom:16px;
+  box-shadow:0 8px 30px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,215,0,.15)}
+.card h2{font-size:14px;letter-spacing:2px;margin:0 0 14px;color:var(--gold);
+  text-transform:uppercase;font-weight:700;display:flex;align-items:center;gap:8px}
+.card h2::before{content:"";width:4px;height:14px;background:var(--gold);
+  border-radius:2px;box-shadow:0 0 8px var(--gold-glow)}
+label{display:block;font-size:11px;letter-spacing:1.5px;opacity:.75;margin:12px 0 6px;text-transform:uppercase}
+input,select{width:100%;background:#000;border:1px solid var(--line);color:var(--gold);
+  padding:13px 14px;border-radius:12px;font-size:15px;font-family:inherit;
+  transition:.2s;outline:none;-webkit-appearance:none}
+input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,215,0,.12)}
+input::placeholder{color:rgba(255,215,0,.35)}
+.btn{width:100%;background:linear-gradient(180deg,#FFE55C,#FFD700 45%,#B8860B);
+  color:#000;border:none;padding:15px;border-radius:14px;font-size:15px;font-weight:800;
+  letter-spacing:2px;margin-top:16px;cursor:pointer;text-transform:uppercase;
+  box-shadow:0 6px 20px rgba(255,215,0,.35),inset 0 1px 0 rgba(255,255,255,.5);
+  transition:.15s;font-family:inherit}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:transparent;border:1px solid var(--gold);color:var(--gold);
+  box-shadow:0 0 15px rgba(255,215,0,.2)}
+.chk{display:flex;align-items:center;gap:10px;padding:12px 14px;margin:8px 0;
+  background:#0a0a0a;border:1px solid var(--line);border-radius:12px;cursor:pointer;
+  transition:.2s;font-size:14px;letter-spacing:.5px}
+.chk input{display:none}
+.chk .box{width:20px;height:20px;border:2px solid var(--gold);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.2s}
+.chk.on{background:rgba(255,215,0,.08);border-color:var(--gold)}
+.chk.on .box{background:var(--gold);box-shadow:0 0 12px var(--gold-glow)}
+.chk.on .box::after{content:"✓";color:#000;font-weight:900;font-size:13px}
+.row{display:flex;justify-content:space-between;align-items:center;
+  padding:11px 0;border-bottom:1px solid rgba(255,215,0,.1);font-size:13px}
+.row:last-child{border:none}
+.row .k{opacity:.65;letter-spacing:1px;font-size:11px;text-transform:uppercase}
+.row .v{font-weight:700;color:var(--gold);text-align:right}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;
+  letter-spacing:1px;font-weight:700}
+.badge.on{background:rgba(0,255,100,.15);color:#4dff88;border:1px solid rgba(0,255,100,.4)}
+.badge.off{background:rgba(255,60,60,.15);color:#ff6b6b;border:1px solid rgba(255,60,60,.4)}
+#loading{position:fixed;inset:0;background:#000;display:none;flex-direction:column;
+  align-items:center;justify-content:center;z-index:9999}
+#loading.show{display:flex}
+.loader{width:90px;height:90px;border:3px solid rgba(255,215,0,.15);
+  border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;
+  box-shadow:0 0 30px var(--gold-glow)}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loadPct{font-size:36px;font-weight:900;margin-top:28px;
+  background:linear-gradient(180deg,#FFF6B0,#FFD700,#B8860B);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+#loadMsg{font-size:12px;letter-spacing:3px;opacity:.6;margin-top:10px;text-align:center;padding:0 20px}
+table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+th,td{padding:9px 6px;text-align:left;border-bottom:1px solid rgba(255,215,0,.12)}
+th{font-size:10px;letter-spacing:1px;opacity:.6;text-transform:uppercase}
+td:last-child{color:var(--gold);font-weight:700;text-align:right}
+.hidden{display:none!important}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);
+  background:linear-gradient(180deg,#1a1a1a,#000);border:1px solid var(--gold);
+  color:var(--gold);padding:13px 22px;border-radius:30px;font-size:13px;
+  box-shadow:0 8px 30px var(--gold-glow);transition:.35s;z-index:10000;
+  max-width:90vw;text-align:center;letter-spacing:.5px}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.switch{position:relative;width:52px;height:30px;background:#1a1a1a;
+  border-radius:30px;border:1px solid var(--line);cursor:pointer;transition:.25s;flex-shrink:0}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;
+  background:#555;border-radius:50%;transition:.25s}
+.switch.on{background:rgba(255,215,0,.2);border-color:var(--gold)}
+.switch.on::after{left:25px;background:var(--gold);box-shadow:0 0 12px var(--gold-glow)}
+.func-row{display:flex;align-items:center;justify-content:space-between;
+  padding:14px;background:#0a0a0a;border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+.func-row span{font-size:13px;letter-spacing:.5px}
 </style>
 </head>
 <body>
-
 <div class="app">
 
-  <div id="loadingScreen">
-    <div class="load-logo">🔓</div>
-    <div class="load-title">ĐANG XÁC THỰC</div>
-    <div class="load-status" id="loadStatus">Đang kiểm tra key...</div>
-    <div class="load-bar"><div class="load-bar-fill" id="loadBarFill"></div></div>
-    <div class="load-percent" id="loadPercent">0%</div>
+<!-- ============ TRANG 1: KHÓA KEY ============ -->
+<div id="page-key">
+  <h1>SERENITY LOCK</h1>
+  <div class="sub">SECURE ACCESS SYSTEM</div>
+
+  <div class="card">
+    <h2>Nhập Key Kích Hoạt</h2>
+    <label>Định dạng: SERENITY-XXXX-XXXX-FF</label>
+    <input id="keyInput" placeholder="SERENITY-XXXX-XXXX-FF" autocapitalize="characters" autocomplete="off" spellcheck="false">
+    <button class="btn" onclick="activateKey()">KÍCH HOẠT</button>
   </div>
 
-  <div id="authScreen">
-    <div class="sound-toggle" id="soundToggleAuth" onclick="toggleSound()">🔊</div>
-    <div class="logo-wrap"><div class="logo-circle">🔒</div></div>
-    <div class="app-name">X LOCK</div>
-    <div class="app-sub">DNS MAXX FF PREMIUM</div>
-    <div class="input-label">KEY BẢN QUYỀN</div>
-    <input type="text" id="keyInput" class="key-input" placeholder="XLK-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false">
-    <div class="error-msg" id="errorMsg"></div>
-    <button class="btn-activate" id="btnActivate" onclick="validateKey()">
-      <div class="spinner" id="spinner"></div>
-      <span id="btnText">🔓 KÍCH HOẠT</span>
-    </button>
-    <div class="device-info" id="deviceInfo">Device: LOADING...</div>
+  <div class="card" id="keyInfo" style="display:none">
+    <h2>Thông Tin Key</h2>
+    <div class="row"><span class="k">Thiết bị</span><span class="v" id="infoDevice">—</span></div>
+    <div class="row"><span class="k">Loại key</span><span class="v" id="infoType">—</span></div>
+    <div class="row"><span class="k">Còn lại</span><span class="v" id="infoTime">—</span></div>
+    <div class="row"><span class="k">Trạng thái</span><span class="v" id="infoStatus">—</span></div>
   </div>
-
-  <div id="mainScreen">
-    <div class="header">
-      <div class="header-top">
-        <div class="header-left">
-          <div class="header-title">X LOCK</div>
-          <div class="header-status"><div class="dot"></div><span id="keyTypeLabel">ĐANG HOẠT ĐỘNG</span></div>
-        </div>
-        <div class="header-right">
-          <div class="sound-toggle-inline" id="soundToggleMain" onclick="toggleSound()">🔊</div>
-          <div class="ping-value" id="pingValue">-- ms</div>
-          <div class="ping-label">PING</div>
-        </div>
-      </div>
-      <div class="time-box">
-        <div class="time-label">⏱ Thời gian:</div>
-        <div class="time-value" id="timeValue">--:--:--</div>
-      </div>
-    </div>
-    <div class="dns-list" id="dnsList"></div>
-    <div class="ff-buttons">
-      <button class="btn-ff btn-ff-normal" id="btnFFNormal" onclick="activateFF('normal')">
-        <div class="btn-ff-icon">⚡</div><div>FF THƯỜNG</div>
-      </button>
-      <button class="btn-ff btn-ff-maxx" id="btnFFMaxx" onclick="activateFF('maxx')">
-        <div class="btn-ff-icon">🔥</div><div>FF MAXX</div>
-      </button>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="aimModal" onclick="if(event.target===this)closeModal()">
-    <div class="modal" onclick="event.stopPropagation()">
-      <div class="modal-handle"></div>
-      <div class="modal-title">🎯 CẤU HÌNH AIM LOCK</div>
-      <div class="modal-sub" id="aimModalSub">DNS: HEAD 🔥</div>
-      <div class="modal-section">AIM SETTINGS</div>
-      <div class="modal-grid">
-        <div class="modal-field"><label class="modal-label">Sensitivity</label><input type="text" class="modal-input" id="aimSensi" value="100"></div>
-        <div class="modal-field"><label class="modal-label">Range</label><input type="text" class="modal-input" id="aimRange" value="50"></div>
-        <div class="modal-field"><label class="modal-label">Head Offset</label><input type="text" class="modal-input" id="aimHead" value="15"></div>
-        <div class="modal-field"><label class="modal-label">Drag Speed</label><input type="text" class="modal-input" id="aimDrag" value="2.5"></div>
-        <div class="modal-field"><label class="modal-label">Smooth</label><input type="text" class="modal-input" id="aimSmooth" value="1.0"></div>
-        <div class="modal-field"><label class="modal-label">Trigger Key</label><input type="text" class="modal-input" id="aimTrigger" value="LB"></div>
-      </div>
-      <div class="modal-section">SERVER</div>
-      <div class="modal-field"><label class="modal-label">AIM Server IP</label><input type="text" class="modal-input" id="aimServer" value="103.130.220.15"></div>
-      <div class="modal-buttons">
-        <button class="btn-modal btn-modal-cancel" onclick="closeModal()">Hủy</button>
-        <button class="btn-modal btn-modal-save" onclick="saveAimConfig()">💾 LƯU</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="dnsModal" onclick="if(event.target===this)closeModal()">
-    <div class="modal" onclick="event.stopPropagation()">
-      <div class="modal-handle"></div>
-      <div class="modal-title">🌐 CẤU HÌNH DNS</div>
-      <div class="modal-sub" id="dnsModalSub">DNS: HEAD 🔥</div>
-      <div class="modal-section">DNS SERVER</div>
-      <div class="modal-field"><label class="modal-label">Primary DNS (IPv4)</label><input type="text" class="modal-input" id="dnsPrimary" value="1.1.1.1"></div>
-      <div class="modal-field"><label class="modal-label">Secondary DNS (IPv4)</label><input type="text" class="modal-input" id="dnsSecondary" value="1.0.0.1"></div>
-      <div class="modal-field"><label class="modal-label">Primary DNS (IPv6)</label><input type="text" class="modal-input" id="dnsPrimaryV6" value="2606:4700:4700::1111"></div>
-      <div class="modal-section">BẢO MẬT</div>
-      <div class="modal-field"><label class="modal-label">Protocol</label><input type="text" class="modal-input" id="dnsProtocol" value="DoH"></div>
-      <div class="modal-field"><label class="modal-label">DoH / DoT URL</label><input type="text" class="modal-input" id="dnsDohUrl" value="https://cloudflare-dns.com/dns-query"></div>
-      <div class="modal-grid">
-        <div class="modal-field"><label class="modal-label">Port</label><input type="text" class="modal-input" id="dnsPort" value="443"></div>
-        <div class="modal-field"><label class="modal-label">Timeout (ms)</label><input type="text" class="modal-input" id="dnsTimeout" value="5000"></div>
-      </div>
-      <div class="modal-section">TÙY CHỌN</div>
-      <div class="modal-field"><label class="modal-label">Tên hiển thị</label><input type="text" class="modal-input" id="dnsDisplayName" value="HEAD 🔥"></div>
-      <div class="modal-field"><label class="modal-label">Ghi chú</label><input type="text" class="modal-input" id="dnsNote" value="Config VIP"></div>
-      <div class="modal-buttons">
-        <button class="btn-modal btn-modal-cancel" onclick="closeModal()">Hủy</button>
-        <button class="btn-modal btn-modal-save" onclick="saveDNSConfig()">💾 LƯU DNS</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="loading-overlay" id="loadingOverlay">
-    <div class="loading-spinner"></div>
-    <div class="loading-text" id="loadingText">Đang cài đặt DNS...</div>
-    <div class="loading-bar"><div class="loading-bar-fill" id="loadingBar"></div></div>
-  </div>
-
-  <div class="toast" id="toast"></div>
 </div>
 
-<div id="expiredScreen">
-  <div class="expired-icon">🔒</div>
-  <div class="expired-title">KEY ĐÃ HẾT HẠN</div>
-  <div class="expired-sub">Thời gian sử dụng key đã kết thúc.<br>Vui lòng liên hệ admin để gia hạn key mới.</div>
-  <button class="expired-btn" onclick="location.reload()">🔄 KHỞI ĐỘNG LẠI</button>
+<!-- ============ TRANG 2: CHÍNH ============ -->
+<div id="page-main" class="hidden">
+  <h1>SERENITY LOCK</h1>
+  <div class="sub">CONTROL PANEL</div>
+
+  <div class="card">
+    <h2>Thông Tin Thiết Bị</h2>
+    <div class="row"><span class="k">Người dùng</span><span class="v" id="mUser">—</span></div>
+    <div class="row"><span class="k">Thiết bị</span><span class="v" id="mDevice">—</span></div>
+    <div class="row"><span class="k">Loại key</span><span class="v" id="mType">—</span></div>
+    <div class="row"><span class="k">Còn lại</span><span class="v" id="mTime">—</span></div>
+    <div class="row"><span class="k">Server</span><span class="v" id="mServer">—</span></div>
+  </div>
+
+  <div class="card">
+    <h2>1. Tạo MobileConfig</h2>
+    <label>Tên file</label>
+    <input id="mcName" placeholder="Serenity_Config" value="Serenity_Config">
+    <label>DNS chính</label>
+    <input id="mcDns1" placeholder="1.1.1.1" value="1.1.1.1">
+    <label>DNS phụ</label>
+    <input id="mcDns2" placeholder="1.0.0.1" value="1.0.0.1">
+    <label>URL cấu hình (tuỳ chọn)</label>
+    <input id="mcUrl" placeholder="https://...">
+    <label>Chức năng nhúng</label>
+    <div class="chk" data-fn="nhetam"><div class="box"></div>Nhẹ Tâm</div>
+    <div class="chk" data-fn="bamtam"><div class="box"></div>Bám Tâm</div>
+    <div class="chk" data-fn="khoatam"><div class="box"></div>Khóa Tâm</div>
+    <div class="chk" data-fn="khoavung"><div class="box"></div>Khóa Di Chuyển Vùng Đầu</div>
+    <button class="btn" onclick="createMobileConfig()">TẠO & TẢI FILE</button>
+  </div>
+
+  <div class="card">
+    <h2>2. Độ Nhạy FF OB55</h2>
+    <label>Chọn thiết bị iPhone</label>
+    <select id="devSelect"></select>
+    <label>Kiểu chơi</label>
+    <select id="playStyle">
+      <option value="nhe">NHẸ</option>
+      <option value="tb" selected>TRUNG BÌNH</option>
+      <option value="manh">MẠNH</option>
+    </select>
+    <table id="sensTable">
+      <thead><tr><th>Thông số</th><th>Giá trị</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <button class="btn ghost" onclick="saveSensitivity()">LƯU CẤU HÌNH</button>
+  </div>
+
+  <div class="card">
+    <h2>3. Kết Nối & Điều Khiển</h2>
+    <div class="func-row"><span>Nhẹ Tâm</span><div class="switch" data-fn="nhetam"></div></div>
+    <div class="func-row"><span>Bám Tâm</span><div class="switch" data-fn="bamtam"></div></div>
+    <div class="func-row"><span>Khóa Tâm</span><div class="switch" data-fn="khoatam"></div></div>
+    <div class="func-row"><span>Khóa Di Chuyển Vùng Đầu</span><div class="switch" data-fn="khoavung"></div></div>
+    <button class="btn" onclick="syncFunctions()">ĐỒNG BỘ LÊN SERVER</button>
+  </div>
+
+  <button class="btn ghost" onclick="logout()" style="margin-top:20px">ĐĂNG XUẤT KEY</button>
 </div>
+
+</div>
+
+<div id="loading">
+  <div class="loader"></div>
+  <div id="loadPct">0%</div>
+  <div id="loadMsg">ĐANG KHỞI TẠO...</div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-/* =========================================================
-   X LOCK — DNS MAXX FF
-   Config AIMBOT: https://raw.githubusercontent.com/mton3702-source/Proxy/refs/heads/main/Aimbot.json
-   ========================================================= */
+/* ===================================================
+   CẤU HÌNH SERVER
+=================================================== */
+const SERVER_URL = "https://sever-lock.onrender.com";
 
-const CONFIG_URL = "https://raw.githubusercontent.com/mton3702-source/Proxy/refs/heads/main/Aimbot.json";
-
-/* =========================================================
-   HỆ THỐNG ÂM THANH — Web Audio API (không cần file mp3)
-   ========================================================= */
-const SoundFX = {
-  ctx: null,
-  muted: localStorage.getItem("xlock_muted") === "1",
-
-  init() {
-    if (this.ctx) return;
-    try {
-      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-    } catch (e) {
-      console.warn("Web Audio API không được hỗ trợ");
-    }
-  },
-
-  unlock() {
-    this.init();
-    if (this.ctx && this.ctx.state === "suspended") {
-      this.ctx.resume();
-    }
-  },
-
-  playTone({ freq = 440, duration = 0.15, type = "sine", volume = 0.15, slideTo = null } = {}) {
-    if (this.muted) return;
-    this.init();
-    if (!this.ctx) return;
-
-    try {
-      const now = this.ctx.currentTime;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-
-      osc.type = type;
-      osc.frequency.setValueAtTime(freq, now);
-      if (slideTo !== null) {
-        osc.frequency.exponentialRampToValueAtTime(slideTo, now + duration);
-      }
-
-      gain.gain.setValueAtTime(0, now);
-      gain.gain.linearRampToValueAtTime(volume, now + 0.01);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-
-      osc.start(now);
-      osc.stop(now + duration + 0.05);
-    } catch (e) {}
-  },
-
-  /* 🔊 CHỌN DNS — "ting" 3 nốt tăng */
-  playSelect() {
-    this.playTone({ freq: 880,  duration: 0.08, type: "sine",     volume: 0.12 });
-    setTimeout(() => this.playTone({ freq: 1320, duration: 0.10, type: "sine",     volume: 0.14 }), 50);
-    setTimeout(() => this.playTone({ freq: 1760, duration: 0.18, type: "triangle", volume: 0.10 }), 110);
-  },
-
-  /* 🔊 BỎ CHỌN DNS — "tock" trượt xuống */
-  playDeselect() {
-    this.playTone({ freq: 660, duration: 0.12, type: "sine", volume: 0.10, slideTo: 400 });
-  },
-
-  /* 🔊 MỞ RỘNG (giữ nguyên selected) — sweep nhẹ */
-  playOpen() {
-    this.playTone({ freq: 700, duration: 0.10, type: "sine", volume: 0.09, slideTo: 1200 });
-  },
-
-  /* 🔊 NHẤN NÚT — click đôi */
-  playClick() {
-    this.playTone({ freq: 1200, duration: 0.04, type: "square", volume: 0.07 });
-    this.playTone({ freq: 800,  duration: 0.07, type: "sine",   volume: 0.10 });
-  },
-
-  /* 🔊 THÀNH CÔNG — chime 3 nốt (C-E-G) */
-  playSuccess() {
-    [523, 659, 784].forEach((f, i) => {
-      setTimeout(() => this.playTone({ freq: f, duration: 0.18, type: "triangle", volume: 0.14 }), i * 85);
-    });
-  },
-
-  /* 🔊 LỖI — buzz 2 nốt trầm */
-  playError() {
-    this.playTone({ freq: 220, duration: 0.14, type: "sawtooth", volume: 0.11 });
-    setTimeout(() => this.playTone({ freq: 165, duration: 0.22, type: "sawtooth", volume: 0.11 }), 120);
-  },
-
-  /* 🔊 KÍCH HOẠT KEY — epic rise */
-  playActivate() {
-    this.playTone({ freq: 400, duration: 0.35, type: "sawtooth", volume: 0.11, slideTo: 1400 });
-    setTimeout(() => this.playTone({ freq: 800, duration: 0.30, type: "triangle", volume: 0.13, slideTo: 1600 }), 180);
-    setTimeout(() => {
-      this.playTone({ freq: 1046, duration: 0.35, type: "sine", volume: 0.16 });
-      this.playTone({ freq: 1568, duration: 0.35, type: "sine", volume: 0.10 });
-    }, 380);
-  },
-
-  /* 🔊 BẬT FF — power surge */
-  playFF() {
-    this.playTone({ freq: 150, duration: 0.45, type: "sawtooth", volume: 0.10, slideTo: 900 });
-    setTimeout(() => this.playTone({ freq: 600, duration: 0.22, type: "square", volume: 0.07 }), 180);
-    setTimeout(() => this.playTone({ freq: 1200, duration: 0.28, type: "triangle", volume: 0.12 }), 350);
-  },
-
-  /* 🔊 CẢNH BÁO (key sắp hết) — beep đôi */
-  playWarning() {
-    this.playTone({ freq: 880, duration: 0.18, type: "square", volume: 0.09 });
-    setTimeout(() => this.playTone({ freq: 880, duration: 0.18, type: "square", volume: 0.09 }), 240);
-  },
-
-  /* 🔊 HẾT HẠN — alarm 3 lần */
-  playExpired() {
-    for (let i = 0; i < 3; i++) {
-      setTimeout(() => {
-        this.playTone({ freq: 440, duration: 0.15, type: "square", volume: 0.13 });
-        setTimeout(() => this.playTone({ freq: 330, duration: 0.15, type: "square", volume: 0.13 }), 160);
-      }, i * 350);
-    }
-  },
-
-  /* 🔊 TOAST — pop theo loại */
-  playToast(type = "") {
-    if (type === "success") {
-      this.playTone({ freq: 1000, duration: 0.10, type: "sine", volume: 0.09, slideTo: 1500 });
-    } else if (type === "error") {
-      this.playTone({ freq: 400, duration: 0.13, type: "sawtooth", volume: 0.09, slideTo: 200 });
-    } else {
-      this.playTone({ freq: 800, duration: 0.07, type: "sine", volume: 0.07 });
-    }
-  },
-
-  toggle() {
-    this.muted = !this.muted;
-    localStorage.setItem("xlock_muted", this.muted ? "1" : "0");
-    updateSoundToggleUI();
-    if (!this.muted) {
-      this.unlock();
-      this.playTone({ freq: 1200, duration: 0.09, type: "sine", volume: 0.11 });
-      setTimeout(() => this.playTone({ freq: 1600, duration: 0.13, type: "sine", volume: 0.11 }), 70);
-    }
-  }
+/* ---------- HELPERS ---------- */
+const $ = id => document.getElementById(id);
+const toast = (msg, ms=2500) => {
+  const t = $("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove("show"), ms);
+};
+const fmtTime = ms => {
+  if (ms <= 0) return "HẾT HẠN";
+  const d = Math.floor(ms/86400000);
+  const h = Math.floor(ms%86400000/3600000);
+  const m = Math.floor(ms%3600000/60000);
+  const s = Math.floor(ms%60000/1000);
+  if (d > 0) return d + " ngày " + h + "g " + m + "p";
+  if (h > 0) return h + "g " + m + "p " + s + "s";
+  return m + "p " + s + "s";
 };
 
-function toggleSound() {
-  SoundFX.unlock();
-  SoundFX.toggle();
-  showToast(SoundFX.muted ? "🔇 Đã tắt âm thanh" : "🔊 Đã bật âm thanh", "");
-}
-
-function updateSoundToggleUI() {
-  const icon = SoundFX.muted ? "🔇" : "🔊";
-  const auth = document.getElementById("soundToggleAuth");
-  const main = document.getElementById("soundToggleMain");
-  if (auth) { auth.textContent = icon; auth.classList.toggle("muted", SoundFX.muted); }
-  if (main) { main.textContent = icon; main.classList.toggle("muted", SoundFX.muted); }
-}
-
-/* =========================================================
-   HỆ THỐNG KEY
-   ========================================================= */
-const KEY_DATABASE = {
-  "XLK-N7K2-9PQR-4MZW": { label: "KEY TUẦN",     duration: 7 * 24 * 3600, tier: "WEEK" },
-  "XLK-A3F8-L5VX-2QHN": { label: "KEY TUẦN",     duration: 7 * 24 * 3600, tier: "WEEK" },
-  "XLK-T6B1-R9CZ-8YKD": { label: "KEY TUẦN",     duration: 7 * 24 * 3600, tier: "WEEK" },
-  "XLK-M4X7-D2WJ-6FPS": { label: "KEY TUẦN",     duration: 7 * 24 * 3600, tier: "WEEK" },
-  "XLK-H8Z3-V1NQ-5TRE": { label: "KEY TUẦN",     duration: 7 * 24 * 3600, tier: "WEEK" },
-  "XLK-P2W9-K7YM-3BGA": { label: "KEY THÁNG",    duration: 30 * 24 * 3600, tier: "MONTH" },
-  "XLK-C5R1-Z8XQ-4NVD": { label: "KEY THÁNG",    duration: 30 * 24 * 3600, tier: "MONTH" },
-  "XLK-F9T6-Y3BJ-7HWM": { label: "KEY THÁNG",    duration: 30 * 24 * 3600, tier: "MONTH" },
-  "XLK-Q4G2-M8VP-1KXC": { label: "KEY THÁNG",    duration: 30 * 24 * 3600, tier: "MONTH" },
-  "XLK-W7J5-N1RT-9ZFB": { label: "KEY THÁNG",    duration: 30 * 24 * 3600, tier: "MONTH" },
-  "XLK-V1P8-K4XM-2QWZ": { label: "KEY VĨNH VIỄN", duration: null,          tier: "VIP" },
-  "XLK-Z3N6-T9YB-5RGC": { label: "KEY VĨNH VIỄN", duration: null,          tier: "VIP" },
-  "XLK-B8L2-W5KD-7FXH": { label: "KEY VĨNH VIỄN", duration: null,          tier: "VIP" },
-  "XLK-D4Q9-J1VN-6MPT": { label: "KEY VĨNH VIỄN", duration: null,          tier: "VIP" },
-  "XLK-R6X3-C8ZF-4HNW": { label: "KEY VĨNH VIỄN", duration: null,          tier: "VIP" }
-};
-
-function isValidKeyFormat(key) {
-  return /^XLK-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(key);
-}
-
-function hashKey(key) {
-  let hash = 0;
-  const salt = "XLOCK_2026_SALT_v3_" + DEVICE_ID;
-  const str = key + salt;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash;
-  }
-  return "H_" + Math.abs(hash).toString(36).toUpperCase();
-}
-
-let DNS_LIST = [
-  { id: "auto", name: "Tự động", icon: "✨", color: "#888888", sub: "Hệ thống", installed: false, aim: null, dns: null },
-  { id: "aimbot", name: "Aimbot ⚡", icon: "🎯", color: "#FF0040", sub: "Config v2.1", installed: false,
-    aim: { sensi: "120", range: "60", head: "18", drag: "3.0", smooth: "1.2", trigger: "LB", server: "103.130.220.15" },
-    dns: { primary: "1.1.1.1", secondary: "1.0.0.1", primaryV6: "2606:4700:4700::1111",
-      protocol: "DoH", dohUrl: "https://cloudflare-dns.com/dns-query",
-      port: "443", timeout: "5000", displayName: "Aimbot", note: "Config v2.1" } },
-  { id: "dpi1200", name: "DPI 1200 💻", icon: "🖥", color: "#9B30FF", sub: "Config v3.0", installed: false,
-    aim: { sensi: "100", range: "50", head: "15", drag: "2.5", smooth: "1.0", trigger: "RB", server: "103.130.220.16" },
-    dns: { primary: "8.8.8.8", secondary: "8.8.4.4", primaryV6: "2001:4860:4860::8888",
-      protocol: "DoT", dohUrl: "tls://dns.google",
-      port: "853", timeout: "5000", displayName: "DPI 1200", note: "Config v3.0" } },
-  { id: "fps90", name: "FPS 90 📱", icon: "📱", color: "#FF6600", sub: "Config v1.8", installed: false,
-    aim: { sensi: "90", range: "45", head: "12", drag: "2.0", smooth: "0.8", trigger: "LT", server: "103.130.220.17" },
-    dns: { primary: "9.9.9.9", secondary: "149.112.112.112", primaryV6: "2620:fe::fe",
-      protocol: "DoH", dohUrl: "https://dns.quad9.net/dns-query",
-      port: "443", timeout: "5000", displayName: "FPS 90", note: "Config v1.8" } },
-  { id: "fullsettings", name: "Full Settings DNS ✅🔥", icon: "⚙️", color: "#FF00FF", sub: "NGHIEM IS ME 🔥", installed: false,
-    aim: { sensi: "150", range: "70", head: "20", drag: "3.5", smooth: "1.5", trigger: "LB+RB", server: "103.130.220.18" },
-    dns: { primary: "94.140.14.14", secondary: "94.140.15.15", primaryV6: "2a10:50c0::ad1:ff",
-      protocol: "DoH", dohUrl: "https://dns.adguard-dns.com/dns-query",
-      port: "443", timeout: "5000", displayName: "Full Settings DNS", note: "NGHIEM IS ME" } },
-  { id: "head", name: "HEAD 🔥", icon: "🔥", color: "#FF0040", sub: "Config VIP", installed: false,
-    aim: { sensi: "110", range: "55", head: "16", drag: "2.8", smooth: "1.1", trigger: "LB", server: "103.130.220.19" },
-    dns: { primary: "1.1.1.2", secondary: "1.0.0.2", primaryV6: "2606:4700:4700::1112",
-      protocol: "DoH", dohUrl: "https://security.cloudflare-dns.com/dns-query",
-      port: "443", timeout: "5000", displayName: "HEAD", note: "Config VIP" } },
-  { id: "nextdns", name: "NextDNS", icon: "🛡", color: "#00CED1", sub: "Hệ thống", installed: false, aim: null,
-    dns: { primary: "45.90.28.0", secondary: "45.90.30.0", primaryV6: "2a07:a8c0::",
-      protocol: "DoH", dohUrl: "https://dns.nextdns.io/abc123",
-      port: "443", timeout: "5000", displayName: "NextDNS", note: "Hệ thống" } },
-  { id: "sensai", name: "Sensi Touch ⚡", icon: "👆", color: "#9B30FF", sub: "Config v2.5", installed: false,
-    aim: { sensi: "130", range: "65", head: "17", drag: "3.2", smooth: "1.3", trigger: "RB", server: "103.130.220.20" },
-    dns: { primary: "1.1.1.3", secondary: "1.0.0.3", primaryV6: "2606:4700:4700::1113",
-      protocol: "DoH", dohUrl: "https://family.cloudflare-dns.com/dns-query",
-      port: "443", timeout: "5000", displayName: "Sensi Touch", note: "Config v2.5" } }
-];
-
-let state = {
-  activated: false, currentKey: null, keyType: null, expiryTime: null,
-  selectedDNS: "HEAD 🔥", expandedDNS: null,
-  editingAimDNS: null, editingDnsDNS: null,
-  ping: 0, timeTimer: null, pingTimer: null, appClosed: false
-};
-
-let AIMBOT_CONFIG = null;
-
-/* ===================== DEVICE ID ===================== */
-function getDeviceID() {
-  let id = localStorage.getItem("xlock_device_id");
-  if (!id) {
-    id = "DEV-" + Math.random().toString(36).substring(2, 10).toUpperCase()
-       + Math.random().toString(36).substring(2, 6).toUpperCase();
-    localStorage.setItem("xlock_device_id", id);
+/* ---------- DEVICE ---------- */
+function getDeviceId(){
+  let id = localStorage.getItem("sl_deviceid");
+  if (!id){
+    id = "iOS-" + Math.random().toString(36).slice(2,10).toUpperCase()
+       + "-" + Date.now().toString(36).toUpperCase();
+    localStorage.setItem("sl_deviceid", id);
   }
   return id;
 }
-const DEVICE_ID = getDeviceID();
-document.getElementById("deviceInfo").textContent = "Device: " + DEVICE_ID;
-
-/* ===================== HELPERS ===================== */
-function showError(msg) { const el = document.getElementById("errorMsg"); el.textContent = msg; el.classList.add("show"); }
-function hideError() { document.getElementById("errorMsg").classList.remove("show"); }
-function showToast(msg, type = "") {
-  const toast = document.getElementById("toast");
-  toast.textContent = msg;
-  toast.className = "toast show " + type;
-  SoundFX.playToast(type);
-  clearTimeout(toast._timeout);
-  toast._timeout = setTimeout(() => toast.classList.remove("show"), 2400);
+function getDeviceName(){
+  const ua = navigator.userAgent;
+  if (/iPhone/.test(ua)) return "iPhone";
+  if (/iPad/.test(ua)) return "iPad";
+  if (/Android/.test(ua)) return "Android";
+  return "Thiết bị iOS";
 }
+const DEVICE_ID = getDeviceId();
+const DEVICE_NAME = getDeviceName();
 
-/* ===================== ĐÓNG APP KHI HẾT KEY ===================== */
-function closeApp() {
-  if (state.appClosed) return;
-  state.appClosed = true;
-
-  if (state.timeTimer) clearInterval(state.timeTimer);
-  if (state.pingTimer) clearInterval(state.pingTimer);
-
-  localStorage.removeItem("xlock_current_key");
-  localStorage.removeItem("xlock_expiry");
-  localStorage.removeItem("xlock_key_hash");
-
-  SoundFX.playExpired();
-
-  document.getElementById("expiredScreen").classList.add("show");
-  document.getElementById("mainScreen").style.display = "none";
-
-  console.log("🔒 KEY HẾT HẠN — APP ĐÃ ĐÓNG");
-}
-
-/* ===================== LOADING SCREEN ===================== */
-function showLoadingScreen(steps, onComplete) {
-  const screen = document.getElementById("loadingScreen");
-  const bar = document.getElementById("loadBarFill");
-  const percent = document.getElementById("loadPercent");
-  const status = document.getElementById("loadStatus");
-
-  screen.style.display = "flex";
-  bar.style.width = "0%";
-  percent.textContent = "0%";
-
-  let progress = 0, stepIndex = 0;
-  const interval = setInterval(() => {
-    progress += Math.random() * 12 + 6;
-    if (progress > 100) progress = 100;
-
-    bar.style.width = progress + "%";
-    percent.textContent = Math.floor(progress) + "%";
-
-    const newIndex = Math.min(Math.floor(progress / (100 / steps.length)), steps.length - 1);
-    if (newIndex !== stepIndex || progress < 5) {
-      stepIndex = newIndex;
-      status.textContent = steps[stepIndex];
-    }
-
-    if (progress >= 100) {
-      clearInterval(interval);
-      status.textContent = "Hoàn tất!";
-      setTimeout(() => {
-        screen.style.display = "none";
-        document.getElementById("mainScreen").style.display = "flex";
-        if (onComplete) onComplete();
-      }, 500);
-    }
-  }, 180);
-}
-
-/* ===================== VALIDATE KEY ===================== */
-function validateKey() {
-  SoundFX.unlock();
-
-  const input = document.getElementById("keyInput");
-  const key = input.value.trim().toUpperCase();
-  const btn = document.getElementById("btnActivate");
-  const btnText = document.getElementById("btnText");
-  const spinner = document.getElementById("spinner");
-
-  hideError();
-
-  if (!key) { showError("⚠️ Vui lòng nhập Key!"); SoundFX.playError(); return; }
-  if (!isValidKeyFormat(key)) {
-    showError("❌ Key không đúng định dạng XLK-XXXX-XXXX-XXXX!");
-    SoundFX.playError();
-    return;
-  }
-
-  btn.disabled = true;
-  btnText.textContent = "ĐANG XÁC THỰC...";
-  spinner.classList.add("show");
-  SoundFX.playClick();
-
-  setTimeout(() => {
-    if (!KEY_DATABASE[key]) {
-      btn.disabled = false; btnText.textContent = "🔓 KÍCH HOẠT";
-      spinner.classList.remove("show");
-      showError("❌ Key không hợp lệ hoặc đã bị thu hồi!");
-      SoundFX.playError();
-      return;
-    }
-
-    const keyHash = hashKey(key);
-    const usedHash = localStorage.getItem("xlock_key_" + keyHash);
-    if (usedHash && usedHash !== DEVICE_ID) {
-      btn.disabled = false; btnText.textContent = "🔓 KÍCH HOẠT";
-      spinner.classList.remove("show");
-      showError("⚠️ Key đã được dùng trên thiết bị khác!");
-      SoundFX.playError();
-      return;
-    }
-
-    localStorage.setItem("xlock_key_" + keyHash, DEVICE_ID);
-    localStorage.setItem("xlock_current_key", key);
-    localStorage.setItem("xlock_key_hash", keyHash);
-
-    const keyData = KEY_DATABASE[key];
-    state.activated = true;
-    state.currentKey = key;
-    state.keyType = keyData;
-
-    if (keyData.duration !== null) {
-      state.expiryTime = Date.now() + keyData.duration * 1000;
-      localStorage.setItem("xlock_expiry", state.expiryTime);
-    } else {
-      state.expiryTime = null;
-      localStorage.removeItem("xlock_expiry");
-    }
-
-    btn.disabled = false; btnText.textContent = "🔓 KÍCH HOẠT";
-    spinner.classList.remove("show");
-
-    SoundFX.playActivate();
-
-    showLoadingScreen([
-      "🔐 Đang xác thực key...",
-      "📡 Đang kết nối server X LOCK...",
-      "🎯 Đang tải cấu hình AIMBOT...",
-      "🌐 Đang tải cấu hình DNS...",
-      "✅ Kích hoạt thành công!"
-    ], () => {
-      document.getElementById("authScreen").style.display = "none";
-      document.getElementById("keyTypeLabel").textContent = keyData.label;
-      renderDNSList();
-      startTimers();
-      showToast("🎉 Kích hoạt thành công!", "success");
-      fetchAimbotConfig().catch(() => {});
+/* ---------- API ---------- */
+async function api(path, opts={}){
+  try{
+    const r = await fetch(SERVER_URL + path, {
+      headers:{"Content-Type":"application/json"},
+      ...opts
     });
-  }, 1200);
+    return await r.json();
+  }catch(e){
+    return {ok:false, error:"Không kết nối được server"};
+  }
 }
 
-/* ===================== TIMERS ===================== */
-function startTimers() {
-  updateTime(); updatePing();
-  if (state.timeTimer) clearInterval(state.timeTimer);
-  if (state.pingTimer) clearInterval(state.pingTimer);
-  state.timeTimer = setInterval(updateTime, 1000);
-  state.pingTimer = setInterval(updatePing, 2000);
-}
+/* ===================================================
+   KEY ACTIVATION
+=================================================== */
+let currentSession = null;
+let timerInterval = null;
 
-let lastWarningPlayed = 0;
-function updateTime() {
-  const el = document.getElementById("timeValue");
-  if (!el) return;
-
-  if (!state.expiryTime) {
-    el.textContent = "∞ VĨNH VIỄN";
+async function activateKey(){
+  const key = $("keyInput").value.trim().toUpperCase();
+  if (!/^SERENITY-[A-Z0-9]{4}-[A-Z0-9]{4}-FF$/.test(key)){
+    toast("❌ Sai định dạng key");
     return;
   }
+  toast("⏳ Đang xác thực...");
+  const res = await api("/api/activate", {
+    method:"POST",
+    body: JSON.stringify({key, deviceId: DEVICE_ID, deviceName: DEVICE_NAME})
+  });
+  if (!res.ok){ toast("❌ " + (res.error || "Key không hợp lệ")); return; }
 
-  const remaining = state.expiryTime - Date.now();
+  currentSession = {
+    key, deviceId: DEVICE_ID, deviceName: DEVICE_NAME,
+    type: res.type, expiresAt: res.expiresAt, user: res.user
+  };
+  localStorage.setItem("sl_session", JSON.stringify(currentSession));
 
-  if (remaining <= 0) {
-    el.textContent = "00:00:00";
-    closeApp();
-    return;
-  }
+  $("infoDevice").textContent = DEVICE_NAME;
+  $("infoType").textContent = res.type;
+  $("infoTime").textContent = fmtTime(res.expiresAt - Date.now());
+  $("infoStatus").innerHTML = '<span class="badge on">HỢP LỆ</span>';
+  $("keyInfo").style.display = "block";
 
-  const days = Math.floor(remaining / 86400000);
-  const hours = Math.floor((remaining % 86400000) / 3600000);
-  const minutes = Math.floor((remaining % 3600000) / 60000);
-  const seconds = Math.floor((remaining % 60000) / 1000);
-
-  if (days > 0) el.textContent = `${days}d ${hours}h ${minutes}m`;
-  else el.textContent = `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-
-  // Cảnh báo âm thanh khi còn < 5 phút
-  if (remaining < 300000) {
-    const now = Date.now();
-    if (now - lastWarningPlayed > 60000) {
-      lastWarningPlayed = now;
-      SoundFX.playWarning();
-    }
-  }
+  await runLoading();
+  enterMain();
 }
 
-function updatePing() {
-  if (state.appClosed) return;
-  state.ping = Math.floor(Math.random() * 60) + 15;
-  const el = document.getElementById("pingValue");
-  if (!el) return;
-  el.textContent = state.ping + " ms";
-  if (state.ping < 30) el.style.color = "#00ff88";
-  else if (state.ping < 50) el.style.color = "#FF00FF";
-  else el.style.color = "#FF0040";
-}
-
-/* ===================== RENDER DNS ===================== */
-function renderDNSList() {
-  const container = document.getElementById("dnsList");
-  if (!container) return;
-  container.innerHTML = "";
-
-  DNS_LIST.forEach(dns => {
-    const card = document.createElement("div");
-    card.className = "dns-card";
-    if (state.selectedDNS === dns.name) card.classList.add("selected");
-    if (dns.installed) card.classList.add("installed");
-
-    let aimDetails = "";
-    if (dns.aim) {
-      aimDetails = `<div class="detail-section"><div class="detail-title">🎯 AIM LOCK</div><div class="detail-grid">
-        <div class="detail-item"><span class="detail-label">Sensi</span><span class="detail-value">${dns.aim.sensi}</span></div>
-        <div class="detail-item"><span class="detail-label">Range</span><span class="detail-value">${dns.aim.range}</span></div>
-        <div class="detail-item"><span class="detail-label">Head</span><span class="detail-value">${dns.aim.head}</span></div>
-        <div class="detail-item"><span class="detail-label">Drag</span><span class="detail-value">${dns.aim.drag}</span></div>
-        <div class="detail-item"><span class="detail-label">Smooth</span><span class="detail-value">${dns.aim.smooth}</span></div>
-        <div class="detail-item"><span class="detail-label">Trigger</span><span class="detail-value">${dns.aim.trigger}</span></div>
-      </div></div>`;
-    }
-
-    let dnsDetails = "";
-    if (dns.dns) {
-      dnsDetails = `<div class="detail-section"><div class="detail-title">🌐 DNS SERVER</div><div class="detail-grid purple">
-        <div class="detail-item"><span class="detail-label">Primary</span><span class="detail-value">${dns.dns.primary}</span></div>
-        <div class="detail-item"><span class="detail-label">Proto</span><span class="detail-value">${dns.dns.protocol}</span></div>
-        <div class="detail-item"><span class="detail-label">Port</span><span class="detail-value">${dns.dns.port}</span></div>
-        <div class="detail-item"><span class="detail-label">Timeout</span><span class="detail-value">${dns.dns.timeout}ms</span></div>
-      </div></div>`;
-    }
-
-    let actionsHTML = "";
-    if (dns.aim || dns.dns) {
-      actionsHTML = `<div class="dns-actions">
-        ${dns.aim ? `<button class="btn-small btn-config" onclick="event.stopPropagation();openAimModal('${dns.id}')">🎯 AIM</button>` : ''}
-        ${dns.dns ? `<button class="btn-small btn-config" onclick="event.stopPropagation();openDnsModal('${dns.id}')">🌐 DNS</button>` : ''}
-        <button class="btn-small btn-install ${dns.installed ? 'installed' : ''}" onclick="event.stopPropagation();installDNS('${dns.id}')">${dns.installed ? '✓ ĐÃ CÀI' : '📥 CÀI'}</button>
-      </div>`;
-    }
-
-    card.innerHTML = `<div class="dns-row">
-      <div class="dns-icon-box" style="background:${dns.color}22;color:${dns.color}">${dns.icon}</div>
-      <div class="dns-info">
-        <div class="dns-name"><span class="dns-name-text">${dns.name}</span>${dns.aim ? '<span class="dns-badge">🎯 AIM</span>' : ''}</div>
-        <div class="dns-sub">${dns.sub}</div>
-      </div>
-      <div class="dns-check">✓</div>
-    </div>
-    <div class="dns-details">${aimDetails}${dnsDetails}${actionsHTML}</div>`;
-
-    card.querySelector(".dns-row").onclick = () => selectDNS(dns);
-    container.appendChild(card);
+/* ---------- LOADING 20s ---------- */
+function runLoading(){
+  return new Promise(resolve => {
+    const ld = $("loading"); ld.classList.add("show");
+    let p = 0;
+    const msgs = ["ĐANG XÁC THỰC...","ĐANG KẾT NỐI SERVER...","ĐANG TẢI CẤU HÌNH...","HOÀN TẤT!"];
+    const total = 20000, step = 100;
+    const iv = setInterval(()=>{
+      p += (step/total)*100;
+      if (p >= 100){ p = 100; clearInterval(iv); }
+      $("loadPct").textContent = Math.floor(p) + "%";
+      $("loadMsg").textContent = msgs[Math.min(3, Math.floor(p/30))];
+      if (p >= 100){
+        setTimeout(()=>{
+          ld.classList.remove("show");
+          speakWelcome();
+          resolve();
+        }, 400);
+      }
+    }, step);
   });
 }
 
-function selectDNS(dns) {
-  SoundFX.unlock();
+function speakWelcome(){
+  try{
+    const u = new SpeechSynthesisUtterance("Chào mừng bạn đã vào SERENITY LOCK");
+    u.lang = "vi-VN"; u.rate = 1; u.pitch = 1; u.volume = 1;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
 
-  const wasExpanded = state.expandedDNS === dns.id;
-  const wasSelected = state.selectedDNS === dns.name;
+/* ===================================================
+   MAIN
+=================================================== */
+function enterMain(){
+  $("page-key").classList.add("hidden");
+  $("page-main").classList.remove("hidden");
+  refreshMainInfo();
+  startCountdown();
+  loadDevices();
+  loadFunctions();
+  updateSensTable();
+  pingServer();
+}
 
-  if (wasExpanded) {
-    state.expandedDNS = null;
-    SoundFX.playDeselect();
-  } else {
-    state.expandedDNS = dns.id;
-    if (!wasSelected) {
-      state.selectedDNS = dns.name;
-      SoundFX.playSelect();
-    } else {
-      SoundFX.playOpen();
+function refreshMainInfo(){
+  if (!currentSession) return;
+  $("mUser").textContent = currentSession.user || "Người dùng";
+  $("mDevice").textContent = currentSession.deviceName;
+  $("mType").textContent = currentSession.type;
+  $("mTime").textContent = fmtTime(currentSession.expiresAt - Date.now());
+}
+
+async function pingServer(){
+  const res = await api("/api/ping");
+  const el = $("mServer");
+  if (res.ok) el.innerHTML = '<span class="badge on">ĐÃ KẾT NỐI</span>';
+  else el.innerHTML = '<span class="badge off">MẤT KẾT NỐI</span>';
+}
+
+function startCountdown(){
+  clearInterval(timerInterval);
+  timerInterval = setInterval(()=>{
+    if (!currentSession) return;
+    const left = currentSession.expiresAt - Date.now();
+    $("mTime").textContent = fmtTime(left);
+    if (left <= 0){
+      clearInterval(timerInterval);
+      autoLock();
     }
-  }
-
-  renderDNSList();
+  }, 1000);
 }
 
-/* ===================== FETCH AIMBOT CONFIG ===================== */
-async function fetchAimbotConfig() {
-  try {
-    showToast("📡 Đang tải cấu hình AIMBOT...", "");
-    const response = await fetch(CONFIG_URL, {
-      method: "GET",
-      headers: { "Accept": "application/json" },
-      cache: "no-cache"
-    });
-
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-    const config = await response.json();
-
-    if (!config || !config.aimbot || !config.head_lock) {
-      throw new Error("Cấu trúc JSON không hợp lệ");
-    }
-
-    AIMBOT_CONFIG = config;
-    localStorage.setItem("xlock_aimbot_config", JSON.stringify(config));
-
-    const info = config.config_info || {};
-    showToast(`✅ Đã tải: ${info.name || "AIMBOT"} v${info.version || "?"}`, "success");
-    console.log("🎯 AIMBOT CONFIG LOADED:", config);
-    return config;
-  } catch (error) {
-    console.error("❌ Lỗi tải config:", error);
-
-    const cached = localStorage.getItem("xlock_aimbot_config");
-    if (cached) {
-      try {
-        AIMBOT_CONFIG = JSON.parse(cached);
-        showToast("📦 Dùng config từ cache", "");
-        return AIMBOT_CONFIG;
-      } catch(e) {}
-    }
-    showToast(`❌ Lỗi tải config: ${error.message}`, "error");
-    return null;
-  }
+function autoLock(){
+  localStorage.removeItem("sl_session");
+  currentSession = null;
+  clearInterval(timerInterval);
+  $("page-main").classList.add("hidden");
+  $("page-key").classList.remove("hidden");
+  $("keyInput").value = "";
+  $("keyInfo").style.display = "none";
+  toast("⏰ Key đã hết hạn - App tự khóa");
+  try{ speechSynthesis.cancel(); }catch(e){}
 }
 
-/* ===================== APPLY AIMBOT CONFIG ===================== */
-function applyAimbotConfig(dns) {
-  if (!AIMBOT_CONFIG || !dns) return;
-
-  const ab = AIMBOT_CONFIG.aimbot || {};
-  const hl = AIMBOT_CONFIG.head_lock || {};
-  const sens = AIMBOT_CONFIG.sensitivity || {};
-  const dnsLink = AIMBOT_CONFIG.dns_aim_link || {};
-
-  dns.aim = {
-    sensi: String(sens.aim || dns.aim?.sensi || "100"),
-    range: String(ab.fov_radius || dns.aim?.range || "50"),
-    head: String(Math.abs(hl.offset_y || 0.05) * 100).substring(0, 4),
-    drag: String(hl.follow_speed || dns.aim?.drag || "2.5"),
-    smooth: String(ab.smoothness || dns.aim?.smooth || "1.0"),
-    trigger: dns.aim?.trigger || "LB",
-    server: dnsLink.primary || dns.aim?.server || "103.130.220.15"
-  };
-
-  if (dnsLink && dns.dns) {
-    if (dnsLink.primary) dns.dns.primary = dnsLink.primary;
-    if (dnsLink.secondary) dns.dns.secondary = dnsLink.secondary;
-  }
-
-  const info = AIMBOT_CONFIG.config_info || {};
-  dns.sub = `${info.name || "AIMBOT"} v${info.version || "?"}`;
-
-  console.log("🎯 Đã áp dụng AIMBOT config cho:", dns.name, dns.aim);
+function logout(){
+  if (!confirm("Đăng xuất key khỏi thiết bị này?")) return;
+  autoLock();
 }
 
-/* ===================== INSTALL DNS ===================== */
-function generateMobileConfig(dns) {
-  function makeUUID() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-      const r = Math.random() * 16 | 0;
-      const v = c === 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16).toUpperCase();
-    });
-  }
-  function esc(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;').replace(/'/g, '&apos;');
-  }
-
-  const profileUUID = makeUUID();
-  const dnsUUID = makeUUID();
-  const proto = (dns.protocol || "DoH").toUpperCase();
-  let dnsProtocol = "HTTPS";
-  if (proto === "DOT" || proto === "TLS") dnsProtocol = "TLS";
-  else if (proto === "CLEARTEXT") dnsProtocol = "Cleartext";
-
-  let dnsSettings = '';
-  if (dnsProtocol === "Cleartext") {
-    dnsSettings = `<key>DNSProtocol</key><string>Cleartext</string>
-        <key>ServerAddresses</key><array>
-          <string>${esc(dns.primary)}</string>
-          <string>${esc(dns.secondary)}</string>
-        </array>`;
-  } else {
-    let serverURL = dns.dohUrl || "https://cloudflare-dns.com/dns-query";
-    if (dnsProtocol === "TLS" && serverURL.startsWith("https://")) {
-      serverURL = serverURL.replace("https://", "tls://");
-    }
-    dnsSettings = `<key>DNSProtocol</key><string>${dnsProtocol}</string>
-        <key>ServerURL</key><string>${esc(serverURL)}</string>`;
-  }
-
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>PayloadContent</key>
-  <array>
-    <dict>
-      <key>DNSSettings</key>
-      <dict>${dnsSettings}</dict>
-      <key>PayloadDescription</key>
-      <string>Cấu hình DNS ${esc(dns.displayName)} - X LOCK</string>
-      <key>PayloadDisplayName</key>
-      <string>${esc(dns.displayName)} - X LOCK</string>
-      <key>PayloadIdentifier</key>
-      <string>com.xlock.dns.${dnsUUID}</string>
-      <key>PayloadType</key>
-      <string>com.apple.dnsSettings.managed</string>
-      <key>PayloadUUID</key>
-      <string>${dnsUUID}</string>
-      <key>PayloadVersion</key>
-      <integer>1</integer>
-    </dict>
-  </array>
-  <key>PayloadDescription</key>
-  <string>Profile DNS ${esc(dns.displayName)} - X LOCK</string>
-  <key>PayloadDisplayName</key>
-  <string>X LOCK - ${esc(dns.displayName)}</string>
-  <key>PayloadIdentifier</key>
-  <string>com.xlock.profile.${profileUUID}</string>
-  <key>PayloadOrganization</key>
-  <string>X LOCK</string>
-  <key>PayloadRemovalDisallowed</key>
-  <false/>
-  <key>PayloadType</key>
-  <string>Configuration</string>
-  <key>PayloadUUID</key>
-  <string>${profileUUID}</string>
-  <key>PayloadVersion</key>
-  <integer>1</integer>
-</dict>
-</plist>`;
+/* ===================================================
+   MỤC 1: MOBILECONFIG
+=================================================== */
+document.querySelectorAll('.chk[data-fn]').forEach(el=>{
+  el.addEventListener("click", ()=> el.classList.toggle("on"));
+});
+function getCheckedFns(){
+  return [...document.querySelectorAll('.chk[data-fn].on')].map(e=>e.dataset.fn);
 }
 
-function downloadMobileConfig(dns) {
-  try {
-    const content = generateMobileConfig(dns.dns);
-    const blob = new Blob([content], { type: "application/x-apple-aspen-config" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `X-LOCK-${dns.id}.mobileconfig`;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 2000);
-    return true;
-  } catch (err) {
-    showToast("❌ Lỗi: " + err.message, "error");
-    return false;
-  }
+function createMobileConfig(){
+  const name = $("mcName").value.trim() || "Serenity_Config";
+  const dns1 = $("mcDns1").value.trim() || "1.1.1.1";
+  const dns2 = $("mcDns2").value.trim() || "1.0.0.1";
+  const url  = $("mcUrl").value.trim();
+  const fns  = getCheckedFns();
+
+  const uuid = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{
+    const r=Math.random()*16|0, v=c==='x'?r:(r&0x3|0x8); return v.toString(16);
+  });
+
+  const dnsPayload = '    <dict>\n' +
+    '      <key>PayloadType</key><string>com.apple.dnsSettings.managed</string>\n' +
+    '      <key>PayloadIdentifier</key><string>com.serenity.dns.' + uuid() + '</string>\n' +
+    '      <key>PayloadUUID</key><string>' + uuid() + '</string>\n' +
+    '      <key>PayloadVersion</key><integer>1</integer>\n' +
+    '      <key>PayloadDisplayName</key><string>Serenity DNS</string>\n' +
+    '      <key>DNSSettings</key>\n' +
+    '      <dict>\n' +
+    '        <key>DNSProtocol</key><string>HTTPS</string>\n' +
+    '        <key>ServerURL</key><string>https://' + dns1 + '/dns-query</string>\n' +
+    '        <key>ServerAddresses</key>\n' +
+    '        <array><string>' + dns1 + '</string><string>' + dns2 + '</string></array>\n' +
+    '      </dict>\n' +
+    '    </dict>';
+
+  const webPayload = url ? ',\n    <dict>\n' +
+    '      <key>PayloadType</key><string>com.apple.webClip.managed</string>\n' +
+    '      <key>PayloadIdentifier</key><string>com.serenity.web.' + uuid() + '</string>\n' +
+    '      <key>PayloadUUID</key><string>' + uuid() + '</string>\n' +
+    '      <key>PayloadVersion</key><integer>1</integer>\n' +
+    '      <key>PayloadDisplayName</key><string>' + name + '</string>\n' +
+    '      <key>URL</key><string>' + url + '</string>\n' +
+    '    </dict>' : "";
+
+  const fnStr = fns.join(",") || "none";
+  const customPayload = ',\n    <dict>\n' +
+    '      <key>PayloadType</key><string>com.serenity.functions</string>\n' +
+    '      <key>PayloadIdentifier</key><string>com.serenity.fn.' + uuid() + '</string>\n' +
+    '      <key>PayloadUUID</key><string>' + uuid() + '</string>\n' +
+    '      <key>PayloadVersion</key><integer>1</integer>\n' +
+    '      <key>PayloadDisplayName</key><string>Serenity Functions</string>\n' +
+    '      <key>Functions</key><string>' + fnStr + '</string>\n' +
+    '    </dict>';
+
+  const xml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+'<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n' +
+'<plist version="1.0">\n' +
+'<dict>\n' +
+'  <key>PayloadContent</key>\n' +
+'  <array>\n' +
+dnsPayload + webPayload + customPayload + '\n' +
+'  </array>\n' +
+'  <key>PayloadDisplayName</key><string>' + name + '</string>\n' +
+'  <key>PayloadIdentifier</key><string>com.serenity.lock.' + uuid() + '</string>\n' +
+'  <key>PayloadUUID</key><string>' + uuid() + '</string>\n' +
+'  <key>PayloadType</key><string>Configuration</string>\n' +
+'  <key>PayloadVersion</key><integer>1</integer>\n' +
+'</dict>\n' +
+'</plist>';
+
+  const blob = new Blob([xml], {type:"application/x-apple-aspen-config"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name + ".mobileconfig";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 3000);
+
+  toast("✅ Đã tạo file " + name + ".mobileconfig");
 }
 
-function installDNS(dnsId) {
-  SoundFX.unlock();
-  SoundFX.playClick();
+/* ===================================================
+   MỤC 2: ĐỘ NHẠY
+=================================================== */
+const DEVICES = [
+  {id:"iphone6", name:"iPhone 6/6s"},
+  {id:"iphone7", name:"iPhone 7/8"},
+  {id:"iphonex", name:"iPhone X/XS/11 Pro"},
+  {id:"iphone11", name:"iPhone 11/12/13"},
+  {id:"iphone14", name:"iPhone 14/15/16"},
+  {id:"ipadmini", name:"iPad Mini"},
+  {id:"ipad", name:"iPad Pro"}
+];
 
-  const dns = DNS_LIST.find(d => d.id === dnsId);
-  if (!dns || !dns.dns) { showToast("⚠️ Chưa có cấu hình DNS!", "error"); return; }
+const SENS_MAP = {
+  iphone6:  {nhe:[80,90,95,100,110,60,70], tb:[100,110,120,130,140,70,85], manh:[120,130,140,150,160,85,100]},
+  iphone7:  {nhe:[85,95,100,105,115,62,72], tb:[105,115,125,135,145,72,87], manh:[125,135,145,155,165,87,102]},
+  iphonex:  {nhe:[88,98,103,108,118,64,74], tb:[108,118,128,138,148,74,89], manh:[128,138,148,158,168,89,104]},
+  iphone11: {nhe:[90,100,105,110,120,66,76], tb:[110,120,130,140,150,76,91], manh:[130,140,150,160,170,91,106]},
+  iphone14: {nhe:[95,105,110,115,125,68,78], tb:[115,125,135,145,155,78,93], manh:[135,145,155,165,175,93,108]},
+  ipadmini: {nhe:[92,102,107,112,122,65,75], tb:[112,122,132,142,152,75,90], manh:[132,142,152,162,172,90,105]},
+  ipad:     {nhe:[98,108,113,118,128,70,80], tb:[118,128,138,148,158,80,95], manh:[138,148,158,168,178,95,110]}
+};
 
-  const overlay = document.getElementById("loadingOverlay");
-  const bar = document.getElementById("loadingBar");
-  const text = document.getElementById("loadingText");
-  overlay.style.display = "flex";
-  bar.style.width = "0%";
+const SENS_LABELS = [
+  "Nhìn xung quanh","Hồng tâm","Độ nhạy 2x","Độ nhạy 4x",
+  "Độ nhạy 8x","Súng ngắm - Kích thước","Súng ngắm - Vị trí"
+];
 
-  let progress = 0;
-  const steps = ["Đang tạo profile...", "Đang mã hóa...", "Đang áp dụng AIM...", "Đang tạo mobileconfig...", "Hoàn tất!"];
-  const interval = setInterval(() => {
-    progress += Math.random() * 18 + 5;
-    if (progress >= 100) progress = 100;
-    bar.style.width = progress + "%";
-    text.textContent = steps[Math.min(Math.floor(progress / 25), steps.length - 1)] + " " + Math.floor(progress) + "%";
-
-    if (progress >= 100) {
-      clearInterval(interval);
-      setTimeout(() => {
-        overlay.style.display = "none";
-        if (downloadMobileConfig(dns)) {
-          dns.installed = true;
-          saveDNSState();
-          renderDNSList();
-          SoundFX.playSuccess();
-          showIOSGuide(dns);
-        }
-      }, 400);
-    }
-  }, 250);
+function loadDevices(){
+  const sel = $("devSelect");
+  sel.innerHTML = "";
+  DEVICES.forEach(d=>{
+    const o = document.createElement("option");
+    o.value = d.id; o.textContent = d.name;
+    sel.appendChild(o);
+  });
+  sel.addEventListener("change", updateSensTable);
+  $("playStyle").addEventListener("change", updateSensTable);
 }
 
-function showIOSGuide(dns) {
-  const guide = document.createElement("div");
-  guide.style.cssText = "position:fixed;inset:0;background:rgba(10,0,20,0.95);backdrop-filter:blur(15px);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:500;padding:30px;";
-  guide.innerHTML = `
-    <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#00ff88,#00cc66);display:flex;align-items:center;justify-content:center;font-size:40px;margin-bottom:20px;box-shadow:0 0 40px rgba(0,255,136,0.6);">✅</div>
-    <h2 style="font-size:22px;font-weight:900;margin-bottom:8px;background:linear-gradient(90deg,#FF0040,#FF00FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;">ĐÃ TẢI PROFILE DNS</h2>
-    <p style="font-size:13px;color:rgba(255,180,220,0.7);margin-bottom:25px;text-align:center;">File <b style="color:#FF00FF;">X-LOCK-${dns.id}.mobileconfig</b> đã tải về</p>
-    <div style="width:100%;max-width:340px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,0,80,0.3);border-radius:14px;padding:16px;margin-bottom:20px;">
-      <div style="font-size:11px;color:#FF00FF;font-weight:800;letter-spacing:1.5px;margin-bottom:12px;">📱 HƯỚNG DẪN:</div>
-      <ol style="font-size:12px;color:rgba(255,255,255,0.85);padding-left:20px;line-height:1.9;">
-        <li>Mở <b>Settings (Cài đặt)</b></li>
-        <li>Vào <b>General → VPN & Device Management</b></li>
-        <li>Nhấn <b>Profile Downloaded</b></li>
-        <li>Nhấn <b>Install</b> → nhập mật khẩu</li>
-        <li>Kiểm tra tại <b>Settings → General → About → DNS</b></li>
-      </ol>
-    </div>
-    <button onclick="this.parentElement.remove()" style="padding:14px 40px;border:none;border-radius:12px;background:linear-gradient(90deg,#FF0040,#9B30FF);color:#fff;font-size:14px;font-weight:800;letter-spacing:1px;cursor:pointer;box-shadow:0 8px 30px rgba(255,0,80,0.5);">ĐÃ HIỂU</button>`;
-  document.body.appendChild(guide);
+function updateSensTable(){
+  const dev = $("devSelect").value || "iphone11";
+  const style = $("playStyle").value || "tb";
+  const vals = (SENS_MAP[dev] && SENS_MAP[dev][style]) || SENS_MAP.iphone11.tb;
+  const tbody = $("sensTable").querySelector("tbody");
+  tbody.innerHTML = SENS_LABELS.map((lbl, i)=>
+    '<tr><td>' + lbl + '</td><td>' + vals[i] + (i<5?"%":"px") + '</td></tr>'
+  ).join("");
 }
 
-/* ===================== MODAL ===================== */
-function openAimModal(dnsId) {
-  SoundFX.unlock(); SoundFX.playClick();
-  const dns = DNS_LIST.find(d => d.id === dnsId);
-  if (!dns || !dns.aim) return;
-  state.editingAimDNS = dnsId;
-  document.getElementById("aimModalSub").textContent = `DNS: ${dns.name}`;
-  document.getElementById("aimSensi").value = dns.aim.sensi;
-  document.getElementById("aimRange").value = dns.aim.range;
-  document.getElementById("aimHead").value = dns.aim.head;
-  document.getElementById("aimDrag").value = dns.aim.drag;
-  document.getElementById("aimSmooth").value = dns.aim.smooth;
-  document.getElementById("aimTrigger").value = dns.aim.trigger;
-  document.getElementById("aimServer").value = dns.aim.server;
-  document.getElementById("aimModal").classList.add("show");
-}
-function saveAimConfig() {
-  const dns = DNS_LIST.find(d => d.id === state.editingAimDNS);
-  if (!dns) return;
-  dns.aim = { sensi: document.getElementById("aimSensi").value, range: document.getElementById("aimRange").value,
-    head: document.getElementById("aimHead").value, drag: document.getElementById("aimDrag").value,
-    smooth: document.getElementById("aimSmooth").value, trigger: document.getElementById("aimTrigger").value,
-    server: document.getElementById("aimServer").value };
-  saveDNSState(); closeModal(); renderDNSList();
-  showToast(`💾 Đã lưu AIM cho ${dns.name}`, "success");
-}
-function openDnsModal(dnsId) {
-  SoundFX.unlock(); SoundFX.playClick();
-  const dns = DNS_LIST.find(d => d.id === dnsId);
-  if (!dns || !dns.dns) return;
-  state.editingDnsDNS = dnsId;
-  document.getElementById("dnsModalSub").textContent = `DNS: ${dns.name}`;
-  document.getElementById("dnsPrimary").value = dns.dns.primary;
-  document.getElementById("dnsSecondary").value = dns.dns.secondary;
-  document.getElementById("dnsPrimaryV6").value = dns.dns.primaryV6;
-  document.getElementById("dnsProtocol").value = dns.dns.protocol;
-  document.getElementById("dnsDohUrl").value = dns.dns.dohUrl;
-  document.getElementById("dnsPort").value = dns.dns.port;
-  document.getElementById("dnsTimeout").value = dns.dns.timeout;
-  document.getElementById("dnsDisplayName").value = dns.dns.displayName;
-  document.getElementById("dnsNote").value = dns.dns.note;
-  document.getElementById("dnsModal").classList.add("show");
-}
-function saveDNSConfig() {
-  const dns = DNS_LIST.find(d => d.id === state.editingDnsDNS);
-  if (!dns) return;
-  dns.dns = { primary: document.getElementById("dnsPrimary").value, secondary: document.getElementById("dnsSecondary").value,
-    primaryV6: document.getElementById("dnsPrimaryV6").value, protocol: document.getElementById("dnsProtocol").value,
-    dohUrl: document.getElementById("dnsDohUrl").value, port: document.getElementById("dnsPort").value,
-    timeout: document.getElementById("dnsTimeout").value, displayName: document.getElementById("dnsDisplayName").value,
-    note: document.getElementById("dnsNote").value };
-  dns.sub = dns.dns.note;
-  saveDNSState(); closeModal(); renderDNSList();
-  showToast(`💾 Đã lưu DNS cho ${dns.name}`, "success");
-}
-function closeModal() {
-  SoundFX.playClick();
-  document.querySelectorAll(".modal-overlay").forEach(m => m.classList.remove("show"));
+async function saveSensitivity(){
+  const dev = $("devSelect").value;
+  const style = $("playStyle").value;
+  const vals = SENS_MAP[dev][style];
+  const res = await api("/api/sensitivity", {
+    method:"POST",
+    body: JSON.stringify({
+      key: currentSession.key,
+      deviceId: DEVICE_ID,
+      device: dev, style, values: vals
+    })
+  });
+  if (res.ok) toast("✅ Đã lưu cấu hình vào Server");
+  else toast("❌ Lỗi lưu: " + (res.error||""));
 }
 
-/* ===================== ACTIVATE FF ===================== */
-async function activateFF(mode) {
-  SoundFX.unlock();
-  if (state.appClosed) return;
+/* ===================================================
+   MỤC 3: FUNCTIONS
+=================================================== */
+const FUNC_STATE = {nhetam:false, bamtam:false, khoatam:false, khoavung:false};
 
-  const modeName = mode === "normal" ? "⚡ FF THƯỜNG" : "🔥 FF MAXX";
-  const dns = DNS_LIST.find(d => d.name === state.selectedDNS);
-
-  if (!dns) { showToast("⚠️ Chưa chọn DNS", "error"); return; }
-  if (dns.aim && !dns.installed) {
-    showToast("📥 Hãy cài DNS vào máy trước!", "error");
-    SoundFX.playError();
-    return;
-  }
-
-  SoundFX.playFF();
-
-  const btnN = document.getElementById("btnFFNormal");
-  const btnM = document.getElementById("btnFFMaxx");
-  if (btnN) btnN.disabled = true;
-  if (btnM) btnM.disabled = true;
-
-  const overlay = document.getElementById("loadingOverlay");
-  const bar = document.getElementById("loadingBar");
-  const text = document.getElementById("loadingText");
-  overlay.style.display = "flex";
-  bar.style.width = "0%";
-  text.textContent = "📡 Đang tải cấu hình AIMBOT...";
-
-  const config = await fetchAimbotConfig();
-
-  let progress = 0;
-  const interval = setInterval(() => {
-    progress += Math.random() * 20 + 10;
-    if (progress >= 100) progress = 100;
-    bar.style.width = progress + "%";
-
-    if (progress >= 25 && progress < 55) text.textContent = "🎯 Đang áp dụng AIM...";
-    if (progress >= 55 && progress < 85) text.textContent = `🔥 Đang bật ${modeName}...`;
-    if (progress >= 85) text.textContent = "✅ Hoàn tất!";
-
-    if (progress >= 100) {
-      clearInterval(interval);
-      setTimeout(() => {
-        overlay.style.display = "none";
-        if (btnN) btnN.disabled = false;
-        if (btnM) btnM.disabled = false;
-
-        if (config) {
-          applyAimbotConfig(dns);
-          saveDNSState();
-          renderDNSList();
-
-          const info = config.config_info || {};
-          const ab = config.aimbot || {};
-          showToast(
-            `${modeName} ✅ ${info.name || "AIMBOT"} v${info.version || "?"} | Strength: ${ab.aim_strength || "?"}`,
-            "success"
-          );
-          console.log(`🔥 ${modeName} ACTIVATED`, config);
-        } else {
-          showToast(`${modeName} đã bật (offline) - DNS: ${dns.name}`, "");
-        }
-      }, 400);
-    }
-  }, 200);
-}
-
-/* ===================== SAVE / LOAD STATE ===================== */
-function saveDNSState() { localStorage.setItem("xlock_dns_list", JSON.stringify(DNS_LIST)); }
-function loadDNSState() {
-  const saved = localStorage.getItem("xlock_dns_list");
-  if (saved) {
-    try {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.length === DNS_LIST.length) DNS_LIST = parsed;
-    } catch(e) {}
-  }
-}
-
-/* ===================== INIT ===================== */
-window.addEventListener("DOMContentLoaded", () => {
-  updateSoundToggleUI();
-
-  loadDNSState();
-  renderDNSList();
-
-  document.body.addEventListener("touchstart", () => SoundFX.unlock(), { once: true });
-  document.body.addEventListener("click", () => SoundFX.unlock(), { once: true });
-
-  const cachedConfig = localStorage.getItem("xlock_aimbot_config");
-  if (cachedConfig) {
-    try { AIMBOT_CONFIG = JSON.parse(cachedConfig); } catch(e) {}
-  }
-  fetchAimbotConfig().catch(() => {});
-
-  const savedKey = localStorage.getItem("xlock_current_key");
-  const savedExpiry = localStorage.getItem("xlock_expiry");
-
-  if (savedKey && KEY_DATABASE[savedKey]) {
-    const keyHash = hashKey(savedKey);
-    const usedHash = localStorage.getItem("xlock_key_" + keyHash);
-    if (usedHash !== DEVICE_ID) {
-      localStorage.removeItem("xlock_current_key");
-      localStorage.removeItem("xlock_key_hash");
-      return;
-    }
-    const keyData = KEY_DATABASE[savedKey];
-    const expiry = savedExpiry ? parseInt(savedExpiry) : null;
-    if (keyData.duration === null || (expiry && expiry > Date.now())) {
-      state.activated = true;
-      state.currentKey = savedKey;
-      state.keyType = keyData;
-      state.expiryTime = keyData.duration === null ? null : expiry;
-      document.getElementById("authScreen").style.display = "none";
-      document.getElementById("mainScreen").style.display = "flex";
-      document.getElementById("keyTypeLabel").textContent = keyData.label;
-      renderDNSList(); startTimers();
-    } else {
-      localStorage.removeItem("xlock_current_key");
-      localStorage.removeItem("xlock_expiry");
-      state.appClosed = true;
-      document.getElementById("authScreen").style.display = "none";
-      document.getElementById("expiredScreen").classList.add("show");
-    }
-  }
-
-  document.getElementById("keyInput").addEventListener("keydown", e => {
-    if (e.key === "Enter") validateKey();
+document.querySelectorAll('.switch[data-fn]').forEach(sw=>{
+  sw.addEventListener("click", ()=>{
+    sw.classList.toggle("on");
+    FUNC_STATE[sw.dataset.fn] = sw.classList.contains("on");
   });
 });
-</script>
 
+async function loadFunctions(){
+  const res = await api("/api/functions?key=" + encodeURIComponent(currentSession.key)
+    + "&deviceId=" + DEVICE_ID);
+  if (res.ok && res.functions){
+    Object.assign(FUNC_STATE, res.functions);
+    document.querySelectorAll('.switch[data-fn]').forEach(sw=>{
+      if (FUNC_STATE[sw.dataset.fn]) sw.classList.add("on");
+      else sw.classList.remove("on");
+    });
+  }
+}
+
+async function syncFunctions(){
+  const res = await api("/api/functions", {
+    method:"POST",
+    body: JSON.stringify({
+      key: currentSession.key,
+      deviceId: DEVICE_ID,
+      functions: FUNC_STATE
+    })
+  });
+  if (res.ok) toast("✅ Đã đồng bộ lên Server");
+  else toast("❌ Lỗi: " + (res.error||""));
+}
+
+/* ===================================================
+   INIT
+=================================================== */
+(async function init(){
+  const saved = localStorage.getItem("sl_session");
+  if (saved){
+    try{
+      const s = JSON.parse(saved);
+      if (s.expiresAt > Date.now()){
+        const res = await api("/api/verify", {
+          method:"POST",
+          body: JSON.stringify({key:s.key, deviceId:DEVICE_ID})
+        });
+        if (res.ok){
+          currentSession = s;
+          enterMain();
+          return;
+        }
+      }
+      localStorage.removeItem("sl_session");
+    }catch(e){}
+  }
+})();
+</script>
 </body>
 </html>
