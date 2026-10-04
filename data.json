@@ -1,0 +1,117 @@
+{
+  "version": "2.1.0",
+  "updated": "2026-10-04",
+  "author": "SERENITY",
+
+  "keys": [
+    {
+      "key": "SERENITY-A1B2-C3D4-FF",
+      "type": "VIP",
+      "days": 365,
+      "device": null,
+      "note": "Key VIP 1 năm"
+    },
+    {
+      "key": "SERENITY-E5F6-G7H8-FF",
+      "type": "PREMIUM",
+      "days": 180,
+      "device": null,
+      "note": "Key Premium 6 tháng"
+    },
+    {
+      "key": "SERENITY-I9J0-K1L2-FF",
+      "type": "STANDARD",
+      "days": 90,
+      "device": null,
+      "note": "Key Standard 3 tháng"
+    },
+    {
+      "key": "SERENITY-M3N4-O5P6-FF",
+      "type": "TRIAL",
+      "days": 7,
+      "device": null,
+      "note": "Key dùng thử 7 ngày"
+    },
+    {
+      "key": "SERENITY-Q7R8-S9T0-FF",
+      "type": "VIP",
+      "days": 365,
+      "device": null,
+      "note": "Key VIP dự phòng"
+    },
+    {
+      "key": "SERENITY-U1V2-W3X4-FF",
+      "type": "PREMIUM",
+      "days": 180,
+      "device": null,
+      "note": "Key Premium dự phòng"
+    }
+  ],
+
+  "aim": {
+    "strength": 92,
+    "fov": 95,
+    "range": 150,
+    "smooth": 85,
+    "head_lock": true,
+    "neck_lock": true,
+    "chest_lock": false,
+    "recoil_control": 88,
+    "drag_speed": 1.15,
+    "drag_curve": "ease-out",
+    "prediction": 0.75,
+    "snap_radius": 42,
+    "fov_circle": 120,
+    "aim_key": "auto",
+    "ignore_knock": true,
+    "ignore_smoke": true
+  },
+
+  "dns": {
+    "primary": "1.1.1.1",
+    "secondary": "1.0.0.1",
+    "name_primary": "SERENITY-DNS-Chinh",
+    "name_secondary": "SERENITY-DNS-Phu",
+    "protocol": "HTTPS",
+    "port": 443,
+    "fallback": ["8.8.8.8", "8.8.4.4"]
+  },
+
+  "sensitivity": {
+    "iphone_8_plus": {
+      "value": 0.85,
+      "label": "iPhone 8 Plus",
+      "dpi": 326,
+      "screen": "5.5 inch"
+    },
+    "iphone_11": {
+      "value": 0.95,
+      "label": "iPhone 11",
+      "dpi": 326,
+      "screen": "6.1 inch"
+    },
+    "iphone_12_plus": {
+      "value": 1.05,
+      "label": "iPhone 12+",
+      "dpi": 460,
+      "screen": "6.1 inch+"
+    }
+  },
+
+  "features_default": {
+    "nhetam": false,
+    "bamtam": false,
+    "bamdau": false,
+    "khoatam": false,
+    "khoavung": false
+  },
+
+  "limits": {
+    "max_devices_per_key": 1,
+    "loading_seconds": 20,
+    "check_interval": 60,
+    "grace_period_hours": 0
+  },
+
+  "notice": "SERENITY LOCK • Premium Access System"
+}
