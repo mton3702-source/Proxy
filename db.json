@@ -1,1 +1,202 @@
-{"keys":{"SERENITY-AAAA-BBBB-FF":{"type":"Tuần","user":"User A","durationDays":7,"deviceId":null,"deviceName":null,"activatedAt":null,"expiresAt":null,"used":false},"SERENITY-CCCC-DDDD-FF":{"type":"Tháng","user":"User B","durationDays":30,"deviceId":null,"deviceName":null,"activatedAt":null,"expiresAt":null,"used":false},"SERENITY-EEEE-FFFF-FF":{"type":"Vĩnh viễn","user":"User C","durationDays":36500,"deviceId":null,"deviceName":null,"activatedAt":null,"expiresAt":null,"used":false},"SERENITY-GGGG-HHHH-FF":{"type":"Tuần","user":"User D","durationDays":7,"deviceId":null,"deviceName":null,"activatedAt":null,"expiresAt":null,"used":false},"SERENITY-IIII-JJJJ-FF":{"type":"Tháng","user":"User E","durationDays":30,"deviceId":null,"deviceName":null,"activatedAt":null,"expiresAt":null,"used":false},"SERENITY-KKKK-LLLL-FF":{"type":"Vĩnh viễn","user":"User F","durationDays":36500,"deviceId":null,"deviceName":null,"activatedAt":null,"expiresAt":null,"used":false},"SERENITY-MMMM-NNNN-FF":{"type":"Tuần","user":"User G","durationDays":7,"deviceId":null,"deviceName":null,"activatedAt":null,"expiresAt":null,"used":false},"SERENITY-OOOO-PPPP-FF":{"type":"Tháng","user":"User H","durationDays":30,"deviceId":null,"deviceName":null,"activatedAt":null,"expiresAt":null,"used":false},"SERENITY-QQQQ-RRRR-FF":{"type":"Vĩnh viễn","user":"User I","durationDays":36500,"deviceId":null,"deviceName":null,"activatedAt":null,"expiresAt":null,"used":false},"SERENITY-SSSS-TTTT-FF":{"type":"Tuần","user":"User J","durationDays":7,"deviceId":null,"deviceName":null,"activatedAt":null,"expiresAt":null,"used":false}},"devices":{},"sensitivities":{},"functions":{},"logs":[]}
+{
+  "app": {
+    "name": "SERENITY LOCK",
+    "version": "1.2.0",
+    "status": "active",
+    "theme": {
+      "primary": "#ffd700",
+      "secondary": "#b8860b",
+      "accent": "#ffed4a",
+      "background": "#050505",
+      "cardBg": "#121212",
+      "text": "#ffffff",
+      "border": "rgba(255, 215, 0, 0.3)"
+    }
+  },
+
+  "keySystem": {
+    "pattern": "^SERENITY-[A-Z0-9]{4}-[A-Z0-9]{4}-FF$",
+    "loadingSeconds": 20,
+    "oneDeviceOnly": true,
+    "types": {
+      "WK": {
+        "name": "TUẦN",
+        "durationHours": 168,
+        "durationDays": 7
+      },
+      "MN": {
+        "name": "THÁNG",
+        "durationHours": 720,
+        "durationDays": 30
+      },
+      "PM": {
+        "name": "VĨNH VIỄN",
+        "durationHours": 87600,
+        "durationDays": 3650
+      }
+    }
+  },
+
+  "features": {
+    "nhe_tam": {
+      "id": "nhe_tam",
+      "name": "NHẸ TÂM",
+      "icon": "🎯",
+      "description": "Giảm rung • Khử giật • Mượt di chuyển",
+      "enabled": true,
+      "smoothing": {
+        "lookSmooth": 0.72,
+        "aimSmooth": 0.65,
+        "scopeSmooth": 0.78,
+        "transitionSpeed": 0.42
+      },
+      "recoilControl": {
+        "enabled": true,
+        "verticalCompensate": 0.38,
+        "horizontalCompensate": 0.25,
+        "reduction": 0.45,
+        "returnSpeed": 0.55
+      },
+      "shakeReduction": {
+        "movement": 0.68,
+        "jump": 0.75,
+        "land": 0.82,
+        "hit": 0.50
+      },
+      "sensitivityMultiplier": {
+        "normal": 0.92,
+        "aim": 0.85,
+        "scope": 0.78
+      }
+    },
+
+    "bam_tam": {
+      "id": "bam_tam",
+      "name": "BÁM TÂM",
+      "icon": "🎮",
+      "description": "Tự theo dõi mục tiêu mượt mà",
+      "enabled": true,
+      "stickiness": 0.55,
+      "reconnectSpeed": 0.45,
+      "followStrength": 0.60,
+      "smoothTrack": true
+    },
+
+    "khoa_tam": {
+      "id": "khoa_tam",
+      "name": "KHÓA TÂM",
+      "icon": "🔒",
+      "description": "Khóa chặt mục tiêu trong tầm ngắm",
+      "enabled": true,
+      "lockStrength": 0.85,
+      "breakAngle": 8.0,
+      "maxDistance": 120.0,
+      "fov": 45.0,
+      "requireLineOfSight": true
+    },
+
+    "khoa_dau": {
+      "id": "khoa_dau",
+      "name": "KHÓA VÙNG ĐẦU",
+      "icon": "👤",
+      "description": "Tập trung khóa đầu đối phương",
+      "enabled": true,
+      "zoneRadius": 0.18,
+      "pullStrength": 0.70,
+      "onlyWhenAiming": true,
+      "headSnapThreshold": 0.35,
+      "verticalBias": 0.05
+    }
+  },
+
+  "aimEngine": {
+    "version": "1.2.0",
+    "detection": {
+      "maxRange": 120.0,
+      "fovAngle": 45.0,
+      "updateRate": 60,
+      "ignoreTeammates": true,
+      "ignoreDead": true,
+      "priority": "angleToCrosshair"
+    },
+    "tracking": {
+      "strength": 0.75,
+      "smoothing": 0.40,
+      "maxTurnSpeed": 240.0,
+      "minTurnSpeed": 5.0,
+      "leadAmount": 0.15
+    }
+  },
+
+  "dns": {
+    "primary": "8.8.8.8",
+    "secondary": "8.8.4.4",
+    "serverURL": "https://dns.google/dns-query",
+    "protocol": "HTTPS",
+    "mode": "managed"
+  },
+
+  "sensitivity": {
+    "iPhone 8 Plus": {
+      "lookAround": 100,
+      "redDot": 96,
+      "scope2x": 92,
+      "scope4x": 92,
+      "scope8x": 78,
+      "sniper": 48,
+      "fireButtonSize": 45,
+      "cursorSpeed": 14
+    },
+    "iPhone 11": {
+      "lookAround": 98,
+      "redDot": 94,
+      "scope2x": 90,
+      "scope4x": 88,
+      "scope8x": 76,
+      "sniper": 46,
+      "cursorSpeed": 13
+    },
+    "iPhone 12": {
+      "lookAround": 99,
+      "redDot": 95,
+      "scope2x": 91,
+      "scope4x": 89,
+      "scope8x": 77,
+      "sniper": 47,
+      "cursorSpeed": 13
+    },
+    "iPhone 13": {
+      "lookAround": 100,
+      "redDot": 96,
+      "scope2x": 92,
+      "scope4x": 90,
+      "scope8x": 78,
+      "sniper": 48,
+      "cursorSpeed": 14
+    },
+    "iPhone 14+": {
+      "lookAround": 102,
+      "redDot": 98,
+      "scope2x": 94,
+      "scope4x": 92,
+      "scope8x": 80,
+      "sniper": 50,
+      "cursorSpeed": 15
+    }
+  },
+
+  "mobileconfig": {
+    "fileName": "SERENITY_Config.mobileconfig",
+    "identifier": "com.serenity.lock",
+    "organization": "SERENITY LOCK",
+    "payloadVersion": 1,
+    "removalDisallowed": false
+  },
+
+  "server": {
+    "apiBase": "https://mton3702-source.github.io/Proxy/",
+    "configPath": "serenity-lock.json"
+  },
+
+  "timestamp": "2026-10-04T12:52:00+07:00"
+}
