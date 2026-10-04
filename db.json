@@ -142,25 +142,38 @@
         "updateRate": 60,
         "ignoreTeammates": true,
         "ignoreDeadTargets": true,
-        "targetPriority": "angleToCrosshair",
-        "headZoneRadius": 0.18
+        "targetPriority": "headFirst",
+        "headZoneRadius": 0.18,
+        "bodyZoneRadius": 0.35
       },
       "tracking": {
-        "strength": 0.75,
-        "smoothing": 0.40,
-        "maxTurnSpeed": 240.0,
-        "minTurnSpeed": 5.0,
+        "strength": 0.85,
+        "smoothing": 0.35,
+        "maxTurnSpeed": 260.0,
+        "minTurnSpeed": 3.0,
         "leadTarget": {
           "enabled": true,
-          "amount": 0.15
+          "amount": 0.18
         },
         "verticalAdjust": {
           "preferHead": true,
-          "bias": 0.05,
-          "headSnapThreshold": 0.35
+          "bias": 0.12,
+          "headSnapThreshold": 0.25,
+          "headOffset": -0.08
         }
+      },
+      "headLock": {
+        "enabled": true,
+        "mode": "strong",
+        "pullStrength": 0.90,
+        "snapSpeed": 0.75,
+        "onlyWhenAiming": false,
+        "reconnectOnMiss": true,
+        "reconnectDelay": 0.1,
+        "stickinessDuration": 1.5
       }
     },
+
     "nhe_tam": {
       "enabled": true,
       "smoothing": {
@@ -183,17 +196,35 @@
         "hit": 0.50
       }
     },
+
     "bam_tam": {
       "enabled": true,
-      "stickiness": 0.55,
-      "followStrength": 0.60
+      "stickiness": 0.65,
+      "followStrength": 0.70,
+      "reconnectSpeed": 0.55
     },
+
+    "bam_dau": {
+      "enabled": true,
+      "priority": "highest",
+      "zone": "head",
+      "pullStrength": 0.90,
+      "snapImmediately": true,
+      "keepOnTarget": true,
+      "followMovement": true,
+      "breakOnWall": true,
+      "minDistance": 5.0,
+      "maxDistance": 100.0,
+      "fovHead": 50.0
+    },
+
     "khoa_tam": {
       "enabled": true,
       "lockStrength": 0.85,
       "fov": 45.0,
       "maxRange": 120.0
     },
+
     "khoa_vung_dau": {
       "enabled": true,
       "zoneRadius": 0.18,
