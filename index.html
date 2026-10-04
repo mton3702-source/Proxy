@@ -145,7 +145,7 @@ td:last-child{color:var(--gold);font-weight:700;text-align:right}
     <label>DNS phụ</label>
     <input id="mcDns2" placeholder="1.0.0.1" value="1.0.0.1">
     <label>URL cấu hình (tuỳ chọn)</label>
-    <input id="mcUrl" placeholder="https://...">
+    <input id="mcUrl" placeholder="https://sever-lock.onrender.com">
     <label>Chức năng nhúng</label>
     <div class="chk" data-fn="nhetam"><div class="box"></div>Nhẹ Tâm</div>
     <div class="chk" data-fn="bamtam"><div class="box"></div>Bám Tâm</div>
@@ -373,7 +373,7 @@ function logout(){
 }
 
 /* ===================================================
-   MỤC 1: MOBILECONFIG — FIXED
+   MỤC 1: MOBILECONFIG — FIXED FINAL
 =================================================== */
 document.querySelectorAll('.chk[data-fn]').forEach(el=>{
   el.addEventListener("click", ()=> el.classList.toggle("on"));
@@ -397,8 +397,10 @@ function esc(s){
     .replace(/"/g, "&quot;");
 }
 
+/* Tạo XML theo đúng chuẩn plist của Apple */
 function buildMobileConfigXML(){
-  const name = ($("mcName").value.trim() || "Serenity_Config").replace(/[^A-Za-z0-9_\-]/g,'_');
+  const rawName = $("mcName").value.trim() || "Serenity_Config";
+  const name = rawName.replace(/[^A-Za-z0-9_\-]/g,'_');
   const dns1 = $("mcDns1").value.trim() || "1.1.1.1";
   const dns2 = $("mcDns2").value.trim() || "1.0.0.1";
   const url  = $("mcUrl").value.trim();
@@ -410,94 +412,96 @@ function buildMobileConfigXML(){
   const safeUrl  = esc(url);
   const fnStr    = esc(fns.join(",") || "none");
 
-  /* Payload 1: DNS Settings */
+  /* ---------- Payload 1: DNS Settings ---------- */
   const dnsPayload =
-'    <dict>\n' +
-'      <key>PayloadType</key>\n' +
-'      <string>com.apple.dnsSettings.managed</string>\n' +
-'      <key>PayloadIdentifier</key>\n' +
-'      <string>com.serenity.dns.' + uuid() + '</string>\n' +
-'      <key>PayloadUUID</key>\n' +
-'      <string>' + uuid() + '</string>\n' +
-'      <key>PayloadVersion</key>\n' +
-'      <integer>1</integer>\n' +
-'      <key>PayloadDisplayName</key>\n' +
-'      <string>Serenity DNS</string>\n' +
-'      <key>DNSSettings</key>\n' +
-'      <dict>\n' +
-'        <key>DNSProtocol</key>\n' +
-'        <string>HTTPS</string>\n' +
-'        <key>ServerURL</key>\n' +
-'        <string>https://' + safeDns1 + '/dns-query</string>\n' +
-'        <key>ServerAddresses</key>\n' +
-'        <array>\n' +
-'          <string>' + safeDns1 + '</string>\n' +
-'          <string>' + safeDns2 + '</string>\n' +
-'        </array>\n' +
-'      </dict>\n' +
-'    </dict>';
+'        <dict>\n' +
+'            <key>PayloadType</key>\n' +
+'            <string>com.apple.dnsSettings.managed</string>\n' +
+'            <key>PayloadIdentifier</key>\n' +
+'            <string>com.serenity.dns.' + uuid() + '</string>\n' +
+'            <key>PayloadUUID</key>\n' +
+'            <string>' + uuid() + '</string>\n' +
+'            <key>PayloadVersion</key>\n' +
+'            <integer>1</integer>\n' +
+'            <key>PayloadDisplayName</key>\n' +
+'            <string>Serenity DNS</string>\n' +
+'            <key>DNSSettings</key>\n' +
+'            <dict>\n' +
+'                <key>DNSProtocol</key>\n' +
+'                <string>HTTPS</string>\n' +
+'                <key>ServerURL</key>\n' +
+'                <string>https://' + safeDns1 + '/dns-query</string>\n' +
+'                <key>ServerAddresses</key>\n' +
+'                <array>\n' +
+'                    <string>' + safeDns1 + '</string>\n' +
+'                    <string>' + safeDns2 + '</string>\n' +
+'                </array>\n' +
+'            </dict>\n' +
+'        </dict>';
 
-  /* Payload 2: Web Clip (chỉ khi URL bắt đầu bằng https) */
+  /* ---------- Payload 2: Web Clip (nếu có URL https) ---------- */
   let webPayload = "";
   if (url && /^https:\/\//i.test(url)){
     webPayload =
-',\n' +
-'    <dict>\n' +
-'      <key>PayloadType</key>\n' +
-'      <string>com.apple.webClip.managed</string>\n' +
-'      <key>PayloadIdentifier</key>\n' +
-'      <string>com.serenity.web.' + uuid() + '</string>\n' +
-'      <key>PayloadUUID</key>\n' +
-'      <string>' + uuid() + '</string>\n' +
-'      <key>PayloadVersion</key>\n' +
-'      <integer>1</integer>\n' +
-'      <key>PayloadDisplayName</key>\n' +
-'      <string>' + safeName + '</string>\n' +
-'      <key>URL</key>\n' +
-'      <string>' + safeUrl + '</string>\n' +
-'    </dict>';
+'        ,\n' +
+'        <dict>\n' +
+'            <key>PayloadType</key>\n' +
+'            <string>com.apple.webClip.managed</string>\n' +
+'            <key>PayloadIdentifier</key>\n' +
+'            <string>com.serenity.web.' + uuid() + '</string>\n' +
+'            <key>PayloadUUID</key>\n' +
+'            <string>' + uuid() + '</string>\n' +
+'            <key>PayloadVersion</key>\n' +
+'            <integer>1</integer>\n' +
+'            <key>PayloadDisplayName</key>\n' +
+'            <string>' + safeName + '</string>\n' +
+'            <key>URL</key>\n' +
+'            <string>' + safeUrl + '</string>\n' +
+'        </dict>';
   }
 
-  /* Payload 3: Functions */
+  /* ---------- Payload 3: Functions ---------- */
   const customPayload =
-',\n' +
-'    <dict>\n' +
-'      <key>PayloadType</key>\n' +
-'      <string>com.serenity.functions</string>\n' +
-'      <key>PayloadIdentifier</key>\n' +
-'      <string>com.serenity.fn.' + uuid() + '</string>\n' +
-'      <key>PayloadUUID</key>\n' +
-'      <string>' + uuid() + '</string>\n' +
-'      <key>PayloadVersion</key>\n' +
-'      <integer>1</integer>\n' +
-'      <key>PayloadDisplayName</key>\n' +
-'      <string>Serenity Functions</string>\n' +
-'      <key>Functions</key>\n' +
-'      <string>' + fnStr + '</string>\n' +
-'    </dict>';
+'        ,\n' +
+'        <dict>\n' +
+'            <key>PayloadType</key>\n' +
+'            <string>com.serenity.functions</string>\n' +
+'            <key>PayloadIdentifier</key>\n' +
+'            <string>com.serenity.fn.' + uuid() + '</string>\n' +
+'            <key>PayloadUUID</key>\n' +
+'            <string>' + uuid() + '</string>\n' +
+'            <key>PayloadVersion</key>\n' +
+'            <integer>1</integer>\n' +
+'            <key>PayloadDisplayName</key>\n' +
+'            <string>Serenity Functions</string>\n' +
+'            <key>Functions</key>\n' +
+'            <string>' + fnStr + '</string>\n' +
+'        </dict>';
 
-  /* XML hoàn chỉnh */
+  /* ---------- XML hoàn chỉnh ---------- */
   const xml =
 '<?xml version="1.0" encoding="UTF-8"?>\n' +
 '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n' +
 '<plist version="1.0">\n' +
 '<dict>\n' +
-'  <key>PayloadContent</key>\n' +
-'  <array>\n' +
+'    <key>PayloadContent</key>\n' +
+'    <array>\n' +
 dnsPayload + webPayload + customPayload + '\n' +
-'  </array>\n' +
-'  <key>PayloadDisplayName</key>\n' +
-'  <string>' + safeName + '</string>\n' +
-'  <key>PayloadIdentifier</key>\n' +
-'  <string>com.serenity.lock.' + uuid() + '</string>\n' +
-'  <key>PayloadUUID</key>\n' +
-'  <string>' + uuid() + '</string>\n' +
-'  <key>PayloadType</key>\n' +
-'  <string>Configuration</string>\n' +
-'  <key>PayloadVersion</key>\n' +
-'  <integer>1</integer>\n' +
-'  <key>PayloadRemovalDisallowed</key>\n' +
-'  <false/>\n' +
+'    </array>\n' +
+'    <key>PayloadDisplayName</key>\n' +
+'    <string>' + safeName + '</string>\n' +
+'    <key>PayloadIdentifier</key>\n' +
+'    <string>com.serenity.lock.' + uuid() + '</string>\n' +
+'    <key>PayloadUUID</key>\n' +
+'    <string>' + uuid() + '</string>\n' +
+'    <key>PayloadOrganization</key>\n' +
+'    <string>Serenity Lock</string>\n' +
+'    <key>PayloadType</key>\n' +
+'    <string>Configuration</string>\n' +
+'    <key>PayloadVersion</key>\n' +
+'    <integer>1</integer>\n' +
+'    <key>PayloadRemovalDisallowed</key>\n' +
+'    <false/>\n' +
 '</dict>\n' +
 '</plist>';
 
@@ -507,6 +511,10 @@ dnsPayload + webPayload + customPayload + '\n' +
 function createMobileConfig(){
   try {
     const result = buildMobileConfigXML();
+    console.log("=== MOBILECONFIG XML ===");
+    console.log(result.xml);
+    console.log("=== END ===");
+
     const blob = new Blob([result.xml], {type:"application/x-apple-aspen-config"});
     const blobUrl = URL.createObjectURL(blob);
 
@@ -533,12 +541,21 @@ function createMobileConfig(){
 function previewXML(){
   try {
     const result = buildMobileConfigXML();
-    // Tạo cửa sổ mới hiển thị XML
     const w = window.open("", "_blank");
     if (!w){ toast("⚠️ Safari chặn popup — cho phép đi"); return; }
-    w.document.write("<pre style='background:#000;color:#FFD700;padding:20px;font-size:11px;white-space:pre-wrap;word-break:break-all;'>" +
-      result.xml.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;") + "</pre>");
-    w.document.title = "XML Preview — " + result.name;
+    const safe = result.xml
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;");
+    w.document.write(
+      "<!DOCTYPE html><html><head><meta charset='UTF-8'>" +
+      "<title>XML Preview</title>" +
+      "<style>body{background:#000;color:#FFD700;font-family:monospace;padding:16px;font-size:11px;}" +
+      "pre{white-space:pre-wrap;word-break:break-all;}</style></head><body>" +
+      "<h2>XML PREVIEW — " + result.name + "</h2>" +
+      "<pre>" + safe + "</pre></body></html>"
+    );
+    w.document.close();
   } catch(err){
     toast("❌ Lỗi: " + err.message);
   }
