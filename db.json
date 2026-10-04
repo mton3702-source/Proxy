@@ -1,0 +1,31 @@
+{
+  "keys": {
+    "SERENITY-AAAA-BBBB-FF": {
+      "type": "Tuần",
+      "user": "User A",
+      "durationDays": 7,
+      "deviceId": null,
+      "deviceName": null,
+      "used": false
+    },
+    "SERENITY-CCCC-DDDD-FF": {
+      "type": "Tháng",
+      "user": "User B",
+      "durationDays": 30,
+      "deviceId": null,
+      "deviceName": null,
+      "used": false
+    },
+    "SERENITY-EEEE-FFFF-FF": {
+      "type": "Vĩnh viễn",
+      "user": "User C",
+      "durationDays": 36500,
+      "deviceId": null,
+      "deviceName": null,
+      "used": false
+    }
+  },
+  "devices": {},
+  "sensitivities": {},
+  "functions": {}
+}
