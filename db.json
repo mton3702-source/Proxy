@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "SERENITY LOCK",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "status": "active",
     "theme": {
       "primary": "#ffd700",
@@ -18,23 +18,34 @@
     "pattern": "^SERENITY-[A-Z0-9]{4}-[A-Z0-9]{4}-FF$",
     "loadingSeconds": 20,
     "oneDeviceOnly": true,
+    
     "types": {
-      "WK": {
-        "name": "TUẦN",
-        "durationHours": 168,
-        "durationDays": 7
-      },
-      "MN": {
-        "name": "THÁNG",
-        "durationHours": 720,
-        "durationDays": 30
-      },
-      "PM": {
-        "name": "VĨNH VIỄN",
-        "durationHours": 87600,
-        "durationDays": 3650
-      }
-    }
+      "WK": { "name": "TUẦN", "durationHours": 168, "durationDays": 7 },
+      "MN": { "name": "THÁNG", "durationHours": 720, "durationDays": 30 },
+      "PM": { "name": "VĨNH VIỄN", "durationHours": 87600, "durationDays": 3650 }
+    },
+
+    "validKeys": {
+      "SERENITY-WK1A-2B3C-FF": { "type": "WK", "user": "Sếp 1", "note": "Key Tuần 1" },
+      "SERENITY-WK2D-4E5F-FF": { "type": "WK", "user": "Sếp 2", "note": "Key Tuần 2" },
+      "SERENITY-WK3G-6H7I-FF": { "type": "WK", "user": "Sếp 3", "note": "Key Tuần 3" },
+      "SERENITY-WK4J-8K9L-FF": { "type": "WK", "user": "Sếp 4", "note": "Key Tuần 4" },
+      "SERENITY-WK5M-0N1O-FF": { "type": "WK", "user": "Sếp 5", "note": "Key Tuần 5" },
+
+      "SERENITY-MN1P-2Q3R-FF": { "type": "MN", "user": "Sếp 1", "note": "Key Tháng 1" },
+      "SERENITY-MN2S-4T5U-FF": { "type": "MN", "user": "Sếp 2", "note": "Key Tháng 2" },
+      "SERENITY-MN3V-6W7X-FF": { "type": "MN", "user": "Sếp 3", "note": "Key Tháng 3" },
+      "SERENITY-MN4Y-8Z9A-FF": { "type": "MN", "user": "Sếp 4", "note": "Key Tháng 4" },
+      "SERENITY-MN5B-0C1D-FF": { "type": "MN", "user": "Sếp 5", "note": "Key Tháng 5" },
+
+      "SERENITY-PM1E-2F3G-FF": { "type": "PM", "user": "Sếp 1", "note": "Key Vĩnh Viễn 1" },
+      "SERENITY-PM2H-4I5J-FF": { "type": "PM", "user": "Sếp 2", "note": "Key Vĩnh Viễn 2" },
+      "SERENITY-PM3K-6L7M-FF": { "type": "PM", "user": "Sếp 3", "note": "Key Vĩnh Viễn 3" },
+      "SERENITY-PM4N-8O9P-FF": { "type": "PM", "user": "Sếp 4", "note": "Key Vĩnh Viễn 4" },
+      "SERENITY-PM5Q-0R1S-FF": { "type": "PM", "user": "Sếp 5", "note": "Key Vĩnh Viễn 5" }
+    },
+
+    "issuedKeys": {}
   },
 
   "features": {
@@ -44,32 +55,11 @@
       "icon": "🎯",
       "description": "Giảm rung • Khử giật • Mượt di chuyển",
       "enabled": true,
-      "smoothing": {
-        "lookSmooth": 0.72,
-        "aimSmooth": 0.65,
-        "scopeSmooth": 0.78,
-        "transitionSpeed": 0.42
-      },
-      "recoilControl": {
-        "enabled": true,
-        "verticalCompensate": 0.38,
-        "horizontalCompensate": 0.25,
-        "reduction": 0.45,
-        "returnSpeed": 0.55
-      },
-      "shakeReduction": {
-        "movement": 0.68,
-        "jump": 0.75,
-        "land": 0.82,
-        "hit": 0.50
-      },
-      "sensitivityMultiplier": {
-        "normal": 0.92,
-        "aim": 0.85,
-        "scope": 0.78
-      }
+      "smoothing": { "lookSmooth": 0.72, "aimSmooth": 0.65, "scopeSmooth": 0.78, "transitionSpeed": 0.42 },
+      "recoilControl": { "enabled": true, "verticalCompensate": 0.38, "horizontalCompensate": 0.25, "reduction": 0.45, "returnSpeed": 0.55 },
+      "shakeReduction": { "movement": 0.68, "jump": 0.75, "land": 0.82, "hit": 0.50 },
+      "sensitivityMultiplier": { "normal": 0.92, "aim": 0.85, "scope": 0.78 }
     },
-
     "bam_tam": {
       "id": "bam_tam",
       "name": "BÁM TÂM",
@@ -81,7 +71,6 @@
       "followStrength": 0.60,
       "smoothTrack": true
     },
-
     "khoa_tam": {
       "id": "khoa_tam",
       "name": "KHÓA TÂM",
@@ -94,7 +83,6 @@
       "fov": 45.0,
       "requireLineOfSight": true
     },
-
     "khoa_dau": {
       "id": "khoa_dau",
       "name": "KHÓA VÙNG ĐẦU",
@@ -111,21 +99,8 @@
 
   "aimEngine": {
     "version": "1.2.0",
-    "detection": {
-      "maxRange": 120.0,
-      "fovAngle": 45.0,
-      "updateRate": 60,
-      "ignoreTeammates": true,
-      "ignoreDead": true,
-      "priority": "angleToCrosshair"
-    },
-    "tracking": {
-      "strength": 0.75,
-      "smoothing": 0.40,
-      "maxTurnSpeed": 240.0,
-      "minTurnSpeed": 5.0,
-      "leadAmount": 0.15
-    }
+    "detection": { "maxRange": 120.0, "fovAngle": 45.0, "updateRate": 60, "ignoreTeammates": true, "ignoreDead": true, "priority": "angleToCrosshair" },
+    "tracking": { "strength": 0.75, "smoothing": 0.40, "maxTurnSpeed": 240.0, "minTurnSpeed": 5.0, "leadAmount": 0.15 }
   },
 
   "dns": {
@@ -137,52 +112,11 @@
   },
 
   "sensitivity": {
-    "iPhone 8 Plus": {
-      "lookAround": 100,
-      "redDot": 96,
-      "scope2x": 92,
-      "scope4x": 92,
-      "scope8x": 78,
-      "sniper": 48,
-      "fireButtonSize": 45,
-      "cursorSpeed": 14
-    },
-    "iPhone 11": {
-      "lookAround": 98,
-      "redDot": 94,
-      "scope2x": 90,
-      "scope4x": 88,
-      "scope8x": 76,
-      "sniper": 46,
-      "cursorSpeed": 13
-    },
-    "iPhone 12": {
-      "lookAround": 99,
-      "redDot": 95,
-      "scope2x": 91,
-      "scope4x": 89,
-      "scope8x": 77,
-      "sniper": 47,
-      "cursorSpeed": 13
-    },
-    "iPhone 13": {
-      "lookAround": 100,
-      "redDot": 96,
-      "scope2x": 92,
-      "scope4x": 90,
-      "scope8x": 78,
-      "sniper": 48,
-      "cursorSpeed": 14
-    },
-    "iPhone 14+": {
-      "lookAround": 102,
-      "redDot": 98,
-      "scope2x": 94,
-      "scope4x": 92,
-      "scope8x": 80,
-      "sniper": 50,
-      "cursorSpeed": 15
-    }
+    "iPhone 8 Plus": { "lookAround": 100, "redDot": 96, "scope2x": 92, "scope4x": 92, "scope8x": 78, "sniper": 48, "fireButtonSize": 45, "cursorSpeed": 14 },
+    "iPhone 11": { "lookAround": 98, "redDot": 94, "scope2x": 90, "scope4x": 88, "scope8x": 76, "sniper": 46, "cursorSpeed": 13 },
+    "iPhone 12": { "lookAround": 99, "redDot": 95, "scope2x": 91, "scope4x": 89, "scope8x": 77, "sniper": 47, "cursorSpeed": 13 },
+    "iPhone 13": { "lookAround": 100, "redDot": 96, "scope2x": 92, "scope4x": 90, "scope8x": 78, "sniper": 48, "cursorSpeed": 14 },
+    "iPhone 14+": { "lookAround": 102, "redDot": 98, "scope2x": 94, "scope4x": 92, "scope8x": 80, "sniper": 50, "cursorSpeed": 15 }
   },
 
   "mobileconfig": {
@@ -198,5 +132,5 @@
     "configPath": "serenity-lock.json"
   },
 
-  "timestamp": "2026-10-04T12:52:00+07:00"
+  "timestamp": "2026-10-04T12:56:00+07:00"
 }
