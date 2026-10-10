@@ -1,6 +1,41 @@
 {
-  "version": "1.0",
-  "updated_at": "2026-10-10T00:00:00.000Z",
+  "version": "1.1",
+  "updated_at": "2026-10-11T00:30:00.000Z",
+  "global_settings": {
+    "aim": {
+      "enabled": true,
+      "version": "2.0",
+      "aim_strength": 85,
+      "aim_smooth": 15,
+      "aim_distance": 100,
+      "aim_part": "head",
+      "aim_auto_fire": false,
+      "aim_delay_ms": 50,
+      "fov": 60,
+      "max_distance": 150,
+      "bone_head": true,
+      "bone_chest": false,
+      "bone_hips": false,
+      "visible_check": true,
+      "smooth_mode": "exponential",
+      "sensitivity_x": 1.2,
+      "sensitivity_y": 1.1,
+      "aim_lock_on_shoot": true,
+      "aim_release_on_enemy_lost": false,
+      "prediction_factor": 0.25,
+      "fps_mode": "120",
+      "auto_update": true
+    },
+    "dns": {
+      "name": "UN LOCK — Garena FF",
+      "primary_dns": "185.228.168.168",
+      "secondary_dns": "1.1.1.1",
+      "garena_api_url": "https://ms.garena.com",
+      "custom_url": "",
+      "encryption": "AES-256",
+      "auto_connect": false
+    }
+  },
   "keys": [
     {
       "key": "PTROT1234567",
@@ -13,6 +48,8 @@
       "max_devices": 1,
       "devices": [],
       "note": "Key demo 7 ngày",
+      "aim_override": null,
+      "dns_override": null,
       "created_at": "2026-10-10T00:00:00.000Z"
     },
     {
@@ -26,6 +63,8 @@
       "max_devices": 1,
       "devices": [],
       "note": "Key VIP 30 ngày",
+      "aim_override": null,
+      "dns_override": null,
       "created_at": "2026-10-10T00:00:00.000Z"
     },
     {
@@ -39,6 +78,8 @@
       "max_devices": 1,
       "devices": [],
       "note": "Key test 1 ngày",
+      "aim_override": null,
+      "dns_override": null,
       "created_at": "2026-10-10T00:00:00.000Z"
     },
     {
@@ -52,6 +93,8 @@
       "max_devices": 3,
       "devices": [],
       "note": "Key VIP năm",
+      "aim_override": null,
+      "dns_override": null,
       "created_at": "2026-10-10T00:00:00.000Z"
     },
     {
@@ -65,6 +108,8 @@
       "max_devices": 1,
       "devices": [],
       "note": "Key demo 7 ngày",
+      "aim_override": null,
+      "dns_override": null,
       "created_at": "2026-10-10T00:00:00.000Z"
     }
   ]
