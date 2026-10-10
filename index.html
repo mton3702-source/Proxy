@@ -5,920 +5,145 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>UN LOCK</title>
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-    -webkit-tap-highlight-color: transparent;
-  }
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+body{min-height:100vh;background:linear-gradient(160deg,#6B21A8 0%,#0EA5E9 100%);background-attachment:fixed;display:flex;align-items:center;justify-content:center;padding:14px;color:#fff;overflow-x:hidden}
+.app{width:100%;max-width:420px;min-height:calc(100vh - 28px);max-height:900px;background:rgba(15,12,30,.42);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:40px;padding:26px 20px 30px;box-shadow:0 30px 60px -10px rgba(0,0,0,.55),inset 0 1px 1px rgba(255,255,255,.15),0 0 0 1px rgba(255,255,255,.08);display:flex;flex-direction:column;position:relative;overflow:hidden}
+.app::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(107,33,168,.4),transparent 45%),radial-gradient(circle at 75% 80%,rgba(14,165,233,.35),transparent 45%);pointer-events:none;z-index:0}
+.screen{display:none;flex-direction:column;flex:1;width:100%;position:relative;z-index:1;animation:fadeSlide .4s ease}
+.screen.active{display:flex}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.logo-wrap{display:flex;flex-direction:column;align-items:center;margin-top:30px;margin-bottom:8px}
+.logo{font-size:3.2rem;font-weight:900;letter-spacing:8px;text-align:center;background:linear-gradient(135deg,#fff,#c4b5fd 50%,#7dd3fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 24px rgba(124,58,237,.8)) drop-shadow(0 0 40px rgba(14,165,233,.5));animation:logoGlow 3s ease-in-out infinite}
+@keyframes logoGlow{0%,100%{filter:drop-shadow(0 0 20px rgba(124,58,237,.6)) drop-shadow(0 0 35px rgba(14,165,233,.4))}50%{filter:drop-shadow(0 0 35px rgba(124,58,237,1)) drop-shadow(0 0 55px rgba(14,165,233,.7))}}
+.logo-sub{text-align:center;font-size:.7rem;letter-spacing:5px;opacity:.65;margin-top:4px;color:#ddd6fe;font-weight:500}
+.logo-badge{display:inline-block;margin-top:14px;padding:6px 18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:30px;font-size:.68rem;letter-spacing:2px;color:#bae6fd;backdrop-filter:blur(10px)}
+
+.input-group{margin-top:30px;margin-bottom:8px}
+.input-label{display:block;font-size:.75rem;margin-bottom:10px;opacity:.85;letter-spacing:1.5px;color:#ddd6fe;font-weight:600;padding-left:6px}
+.key-input{width:100%;padding:20px 18px;font-size:1.15rem;letter-spacing:2px;text-align:center;background:rgba(0,0,0,.35);border:2px solid rgba(255,255,255,.18);border-radius:24px;color:#fff;outline:none;transition:all .25s ease;font-weight:600;text-transform:uppercase;box-shadow:inset 0 2px 8px rgba(0,0,0,.35)}
+.key-input:focus{border-color:#0EA5E9;background:rgba(0,0,0,.45);box-shadow:0 0 0 5px rgba(14,165,233,.2),inset 0 2px 8px rgba(0,0,0,.4);transform:translateY(-1px)}
+.key-input::placeholder{color:rgba(255,255,255,.32);font-weight:400;text-transform:none;letter-spacing:1px;font-size:.95rem}
+.key-input.shake{animation:shake .4s ease;border-color:#ef4444!important;box-shadow:0 0 0 5px rgba(239,68,68,.2)!important}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+
+.btn{position:relative;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);border-radius:22px;padding:17px 22px;font-size:.95rem;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:all .2s ease;backdrop-filter:blur(10px);letter-spacing:1px;user-select:none;overflow:hidden}
+.btn:active:not(.loading){transform:scale(.97);background:rgba(255,255,255,.16)}
+.btn-primary{background:linear-gradient(135deg,#7C3AED,#0EA5E9);border:none;box-shadow:0 12px 28px -6px rgba(14,165,233,.6),0 6px 16px -4px rgba(124,58,237,.5),inset 0 1px 1px rgba(255,255,255,.3)}
+.btn.loading{pointer-events:none;opacity:.85}
+.btn.loading::after{content:'';position:absolute;right:20px;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.error-msg{color:#fecaca;background:rgba(220,38,38,.22);padding:13px 16px;border-radius:18px;font-size:.82rem;text-align:center;margin:14px 0 6px;border-left:5px solid #ef4444;display:none;font-weight:500;backdrop-filter:blur(8px)}
+.error-msg.show{display:block;animation:fadeSlide .3s ease}
+
+.loading-screen{justify-content:center;align-items:center;text-align:center;gap:34px}
+.spinner-wrap{position:relative;width:170px;height:170px;display:flex;align-items:center;justify-content:center}
+.spinner-ring{position:absolute;inset:0;border-radius:50%;border:5px solid rgba(255,255,255,.1)}
+.spinner-ring::before{content:'';position:absolute;inset:-5px;border-radius:50%;border:5px solid transparent;border-top-color:#0EA5E9;border-right-color:#c084fc;animation:spin 1s linear infinite;filter:drop-shadow(0 0 12px #0EA5E9)}
+.loading-percent{font-size:3.6rem;font-weight:900;background:linear-gradient(135deg,#fff,#7dd3fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;letter-spacing:-2px;filter:drop-shadow(0 0 20px rgba(14,165,233,.7))}
+.loading-text{font-size:.95rem;opacity:.9;letter-spacing:3px;color:#e0f2fe;font-weight:500}
+.loading-bar-bg{width:75%;height:8px;background:rgba(255,255,255,.12);border-radius:20px;overflow:hidden;box-shadow:inset 0 1px 4px rgba(0,0,0,.5)}
+.loading-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,#c084fc,#38bdf8,#0EA5E9);border-radius:20px;transition:width .15s linear;box-shadow:0 0 15px #38bdf8}
+
+.main-header{margin-bottom:16px}
+.info-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:22px;padding:14px 18px;backdrop-filter:blur(14px);box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.device-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.device-icon{font-size:1.3rem}
+.device-name{font-size:1rem;font-weight:700;color:#f0f9ff;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.device-badge{font-size:.62rem;background:rgba(14,165,233,.25);border:1px solid rgba(14,165,233,.5);color:#bae6fd;padding:3px 9px;border-radius:20px;font-weight:600}
+.time-row{display:flex;justify-content:space-between;font-size:.82rem;color:#cbd5e1}
+.time-row .value{font-weight:800;color:#7dd3fc;font-size:.92rem;text-shadow:0 0 10px rgba(14,165,233,.6)}
+
+.dns-wrapper{display:flex;justify-content:center;align-items:center;margin:8px 0 18px;position:relative;height:220px}
+.dns-wave{position:absolute;width:200px;height:200px;border-radius:50%;border:2px solid rgba(14,165,233,.6);opacity:0;pointer-events:none}
+.dns-circle.active ~ .dns-wave-1{animation:wave 2.2s ease-out infinite}
+.dns-circle.active ~ .dns-wave-2{animation:wave 2.2s ease-out .7s infinite}
+.dns-circle.active ~ .dns-wave-3{animation:wave 2.2s ease-out 1.4s infinite}
+@keyframes wave{0%{transform:scale(.85);opacity:.8}100%{transform:scale(1.5);opacity:0}}
+.dns-circle{width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(80,80,90,.5),rgba(30,30,40,.7));border:3px solid rgba(255,255,255,.15);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all .4s cubic-bezier(.4,0,.2,1);cursor:pointer;user-select:none;position:relative;z-index:2;box-shadow:0 10px 30px rgba(0,0,0,.45),inset 0 2px 6px rgba(255,255,255,.08)}
+.dns-circle:active{transform:scale(.96)}
+.dns-circle.active{background:radial-gradient(circle at 35% 30%,rgba(56,189,248,.55),rgba(14,165,233,.25));border-color:#38bdf8;box-shadow:0 0 40px rgba(14,165,233,.9),0 0 80px rgba(56,189,248,.5),inset 0 0 30px rgba(56,189,248,.35);animation:dnsPulse 2s ease-in-out infinite}
+@keyframes dnsPulse{0%,100%{box-shadow:0 0 35px rgba(14,165,233,.8),0 0 70px rgba(56,189,248,.4),inset 0 0 25px rgba(56,189,248,.3)}50%{box-shadow:0 0 55px rgba(14,165,233,1),0 0 110px rgba(56,189,248,.7),inset 0 0 40px rgba(56,189,248,.5)}}
+.dns-icon{font-size:3.4rem;line-height:1;margin-bottom:4px;filter:drop-shadow(0 0 10px rgba(255,255,255,.4))}
+.dns-circle.active .dns-icon{filter:drop-shadow(0 0 18px #7dd3fc) drop-shadow(0 0 30px #0EA5E9)}
+.dns-label{font-size:.92rem;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:#cbd5e1;text-shadow:0 2px 8px #000;transition:all .3s;text-align:center;padding:0 8px;line-height:1.2}
+.dns-circle.active .dns-label{color:#fff;text-shadow:0 0 15px #0EA5E9}
+.dns-hint{font-size:.68rem;margin-top:6px;opacity:.75;font-weight:500;color:#94a3b8}
+.dns-circle.active .dns-hint{color:#bae6fd;opacity:.95}
+
+.config-section{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:16px 16px 18px;margin-bottom:12px;backdrop-filter:blur(14px)}
+.config-title{font-size:.8rem;font-weight:700;letter-spacing:1.5px;color:#bae6fd;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.config-title .dot{width:8px;height:8px;border-radius:50%;background:#0EA5E9;box-shadow:0 0 10px #0EA5E9}
+.config-field{margin-bottom:10px}
+.config-field:last-of-type{margin-bottom:14px}
+.config-field label{display:block;font-size:.66rem;letter-spacing:1px;color:#cbd5e1;margin-bottom:5px;padding-left:4px;font-weight:600;text-transform:uppercase;opacity:.85}
+.config-field input{width:100%;padding:11px 14px;font-size:.85rem;background:rgba(0,0,0,.3);border:1.5px solid rgba(255,255,255,.12);border-radius:14px;color:#fff;outline:none;font-weight:500}
+.config-field input:focus{border-color:#0EA5E9;background:rgba(0,0,0,.42);box-shadow:0 0 0 3px rgba(14,165,233,.18)}
+.btn-download{width:100%;background:linear-gradient(135deg,#7C3AED,#0EA5E9);border:none;border-radius:16px;padding:14px;font-size:.82rem;font-weight:700;letter-spacing:1px;color:#fff;box-shadow:0 8px 20px -4px rgba(14,165,233,.5)}
+
+.func-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.func-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:14px 10px;font-size:.8rem;font-weight:700;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:all .2s;backdrop-filter:blur(10px);user-select:none;text-align:center;position:relative}
+.func-btn:active:not(.loading){transform:scale(.95);background:rgba(255,255,255,.16)}
+.func-btn.loading{pointer-events:none;opacity:.7}
+.func-btn.loading::after{content:'';position:absolute;top:8px;right:10px;width:14px;height:14px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+.func-btn .emoji{font-size:1.7rem;line-height:1}
+.aim-status{font-size:.6rem;padding:2px 10px;border-radius:10px;background:rgba(0,0,0,.35);color:#94a3b8;font-weight:700;letter-spacing:1px;margin-top:2px}
+.aim-status.on{background:rgba(14,165,233,.6);color:#fff;box-shadow:0 0 12px rgba(14,165,233,.7)}
+
+.logout-btn{margin-top:auto;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.7);font-size:.82rem;padding:14px;border-radius:20px;font-weight:600;letter-spacing:1.5px}
+.logout-btn:active:not(.loading){background:rgba(239,68,68,.25);border-color:rgba(239,68,68,.5);color:#fecaca}
+
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(15,12,30,.92);backdrop-filter:blur(20px);color:#fff;padding:13px 24px;border-radius:40px;font-size:.85rem;font-weight:600;border-left:5px solid #0EA5E9;box-shadow:0 15px 40px rgba(0,0,0,.7);z-index:9999;max-width:90vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;animation:toastIn .35s ease}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,20px)}to{opacity:1;transform:translate(-50%,0)}}
+
+.footer-note{text-align:center;font-size:.58rem;opacity:.45;margin-top:12px;letter-spacing:2px;color:#cbd5e1;font-weight:500}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:10000;padding:24px}
+.modal-overlay.show{display:flex}
+.modal-box{background:rgba(30,20,50,.95);border:1px solid rgba(255,255,255,.18);border-radius:28px;padding:26px 22px;max-width:340px;width:100%;text-align:center;box-shadow:0 30px 60px rgba(0,0,0,.7)}
+.modal-icon{font-size:3rem;margin-bottom:12px}
+.modal-title{font-size:1.1rem;font-weight:800;margin-bottom:8px;color:#fff;letter-spacing:1px}
+.modal-desc{font-size:.8rem;color:#cbd5e1;margin-bottom:22px;line-height:1.5;opacity:.9}
+.modal-actions{display:flex;gap:10px}
+.modal-actions .btn{flex:1;padding:14px;font-size:.85rem;border-radius:16px}
+.btn-danger{background:linear-gradient(135deg,#dc2626,#ef4444);border:none;box-shadow:0 8px 20px -4px rgba(239,68,68,.6)}
 
-  body {
-    min-height: 100vh;
-    background: linear-gradient(160deg, #6B21A8 0%, #0EA5E9 100%);
-    background-attachment: fixed;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px;
-    color: white;
-    overflow-x: hidden;
-  }
+#screenMain{overflow-y:auto;overflow-x:hidden;padding-bottom:4px;scrollbar-width:none}
+#screenMain::-webkit-scrollbar{display:none}
 
-  .app-container {
-    width: 100%;
-    max-width: 420px;
-    min-height: calc(100vh - 28px);
-    max-height: 900px;
-    background: rgba(15, 12, 30, 0.42);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border-radius: 40px;
-    padding: 26px 20px 30px;
-    box-shadow:
-      0 30px 60px -10px rgba(0, 0, 0, 0.55),
-      inset 0 1px 1px rgba(255, 255, 255, 0.15),
-      0 0 0 1px rgba(255, 255, 255, 0.08);
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .app-container::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle at 30% 20%, rgba(107, 33, 168, 0.4), transparent 45%),
-                radial-gradient(circle at 75% 80%, rgba(14, 165, 233, 0.35), transparent 45%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .screen {
-    display: none;
-    flex-direction: column;
-    flex: 1;
-    width: 100%;
-    position: relative;
-    z-index: 1;
-    animation: fadeSlide 0.4s ease;
-  }
-
-  .screen.active {
-    display: flex;
-  }
-
-  @keyframes fadeSlide {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ===== LOGO ===== */
-  .logo-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 40px;
-    margin-bottom: 8px;
-  }
-
-  .logo {
-    font-size: 3.4rem;
-    font-weight: 900;
-    letter-spacing: 8px;
-    text-align: center;
-    background: linear-gradient(135deg, #ffffff 0%, #c4b5fd 50%, #7dd3fc 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    filter: drop-shadow(0 0 24px rgba(124, 58, 237, 0.8))
-            drop-shadow(0 0 40px rgba(14, 165, 233, 0.5));
-    animation: logoGlow 3s ease-in-out infinite;
-  }
-
-  @keyframes logoGlow {
-    0%, 100% { filter: drop-shadow(0 0 20px rgba(124, 58, 237, 0.6)) drop-shadow(0 0 35px rgba(14, 165, 233, 0.4)); }
-    50% { filter: drop-shadow(0 0 35px rgba(124, 58, 237, 1)) drop-shadow(0 0 55px rgba(14, 165, 233, 0.7)); }
-  }
-
-  .logo-sub {
-    text-align: center;
-    font-size: 0.72rem;
-    letter-spacing: 5px;
-    opacity: 0.65;
-    margin-top: 4px;
-    color: #ddd6fe;
-    font-weight: 500;
-  }
-
-  .logo-badge {
-    display: inline-block;
-    margin-top: 14px;
-    padding: 6px 18px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 30px;
-    font-size: 0.7rem;
-    letter-spacing: 2px;
-    color: #bae6fd;
-    backdrop-filter: blur(10px);
-  }
-
-  /* ===== Ô NHẬP KEY ===== */
-  .input-group {
-    margin-top: 34px;
-    margin-bottom: 8px;
-  }
-
-  .input-label {
-    display: block;
-    font-size: 0.78rem;
-    margin-bottom: 10px;
-    opacity: 0.85;
-    letter-spacing: 1.5px;
-    color: #ddd6fe;
-    font-weight: 600;
-    padding-left: 6px;
-  }
-
-  .key-input {
-    width: 100%;
-    padding: 20px 18px;
-    font-size: 1.15rem;
-    letter-spacing: 2px;
-    text-align: center;
-    background: rgba(0, 0, 0, 0.35);
-    border: 2px solid rgba(255, 255, 255, 0.18);
-    border-radius: 24px;
-    color: white;
-    outline: none;
-    transition: all 0.25s ease;
-    font-weight: 600;
-    text-transform: uppercase;
-    box-shadow: inset 0 2px 8px rgba(0,0,0,0.35);
-  }
-
-  .key-input:focus {
-    border-color: #0EA5E9;
-    background: rgba(0, 0, 0, 0.45);
-    box-shadow: 0 0 0 5px rgba(14, 165, 233, 0.2), inset 0 2px 8px rgba(0,0,0,0.4);
-    transform: translateY(-1px);
-  }
-
-  .key-input::placeholder {
-    color: rgba(255, 255, 255, 0.32);
-    font-weight: 400;
-    text-transform: none;
-    letter-spacing: 1px;
-    font-size: 0.95rem;
-  }
-
-  .key-input.shake {
-    animation: shake 0.4s ease;
-    border-color: #ef4444 !important;
-    box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.2) !important;
-  }
-
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    20% { transform: translateX(-8px); }
-    40% { transform: translateX(8px); }
-    60% { transform: translateX(-6px); }
-    80% { transform: translateX(6px); }
-  }
-
-  /* ===== NÚT ===== */
-  .btn {
-    position: relative;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-radius: 22px;
-    padding: 17px 22px;
-    font-size: 0.98rem;
-    font-weight: 700;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    backdrop-filter: blur(10px);
-    letter-spacing: 1px;
-    user-select: none;
-    overflow: hidden;
-  }
-
-  .btn:active:not(.loading) {
-    transform: scale(0.97);
-    background: rgba(255, 255, 255, 0.16);
-  }
-
-  .btn-primary {
-    background: linear-gradient(135deg, #7C3AED 0%, #0EA5E9 100%);
-    border: none;
-    box-shadow: 0 12px 28px -6px rgba(14, 165, 233, 0.6),
-                0 6px 16px -4px rgba(124, 58, 237, 0.5),
-                inset 0 1px 1px rgba(255,255,255,0.3);
-  }
-
-  .btn-primary:active:not(.loading) {
-    box-shadow: 0 6px 14px -3px rgba(14, 165, 233, 0.7),
-                inset 0 1px 2px rgba(0,0,0,0.2);
-  }
-
-  /* loading spinner trong nút */
-  .btn.loading {
-    pointer-events: none;
-    opacity: 0.85;
-  }
-
-  .btn.loading::after {
-    content: '';
-    position: absolute;
-    right: 20px;
-    width: 18px;
-    height: 18px;
-    border: 2.5px solid rgba(255,255,255,0.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-  }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-
-  /* ===== LỖI ===== */
-  .error-msg {
-    color: #fecaca;
-    background: rgba(220, 38, 38, 0.22);
-    padding: 13px 16px;
-    border-radius: 18px;
-    font-size: 0.82rem;
-    text-align: center;
-    margin: 14px 0 6px;
-    border-left: 5px solid #ef4444;
-    display: none;
-    font-weight: 500;
-    backdrop-filter: blur(8px);
-    animation: fadeSlide 0.3s ease;
-  }
-
-  .error-msg.show {
-    display: block;
-  }
-
-  /* ===== LOADING SCREEN ===== */
-  .loading-screen {
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    gap: 34px;
-  }
-
-  .spinner-wrap {
-    position: relative;
-    width: 170px;
-    height: 170px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .spinner-ring {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    border: 5px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .spinner-ring::before {
-    content: '';
-    position: absolute;
-    inset: -5px;
-    border-radius: 50%;
-    border: 5px solid transparent;
-    border-top-color: #0EA5E9;
-    border-right-color: #c084fc;
-    animation: spin 1s linear infinite;
-    filter: drop-shadow(0 0 12px #0EA5E9);
-  }
-
-  .loading-percent {
-    font-size: 3.6rem;
-    font-weight: 900;
-    background: linear-gradient(135deg, #ffffff, #7dd3fc);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1;
-    letter-spacing: -2px;
-    filter: drop-shadow(0 0 20px rgba(14, 165, 233, 0.7));
-  }
-
-  .loading-text {
-    font-size: 0.95rem;
-    opacity: 0.9;
-    letter-spacing: 3px;
-    color: #e0f2fe;
-    font-weight: 500;
-  }
-
-  .loading-bar-bg {
-    width: 75%;
-    height: 8px;
-    background: rgba(255, 255, 255, 0.12);
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: inset 0 1px 4px rgba(0,0,0,0.5);
-  }
-
-  .loading-bar-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #c084fc, #38bdf8, #0EA5E9);
-    border-radius: 20px;
-    transition: width 0.15s linear;
-    box-shadow: 0 0 15px #38bdf8;
-  }
-
-  /* ===== TRANG CHÍNH ===== */
-  .main-header {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 18px;
-  }
-
-  .info-card {
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 22px;
-    padding: 14px 18px;
-    backdrop-filter: blur(14px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-  }
-
-  .device-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
-  }
-
-  .device-icon {
-    font-size: 1.3rem;
-    filter: drop-shadow(0 0 8px rgba(255,255,255,0.4));
-  }
-
-  .device-name {
-    font-size: 1rem;
-    font-weight: 700;
-    color: #f0f9ff;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.4);
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .device-badge {
-    font-size: 0.65rem;
-    background: rgba(14, 165, 233, 0.25);
-    border: 1px solid rgba(14, 165, 233, 0.5);
-    color: #bae6fd;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-  }
-
-  .time-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 0.82rem;
-    color: #cbd5e1;
-  }
-
-  .time-row .label {
-    opacity: 0.85;
-  }
-
-  .time-row .value {
-    font-weight: 800;
-    color: #7dd3fc;
-    font-size: 0.92rem;
-    text-shadow: 0 0 10px rgba(14, 165, 233, 0.6);
-  }
-
-  /* ===== NÚT DNS TRÒN ===== */
-  .dns-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 8px 0 20px;
-    position: relative;
-    height: 220px;
-  }
-
-  .dns-wave {
-    position: absolute;
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    border: 2px solid rgba(14, 165, 233, 0.6);
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .dns-circle.active ~ .dns-wave-1 {
-    animation: wave 2.2s ease-out infinite;
-  }
-  .dns-circle.active ~ .dns-wave-2 {
-    animation: wave 2.2s ease-out 0.7s infinite;
-  }
-  .dns-circle.active ~ .dns-wave-3 {
-    animation: wave 2.2s ease-out 1.4s infinite;
-  }
-
-  @keyframes wave {
-    0% { transform: scale(0.85); opacity: 0.8; }
-    100% { transform: scale(1.5); opacity: 0; }
-  }
-
-  .dns-circle {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, rgba(80, 80, 90, 0.5), rgba(30, 30, 40, 0.7));
-    border: 3px solid rgba(255, 255, 255, 0.15);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: pointer;
-    user-select: none;
-    position: relative;
-    z-index: 2;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.45),
-                inset 0 2px 6px rgba(255,255,255,0.08);
-  }
-
-  .dns-circle:active {
-    transform: scale(0.96);
-  }
-
-  .dns-circle.active {
-    background: radial-gradient(circle at 35% 30%, rgba(56, 189, 248, 0.55), rgba(14, 165, 233, 0.25));
-    border-color: #38bdf8;
-    box-shadow:
-      0 0 40px rgba(14, 165, 233, 0.9),
-      0 0 80px rgba(56, 189, 248, 0.5),
-      inset 0 0 30px rgba(56, 189, 248, 0.35);
-    animation: dnsPulse 2s ease-in-out infinite;
-  }
-
-  @keyframes dnsPulse {
-    0%, 100% {
-      box-shadow: 0 0 35px rgba(14, 165, 233, 0.8),
-                  0 0 70px rgba(56, 189, 248, 0.4),
-                  inset 0 0 25px rgba(56, 189, 248, 0.3);
-    }
-    50% {
-      box-shadow: 0 0 55px rgba(14, 165, 233, 1),
-                  0 0 110px rgba(56, 189, 248, 0.7),
-                  inset 0 0 40px rgba(56, 189, 248, 0.5);
-    }
-  }
-
-  .dns-icon {
-    font-size: 3.4rem;
-    line-height: 1;
-    margin-bottom: 4px;
-    filter: drop-shadow(0 0 10px rgba(255,255,255,0.4));
-    transition: all 0.3s;
-  }
-
-  .dns-circle.active .dns-icon {
-    filter: drop-shadow(0 0 18px #7dd3fc) drop-shadow(0 0 30px #0EA5E9);
-  }
-
-  .dns-label {
-    font-size: 0.92rem;
-    font-weight: 800;
-    letter-spacing: 1.8px;
-    text-transform: uppercase;
-    color: #cbd5e1;
-    text-shadow: 0 2px 8px black;
-    transition: all 0.3s;
-    text-align: center;
-    padding: 0 8px;
-    line-height: 1.2;
-  }
-
-  .dns-circle.active .dns-label {
-    color: #fff;
-    text-shadow: 0 0 15px #0EA5E9;
-  }
-
-  .dns-hint {
-    font-size: 0.68rem;
-    margin-top: 6px;
-    opacity: 0.75;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-    color: #94a3b8;
-  }
-
-  .dns-circle.active .dns-hint {
-    color: #bae6fd;
-    opacity: 0.95;
-  }
-
-  /* ===== PHẦN CẤU HÌNH DNS ===== */
-  .config-section {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 24px;
-    padding: 16px 16px 18px;
-    margin-bottom: 14px;
-    backdrop-filter: blur(14px);
-    box-shadow: 0 8px 22px rgba(0,0,0,0.25);
-  }
-
-  .config-title {
-    font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    color: #bae6fd;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .config-title .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #0EA5E9;
-    box-shadow: 0 0 10px #0EA5E9;
-  }
-
-  .config-field {
-    margin-bottom: 10px;
-  }
-
-  .config-field:last-of-type {
-    margin-bottom: 14px;
-  }
-
-  .config-field label {
-    display: block;
-    font-size: 0.68rem;
-    letter-spacing: 1px;
-    color: #cbd5e1;
-    margin-bottom: 5px;
-    padding-left: 4px;
-    font-weight: 600;
-    text-transform: uppercase;
-    opacity: 0.85;
-  }
-
-  .config-field input {
-    width: 100%;
-    padding: 11px 14px;
-    font-size: 0.85rem;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1.5px solid rgba(255, 255, 255, 0.12);
-    border-radius: 14px;
-    color: white;
-    outline: none;
-    transition: all 0.2s;
-    font-weight: 500;
-  }
-
-  .config-field input:focus {
-    border-color: #0EA5E9;
-    background: rgba(0, 0, 0, 0.42);
-    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.18);
-  }
-
-  .config-field input::placeholder {
-    color: rgba(255, 255, 255, 0.3);
-    font-weight: 400;
-  }
-
-  .btn-download {
-    width: 100%;
-    background: linear-gradient(135deg, #7C3AED, #0EA5E9);
-    border: none;
-    border-radius: 16px;
-    padding: 14px;
-    font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: white;
-    box-shadow: 0 8px 20px -4px rgba(14, 165, 233, 0.5);
-  }
-
-  /* ===== CHỨC NĂNG ===== */
-  .func-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-
-  .func-btn {
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-    padding: 14px 10px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    backdrop-filter: blur(10px);
-    user-select: none;
-    text-align: center;
-    letter-spacing: 0.5px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.22);
-    position: relative;
-  }
-
-  .func-btn:active:not(.loading) {
-    transform: scale(0.95);
-    background: rgba(255, 255, 255, 0.16);
-  }
-
-  .func-btn.loading {
-    pointer-events: none;
-    opacity: 0.7;
-  }
-
-  .func-btn.loading::after {
-    content: '';
-    position: absolute;
-    top: 8px;
-    right: 10px;
-    width: 14px;
-    height: 14px;
-    border: 2px solid rgba(255,255,255,0.25);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-  }
-
-  .func-btn .emoji {
-    font-size: 1.7rem;
-    line-height: 1;
-    filter: drop-shadow(0 0 8px rgba(255,255,255,0.3));
-  }
-
-  .aim-status {
-    font-size: 0.62rem;
-    padding: 2px 10px;
-    border-radius: 10px;
-    background: rgba(0,0,0,0.35);
-    color: #94a3b8;
-    font-weight: 700;
-    letter-spacing: 1px;
-    margin-top: 2px;
-    transition: all 0.3s;
-  }
-
-  .aim-status.on {
-    background: rgba(14, 165, 233, 0.6);
-    color: #fff;
-    box-shadow: 0 0 12px rgba(14, 165, 233, 0.7);
-  }
-
-  /* ===== ĐĂNG XUẤT ===== */
-  .logout-btn {
-    margin-top: auto;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.82rem;
-    padding: 14px;
-    border-radius: 20px;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-  }
-
-  .logout-btn:active:not(.loading) {
-    background: rgba(239, 68, 68, 0.25);
-    border-color: rgba(239, 68, 68, 0.5);
-    color: #fecaca;
-  }
-
-  /* ===== TOAST ===== */
-  .toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(15, 12, 30, 0.92);
-    backdrop-filter: blur(20px);
-    color: white;
-    padding: 13px 24px;
-    border-radius: 40px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    border-left: 5px solid #0EA5E9;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.7);
-    z-index: 9999;
-    transition: opacity 0.3s, transform 0.3s;
-    white-space: nowrap;
-    max-width: 90vw;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    animation: toastIn 0.35s ease;
-    border: 1px solid rgba(255,255,255,0.15);
-  }
-
-  @keyframes toastIn {
-    from { opacity: 0; transform: translate(-50%, 20px); }
-    to { opacity: 1; transform: translate(-50%, 0); }
-  }
-
-  .footer-note {
-    text-align: center;
-    font-size: 0.6rem;
-    opacity: 0.45;
-    margin-top: 14px;
-    letter-spacing: 2px;
-    color: #cbd5e1;
-    font-weight: 500;
-  }
-
-  /* Modal xác nhận đăng xuất */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(6px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-    padding: 24px;
-    animation: fadeIn 0.25s ease;
-  }
-
-  .modal-overlay.show {
-    display: flex;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  .modal-box {
-    background: rgba(30, 20, 50, 0.95);
-    border: 1px solid rgba(255,255,255,0.18);
-    border-radius: 28px;
-    padding: 26px 22px;
-    max-width: 340px;
-    width: 100%;
-    text-align: center;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.7);
-    animation: modalIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  @keyframes modalIn {
-    from { transform: scale(0.85); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-  }
-
-  .modal-icon {
-    font-size: 3rem;
-    margin-bottom: 12px;
-    filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.6));
-  }
-
-  .modal-title {
-    font-size: 1.15rem;
-    font-weight: 800;
-    margin-bottom: 8px;
-    color: #fff;
-    letter-spacing: 1px;
-  }
-
-  .modal-desc {
-    font-size: 0.82rem;
-    color: #cbd5e1;
-    margin-bottom: 22px;
-    line-height: 1.5;
-    opacity: 0.9;
-  }
-
-  .modal-actions {
-    display: flex;
-    gap: 10px;
-  }
-
-  .modal-actions .btn {
-    flex: 1;
-    padding: 14px;
-    font-size: 0.85rem;
-    border-radius: 16px;
-  }
-
-  .btn-danger {
-    background: linear-gradient(135deg, #dc2626, #ef4444);
-    border: none;
-    box-shadow: 0 8px 20px -4px rgba(239, 68, 68, 0.6);
-  }
-
-  /* Scroll cho màn hình chính nếu dài */
-  #screenMain {
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-bottom: 4px;
-    scrollbar-width: none;
-  }
-  #screenMain::-webkit-scrollbar { display: none; }
-
-  /* Responsive nhỏ */
-  @media (max-height: 750px) {
-    .logo { font-size: 2.8rem; }
-    .logo-wrap { margin-top: 24px; }
-    .dns-wrapper { height: 190px; }
-    .dns-circle { width: 170px; height: 170px; }
-    .dns-wave { width: 170px; height: 170px; }
-    .dns-icon { font-size: 2.8rem; }
-    .dns-label { font-size: 0.82rem; }
-    .config-section { padding: 14px; }
-  }
-
-  @media (max-height: 680px) {
-    .dns-wrapper { height: 170px; margin: 4px 0 12px; }
-    .dns-circle { width: 150px; height: 150px; }
-    .dns-wave { width: 150px; height: 150px; }
-    .dns-icon { font-size: 2.4rem; }
-    .dns-label { font-size: 0.72rem; }
-    .dns-hint { font-size: 0.62rem; }
-  }
+@media(max-height:750px){.logo{font-size:2.8rem}.dns-wrapper{height:185px}.dns-circle{width:165px;height:165px}.dns-wave{width:165px;height:165px}.dns-icon{font-size:2.7rem}.dns-label{font-size:.78rem}}
 </style>
 </head>
 <body>
 
-<div class="app-container">
+<div class="app">
 
-  <!-- ============ SCREEN 1: NHẬP KEY ============ -->
   <div class="screen active" id="screenKey">
     <div class="logo-wrap">
       <div class="logo">UN LOCK</div>
       <div class="logo-sub">MỞ KHÓA DNS</div>
       <div class="logo-badge">🔒 BẢO MẬT CAO</div>
     </div>
-
     <div class="input-group">
       <label class="input-label">🔑 NHẬP KEY KÍCH HOẠT</label>
       <input type="text" class="key-input" id="keyInput" placeholder="PTROTXXXXXXX" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false">
     </div>
-
     <div class="error-msg" id="errorMsg"></div>
-
-    <button class="btn btn-primary" id="activateBtn" style="margin-top: 18px;">
-      <span>🚀 KÍCH HOẠT</span>
-    </button>
-
-    <div class="footer-note" style="margin-top: auto; padding-top: 20px;">KEY CÓ THỜI HẠN · GẮN VỚI THIẾT BỊ</div>
+    <button class="btn btn-primary" id="activateBtn" style="margin-top:18px;"><span>🚀 KÍCH HOẠT</span></button>
+    <div class="footer-note" style="margin-top:auto;padding-top:20px;">KEY CÓ THỜI HẠN · GẮN VỚI THIẾT BỊ</div>
   </div>
 
-  <!-- ============ SCREEN 2: LOADING ============ -->
   <div class="screen loading-screen" id="screenLoading">
     <div class="spinner-wrap">
       <div class="spinner-ring"></div>
       <div class="loading-percent" id="loadingPercent">0%</div>
     </div>
     <div class="loading-text" id="loadingText">ĐANG KẾT NỐI ...</div>
-    <div class="loading-bar-bg">
-      <div class="loading-bar-fill" id="loadingBarFill"></div>
-    </div>
+    <div class="loading-bar-bg"><div class="loading-bar-fill" id="loadingBarFill"></div></div>
   </div>
 
-  <!-- ============ SCREEN 3: TRANG CHÍNH ============ -->
   <div class="screen" id="screenMain">
-
-    <!-- Header thông tin -->
     <div class="main-header">
       <div class="info-card">
         <div class="device-row">
@@ -927,13 +152,12 @@
           <span class="device-badge" id="deviceBadge">ID</span>
         </div>
         <div class="time-row">
-          <span class="label">⏳ Thời gian còn lại</span>
+          <span>⏳ Thời gian còn lại</span>
           <span class="value" id="timeRemainingDisplay">0 ngày</span>
         </div>
       </div>
     </div>
 
-    <!-- Nút DNS tròn -->
     <div class="dns-wrapper">
       <div class="dns-wave dns-wave-1"></div>
       <div class="dns-wave dns-wave-2"></div>
@@ -945,64 +169,36 @@
       </div>
     </div>
 
-    <!-- TỰ CHỈNH DNS -->
     <div class="config-section">
       <div class="config-title"><span class="dot"></span> TỰ CHỈNH DNS</div>
-
-      <div class="config-field">
-        <label>Tên cấu hình</label>
-        <input type="text" id="cfgName" value="UN LOCK DNS" placeholder="VD: My DNS">
-      </div>
-
-      <div class="config-field">
-        <label>DNS chính</label>
-        <input type="text" id="cfgDns1" value="1.1.1.1" placeholder="VD: 1.1.1.1">
-      </div>
-
-      <div class="config-field">
-        <label>DNS phụ</label>
-        <input type="text" id="cfgDns2" value="1.0.0.1" placeholder="VD: 8.8.8.8">
-      </div>
-
-      <div class="config-field">
-        <label>URL Garena</label>
-        <input type="text" id="cfgUrl" value="https://ms.garena.com" placeholder="https://...">
-      </div>
-
-      <button class="btn btn-download" id="downloadBtn">
-        <span>📥 TẠO &amp; TẢI CẤU HÌNH</span>
-      </button>
+      <div class="config-field"><label>Tên cấu hình</label><input type="text" id="cfgName" value="UN LOCK DNS"></div>
+      <div class="config-field"><label>DNS chính</label><input type="text" id="cfgDns1" value="1.1.1.1"></div>
+      <div class="config-field"><label>DNS phụ</label><input type="text" id="cfgDns2" value="1.0.0.1"></div>
+      <div class="config-field"><label>URL Garena</label><input type="text" id="cfgUrl" value="https://ms.garena.com"></div>
+      <button class="btn btn-download" id="downloadBtn"><span>📥 TẠO &amp; TẢI CẤU HÌNH</span></button>
     </div>
 
-    <!-- Chức năng khác -->
     <div class="func-grid">
       <div class="func-btn" id="aimBtn">
-        <span class="emoji">🎯</span>
-        <span>AIM</span>
+        <span class="emoji">🎯</span><span>AIM</span>
         <span class="aim-status" id="aimStatus">TẮT</span>
       </div>
       <div class="func-btn" id="viewInfoBtn">
-        <span class="emoji">📋</span>
-        <span>XEM THÔNG TIN</span>
+        <span class="emoji">📋</span><span>XEM THÔNG TIN</span>
       </div>
     </div>
 
-    <!-- Đăng xuất -->
-    <button class="btn logout-btn" id="logoutBtn">
-      <span>🚪 ĐĂNG XUẤT</span>
-    </button>
-
+    <button class="btn logout-btn" id="logoutBtn"><span>🚪 ĐĂNG XUẤT</span></button>
     <div class="footer-note">UN LOCK · BẢO VỆ RIÊNG TƯ</div>
   </div>
 
 </div>
 
-<!-- Modal xác nhận đăng xuất -->
 <div class="modal-overlay" id="logoutModal">
   <div class="modal-box">
     <div class="modal-icon">⚠️</div>
     <div class="modal-title">XÁC NHẬN ĐĂNG XUẤT</div>
-    <div class="modal-desc">Bạn có chắc muốn đăng xuất? Key sẽ bị xóa khỏi thiết bị này và bạn cần nhập lại key để sử dụng.</div>
+    <div class="modal-desc">Key sẽ được giải phóng khỏi thiết bị này. Bạn cần nhập lại key để sử dụng.</div>
     <div class="modal-actions">
       <button class="btn" id="cancelLogout">HỦY</button>
       <button class="btn btn-danger" id="confirmLogout">ĐĂNG XUẤT</button>
@@ -1011,658 +207,610 @@
 </div>
 
 <script>
-(function() {
-  'use strict';
+(function(){
+'use strict';
 
-  // ============ CẤU HÌNH ============
-  const KEY_PREFIX = 'PTROT';
-  const KEY_LENGTH = 12;
-  const LOADING_DURATION = 15000; // 15 giây
-  const KEY_EXPIRE_DAYS = 7;       // Thời hạn key (ngày)
+// ═══════════════════════════════════════════════════════
+// ⚙️ ĐỔI URL RENDER CỦA BẠN VÀO ĐÂY
+// ═══════════════════════════════════════════════════════
+const API_URL = 'https://unlock-server-xxxx.onrender.com';
+//              ↑ THAY BẰNG URL RENDER CỦA BẠN
 
-  // Danh sách key hợp lệ. Để [] để chấp nhận mọi key đúng định dạng
-  const VALID_KEYS = [
-    'PTROT1234567',
-    'PTROTABCDEFG',
-    'PTROTUNLOCK1',
-    'PTROT8888888'
-  ];
+const KEY_PREFIX = 'PTROT';
+const KEY_LENGTH = 12;
+const LOADING_DURATION = 15000;
 
-  // ============ STORAGE KEYS ============
-  const LS_DEVICE_ID    = 'unlock_device_id';
-  const LS_DEVICE_NAME  = 'unlock_device_name';
-  const LS_ACTIVATED    = 'unlock_activated_key';
-  const LS_EXPIRE_AT    = 'unlock_key_expire_at';
-  const LS_AIM_STATE    = 'unlock_aim_state';
-  const LS_DNS_STATE    = 'unlock_dns_state';
-  const LS_DNS_CONFIG   = 'unlock_dns_config';
+const LS_DEVICE_ID   = 'unlock_device_id';
+const LS_DEVICE_NAME = 'unlock_device_name';
+const LS_ACTIVATED   = 'unlock_activated_key';
+const LS_EXPIRE_AT   = 'unlock_key_expire_at';
+const LS_AIM_STATE   = 'unlock_aim_state';
+const LS_DNS_STATE   = 'unlock_dns_state';
+const LS_DNS_CONFIG  = 'unlock_dns_config';
 
-  // ============ TRẠNG THÁI ============
-  let currentKey = '';
-  let expireTimestamp = 0;
-  let countdownInterval = null;
-  let loadingInterval = null;
-  let isLoading = false;
-  let audioCtx = null;
-  let toastTimer = null;
-  let dnsPressTimer = null;
-  let dnsLongPressDone = false;
+let currentKey = '';
+let expireTimestamp = 0;
+let countdownInterval = null;
+let loadingInterval = null;
+let isLoading = false;
+let audioCtx = null;
+let toastTimer = null;
+let dnsPressTimer = null;
+let dnsLongPressDone = false;
 
-  // ============ DOM ============
-  const $ = id => document.getElementById(id);
-  const screenKey = $('screenKey');
-  const screenLoading = $('screenLoading');
-  const screenMain = $('screenMain');
-  const keyInput = $('keyInput');
-  const activateBtn = $('activateBtn');
-  const errorMsg = $('errorMsg');
-  const loadingPercentEl = $('loadingPercent');
-  const loadingBarFill = $('loadingBarFill');
-  const loadingText = $('loadingText');
-  const deviceIcon = $('deviceIcon');
-  const deviceNameDisplay = $('deviceNameDisplay');
-  const deviceBadge = $('deviceBadge');
-  const timeRemainingDisplay = $('timeRemainingDisplay');
-  const dnsCircle = $('dnsCircle');
-  const dnsLabel = $('dnsLabel');
-  const dnsHint = $('dnsHint');
-  const aimBtn = $('aimBtn');
-  const aimStatus = $('aimStatus');
-  const viewInfoBtn = $('viewInfoBtn');
-  const logoutBtn = $('logoutBtn');
-  const downloadBtn = $('downloadBtn');
-  const cfgName = $('cfgName');
-  const cfgDns1 = $('cfgDns1');
-  const cfgDns2 = $('cfgDns2');
-  const cfgUrl = $('cfgUrl');
-  const logoutModal = $('logoutModal');
-  const cancelLogout = $('cancelLogout');
-  const confirmLogout = $('confirmLogout');
+const $ = id => document.getElementById(id);
+const keyInput = $('keyInput');
+const activateBtn = $('activateBtn');
+const errorMsg = $('errorMsg');
+const deviceNameDisplay = $('deviceNameDisplay');
+const deviceIcon = $('deviceIcon');
+const deviceBadge = $('deviceBadge');
+const timeRemainingDisplay = $('timeRemainingDisplay');
+const dnsCircle = $('dnsCircle');
+const dnsLabel = $('dnsLabel');
+const dnsHint = $('dnsHint');
+const aimBtn = $('aimBtn');
+const aimStatus = $('aimStatus');
+const viewInfoBtn = $('viewInfoBtn');
+const logoutBtn = $('logoutBtn');
+const downloadBtn = $('downloadBtn');
+const cfgName = $('cfgName');
+const cfgDns1 = $('cfgDns1');
+const cfgDns2 = $('cfgDns2');
+const cfgUrl = $('cfgUrl');
+const logoutModal = $('logoutModal');
 
-  // ============ TIỆN ÍCH ============
-  function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    $(id).classList.add('active');
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(id).classList.add('active');
+}
+
+function showToast(msg, dur = 2400){
+  const old = document.querySelector('.toast');
+  if (old) old.remove();
+  if (toastTimer) clearTimeout(toastTimer);
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  toastTimer = setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translate(-50%, 20px)';
+    setTimeout(() => t.remove(), 320);
+  }, dur);
+}
+
+function playSound(freq = 880, dur = 0.25){
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
+    osc.start(); osc.stop(audioCtx.currentTime + dur);
+  } catch(e){}
+}
+
+function speak(text){
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'vi-VN';
+  window.speechSynthesis.speak(u);
+}
+
+function getDeviceId(){
+  let id = localStorage.getItem(LS_DEVICE_ID);
+  if (!id){
+    id = 'dev_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2,8);
+    localStorage.setItem(LS_DEVICE_ID, id);
+  }
+  return id;
+}
+
+function getDeviceName(){
+  let name = localStorage.getItem(LS_DEVICE_NAME);
+  if (!name){
+    const ua = navigator.userAgent;
+    let device = 'Thiết bị';
+    if (/iPhone/i.test(ua)) device = 'iPhone';
+    else if (/iPad/i.test(ua)) device = 'iPad';
+    else if (/Android/i.test(ua)) device = 'Android';
+    else if (/Mac/i.test(ua)) device = 'Mac';
+    else if (/Windows/i.test(ua)) device = 'Windows';
+    name = device + ' ' + Math.floor(1000 + Math.random() * 9000);
+    localStorage.setItem(LS_DEVICE_NAME, name);
+  }
+  return name;
+}
+
+function getDeviceIcon(name){
+  if (/Mac|Windows/i.test(name)) return '💻';
+  return '📱';
+}
+
+function isValidKeyFormat(key){
+  if (!key || key.length !== KEY_LENGTH) return false;
+  if (!key.startsWith(KEY_PREFIX)) return false;
+  return true;
+}
+
+// ═══════════ GỌI API SERVER ═══════════
+async function apiVerifyKey(key, deviceId, deviceName){
+  const res = await fetch(API_URL + '/api/verify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ key, device_id: deviceId, device_name: deviceName })
+  });
+  return await res.json();
+}
+
+async function apiLogout(key, deviceId){
+  try {
+    const res = await fetch(API_URL + '/api/logout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key, device_id: deviceId })
+    });
+    return await res.json();
+  } catch(e){ return { ok: false }; }
+}
+
+// ═══════════ KÍCH HOẠT KEY ═══════════
+async function handleActivate(){
+  const rawKey = (keyInput.value || '').trim().toUpperCase();
+  errorMsg.classList.remove('show');
+  keyInput.classList.remove('shake');
+
+  if (!isValidKeyFormat(rawKey)){
+    errorMsg.textContent = '❌ Key không hợp lệ. Định dạng: PTROT + 7 ký tự';
+    errorMsg.classList.add('show');
+    keyInput.classList.add('shake');
+    setTimeout(() => keyInput.classList.remove('shake'), 500);
+    playSound(220, 0.4);
+    return;
   }
 
-  function showToast(msg, duration = 2400) {
-    const old = document.querySelector('.toast');
-    if (old) old.remove();
-    if (toastTimer) clearTimeout(toastTimer);
-    const t = document.createElement('div');
-    t.className = 'toast';
-    t.textContent = msg;
-    document.body.appendChild(t);
-    toastTimer = setTimeout(() => {
-      t.style.opacity = '0';
-      t.style.transform = 'translate(-50%, 20px)';
-      setTimeout(() => t.remove(), 320);
-    }, duration);
+  activateBtn.classList.add('loading');
+
+  let result;
+  try {
+    result = await apiVerifyKey(rawKey, getDeviceId(), getDeviceName());
+  } catch(e){
+    activateBtn.classList.remove('loading');
+    errorMsg.textContent = '❌ Không kết nối được server. Kiểm tra mạng hoặc URL.';
+    errorMsg.classList.add('show');
+    keyInput.classList.add('shake');
+    setTimeout(() => keyInput.classList.remove('shake'), 500);
+    playSound(220, 0.4);
+    return;
   }
 
-  function playSound(freq = 880, dur = 0.25) {
-    try {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.type = 'sine';
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
-      osc.start();
-      osc.stop(audioCtx.currentTime + dur);
-    } catch (e) {}
+  activateBtn.classList.remove('loading');
+
+  if (!result.ok){
+    const codeMap = {
+      'INVALID_FORMAT': '❌ Key sai định dạng',
+      'KEY_NOT_FOUND': '❌ Key không tồn tại',
+      'KEY_BANNED': '🚫 Key đã bị khóa',
+      'KEY_EXPIRED': '⏰ Key đã hết hạn',
+      'DEVICE_LIMIT': '⚠️ Key đã đạt giới hạn thiết bị'
+    };
+    errorMsg.textContent = codeMap[result.code] || ('❌ ' + (result.message || 'Key không hợp lệ'));
+    errorMsg.classList.add('show');
+    keyInput.classList.add('shake');
+    setTimeout(() => keyInput.classList.remove('shake'), 500);
+    playSound(220, 0.4);
+    return;
   }
 
-  function speak(text, rate = 1) {
-    if (!window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'vi-VN';
-    u.rate = rate;
-    u.pitch = 1;
-    u.volume = 1;
-    window.speechSynthesis.speak(u);
-  }
+  const data = result.data;
+  localStorage.setItem(LS_ACTIVATED, rawKey);
+  localStorage.setItem(LS_EXPIRE_AT, new Date(data.expire_at).getTime().toString());
+  currentKey = rawKey;
+  expireTimestamp = new Date(data.expire_at).getTime();
 
-  // ============ THIẾT BỊ ============
-  function getDeviceId() {
-    let id = localStorage.getItem(LS_DEVICE_ID);
-    if (!id) {
-      id = 'dev_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 8);
-      localStorage.setItem(LS_DEVICE_ID, id);
+  playSound(1000, 0.3);
+  showToast(result.code === 'ACTIVATED' ? '✅ Kích hoạt thành công' : '✅ Key đang hoạt động');
+
+  showScreen('screenLoading');
+  startLoadingAnimation();
+}
+
+function startLoadingAnimation(){
+  const startTime = Date.now();
+  $('loadingPercent').textContent = '0%';
+  $('loadingBarFill').style.width = '0%';
+  $('loadingText').textContent = 'ĐANG KẾT NỐI ...';
+
+  if (loadingInterval) clearInterval(loadingInterval);
+  loadingInterval = setInterval(() => {
+    const elapsed = Date.now() - startTime;
+    const p = Math.min(Math.floor((elapsed / LOADING_DURATION) * 100), 100);
+    $('loadingPercent').textContent = p + '%';
+    $('loadingBarFill').style.width = p + '%';
+
+    if (p < 30) $('loadingText').textContent = 'ĐANG XÁC THỰC KEY ...';
+    else if (p < 60) $('loadingText').textContent = 'ĐANG THIẾT LẬP KẾT NỐI ...';
+    else if (p < 90) $('loadingText').textContent = 'ĐANG ĐỒNG BỘ DỮ LIỆU ...';
+    else $('loadingText').textContent = 'HOÀN TẤT ...';
+
+    if (p >= 100){
+      clearInterval(loadingInterval);
+      loadingInterval = null;
+      setTimeout(finishLoading, 250);
     }
-    return id;
+  }, 100);
+}
+
+function finishLoading(){
+  showScreen('screenMain');
+  const name = getDeviceName();
+  deviceNameDisplay.textContent = name;
+  deviceIcon.textContent = getDeviceIcon(name);
+  deviceBadge.textContent = 'ID: ' + getDeviceId().slice(-6).toUpperCase();
+
+  expireTimestamp = parseInt(localStorage.getItem(LS_EXPIRE_AT) || '0', 10);
+  startCountdown();
+  loadAimState();
+  loadDnsState();
+  loadSavedConfig();
+
+  const daysLeft = Math.max(0, Math.ceil((expireTimestamp - Date.now()) / 86400000));
+  setTimeout(() => speak('Chào mừng bạn đến với UN LOCK'), 300);
+  setTimeout(() => speak(`Thời gian sử dụng của bạn còn lại ${daysLeft} ngày`), 2000);
+}
+
+function updateTimeRemaining(){
+  if (!expireTimestamp) return;
+  const diff = expireTimestamp - Date.now();
+  if (diff <= 0){ handleExpired(); return; }
+
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const mins = Math.floor((diff % 3600000) / 60000);
+  const secs = Math.floor((diff % 60000) / 1000);
+
+  let display;
+  if (days > 0) display = days + ' ngày ' + hours + ' giờ';
+  else if (hours > 0) display = hours + ' giờ ' + mins + ' phút';
+  else if (mins > 0) display = mins + ' phút ' + secs + ' giây';
+  else display = secs + ' giây';
+
+  if (timeRemainingDisplay) timeRemainingDisplay.textContent = display;
+}
+
+function startCountdown(){
+  if (countdownInterval) clearInterval(countdownInterval);
+  updateTimeRemaining();
+  countdownInterval = setInterval(updateTimeRemaining, 1000);
+}
+
+function handleExpired(){
+  if (countdownInterval) clearInterval(countdownInterval);
+  if ($('screenMain').classList.contains('active')){
+    showToast('⚠️ Key đã hết hạn');
+    setTimeout(() => doLogout(true), 800);
+  }
+}
+
+async function doLogout(silent){
+  silent = silent || false;
+  if (countdownInterval) clearInterval(countdownInterval);
+  if (loadingInterval) clearInterval(loadingInterval);
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+
+  const savedKey = localStorage.getItem(LS_ACTIVATED);
+  if (savedKey){
+    try { await apiLogout(savedKey, getDeviceId()); } catch(e){}
   }
 
-  function getDeviceName() {
-    let name = localStorage.getItem(LS_DEVICE_NAME);
-    if (!name) {
-      const ua = navigator.userAgent;
-      let device = 'Thiết bị';
-      if (/iPhone/i.test(ua)) device = 'iPhone';
-      else if (/iPad/i.test(ua)) device = 'iPad';
-      else if (/Android/i.test(ua)) device = 'Android';
-      else if (/Mac/i.test(ua)) device = 'Mac';
-      else if (/Windows/i.test(ua)) device = 'Windows';
-      name = device + ' ' + Math.floor(1000 + Math.random() * 9000);
-      localStorage.setItem(LS_DEVICE_NAME, name);
-    }
-    return name;
+  localStorage.removeItem(LS_ACTIVATED);
+  localStorage.removeItem(LS_EXPIRE_AT);
+  currentKey = '';
+  expireTimestamp = 0;
+  keyInput.value = '';
+  errorMsg.classList.remove('show');
+  keyInput.classList.remove('shake');
+
+  showScreen('screenKey');
+  if (!silent) showToast('👋 Đã đăng xuất');
+}
+
+// ═══════════ DNS ═══════════
+function updateDnsUI(on){
+  if (on){
+    dnsCircle.classList.add('active');
+    dnsLabel.textContent = 'DNS ĐANG HOẠT ĐỘNG';
+    dnsHint.textContent = 'đang bảo vệ';
+  } else {
+    dnsCircle.classList.remove('active');
+    dnsLabel.textContent = 'DNS TẮT';
+    dnsHint.textContent = 'nhấn giữ 1 giây';
   }
+}
 
-  function getDeviceIcon(name) {
-    if (/iPhone|iPad|Mac/i.test(name)) return '📱';
-    if (/Android/i.test(name)) return '📱';
-    if (/Windows/i.test(name)) return '💻';
-    return '📱';
-  }
+function loadDnsState(){
+  updateDnsUI(localStorage.getItem(LS_DNS_STATE) === 'true');
+}
 
-  // ============ KEY ============
-  function isValidKeyFormat(key) {
-    if (!key || key.length !== KEY_LENGTH) return false;
-    if (!key.startsWith(KEY_PREFIX)) return false;
-    return true;
-  }
+function toggleDns(){
+  if (isLoading) return;
+  isLoading = true;
+  const current = localStorage.getItem(LS_DNS_STATE) === 'true';
+  dnsCircle.style.opacity = '0.65';
+  dnsCircle.style.pointerEvents = 'none';
+  setTimeout(() => {
+    const next = !current;
+    localStorage.setItem(LS_DNS_STATE, next.toString());
+    updateDnsUI(next);
+    dnsCircle.style.opacity = '1';
+    dnsCircle.style.pointerEvents = 'auto';
+    isLoading = false;
+    playSound(next ? 1200 : 500, 0.3);
+    showToast(next ? '✅ DNS đã BẬT' : '⛔ DNS đã TẮT');
+  }, 450);
+}
 
-  function isKeyAllowed(key) {
-    if (VALID_KEYS.length === 0) return true;
-    return VALID_KEYS.includes(key);
-  }
-
-  function activateKey(key) {
-    localStorage.setItem(LS_ACTIVATED, key);
-    const expire = Date.now() + KEY_EXPIRE_DAYS * 24 * 60 * 60 * 1000;
-    localStorage.setItem(LS_EXPIRE_AT, expire.toString());
-    expireTimestamp = expire;
-    currentKey = key;
-  }
-
-  // ============ ĐẾM NGƯỢC ============
-  function updateTimeRemaining() {
-    if (!expireTimestamp) return;
-    const diff = expireTimestamp - Date.now();
-    if (diff <= 0) {
-      handleExpired();
-      return;
-    }
-    const days = Math.floor(diff / 86400000);
-    const hours = Math.floor((diff % 86400000) / 3600000);
-    const mins = Math.floor((diff % 3600000) / 60000);
-    const secs = Math.floor((diff % 60000) / 1000);
-
-    let display = '';
-    if (days > 0) display = `${days} ngày ${hours} giờ`;
-    else if (hours > 0) display = `${hours} giờ ${mins} phút`;
-    else if (mins > 0) display = `${mins} phút ${secs} giây`;
-    else display = `${secs} giây`;
-
-    if (timeRemainingDisplay) timeRemainingDisplay.textContent = display;
-  }
-
-  function startCountdown() {
-    if (countdownInterval) clearInterval(countdownInterval);
-    updateTimeRemaining();
-    countdownInterval = setInterval(updateTimeRemaining, 1000);
-  }
-
-  function handleExpired() {
-    if (countdownInterval) clearInterval(countdownInterval);
-    if (screenMain.classList.contains('active')) {
-      showToast('⚠️ Key đã hết hạn');
-      setTimeout(() => doLogout(true), 800);
-    }
-  }
-
-  // ============ ĐĂNG XUẤT ============
-  function doLogout(silent = false) {
-    if (countdownInterval) clearInterval(countdownInterval);
-    if (loadingInterval) clearInterval(loadingInterval);
-    if (window.speechSynthesis) window.speechSynthesis.cancel();
-
-    localStorage.removeItem(LS_ACTIVATED);
-    localStorage.removeItem(LS_EXPIRE_AT);
-
-    currentKey = '';
-    expireTimestamp = 0;
-    keyInput.value = '';
-    errorMsg.classList.remove('show');
-    keyInput.classList.remove('shake');
-
-    showScreen('screenKey');
-    if (!silent) showToast('👋 Đã đăng xuất');
-  }
-
-  // ============ DNS UI ============
-  function updateDnsUI(on) {
-    if (on) {
-      dnsCircle.classList.add('active');
-      dnsLabel.textContent = 'DNS ĐANG HOẠT ĐỘNG';
-      dnsHint.textContent = 'đang bảo vệ';
-    } else {
-      dnsCircle.classList.remove('active');
-      dnsLabel.textContent = 'DNS TẮT';
-      dnsHint.textContent = 'nhấn giữ 1 giây';
-    }
-  }
-
-  function loadDnsState() {
-    const on = localStorage.getItem(LS_DNS_STATE) === 'true';
-    updateDnsUI(on);
-  }
-
-  function toggleDns() {
-    if (isLoading) return;
-    isLoading = true;
-    const current = localStorage.getItem(LS_DNS_STATE) === 'true';
-    dnsCircle.style.opacity = '0.65';
-    dnsCircle.style.pointerEvents = 'none';
-
-    setTimeout(() => {
-      const newState = !current;
-      localStorage.setItem(LS_DNS_STATE, newState.toString());
-      updateDnsUI(newState);
-      dnsCircle.style.opacity = '1';
-      dnsCircle.style.pointerEvents = 'auto';
-      isLoading = false;
-      playSound(newState ? 1200 : 500, 0.3);
-      showToast(newState ? '✅ DNS đã BẬT' : '⛔ DNS đã TẮT');
-    }, 450);
-  }
-
-  // Nhấn giữ 1s cho DNS
-  function dnsPressStart(e) {
-    e.preventDefault();
-    if (isLoading) return;
-    dnsLongPressDone = false;
-    dnsCircle.style.transform = 'scale(0.96)';
-    dnsPressTimer = setTimeout(() => {
-      dnsLongPressDone = true;
-      toggleDns();
-      dnsCircle.style.transform = 'scale(1)';
-    }, 1000);
-  }
-
-  function dnsPressEnd() {
-    if (dnsPressTimer) {
-      clearTimeout(dnsPressTimer);
-      dnsPressTimer = null;
-    }
+function dnsPressStart(e){
+  e.preventDefault();
+  if (isLoading) return;
+  dnsLongPressDone = false;
+  dnsCircle.style.transform = 'scale(0.96)';
+  dnsPressTimer = setTimeout(() => {
+    dnsLongPressDone = true;
+    toggleDns();
     dnsCircle.style.transform = 'scale(1)';
-    if (!dnsLongPressDone) {
-      showToast('💡 Nhấn giữ 1 giây để bật/tắt');
-    }
-  }
+  }, 1000);
+}
 
-  // ============ AIM ============
-  function updateAimUI(on) {
-    if (on) {
-      aimStatus.textContent = 'BẬT';
-      aimStatus.classList.add('on');
-    } else {
-      aimStatus.textContent = 'TẮT';
-      aimStatus.classList.remove('on');
-    }
-  }
+function dnsPressEnd(){
+  if (dnsPressTimer){ clearTimeout(dnsPressTimer); dnsPressTimer = null; }
+  dnsCircle.style.transform = 'scale(1)';
+  if (!dnsLongPressDone) showToast('💡 Nhấn giữ 1 giây để bật/tắt');
+}
 
-  function loadAimState() {
-    const on = localStorage.getItem(LS_AIM_STATE) === 'true';
-    updateAimUI(on);
-  }
+// ═══════════ AIM ═══════════
+function updateAimUI(on){
+  if (on){ aimStatus.textContent = 'BẬT'; aimStatus.classList.add('on'); }
+  else { aimStatus.textContent = 'TẮT'; aimStatus.classList.remove('on'); }
+}
 
-  // ============ TẢI CẤU HÌNH ============
-  function buildMobileconfig(name, dns1, dns2, url) {
-    const uuid = (crypto.randomUUID ? crypto.randomUUID() : 'uuid-' + Date.now() + '-' + Math.random().toString(36).substr(2,9));
-    const uuid2 = (crypto.randomUUID ? crypto.randomUUID() : 'uuid-' + Date.now() + 1 + '-' + Math.random().toString(36).substr(2,9));
+function loadAimState(){
+  updateAimUI(localStorage.getItem(LS_AIM_STATE) === 'true');
+}
 
-    return `<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>PayloadContent</key>
-  <array>
-    <dict>
-      <key>DNSSettings</key>
-      <dict>
-        <key>DNSProtocol</key>
-        <string>HTTPS</string>
-        <key>ServerURL</key>
-        <string>${escapeXml(url)}</string>
-        <key>ServerAddresses</key>
-        <array>
-          <string>${escapeXml(dns1)}</string>
-          <string>${escapeXml(dns2)}</string>
-        </array>
-      </dict>
-      <key>PayloadDescription</key>
-      <string>Cấu hình DNS cho ${escapeXml(name)}</string>
-      <key>PayloadDisplayName</key>
-      <string>${escapeXml(name)}</string>
-      <key>PayloadIdentifier</key>
-      <string>app.unlock.dns.${uuid}</string>
-      <key>PayloadType</key>
-      <string>com.apple.dnsSettings.managed</string>
-      <key>PayloadUUID</key>
-      <string>${uuid}</string>
-      <key>PayloadVersion</key>
-      <integer>1</integer>
-    </dict>
-  </array>
-  <key>PayloadDescription</key>
-  <string>Cấu hình DNS tùy chỉnh từ UN LOCK</string>
-  <key>PayloadDisplayName</key>
-  <string>${escapeXml(name)}</string>
-  <key>PayloadIdentifier</key>
-  <string>app.unlock.profile.${uuid2}</string>
-  <key>PayloadRemovalDisallowed</key>
-  <false/>
-  <key>PayloadType</key>
-  <string>Configuration</string>
-  <key>PayloadUUID</key>
-  <string>${uuid2}</string>
-  <key>PayloadVersion</key>
-  <integer>1</integer>
-</dict>
-</plist>`;
-  }
+// ═══════════ TẢI CẤU HÌNH ═══════════
+function escapeXml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
+}
 
-  function escapeXml(s) {
-    return String(s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&apos;');
-  }
+function buildMobileconfig(name, dns1, dns2, url){
+  const uuid = (crypto.randomUUID ? crypto.randomUUID() : 'uuid-' + Date.now() + '-' + Math.random().toString(36).substr(2,9));
+  const uuid2 = (crypto.randomUUID ? crypto.randomUUID() : 'uuid-' + Date.now() + '1-' + Math.random().toString(36).substr(2,9));
+  return '<?xml version="1.0" encoding="UTF-8"?>\n' +
+'<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n' +
+'<plist version="1.0">\n' +
+'<dict>\n' +
+'  <key>PayloadContent</key>\n' +
+'  <array>\n' +
+'    <dict>\n' +
+'      <key>DNSSettings</key>\n' +
+'      <dict>\n' +
+'        <key>DNSProtocol</key>\n' +
+'        <string>HTTPS</string>\n' +
+'        <key>ServerURL</key>\n' +
+'        <string>' + escapeXml(url) + '</string>\n' +
+'        <key>ServerAddresses</key>\n' +
+'        <array>\n' +
+'          <string>' + escapeXml(dns1) + '</string>\n' +
+'          <string>' + escapeXml(dns2) + '</string>\n' +
+'        </array>\n' +
+'      </dict>\n' +
+'      <key>PayloadDescription</key>\n' +
+'      <string>Cấu hình DNS cho ' + escapeXml(name) + '</string>\n' +
+'      <key>PayloadDisplayName</key>\n' +
+'      <string>' + escapeXml(name) + '</string>\n' +
+'      <key>PayloadIdentifier</key>\n' +
+'      <string>app.unlock.dns.' + uuid + '</string>\n' +
+'      <key>PayloadType</key>\n' +
+'      <string>com.apple.dnsSettings.managed</string>\n' +
+'      <key>PayloadUUID</key>\n' +
+'      <string>' + uuid + '</string>\n' +
+'      <key>PayloadVersion</key>\n' +
+'      <integer>1</integer>\n' +
+'    </dict>\n' +
+'  </array>\n' +
+'  <key>PayloadDescription</key>\n' +
+'  <string>Cấu hình DNS tùy chỉnh từ UN LOCK</string>\n' +
+'  <key>PayloadDisplayName</key>\n' +
+'  <string>' + escapeXml(name) + '</string>\n' +
+'  <key>PayloadIdentifier</key>\n' +
+'  <string>app.unlock.profile.' + uuid2 + '</string>\n' +
+'  <key>PayloadRemovalDisallowed</key>\n' +
+'  <false/>\n' +
+'  <key>PayloadType</key>\n' +
+'  <string>Configuration</string>\n' +
+'  <key>PayloadUUID</key>\n' +
+'  <string>' + uuid2 + '</string>\n' +
+'  <key>PayloadVersion</key>\n' +
+'  <integer>1</integer>\n' +
+'</dict>\n' +
+'</plist>';
+}
 
-  function downloadConfig() {
-    if (isLoading) return;
-    isLoading = true;
-    downloadBtn.classList.add('loading');
+function downloadConfig(){
+  if (isLoading) return;
+  isLoading = true;
+  downloadBtn.classList.add('loading');
 
-    const name = (cfgName.value.trim() || 'UN LOCK DNS');
-    const dns1 = (cfgDns1.value.trim() || '1.1.1.1');
-    const dns2 = (cfgDns2.value.trim() || '1.0.0.1');
-    const url  = (cfgUrl.value.trim()  || 'https://ms.garena.com');
+  const name = (cfgName.value.trim() || 'UN LOCK DNS');
+  const dns1 = (cfgDns1.value.trim() || '1.1.1.1');
+  const dns2 = (cfgDns2.value.trim() || '1.0.0.1');
+  const url  = (cfgUrl.value.trim()  || 'https://ms.garena.com');
 
-    // Lưu cấu hình
-    localStorage.setItem(LS_DNS_CONFIG, JSON.stringify({ name, dns1, dns2, url }));
+  localStorage.setItem(LS_DNS_CONFIG, JSON.stringify({ name, dns1, dns2, url }));
 
-    setTimeout(() => {
-      try {
-        const content = buildMobileconfig(name, dns1, dns2, url);
-        const blob = new Blob([content], { type: 'application/x-apple-aspen-config' });
-        const urlObj = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = urlObj;
-        a.download = name.replace(/[^a-zA-Z0-9-_]/g, '_') + '.mobileconfig';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        setTimeout(() => URL.revokeObjectURL(urlObj), 1000);
-        playSound(1100, 0.3);
-        showToast('📥 Đã tải cấu hình ' + a.download);
-      } catch (e) {
-        showToast('❌ Lỗi tạo cấu hình');
-      }
-      downloadBtn.classList.remove('loading');
-      isLoading = false;
-    }, 700);
-  }
-
-  // ============ LOAD CẤU HÌNH ĐÃ LƯU ============
-  function loadSavedConfig() {
+  setTimeout(() => {
     try {
-      const raw = localStorage.getItem(LS_DNS_CONFIG);
-      if (!raw) return;
-      const c = JSON.parse(raw);
-      if (c.name) cfgName.value = c.name;
-      if (c.dns1) cfgDns1.value = c.dns1;
-      if (c.dns2) cfgDns2.value = c.dns2;
-      if (c.url)  cfgUrl.value  = c.url;
-    } catch (e) {}
-  }
+      const content = buildMobileconfig(name, dns1, dns2, url);
+      const blob = new Blob([content], { type: 'application/x-apple-aspen-config' });
+      const urlObj = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = urlObj;
+      a.download = name.replace(/[^a-zA-Z0-9-_]/g, '_') + '.mobileconfig';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(urlObj), 1000);
+      playSound(1100, 0.3);
+      showToast('📥 Đã tải cấu hình');
+    } catch(e){
+      showToast('❌ Lỗi tạo cấu hình');
+    }
+    downloadBtn.classList.remove('loading');
+    isLoading = false;
+  }, 700);
+}
 
-  // ============ HOÀN TẤT LOADING ============
-  function finishLoading() {
-    showScreen('screenMain');
+function loadSavedConfig(){
+  try {
+    const raw = localStorage.getItem(LS_DNS_CONFIG);
+    if (!raw) return;
+    const c = JSON.parse(raw);
+    if (c.name) cfgName.value = c.name;
+    if (c.dns1) cfgDns1.value = c.dns1;
+    if (c.dns2) cfgDns2.value = c.dns2;
+    if (c.url)  cfgUrl.value  = c.url;
+  } catch(e){}
+}
+
+// ═══════════ SỰ KIỆN ═══════════
+function bindEvents(){
+  keyInput.addEventListener('input', () => {
+    keyInput.value = keyInput.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    errorMsg.classList.remove('show');
+  });
+  keyInput.addEventListener('keypress', e => { if (e.key === 'Enter') handleActivate(); });
+
+  activateBtn.addEventListener('click', () => {
+    if (activateBtn.classList.contains('loading')) return;
+    handleActivate();
+  });
+
+  ['mousedown','touchstart'].forEach(ev => {
+    dnsCircle.addEventListener(ev, dnsPressStart, { passive: false });
+  });
+  ['mouseup','mouseleave','touchend','touchcancel'].forEach(ev => {
+    dnsCircle.addEventListener(ev, dnsPressEnd);
+  });
+
+  aimBtn.addEventListener('click', () => {
+    if (aimBtn.classList.contains('loading')) return;
+    aimBtn.classList.add('loading');
+    setTimeout(() => {
+      const next = !(localStorage.getItem(LS_AIM_STATE) === 'true');
+      localStorage.setItem(LS_AIM_STATE, next.toString());
+      updateAimUI(next);
+      playSound(next ? 1000 : 400, 0.25);
+      showToast(next ? '🎯 AIM đã BẬT' : '🎯 AIM đã TẮT');
+      aimBtn.classList.remove('loading');
+    }, 400);
+  });
+
+  viewInfoBtn.addEventListener('click', () => {
+    if (viewInfoBtn.classList.contains('loading')) return;
+    viewInfoBtn.classList.add('loading');
+    setTimeout(() => {
+      const dnsOn = localStorage.getItem(LS_DNS_STATE) === 'true';
+      const dnsState = dnsOn ? '🟢 BẬT' : '⚪ TẮT';
+      const dns1 = cfgDns1.value.trim() || '1.1.1.1';
+      const dns2 = cfgDns2.value.trim() || '1.0.0.1';
+      const url = cfgUrl.value.trim() || 'https://ms.garena.com';
+      showToast('DNS: ' + dnsState + ' · ' + dns1 + ' / ' + dns2 + ' · ' + url, 4500);
+      viewInfoBtn.classList.remove('loading');
+    }, 400);
+  });
+
+  downloadBtn.addEventListener('click', downloadConfig);
+
+  logoutBtn.addEventListener('click', () => {
+    if (logoutBtn.classList.contains('loading')) return;
+    logoutBtn.classList.add('loading');
+    setTimeout(() => {
+      logoutBtn.classList.remove('loading');
+      logoutModal.classList.add('show');
+    }, 300);
+  });
+
+  $('cancelLogout').addEventListener('click', () => logoutModal.classList.remove('show'));
+  $('confirmLogout').addEventListener('click', async () => {
+    logoutModal.classList.remove('show');
+    await doLogout(false);
+  });
+  logoutModal.addEventListener('click', e => {
+    if (e.target === logoutModal) logoutModal.classList.remove('show');
+  });
+}
+
+// ═══════════ KHỞI TẠO ═══════════
+function init(){
+  getDeviceId();
+  getDeviceName();
+  bindEvents();
+
+  document.body.addEventListener('click', function once(){
+    playSound(880, 0.2);
+    document.body.removeEventListener('click', once);
+  }, { once: true });
+  document.body.addEventListener('touchstart', function once(){
+    playSound(880, 0.2);
+    document.body.removeEventListener('touchstart', once);
+  }, { once: true });
+
+  const savedKey = localStorage.getItem(LS_ACTIVATED);
+  const savedExpire = parseInt(localStorage.getItem(LS_EXPIRE_AT) || '0', 10);
+
+  if (savedKey && savedExpire > Date.now()){
+    currentKey = savedKey;
+    expireTimestamp = savedExpire;
+    keyInput.value = savedKey;
 
     const name = getDeviceName();
     deviceNameDisplay.textContent = name;
     deviceIcon.textContent = getDeviceIcon(name);
     deviceBadge.textContent = 'ID: ' + getDeviceId().slice(-6).toUpperCase();
-
-    expireTimestamp = parseInt(localStorage.getItem(LS_EXPIRE_AT) || '0', 10);
     startCountdown();
     loadAimState();
     loadDnsState();
     loadSavedConfig();
+    showScreen('screenMain');
 
     const daysLeft = Math.max(0, Math.ceil((expireTimestamp - Date.now()) / 86400000));
-
-    setTimeout(() => speak('Chào mừng bạn đến với UN LOCK'), 300);
-    setTimeout(() => {
-      speak(`Thời gian sử dụng của bạn còn lại ${daysLeft} ngày`);
-    }, 2000);
-  }
-
-  // ============ KÍCH HOẠT KEY ============
-  function handleActivate() {
-    const rawKey = (keyInput.value || '').trim().toUpperCase();
-    errorMsg.classList.remove('show');
-    keyInput.classList.remove('shake');
-
-    if (!isValidKeyFormat(rawKey)) {
-      errorMsg.textContent = '❌ Key không hợp lệ. Định dạng: PTROT + 7 ký tự (12 ký tự)';
-      errorMsg.classList.add('show');
-      keyInput.classList.add('shake');
-      setTimeout(() => keyInput.classList.remove('shake'), 500);
-      playSound(220, 0.4);
-      return;
+    setTimeout(() => speak('Chào mừng bạn đến với UN LOCK'), 500);
+    setTimeout(() => speak('Thời gian sử dụng của bạn còn lại ' + daysLeft + ' ngày'), 2200);
+  } else {
+    if (savedKey && savedExpire <= Date.now()){
+      localStorage.removeItem(LS_ACTIVATED);
+      localStorage.removeItem(LS_EXPIRE_AT);
     }
-
-    if (!isKeyAllowed(rawKey)) {
-      errorMsg.textContent = '❌ Key không tồn tại trong hệ thống.';
-      errorMsg.classList.add('show');
-      keyInput.classList.add('shake');
-      setTimeout(() => keyInput.classList.remove('shake'), 500);
-      playSound(220, 0.4);
-      return;
-    }
-
-    // Kiểm tra key đã dùng trên máy khác
-    const savedKey = localStorage.getItem(LS_ACTIVATED);
-    if (savedKey && savedKey !== rawKey) {
-      errorMsg.textContent = '⚠️ Thiết bị đã kích hoạt key khác. Vui lòng đăng xuất trước.';
-      errorMsg.classList.add('show');
-      keyInput.classList.add('shake');
-      setTimeout(() => keyInput.classList.remove('shake'), 500);
-      return;
-    }
-
-    // OK, kích hoạt
-    activateKey(rawKey);
-    getDeviceId();
-    getDeviceName();
-    playSound(1000, 0.3);
-
-    // Chuyển sang loading 15s
-    showScreen('screenLoading');
-    let startTime = Date.now();
-    loadingPercentEl.textContent = '0%';
-    loadingBarFill.style.width = '0%';
-    loadingText.textContent = 'ĐANG KẾT NỐI ...';
-
-    if (loadingInterval) clearInterval(loadingInterval);
-    loadingInterval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      let p = Math.min(Math.floor((elapsed / LOADING_DURATION) * 100), 100);
-
-      loadingPercentEl.textContent = p + '%';
-      loadingBarFill.style.width = p + '%';
-
-      if (p < 30) loadingText.textContent = 'ĐANG XÁC THỰC KEY ...';
-      else if (p < 60) loadingText.textContent = 'ĐANG THIẾT LẬP KẾT NỐI ...';
-      else if (p < 90) loadingText.textContent = 'ĐANG ĐỒNG BỘ DỮ LIỆU ...';
-      else loadingText.textContent = 'HOÀN TẤT ...';
-
-      if (p >= 100) {
-        clearInterval(loadingInterval);
-        loadingInterval = null;
-        setTimeout(finishLoading, 250);
-      }
-    }, 100);
+    showScreen('screenKey');
   }
+}
 
-  // ============ GẮN SỰ KIỆN ============
-  function bindEvents() {
-    // KEY INPUT
-    keyInput.addEventListener('input', () => {
-      keyInput.value = keyInput.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-      errorMsg.classList.remove('show');
-    });
-    keyInput.addEventListener('keypress', e => {
-      if (e.key === 'Enter') handleActivate();
-    });
+window.addEventListener('beforeunload', () => {
+  if (countdownInterval) clearInterval(countdownInterval);
+  if (loadingInterval) clearInterval(loadingInterval);
+  if (toastTimer) clearTimeout(toastTimer);
+  if (dnsPressTimer) clearTimeout(dnsPressTimer);
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+});
 
-    // KÍCH HOẠT
-    activateBtn.addEventListener('click', () => {
-      if (activateBtn.classList.contains('loading')) return;
-      activateBtn.classList.add('loading');
-      setTimeout(() => {
-        activateBtn.classList.remove('loading');
-        handleActivate();
-      }, 300);
-    });
-
-    // DNS - nhấn giữ
-    ['mousedown', 'touchstart'].forEach(ev => {
-      dnsCircle.addEventListener(ev, dnsPressStart, { passive: false });
-    });
-    ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach(ev => {
-      dnsCircle.addEventListener(ev, dnsPressEnd);
-    });
-
-    // AIM
-    aimBtn.addEventListener('click', () => {
-      if (aimBtn.classList.contains('loading')) return;
-      aimBtn.classList.add('loading');
-      setTimeout(() => {
-        const cur = localStorage.getItem(LS_AIM_STATE) === 'true';
-        const next = !cur;
-        localStorage.setItem(LS_AIM_STATE, next.toString());
-        updateAimUI(next);
-        playSound(next ? 1000 : 400, 0.25);
-        showToast(next ? '🎯 AIM đã BẬT' : '🎯 AIM đã TẮT');
-        aimBtn.classList.remove('loading');
-      }, 400);
-    });
-
-    // XEM THÔNG TIN
-    viewInfoBtn.addEventListener('click', () => {
-      if (viewInfoBtn.classList.contains('loading')) return;
-      viewInfoBtn.classList.add('loading');
-      setTimeout(() => {
-        const dnsOn = localStorage.getItem(LS_DNS_STATE) === 'true';
-        const dnsState = dnsOn ? '🟢 ĐANG BẬT' : '⚪ ĐANG TẮT';
-        const dns1 = cfgDns1.value.trim() || '1.1.1.ns1';
-        const dns2 = cfgD2.value.trim() || '1.0.0.1';
-        const url = cfgUrl.value.trim() || 'https://ms.garena.com';
-        const name = cfgName.value.trim() || 'UN LOCK DNS';
-
-        showToast(`DNS: ${dnsState} · ${dns1} / ${dns2} · Garena: ${url}`, 4500);
-        viewInfoBtn.classList.remove('loading');
-      }, 400);
-    });
-
-    // TẢI CẤU HÌNH
-    downloadBtn.addEventListener('click', downloadConfig);
-
-    // ĐĂNG XUẤT - mở modal
-    logoutBtn.addEventListener('click', () => {
-      if (logoutBtn.classList.contains('loading')) return;
-      logoutBtn.classList.add('loading');
-      setTimeout(() => {
-        logoutBtn.classList.remove('loading');
-        logoutModal.classList.add('show');
-      }, 300);
-    });
-
-    cancelLogout.addEventListener('click', () => {
-      logoutModal.classList.remove('show');
-    });
-
-    confirmLogout.addEventListener('click', () => {
-      logoutModal.classList.remove('show');
-      doLogout(false);
-    });
-
-    logoutModal.addEventListener('click', e => {
-      if (e.target === logoutModal) logoutModal.classList.remove('show');
-    });
-  }
-
-  // ============ KHỞI TẠO ============
-  function init() {
-    getDeviceId();
-    getDeviceName();
-    bindEvents();
-
-    // Âm thanh mở app - chờ tương tác đầu tiên
-    document.body.addEventListener('click', function once() {
-      playSound(880, 0.2);
-      document.body.removeEventListener('click', once);
-    }, { once: true });
-    document.body.addEventListener('touchstart', function once() {
-      playSound(880, 0.2);
-      document.body.removeEventListener('touchstart', once);
-    }, { once: true });
-
-    // Kiểm tra key đã lưu
-    const savedKey = localStorage.getItem(LS_ACTIVATED);
-    const savedExpire = parseInt(localStorage.getItem(LS_EXPIRE_AT) || '0', 10);
-
-    if (savedKey && savedExpire > Date.now()) {
-      currentKey = savedKey;
-      expireTimestamp = savedExpire;
-      keyInput.value = savedKey;
-
-      // Vào thẳng màn hình chính
-      const name = getDeviceName();
-      deviceNameDisplay.textContent = name;
-      deviceIcon.textContent = getDeviceIcon(name);
-      deviceBadge.textContent = 'ID: ' + getDeviceId().slice(-6).toUpperCase();
-      startCountdown();
-      loadAimState();
-      loadDnsState();
-      loadSavedConfig();
-      showScreen('screenMain');
-
-      const daysLeft = Math.max(0, Math.ceil((expireTimestamp - Date.now()) / 86400000));
-      setTimeout(() => speak('Chào mừng bạn đến với UN LOCK'), 500);
-      setTimeout(() => speak(`Thời gian sử dụng của bạn còn lại ${daysLeft} ngày`), 2200);
-    } else {
-      if (savedKey && savedExpire <= Date.now()) {
-        localStorage.removeItem(LS_ACTIVATED);
-        localStorage.removeItem(LS_EXPIRE_AT);
-      }
-      showScreen('screenKey');
-    }
-  }
-
-  // Dọn dẹp
-  window.addEventListener('beforeunload', () => {
-    if (countdownInterval) clearInterval(countdownInterval);
-    if (loadingInterval) clearInterval(loadingInterval);
-    if (toastTimer) clearTimeout(toastTimer);
-    if (dnsPressTimer) clearTimeout(dnsPressTimer);
-    if (window.speechSynthesis) window.speechSynthesis.cancel();
-  });
-
-  init();
+init();
 })();
 </script>
 </body>
