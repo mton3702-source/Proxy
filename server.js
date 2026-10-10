@@ -1,327 +1,488 @@
-var express = require("express");
-var fs = require("fs");
-var path = require("path");
-var cors = require("cors");
+/**
+ * UN LOCK - Server API
+ * Deploy lên Render.com
+ */
 
-var app = express();
+const express = require('express');
+const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// ═══════════════ MIDDLEWARE ═══════════════
 app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'public')));
 
-var DB_FILE = path.join(__dirname, "db.json");
+// ═══════════════ CẤU HÌNH ═══════════════
+const DB_FILE = path.join(__dirname, 'keys.json');
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN || 'UNLOCK_ADMIN_2026';
+const KEY_PREFIX = 'PTROT';
+const KEY_LENGTH = 12;
+
+// ═══════════════ DATABASE ═══════════════
+let db = {
+  version: '1.0',
+  updated_at: new Date().toISOString(),
+  keys: []
+};
 
 function loadDB() {
   try {
-    if (!fs.existsSync(DB_FILE)) {
-      var init = { keys: {}, devices: {}, sensitivities: {}, functions: {}, logs: [] };
-      fs.writeFileSync(DB_FILE, JSON.stringify(init, null, 2));
-      return init;
+    if (fs.existsSync(DB_FILE)) {
+      const raw = fs.readFileSync(DB_FILE, 'utf8');
+      db = JSON.parse(raw);
+      console.log('✅ Loaded ' + db.keys.length + ' keys');
+    } else {
+      // Tạo 5 key mẫu lần đầu
+      db.keys = [
+        createKey('PTROT1234567', 7),
+        createKey('PTROTABCDEFG', 30),
+        createKey('PTROTUNLOCK1', 1),
+        createKey('PTROTVIP9999', 365, 3),
+        createKey('PTROT8888888', 7)
+      ];
+      saveDB();
+      console.log('📝 Created 5 sample keys');
     }
-    var data = JSON.parse(fs.readFileSync(DB_FILE, "utf8"));
-    if (!data.keys) data.keys = {};
-    if (!data.devices) data.devices = {};
-    if (!data.sensitivities) data.sensitivities = {};
-    if (!data.functions) data.functions = {};
-    if (!data.logs) data.logs = [];
-    return data;
   } catch (e) {
-    console.error("DB error:", e.message);
-    return { keys: {}, devices: {}, sensitivities: {}, functions: {}, logs: [] };
+    console.error('❌ Load DB error:', e.message);
   }
 }
 
-function saveDB(db) {
+function saveDB() {
   try {
-    fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2));
+    db.updated_at = new Date().toISOString();
+    fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2), 'utf8');
   } catch (e) {
-    console.error("Save error:", e.message);
+    console.error('❌ Save DB error:', e.message);
   }
 }
 
-var DB = loadDB();
-console.log("DB loaded. Keys:", Object.keys(DB.keys).length);
+function createKey(key, days, maxDev) {
+  return {
+    key: key.toUpperCase(),
+    device_id: null,
+    device_name: null,
+    activated_at: null,
+    expire_at: null,
+    duration_days: days,
+    status: 'unused',
+    max_devices: maxDev || 1,
+    devices: [],
+    note: '',
+    created_at: new Date().toISOString()
+  };
+}
 
-app.get("/api/ping", function (req, res) {
-  res.json({ ok: true, time: Date.now(), server: "SERENITY LOCK", version: "2.0" });
-});
+function genKey() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let s = '';
+  for (let i = 0; i < 7; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return KEY_PREFIX + s;
+}
 
-app.get("/health", function (req, res) {
+function validFmt(k) {
+  if (!k || typeof k !== 'string') return false;
+  k = k.toUpperCase().trim();
+  return k.length === KEY_LENGTH && k.startsWith(KEY_PREFIX);
+}
+
+function findKey(k) {
+  if (!k) return null;
+  const u = k.toUpperCase().trim();
+  return db.keys.find(function(item){ return item.key === u; });
+}
+
+// ═══════════════ API: HEALTH ═══════════════
+app.get('/api/health', function(req, res){
   res.json({
     ok: true,
-    status: "healthy",
+    service: 'UN LOCK API',
+    version: db.version,
+    total_keys: db.keys.length,
     uptime: process.uptime(),
-    keys: Object.keys(DB.keys).length,
-    time: new Date().toISOString()
+    timestamp: new Date().toISOString()
   });
 });
 
-app.get("/api", function (req, res) {
-  res.json({ ok: true, name: "SERENITY LOCK API", version: "2.0" });
-});
-
-app.post("/api/activate", function (req, res) {
-  var body = req.body || {};
-  var key = body.key;
-  var deviceId = body.deviceId;
-  var deviceName = body.deviceName;
+// ═══════════════ API: VERIFY KEY ═══════════════
+app.post('/api/verify', function(req, res){
+  const body = req.body || {};
+  const key = body.key;
+  const deviceId = body.device_id;
+  const deviceName = body.device_name;
 
   if (!key || !deviceId) {
-    return res.json({ ok: false, error: "Thiếu thông tin" });
+    return res.status(400).json({
+      ok: false,
+      code: 'MISSING_PARAMS',
+      message: 'Thiếu key hoặc device_id'
+    });
   }
 
-  var k = DB.keys[key];
-  if (!k) return res.json({ ok: false, error: "Key không tồn tại" });
-  if (k.used) return res.json({ ok: false, error: "Key đã được sử dụng" });
-
-  var now = Date.now();
-  k.used = true;
-  k.deviceId = deviceId;
-  k.deviceName = deviceName || "iOS Device";
-  k.activatedAt = now;
-  k.expiresAt = now + k.durationDays * 86400000;
-  DB.keys[key] = k;
-
-  DB.devices[deviceId] = {
-    key: key,
-    deviceName: k.deviceName,
-    user: k.user,
-    activatedAt: now,
-    lastSeen: now
-  };
-
-  if (!DB.functions[key]) {
-    DB.functions[key] = { nhetam: false, bamtam: false, khoatam: false, khoavung: false };
+  if (!validFmt(key)) {
+    return res.status(400).json({
+      ok: false,
+      code: 'INVALID_FORMAT',
+      message: 'Key sai định dạng (PTROT + 7 ký tự)'
+    });
   }
 
-  saveDB(DB);
+  const rec = findKey(key);
+  if (!rec) {
+    return res.status(404).json({
+      ok: false,
+      code: 'KEY_NOT_FOUND',
+      message: 'Key không tồn tại'
+    });
+  }
 
-  res.json({
+  if (rec.status === 'banned') {
+    return res.status(403).json({
+      ok: false,
+      code: 'KEY_BANNED',
+      message: 'Key đã bị khóa'
+    });
+  }
+
+  if (rec.status === 'expired' || (rec.expire_at && new Date(rec.expire_at) < new Date())) {
+    rec.status = 'expired';
+    saveDB();
+    return res.status(403).json({
+      ok: false,
+      code: 'KEY_EXPIRED',
+      message: 'Key đã hết hạn'
+    });
+  }
+
+  // Check existing device
+  let existDev = null;
+  for (let i = 0; i < rec.devices.length; i++) {
+    if (rec.devices[i].device_id === deviceId) { existDev = rec.devices[i]; break; }
+  }
+
+  if (rec.devices.length > 0 && !existDev) {
+    if (rec.devices.length >= rec.max_devices) {
+      return res.status(403).json({
+        ok: false,
+        code: 'DEVICE_LIMIT',
+        message: 'Key đã đạt giới hạn ' + rec.max_devices + ' thiết bị'
+      });
+    }
+  }
+
+  let isNew = false;
+
+  if (!existDev) {
+    const now = new Date();
+    let expAt;
+
+    if (rec.expire_at) {
+      expAt = new Date(rec.expire_at);
+    } else {
+      expAt = new Date(now.getTime() + rec.duration_days * 24 * 60 * 60 * 1000);
+      rec.activated_at = now.toISOString();
+      rec.expire_at = expAt.toISOString();
+      rec.device_id = deviceId;
+      rec.device_name = deviceName || 'Thiết bị';
+      isNew = true;
+    }
+
+    rec.devices.push({
+      device_id: deviceId,
+      device_name: deviceName || 'Thiết bị',
+      activated_at: now.toISOString()
+    });
+
+    rec.status = 'active';
+    saveDB();
+    console.log('🔓 Activated: ' + rec.key + ' for ' + deviceName);
+  }
+
+  const expTime = new Date(rec.expire_at).getTime();
+  const remain = expTime - Date.now();
+  const daysLeft = Math.max(0, Math.ceil(remain / (24 * 60 * 60 * 1000)));
+
+  return res.json({
     ok: true,
-    type: k.type,
-    user: k.user,
-    expiresAt: k.expiresAt,
-    deviceName: k.deviceName
+    code: isNew ? 'ACTIVATED' : 'ALREADY_ACTIVE',
+    message: isNew ? 'Kích hoạt thành công' : 'Key đang hoạt động',
+    data: {
+      key: rec.key,
+      status: rec.status,
+      duration_days: rec.duration_days,
+      activated_at: rec.activated_at,
+      expire_at: rec.expire_at,
+      days_left: daysLeft,
+      max_devices: rec.max_devices,
+      device_count: rec.devices.length
+    }
   });
 });
 
-app.post("/api/verify", function (req, res) {
-  var body = req.body || {};
-  var key = body.key;
-  var deviceId = body.deviceId;
+// ═══════════════ API: CHECK KEY ═══════════════
+app.post('/api/check', function(req, res){
+  const key = (req.body || {}).key;
+  if (!validFmt(key)) {
+    return res.status(400).json({ ok: false, message: 'Sai định dạng' });
+  }
+  const rec = findKey(key);
+  if (!rec) return res.status(404).json({ ok: false, message: 'Không tồn tại' });
 
-  var k = DB.keys[key];
-  if (!k) return res.json({ ok: false, error: "Key không tồn tại" });
-  if (k.deviceId !== deviceId) return res.json({ ok: false, error: "Key thuộc thiết bị khác" });
-  if (k.expiresAt <= Date.now()) return res.json({ ok: false, error: "Key hết hạn" });
-
-  res.json({ ok: true, type: k.type, user: k.user, expiresAt: k.expiresAt });
+  res.json({
+    ok: true,
+    data: {
+      status: rec.status,
+      duration_days: rec.duration_days,
+      max_devices: rec.max_devices
+    }
+  });
 });
 
-app.get("/api/functions", function (req, res) {
-  var key = req.query.key;
-  var deviceId = req.query.deviceId;
+// ═══════════════ API: LOGOUT ═══════════════
+app.post('/api/logout', function(req, res){
+  const body = req.body || {};
+  const key = body.key;
+  const deviceId = body.device_id;
 
-  if (!key) return res.json({ ok: false, error: "Thiếu key" });
-
-  var k = DB.keys[key];
-  if (!k) return res.json({ ok: false, error: "Key không tồn tại" });
-  if (deviceId && k.deviceId && k.deviceId !== deviceId) {
-    return res.json({ ok: false, error: "Key thuộc thiết bị khác" });
+  if (!key || !deviceId) {
+    return res.status(400).json({ ok: false, message: 'Thiếu tham số' });
   }
 
-  var funcs = DB.functions[key] || { nhetam: false, bamtam: false, khoatam: false, khoavung: false };
-  res.json({ ok: true, functions: funcs, key: key, user: k.user });
+  const rec = findKey(key);
+  if (!rec) return res.status(404).json({ ok: false, message: 'Key không tồn tại' });
+
+  const before = rec.devices.length;
+  rec.devices = rec.devices.filter(function(d){ return d.device_id !== deviceId; });
+
+  if (rec.devices.length === 0) {
+    rec.status = 'unused';
+    rec.device_id = null;
+    rec.device_name = null;
+    rec.activated_at = null;
+    rec.expire_at = null;
+    console.log('🔄 Reset key: ' + rec.key);
+  }
+
+  saveDB();
+  res.json({
+    ok: true,
+    message: 'Đăng xuất thành công',
+    removed: before - rec.devices.length
+  });
 });
 
-app.post("/api/functions", function (req, res) {
-  var body = req.body || {};
-  var key = body.key;
-  var deviceId = body.deviceId;
-  var functions = body.functions;
+// ═══════════════ ADMIN MIDDLEWARE ═══════════════
+function requireAdmin(req, res, next) {
+  const token = req.headers['x-admin-token'] || req.query.token;
+  if (token !== ADMIN_TOKEN) {
+    return res.status(401).json({ ok: false, message: 'Token admin không hợp lệ' });
+  }
+  next();
+}
 
-  if (!key || !deviceId || !functions) {
-    return res.json({ ok: false, error: "Thiếu thông tin" });
+// ═══════════════ API ADMIN: LIST KEYS ═══════════════
+app.get('/api/admin/keys', requireAdmin, function(req, res){
+  const now = Date.now();
+  db.keys.forEach(function(k){
+    if (k.status === 'active' && k.expire_at && new Date(k.expire_at).getTime() < now) {
+      k.status = 'expired';
+    }
+  });
+  saveDB();
+
+  res.json({
+    ok: true,
+    total: db.keys.length,
+    keys: db.keys
+  });
+});
+
+// ═══════════════ API ADMIN: CREATE KEY ═══════════════
+app.post('/api/admin/keys', requireAdmin, function(req, res){
+  const body = req.body || {};
+  const duration = parseInt(body.duration_days) || 7;
+  const maxDev = parseInt(body.max_devices) || 1;
+  const note = body.note || '';
+
+  let newKey = body.key ? body.key.toUpperCase().trim() : genKey();
+
+  if (!validFmt(newKey)) {
+    return res.status(400).json({ ok: false, message: 'Key sai định dạng' });
   }
 
-  var k = DB.keys[key];
-  if (!k) return res.json({ ok: false, error: "Key không tồn tại" });
-  if (k.deviceId !== deviceId) return res.json({ ok: false, error: "Key thuộc thiết bị khác" });
+  if (findKey(newKey)) {
+    return res.status(409).json({ ok: false, message: 'Key đã tồn tại' });
+  }
 
-  var cleaned = {
-    nhetam: !!functions.nhetam,
-    bamtam: !!functions.bamtam,
-    khoatam: !!functions.khoatam,
-    khoavung: !!functions.khoavung,
-    updatedAt: Date.now()
+  const rec = createKey(newKey, duration, maxDev);
+  rec.note = note;
+  db.keys.push(rec);
+  saveDB();
+
+  console.log('➕ Created: ' + newKey + ' (' + duration + ' days)');
+  res.json({ ok: true, message: 'Đã tạo key', key: rec });
+});
+
+// ═══════════════ API tồ ADMIN: BULK CREATE ═══════════════
+app.post('/api/admin/keys/bulk', requireAdminn, function(req, res){
+  const body = req.body || {};
+  const count = parseInt(body.count) || 10;
+  const duration = parseInt(body.duration_days) || 7;
+  const maxDev = parseInt(body.max_devices) || 1;
+  const note = body.note || '';
+
+  const created tại = [];
+  for (let i = 0; i < count; i++) {
+    let nk;
+    let attempts = 0;
+    do {
+      nk = gen'Key();
+      attempts++;
+    } while (findKey(nk) && attempts < 100);
+
+    if (findKey(nk)) continue;
+
+    const rec });
+ = createKey(nk, duration, maxDev);
+    rec.note = note;
+    db.keys.push(rec);
+    created.push(nk);
+  }
+
+  saveDB();
+  console.log('➕ Bulk created ' + created.length + ' keys');
+  res.json({ ok: true, message: 'Đã tạo ' + created.length + ' keys', keys: created });
+});
+
+// ═══════════════ API ADMIN: DELETE KEY ═══════════════
+app.delete('/api/admin/keys/:key', requireAdmin, function(req, res){
+  const key = req.params.key.toUpperCase();
+  const before = db.keys.length;
+  db.keys = db.keys.filter(function(k){ return k.key !== key; });
+
+  if (db.keys.length === before) {
+    return res.status(404).json({ ok: false, message: 'Key không  }
+
+  saveDB();
+  console.log('🗑️ Deleted: ' + key);
+  res.json({ ok: true, message: 'Đã xóa key' });
+});
+
+// ═══════════════ API ADMIN: UPDATE STATUS ═══════════════
+app.patch('/api/admin/keys/:key/status', requireAdmin, function(req, res){
+  const key = req.params.key.toUpperCase();
+  const status = (req.body || {}).status;
+
+  if (['unused','active','expired','banned'].indexOf(status) === -1) {
+    return res.status(400).json({ ok: false, message: 'Status không hợp lệ' });
+  }
+
+  const rec = findKey(key);
+  if (!rec) return res.status(404).json({ ok: false, message: 'Key không tồn tại' });
+
+  rec.status = status;
+  if (status === 'unused') {
+    rec.devices = [];
+    rec.device _id = null;
+    rec.device_name = null;
+    rec.activated_at = null;
+    rec.expire_at = null;
+  }
+  saveDB();
+  console.log(' if✏️ Status: ' + key + ' → ' + status);
+  res.json({ ok: true, message: 'Đã cập nhật', key: rec });
+});
+
+// (! ═══════════════ API ADMIN: EXTEND ═══════════════
+app.patch('/api/admin/keys/:key/extend', requireAdmin,rec function(req, res){
+  const key = req.params.key.toUpperCase();
+  const days = parseInt((req.body || {}).)days) || 7;
+
+  const rec = findKey(key);
+ return res.status(404).json({ ok: false, message: 'Key không tồn tại' });
+
+  const base = rec.expire_at ? new Date(rec.expire_at).getTime() : Date.now();
+  const newExp = base + days * 24 * 60 * 60 * 1000;
+  rec.expire_at = new Date(newExp).toISOString();
+  rec.duration_days = (rec.duration_days || 0) + days;
+  rec.status = 'active';
+  saveDB();
+
+  console.log('⏰ Extended: ' + key + ' +' + days + ' days');
+  res.json({ ok: true, message: 'Đã gia hạn ' + days + ' ngày', key: rec });
+});
+
+// ═══════════════ API ADMIN: RESET ═══════════════
+app.patch('/api/admin/keys/:key/reset', requireAdmin, function(req, res){
+  const key = req.params.key.toUpperCase();
+  const rec = findKey(key);
+  if (!rec) return res.status(404).json({ ok: false, message: 'Key không tồn tại' });
+
+  rec.devices = [];
+  rec.device_id = null;
+  rec.device_name = null;
+  rec.activated_at = null;
+  rec.expire_at = null;
+  rec.status = 'unused';
+  saveDB();
+
+  console.log('🔄 Reset: ' + key);
+  res.json({ ok: true, message: 'Đã reset key', key: rec });
+});
+
+// ═══════════════ API ADMIN: STATS ═══════════════
+app.get('/api/admin/stats', requireAdmin, function(req, res){
+  const now = Date.now();
+  const stats = {
+    total: db.keys.length,
+    unused: 0,
+    active: 0,
+    expired: 0,
+    banned: 0,
+    total_devices: 0
   };
 
-  DB.functions[key] = cleaned;
+  db.keys.forEach(function(k){
+    if (k.expire_at && k.status === 'active' && new Date(k.expire_at).getTime() < now) {
+      k.status = 'expired';
+    }
+    if (stats[k.status] !== undefined) stats[k.status]++;
+    stats.total_devices += (k.devices || []).length;
+  });
+  saveDB();
 
-  if (DB.devices[deviceId]) {
-    DB.devices[deviceId].functions = cleaned;
-    DB.devices[deviceId].lastSeen = Date.now();
-  }
-
-  saveDB(DB);
-  res.json({ ok: true, functions: cleaned });
+  res.json({ ok: true, stats: stats });
 });
 
-app.post("/api/sensitivity", function (req, res) {
-  var body = req.body || {};
-  var key = body.key;
-  var deviceId = body.deviceId;
+// ═══════════════ AUTO SCAN EXPIRED ═══════════════
+setInterval(function(){
+  let changed = 0;
+  const now = Date.now();
+  db.keys.forEach(function(k){
+    if (k.status === 'active' && k.expire_at && new Date(k.expire_at).getTime() < now) {
+      k.status = 'expired';
+      changed++;
+      console.log('⏰ Expired: ' + k.key);
+    }
+  });
+  if (changed > 0) saveDB();
+}, 60000);
 
-  if (!key || !deviceId) return res.json({ ok: false, error: "Thiếu thông tin" });
+// ═══════════════ START ═══════════════
+loadDB();
 
-  var k = DB.keys[key];
-  if (!k) return res.json({ ok: false, error: "Key không tồn tại" });
-  if (k.deviceId !== deviceId) return res.json({ ok: false, error: "Key thuộc thiết bị khác" });
-
-  DB.sensitivities[key] = {
-    device: body.device,
-    style: body.style,
-    values: body.values,
-    updatedAt: Date.now()
-  };
-  saveDB(DB);
-  res.json({ ok: true });
-});
-
-app.get("/api/admin/create-key", function (req, res) {
-  var secret = req.query.secret;
-  var key = req.query.key;
-  var days = req.query.days;
-  var user = req.query.user;
-
-  if (secret !== "serenity2026") {
-    return res.json({ ok: false, error: "Sai mật khẩu admin" });
-  }
-
-  if (!key) return res.json({ ok: false, error: "Thiếu key" });
-
-  var keyUpper = String(key).toUpperCase();
-
-  if (DB.keys[keyUpper]) {
-    return res.json({ ok: false, error: "Key đã tồn tại" });
-  }
-
-  var daysNum = parseInt(days) || 7;
-  var typeName = "Tuần";
-  if (daysNum >= 36500) typeName = "Vĩnh viễn";
-  else if (daysNum >= 30) typeName = "Tháng";
-
-  DB.keys[keyUpper] = {
-    type: typeName,
-    user: user || "User",
-    durationDays: daysNum,
-    deviceId: null,
-    deviceName: null,
-    activatedAt: null,
-    expiresAt: null,
-    used: false
-  };
-
-  DB.functions[keyUpper] = { nhetam: false, bamtam: false, khoatam: false, khoavung: false };
-
-  saveDB(DB);
-
-  res.json({ ok: true, key: keyUpper, days: daysNum, user: user || "User" });
-});
-
-app.get("/api/admin/reset-key", function (req, res) {
-  var secret = req.query.secret;
-  var key = req.query.key;
-
-  if (secret !== "serenity2026") return res.json({ ok: false, error: "Sai mật khẩu" });
-
-  var k = DB.keys[key];
-  if (!k) return res.json({ ok: false, error: "Key không tồn tại" });
-
-  k.used = false;
-  k.deviceId = null;
-  k.deviceName = null;
-  k.activatedAt = null;
-  k.expiresAt = null;
-  DB.keys[key] = k;
-  DB.functions[key] = { nhetam: false, bamtam: false, khoatam: false, khoavung: false };
-
-  saveDB(DB);
-  res.json({ ok: true, message: "Đã reset" });
-});
-
-app.get("/api/admin/delete-key", function (req, res) {
-  var secret = req.query.secret;
-  var key = req.query.key;
-
-  if (secret !== "serenity2026") return res.json({ ok: false, error: "Sai mật khẩu" });
-  if (!DB.keys[key]) return res.json({ ok: false, error: "Key không tồn tại" });
-
-  delete DB.keys[key];
-  delete DB.functions[key];
-  delete DB.sensitivities[key];
-
-  saveDB(DB);
-  res.json({ ok: true, message: "Đã xoá key" });
-});
-
-app.get("/api/admin/list-keys", function (req, res) {
-  var secret = req.query.secret;
-
-  if (secret !== "serenity2026") return res.json({ ok: false, error: "Sai mật khẩu" });
-
-  var list = [];
-  var keys = Object.keys(DB.keys);
-  for (var i = 0; i < keys.length; i++) {
-    var key = keys[i];
-    var k = DB.keys[key];
-    list.push({
-      key: key,
-      type: k.type,
-      user: k.user,
-      durationDays: k.durationDays,
-      used: k.used,
-      deviceId: k.deviceId,
-      deviceName: k.deviceName,
-      expiresAt: k.expiresAt,
-      activatedAt: k.activatedAt
-    });
-  }
-
-  res.json({ ok: true, total: list.length, keys: list });
-});
-
-app.get("/api/admin/list-devices", function (req, res) {
-  var secret = req.query.secret;
-
-  if (secret !== "serenity2026") return res.json({ ok: false, error: "Sai mật khẩu" });
-
-  var list = [];
-  var ids = Object.keys(DB.devices);
-  for (var i = 0; i < ids.length; i++) {
-    var id = ids[i];
-    var d = DB.devices[id];
-    list.push({
-      deviceId: id,
-      deviceName: d.deviceName,
-      user: d.user,
-      key: d.key,
-      functions: DB.functions[d.key] || {},
-      lastSeen: d.lastSeen
-    });
-  }
-
-  res.json({ ok: true, total: list.length, devices: list });
-});
-
-app.use(function (err, req, res, next) {
-  console.error("Server error:", err.message);
-  res.status(500).json({ ok: false, error: err.message });
-});
-
-var PORT = process.env.PORT || 3000;
-app.listen(PORT, function () {
-  console.log("🚀 SERENITY LOCK Server v2.0");
-  console.log("   Port: " + PORT);
-  console.log("   Admin secret: serenity2026");
-  console.log("   Keys loaded: " + Object.keys(DB.keys).length);
+app.listen(PORT, function(){
+  console.log('');
+  console.log('╔═══════════════════════════════════╗');
+  console.log('║   🔓 UN LOCK SERVER ĐANG CHẠY    ║');
+  console.log('╠═══════════════════════════════════╣');
+  console.log('║  Port: ' + String(PORT).padEnd(26) + '║');
+  console.log('║  Keys: ' + String(db.keys.length).padEnd(26) + '║');
+  console.log('║  Token: ' + String(ADMIN_TOKEN).substring(0, 20).padEnd(25) + '║');
+  console.log('╚═══════════════════════════════════╝');
+  console.log('');
 });
