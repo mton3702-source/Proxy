@@ -3,683 +3,1666 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="SERENITY LOCK">
-<title>SERENITY LOCK</title>
-<link rel="apple-touch-icon" href="https://raw.githubusercontent.com/mton3702-source/Proxy/refs/heads/main/IMG_1378.jpeg">
-<link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/mton3702-source/Proxy/refs/heads/main/IMG_1378.jpeg">
-<link rel="apple-touch-icon" sizes="192x192" href="https://raw.githubusercontent.com/mton3702-source/Proxy/refs/heads/main/IMG_1378.jpeg">
-<link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/mton3702-source/Proxy/refs/heads/main/IMG_1378.jpeg">
+<title>UN LOCK</title>
 <style>
-:root{
-  --gold:#FFD700;
-  --gold-2:#FFC300;
-  --gold-glow:rgba(255,215,0,.55);
-  --bg:#000;
-  --card:#0d0d0d;
-  --line:rgba(255,215,0,.25);
-}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--gold);
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",sans-serif;
-  min-height:100vh;overflow-x:hidden}
-body::before{content:"";position:fixed;inset:0;
-  background:radial-gradient(circle at 50% 0%,rgba(255,215,0,.10),transparent 60%);
-  pointer-events:none;z-index:0}
-.app{position:relative;z-index:1;padding:20px 16px 40px;max-width:520px;margin:0 auto}
-h1{font-size:24px;letter-spacing:6px;text-align:center;margin:10px 0 4px;
-  background:linear-gradient(180deg,#FFF6B0,#FFD700 40%,#B8860B);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  filter:drop-shadow(0 0 12px var(--gold-glow));font-weight:900}
-.sub{text-align:center;font-size:11px;letter-spacing:3px;opacity:.65;margin-bottom:24px}
-.card{background:linear-gradient(180deg,#111,#050505);border:1px solid var(--line);
-  border-radius:18px;padding:18px;margin-bottom:16px;
-  box-shadow:0 8px 30px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,215,0,.15)}
-.card h2{font-size:14px;letter-spacing:2px;margin:0 0 14px;color:var(--gold);
-  text-transform:uppercase;font-weight:700;display:flex;align-items:center;gap:8px}
-.card h2::before{content:"";width:4px;height:14px;background:var(--gold);
-  border-radius:2px;box-shadow:0 0 8px var(--gold-glow)}
-label{display:block;font-size:11px;letter-spacing:1.5px;opacity:.75;margin:12px 0 6px;text-transform:uppercase}
-input,select{width:100%;background:#000;border:1px solid var(--line);color:var(--gold);
-  padding:13px 14px;border-radius:12px;font-size:15px;font-family:inherit;
-  transition:.2s;outline:none;-webkit-appearance:none}
-input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,215,0,.12)}
-input::placeholder{color:rgba(255,215,0,.35)}
-.btn{width:100%;background:linear-gradient(180deg,#FFE55C,#FFD700 45%,#B8860B);
-  color:#000;border:none;padding:15px;border-radius:14px;font-size:15px;font-weight:800;
-  letter-spacing:2px;margin-top:16px;cursor:pointer;text-transform:uppercase;
-  box-shadow:0 6px 20px rgba(255,215,0,.35),inset 0 1px 0 rgba(255,255,255,.5);
-  transition:.15s;font-family:inherit}
-.btn:active{transform:scale(.97)}
-.btn.ghost{background:transparent;border:1px solid var(--gold);color:var(--gold);
-  box-shadow:0 0 15px rgba(255,215,0,.2)}
-.chk{display:flex;align-items:center;gap:10px;padding:12px 14px;margin:8px 0;
-  background:#0a0a0a;border:1px solid var(--line);border-radius:12px;cursor:pointer;
-  transition:.2s;font-size:14px;letter-spacing:.5px}
-.chk input{display:none}
-.chk .box{width:20px;height:20px;border:2px solid var(--gold);border-radius:6px;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.2s}
-.chk.on{background:rgba(255,215,0,.08);border-color:var(--gold)}
-.chk.on .box{background:var(--gold);box-shadow:0 0 12px var(--gold-glow)}
-.chk.on .box::after{content:"✓";color:#000;font-weight:900;font-size:13px}
-.row{display:flex;justify-content:space-between;align-items:center;
-  padding:11px 0;border-bottom:1px solid rgba(255,215,0,.1);font-size:13px}
-.row:last-child{border:none}
-.row .k{opacity:.65;letter-spacing:1px;font-size:11px;text-transform:uppercase}
-.row .v{font-weight:700;color:var(--gold);text-align:right}
-.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;
-  letter-spacing:1px;font-weight:700}
-.badge.on{background:rgba(0,255,100,.15);color:#4dff88;border:1px solid rgba(0,255,100,.4)}
-.badge.off{background:rgba(255,60,60,.15);color:#ff6b6b;border:1px solid rgba(255,60,60,.4)}
-#loading{position:fixed;inset:0;background:#000;display:none;flex-direction:column;
-  align-items:center;justify-content:center;z-index:9999}
-#loading.show{display:flex}
-.loader{width:90px;height:90px;border:3px solid rgba(255,215,0,.15);
-  border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;
-  box-shadow:0 0 30px var(--gold-glow)}
-@keyframes spin{to{transform:rotate(360deg)}}
-#loadPct{font-size:36px;font-weight:900;margin-top:28px;
-  background:linear-gradient(180deg,#FFF6B0,#FFD700,#B8860B);
-  -webkit-background-clip:text;background-clip:text;color:transparent}
-#loadMsg{font-size:12px;letter-spacing:3px;opacity:.6;margin-top:10px;text-align:center;padding:0 20px}
-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
-th,td{padding:9px 6px;text-align:left;border-bottom:1px solid rgba(255,215,0,.12)}
-th{font-size:10px;letter-spacing:1px;opacity:.6;text-transform:uppercase}
-td:last-child{color:var(--gold);font-weight:700;text-align:right}
-.hidden{display:none!important}
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);
-  background:linear-gradient(180deg,#1a1a1a,#000);border:1px solid var(--gold);
-  color:var(--gold);padding:13px 22px;border-radius:30px;font-size:13px;
-  box-shadow:0 8px 30px var(--gold-glow);transition:.35s;z-index:10000;
-  max-width:90vw;text-align:center;letter-spacing:.5px}
-.toast.show{transform:translateX(-50%) translateY(0)}
-.switch{position:relative;width:52px;height:30px;background:#1a1a1a;
-  border-radius:30px;border:1px solid var(--line);cursor:pointer;transition:.25s;flex-shrink:0}
-.switch::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;
-  background:#555;border-radius:50%;transition:.25s}
-.switch.on{background:rgba(255,215,0,.2);border-color:var(--gold)}
-.switch.on::after{left:25px;background:var(--gold);box-shadow:0 0 12px var(--gold-glow)}
-.func-row{display:flex;align-items:center;justify-content:space-between;
-  padding:14px;background:#0a0a0a;border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
-.func-row span{font-size:13px;letter-spacing:.5px}
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #6B21A8 0%, #0EA5E9 100%);
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    color: white;
+    overflow-x: hidden;
+  }
+
+  .app-container {
+    width: 100%;
+    max-width: 420px;
+    min-height: calc(100vh - 28px);
+    max-height: 900px;
+    background: rgba(15, 12, 30, 0.42);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-radius: 40px;
+    padding: 26px 20px 30px;
+    box-shadow:
+      0 30px 60px -10px rgba(0, 0, 0, 0.55),
+      inset 0 1px 1px rgba(255, 255, 255, 0.15),
+      0 0 0 1px rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .app-container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 20%, rgba(107, 33, 168, 0.4), transparent 45%),
+                radial-gradient(circle at 75% 80%, rgba(14, 165, 233, 0.35), transparent 45%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .screen {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    animation: fadeSlide 0.4s ease;
+  }
+
+  .screen.active {
+    display: flex;
+  }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== LOGO ===== */
+  .logo-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+    margin-bottom: 8px;
+  }
+
+  .logo {
+    font-size: 3.4rem;
+    font-weight: 900;
+    letter-spacing: 8px;
+    text-align: center;
+    background: linear-gradient(135deg, #ffffff 0%, #c4b5fd 50%, #7dd3fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 24px rgba(124, 58, 237, 0.8))
+            drop-shadow(0 0 40px rgba(14, 165, 233, 0.5));
+    animation: logoGlow 3s ease-in-out infinite;
+  }
+
+  @keyframes logoGlow {
+    0%, 100% { filter: drop-shadow(0 0 20px rgba(124, 58, 237, 0.6)) drop-shadow(0 0 35px rgba(14, 165, 233, 0.4)); }
+    50% { filter: drop-shadow(0 0 35px rgba(124, 58, 237, 1)) drop-shadow(0 0 55px rgba(14, 165, 233, 0.7)); }
+  }
+
+  .logo-sub {
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 5px;
+    opacity: 0.65;
+    margin-top: 4px;
+    color: #ddd6fe;
+    font-weight: 500;
+  }
+
+  .logo-badge {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 6px 18px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 30px;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: #bae6fd;
+    backdrop-filter: blur(10px);
+  }
+
+  /* ===== Ô NHẬP KEY ===== */
+  .input-group {
+    margin-top: 34px;
+    margin-bottom: 8px;
+  }
+
+  .input-label {
+    display: block;
+    font-size: 0.78rem;
+    margin-bottom: 10px;
+    opacity: 0.85;
+    letter-spacing: 1.5px;
+    color: #ddd6fe;
+    font-weight: 600;
+    padding-left: 6px;
+  }
+
+  .key-input {
+    width: 100%;
+    padding: 20px 18px;
+    font-size: 1.15rem;
+    letter-spacing: 2px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.35);
+    border: 2px solid rgba(255, 255, 255, 0.18);
+    border-radius: 24px;
+    color: white;
+    outline: none;
+    transition: all 0.25s ease;
+    font-weight: 600;
+    text-transform: uppercase;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.35);
+  }
+
+  .key-input:focus {
+    border-color: #0EA5E9;
+    background: rgba(0, 0, 0, 0.45);
+    box-shadow: 0 0 0 5px rgba(14, 165, 233, 0.2), inset 0 2px 8px rgba(0,0,0,0.4);
+    transform: translateY(-1px);
+  }
+
+  .key-input::placeholder {
+    color: rgba(255, 255, 255, 0.32);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 1px;
+    font-size: 0.95rem;
+  }
+
+  .key-input.shake {
+    animation: shake 0.4s ease;
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.2) !important;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+  }
+
+  /* ===== NÚT ===== */
+  .btn {
+    position: relative;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 22px;
+    padding: 17px 22px;
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    letter-spacing: 1px;
+    user-select: none;
+    overflow: hidden;
+  }
+
+  .btn:active:not(.loading) {
+    transform: scale(0.97);
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #7C3AED 0%, #0EA5E9 100%);
+    border: none;
+    box-shadow: 0 12px 28px -6px rgba(14, 165, 233, 0.6),
+                0 6px 16px -4px rgba(124, 58, 237, 0.5),
+                inset 0 1px 1px rgba(255,255,255,0.3);
+  }
+
+  .btn-primary:active:not(.loading) {
+    box-shadow: 0 6px 14px -3px rgba(14, 165, 233, 0.7),
+                inset 0 1px 2px rgba(0,0,0,0.2);
+  }
+
+  /* loading spinner trong nút */
+  .btn.loading {
+    pointer-events: none;
+    opacity: 0.85;
+  }
+
+  .btn.loading::after {
+    content: '';
+    position: absolute;
+    right: 20px;
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ===== LỖI ===== */
+  .error-msg {
+    color: #fecaca;
+    background: rgba(220, 38, 38, 0.22);
+    padding: 13px 16px;
+    border-radius: 18px;
+    font-size: 0.82rem;
+    text-align: center;
+    margin: 14px 0 6px;
+    border-left: 5px solid #ef4444;
+    display: none;
+    font-weight: 500;
+    backdrop-filter: blur(8px);
+    animation: fadeSlide 0.3s ease;
+  }
+
+  .error-msg.show {
+    display: block;
+  }
+
+  /* ===== LOADING SCREEN ===== */
+  .loading-screen {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 34px;
+  }
+
+  .spinner-wrap {
+    position: relative;
+    width: 170px;
+    height: 170px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .spinner-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 5px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .spinner-ring::before {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 5px solid transparent;
+    border-top-color: #0EA5E9;
+    border-right-color: #c084fc;
+    animation: spin 1s linear infinite;
+    filter: drop-shadow(0 0 12px #0EA5E9);
+  }
+
+  .loading-percent {
+    font-size: 3.6rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #ffffff, #7dd3fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    letter-spacing: -2px;
+    filter: drop-shadow(0 0 20px rgba(14, 165, 233, 0.7));
+  }
+
+  .loading-text {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    letter-spacing: 3px;
+    color: #e0f2fe;
+    font-weight: 500;
+  }
+
+  .loading-bar-bg {
+    width: 75%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 4px rgba(0,0,0,0.5);
+  }
+
+  .loading-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #c084fc, #38bdf8, #0EA5E9);
+    border-radius: 20px;
+    transition: width 0.15s linear;
+    box-shadow: 0 0 15px #38bdf8;
+  }
+
+  /* ===== TRANG CHÍNH ===== */
+  .main-header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .info-card {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 22px;
+    padding: 14px 18px;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  }
+
+  .device-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .device-icon {
+    font-size: 1.3rem;
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.4));
+  }
+
+  .device-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #f0f9ff;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .device-badge {
+    font-size: 0.65rem;
+    background: rgba(14, 165, 233, 0.25);
+    border: 1px solid rgba(14, 165, 233, 0.5);
+    color: #bae6fd;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .time-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    color: #cbd5e1;
+  }
+
+  .time-row .label {
+    opacity: 0.85;
+  }
+
+  .time-row .value {
+    font-weight: 800;
+    color: #7dd3fc;
+    font-size: 0.92rem;
+    text-shadow: 0 0 10px rgba(14, 165, 233, 0.6);
+  }
+
+  /* ===== NÚT DNS TRÒN ===== */
+  .dns-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 8px 0 20px;
+    position: relative;
+    height: 220px;
+  }
+
+  .dns-wave {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 2px solid rgba(14, 165, 233, 0.6);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .dns-circle.active ~ .dns-wave-1 {
+    animation: wave 2.2s ease-out infinite;
+  }
+  .dns-circle.active ~ .dns-wave-2 {
+    animation: wave 2.2s ease-out 0.7s infinite;
+  }
+  .dns-circle.active ~ .dns-wave-3 {
+    animation: wave 2.2s ease-out 1.4s infinite;
+  }
+
+  @keyframes wave {
+    0% { transform: scale(0.85); opacity: 0.8; }
+    100% { transform: scale(1.5); opacity: 0; }
+  }
+
+  .dns-circle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, rgba(80, 80, 90, 0.5), rgba(30, 30, 40, 0.7));
+    border: 3px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.45),
+                inset 0 2px 6px rgba(255,255,255,0.08);
+  }
+
+  .dns-circle:active {
+    transform: scale(0.96);
+  }
+
+  .dns-circle.active {
+    background: radial-gradient(circle at 35% 30%, rgba(56, 189, 248, 0.55), rgba(14, 165, 233, 0.25));
+    border-color: #38bdf8;
+    box-shadow:
+      0 0 40px rgba(14, 165, 233, 0.9),
+      0 0 80px rgba(56, 189, 248, 0.5),
+      inset 0 0 30px rgba(56, 189, 248, 0.35);
+    animation: dnsPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes dnsPulse {
+    0%, 100% {
+      box-shadow: 0 0 35px rgba(14, 165, 233, 0.8),
+                  0 0 70px rgba(56, 189, 248, 0.4),
+                  inset 0 0 25px rgba(56, 189, 248, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 55px rgba(14, 165, 233, 1),
+                  0 0 110px rgba(56, 189, 248, 0.7),
+                  inset 0 0 40px rgba(56, 189, 248, 0.5);
+    }
+  }
+
+  .dns-icon {
+    font-size: 3.4rem;
+    line-height: 1;
+    margin-bottom: 4px;
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.4));
+    transition: all 0.3s;
+  }
+
+  .dns-circle.active .dns-icon {
+    filter: drop-shadow(0 0 18px #7dd3fc) drop-shadow(0 0 30px #0EA5E9);
+  }
+
+  .dns-label {
+    font-size: 0.92rem;
+    font-weight: 800;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: #cbd5e1;
+    text-shadow: 0 2px 8px black;
+    transition: all 0.3s;
+    text-align: center;
+    padding: 0 8px;
+    line-height: 1.2;
+  }
+
+  .dns-circle.active .dns-label {
+    color: #fff;
+    text-shadow: 0 0 15px #0EA5E9;
+  }
+
+  .dns-hint {
+    font-size: 0.68rem;
+    margin-top: 6px;
+    opacity: 0.75;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: #94a3b8;
+  }
+
+  .dns-circle.active .dns-hint {
+    color: #bae6fd;
+    opacity: 0.95;
+  }
+
+  /* ===== PHẦN CẤU HÌNH DNS ===== */
+  .config-section {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    padding: 16px 16px 18px;
+    margin-bottom: 14px;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.25);
+  }
+
+  .config-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #bae6fd;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .config-title .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #0EA5E9;
+    box-shadow: 0 0 10px #0EA5E9;
+  }
+
+  .config-field {
+    margin-bottom: 10px;
+  }
+
+  .config-field:last-of-type {
+    margin-bottom: 14px;
+  }
+
+  .config-field label {
+    display: block;
+    font-size: 0.68rem;
+    letter-spacing: 1px;
+    color: #cbd5e1;
+    margin-bottom: 5px;
+    padding-left: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  .config-field input {
+    width: 100%;
+    padding: 11px 14px;
+    font-size: 0.85rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    color: white;
+    outline: none;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+
+  .config-field input:focus {
+    border-color: #0EA5E9;
+    background: rgba(0, 0, 0, 0.42);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.18);
+  }
+
+  .config-field input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 400;
+  }
+
+  .btn-download {
+    width: 100%;
+    background: linear-gradient(135deg, #7C3AED, #0EA5E9);
+    border: none;
+    border-radius: 16px;
+    padding: 14px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: white;
+    box-shadow: 0 8px 20px -4px rgba(14, 165, 233, 0.5);
+  }
+
+  /* ===== CHỨC NĂNG ===== */
+  .func-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .func-btn {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 14px 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    backdrop-filter: blur(10px);
+    user-select: none;
+    text-align: center;
+    letter-spacing: 0.5px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.22);
+    position: relative;
+  }
+
+  .func-btn:active:not(.loading) {
+    transform: scale(0.95);
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  .func-btn.loading {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  .func-btn.loading::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,0.25);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  .func-btn .emoji {
+    font-size: 1.7rem;
+    line-height: 1;
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.3));
+  }
+
+  .aim-status {
+    font-size: 0.62rem;
+    padding: 2px 10px;
+    border-radius: 10px;
+    background: rgba(0,0,0,0.35);
+    color: #94a3b8;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-top: 2px;
+    transition: all 0.3s;
+  }
+
+  .aim-status.on {
+    background: rgba(14, 165, 233, 0.6);
+    color: #fff;
+    box-shadow: 0 0 12px rgba(14, 165, 233, 0.7);
+  }
+
+  /* ===== ĐĂNG XUẤT ===== */
+  .logout-btn {
+    margin-top: auto;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.82rem;
+    padding: 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+  }
+
+  .logout-btn:active:not(.loading) {
+    background: rgba(239, 68, 68, 0.25);
+    border-color: rgba(239, 68, 68, 0.5);
+    color: #fecaca;
+  }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 12, 30, 0.92);
+    backdrop-filter: blur(20px);
+    color: white;
+    padding: 13px 24px;
+    border-radius: 40px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-left: 5px solid #0EA5E9;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+    z-index: 9999;
+    transition: opacity 0.3s, transform 0.3s;
+    white-space: nowrap;
+    max-width: 90vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    animation: toastIn 0.35s ease;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  @keyframes toastIn {
+    from { opacity: 0; transform: translate(-50%, 20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+  }
+
+  .footer-note {
+    text-align: center;
+    font-size: 0.6rem;
+    opacity: 0.45;
+    margin-top: 14px;
+    letter-spacing: 2px;
+    color: #cbd5e1;
+    font-weight: 500;
+  }
+
+  /* Modal xác nhận đăng xuất */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 24px;
+    animation: fadeIn 0.25s ease;
+  }
+
+  .modal-overlay.show {
+    display: flex;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .modal-box {
+    background: rgba(30, 20, 50, 0.95);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 28px;
+    padding: 26px 22px;
+    max-width: 340px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.7);
+    animation: modalIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes modalIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .modal-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.6));
+  }
+
+  .modal-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: #fff;
+    letter-spacing: 1px;
+  }
+
+  .modal-desc {
+    font-size: 0.82rem;
+    color: #cbd5e1;
+    margin-bottom: 22px;
+    line-height: 1.5;
+    opacity: 0.9;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .modal-actions .btn {
+    flex: 1;
+    padding: 14px;
+    font-size: 0.85rem;
+    border-radius: 16px;
+  }
+
+  .btn-danger {
+    background: linear-gradient(135deg, #dc2626, #ef4444);
+    border: none;
+    box-shadow: 0 8px 20px -4px rgba(239, 68, 68, 0.6);
+  }
+
+  /* Scroll cho màn hình chính nếu dài */
+  #screenMain {
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  #screenMain::-webkit-scrollbar { display: none; }
+
+  /* Responsive nhỏ */
+  @media (max-height: 750px) {
+    .logo { font-size: 2.8rem; }
+    .logo-wrap { margin-top: 24px; }
+    .dns-wrapper { height: 190px; }
+    .dns-circle { width: 170px; height: 170px; }
+    .dns-wave { width: 170px; height: 170px; }
+    .dns-icon { font-size: 2.8rem; }
+    .dns-label { font-size: 0.82rem; }
+    .config-section { padding: 14px; }
+  }
+
+  @media (max-height: 680px) {
+    .dns-wrapper { height: 170px; margin: 4px 0 12px; }
+    .dns-circle { width: 150px; height: 150px; }
+    .dns-wave { width: 150px; height: 150px; }
+    .dns-icon { font-size: 2.4rem; }
+    .dns-label { font-size: 0.72rem; }
+    .dns-hint { font-size: 0.62rem; }
+  }
 </style>
 </head>
 <body>
-<div class="app">
 
-<div id="page-key">
-  <h1>SERENITY LOCK</h1>
-  <div class="sub">SECURE ACCESS SYSTEM</div>
+<div class="app-container">
 
-  <div class="card">
-    <h2>Nhập Key Kích Hoạt</h2>
-    <label>Định dạng: SERENITY-XXXX-XXXX-FF</label>
-    <input id="keyInput" placeholder="SERENITY-XXXX-XXXX-FF" autocapitalize="characters" autocomplete="off" spellcheck="false">
-    <button class="btn" onclick="activateKey()">KÍCH HOẠT</button>
+  <!-- ============ SCREEN 1: NHẬP KEY ============ -->
+  <div class="screen active" id="screenKey">
+    <div class="logo-wrap">
+      <div class="logo">UN LOCK</div>
+      <div class="logo-sub">MỞ KHÓA DNS</div>
+      <div class="logo-badge">🔒 BẢO MẬT CAO</div>
+    </div>
+
+    <div class="input-group">
+      <label class="input-label">🔑 NHẬP KEY KÍCH HOẠT</label>
+      <input type="text" class="key-input" id="keyInput" placeholder="PTROTXXXXXXX" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false">
+    </div>
+
+    <div class="error-msg" id="errorMsg"></div>
+
+    <button class="btn btn-primary" id="activateBtn" style="margin-top: 18px;">
+      <span>🚀 KÍCH HOẠT</span>
+    </button>
+
+    <div class="footer-note" style="margin-top: auto; padding-top: 20px;">KEY CÓ THỜI HẠN · GẮN VỚI THIẾT BỊ</div>
   </div>
 
-  <div class="card" id="keyInfo" style="display:none">
-    <h2>Thông Tin Key</h2>
-    <div class="row"><span class="k">Thiết bị</span><span class="v" id="infoDevice">—</span></div>
-    <div class="row"><span class="k">Loại key</span><span class="v" id="infoType">—</span></div>
-    <div class="row"><span class="k">Còn lại</span><span class="v" id="infoTime">—</span></div>
-    <div class="row"><span class="k">Trạng thái</span><span class="v" id="infoStatus">—</span></div>
+  <!-- ============ SCREEN 2: LOADING ============ -->
+  <div class="screen loading-screen" id="screenLoading">
+    <div class="spinner-wrap">
+      <div class="spinner-ring"></div>
+      <div class="loading-percent" id="loadingPercent">0%</div>
+    </div>
+    <div class="loading-text" id="loadingText">ĐANG KẾT NỐI ...</div>
+    <div class="loading-bar-bg">
+      <div class="loading-bar-fill" id="loadingBarFill"></div>
+    </div>
   </div>
+
+  <!-- ============ SCREEN 3: TRANG CHÍNH ============ -->
+  <div class="screen" id="screenMain">
+
+    <!-- Header thông tin -->
+    <div class="main-header">
+      <div class="info-card">
+        <div class="device-row">
+          <span class="device-icon" id="deviceIcon">📱</span>
+          <span class="device-name" id="deviceNameDisplay">iPhone</span>
+          <span class="device-badge" id="deviceBadge">ID</span>
+        </div>
+        <div class="time-row">
+          <span class="label">⏳ Thời gian còn lại</span>
+          <span class="value" id="timeRemainingDisplay">0 ngày</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nút DNS tròn -->
+    <div class="dns-wrapper">
+      <div class="dns-wave dns-wave-1"></div>
+      <div class="dns-wave dns-wave-2"></div>
+      <div class="dns-wave dns-wave-3"></div>
+      <div class="dns-circle" id="dnsCircle">
+        <div class="dns-icon">🌐</div>
+        <div class="dns-label" id="dnsLabel">DNS TẮT</div>
+        <div class="dns-hint" id="dnsHint">nhấn giữ 1 giây</div>
+      </div>
+    </div>
+
+    <!-- TỰ CHỈNH DNS -->
+    <div class="config-section">
+      <div class="config-title"><span class="dot"></span> TỰ CHỈNH DNS</div>
+
+      <div class="config-field">
+        <label>Tên cấu hình</label>
+        <input type="text" id="cfgName" value="UN LOCK DNS" placeholder="VD: My DNS">
+      </div>
+
+      <div class="config-field">
+        <label>DNS chính</label>
+        <input type="text" id="cfgDns1" value="1.1.1.1" placeholder="VD: 1.1.1.1">
+      </div>
+
+      <div class="config-field">
+        <label>DNS phụ</label>
+        <input type="text" id="cfgDns2" value="1.0.0.1" placeholder="VD: 8.8.8.8">
+      </div>
+
+      <div class="config-field">
+        <label>URL Garena</label>
+        <input type="text" id="cfgUrl" value="https://ms.garena.com" placeholder="https://...">
+      </div>
+
+      <button class="btn btn-download" id="downloadBtn">
+        <span>📥 TẠO &amp; TẢI CẤU HÌNH</span>
+      </button>
+    </div>
+
+    <!-- Chức năng khác -->
+    <div class="func-grid">
+      <div class="func-btn" id="aimBtn">
+        <span class="emoji">🎯</span>
+        <span>AIM</span>
+        <span class="aim-status" id="aimStatus">TẮT</span>
+      </div>
+      <div class="func-btn" id="viewInfoBtn">
+        <span class="emoji">📋</span>
+        <span>XEM THÔNG TIN</span>
+      </div>
+    </div>
+
+    <!-- Đăng xuất -->
+    <button class="btn logout-btn" id="logoutBtn">
+      <span>🚪 ĐĂNG XUẤT</span>
+    </button>
+
+    <div class="footer-note">UN LOCK · BẢO VỆ RIÊNG TƯ</div>
+  </div>
+
 </div>
 
-<div id="page-main" class="hidden">
-  <h1>SERENITY LOCK</h1>
-  <div class="sub">CONTROL PANEL</div>
-
-  <div class="card">
-    <h2>Thông Tin Thiết Bị</h2>
-    <div class="row"><span class="k">Người dùng</span><span class="v" id="mUser">—</span></div>
-    <div class="row"><span class="k">Thiết bị</span><span class="v" id="mDevice">—</span></div>
-    <div class="row"><span class="k">Loại key</span><span class="v" id="mType">—</span></div>
-    <div class="row"><span class="k">Còn lại</span><span class="v" id="mTime">—</span></div>
-    <div class="row"><span class="k">Server</span><span class="v" id="mServer">—</span></div>
+<!-- Modal xác nhận đăng xuất -->
+<div class="modal-overlay" id="logoutModal">
+  <div class="modal-box">
+    <div class="modal-icon">⚠️</div>
+    <div class="modal-title">XÁC NHẬN ĐĂNG XUẤT</div>
+    <div class="modal-desc">Bạn có chắc muốn đăng xuất? Key sẽ bị xóa khỏi thiết bị này và bạn cần nhập lại key để sử dụng.</div>
+    <div class="modal-actions">
+      <button class="btn" id="cancelLogout">HỦY</button>
+      <button class="btn btn-danger" id="confirmLogout">ĐĂNG XUẤT</button>
+    </div>
   </div>
-
-  <div class="card">
-    <h2>1. Tạo MobileConfig</h2>
-    <label>Tên file</label>
-    <input id="mcName" placeholder="Serenity_Config" value="Serenity_Config">
-    <label>DNS chính</label>
-    <input id="mcDns1" placeholder="1.1.1.1" value="1.1.1.1">
-    <label>DNS phụ</label>
-    <input id="mcDns2" placeholder="1.0.0.1" value="1.0.0.1">
-    <label>URL cấu hình (tuỳ chọn)</label>
-    <input id="mcUrl" placeholder="https://sever-lock.onrender.com">
-    <label>Chức năng nhúng</label>
-    <div class="chk" data-fn="nhetam"><div class="box"></div>Nhẹ Tâm</div>
-    <div class="chk" data-fn="bamtam"><div class="box"></div>Bám Tâm</div>
-    <div class="chk" data-fn="khoatam"><div class="box"></div>Khóa Tâm</div>
-    <div class="chk" data-fn="khoavung"><div class="box"></div>Khóa Di Chuyển Vùng Đầu</div>
-    <button class="btn" onclick="createMobileConfig()">TẠO & TẢI FILE</button>
-    <button class="btn ghost" onclick="previewXML()">XEM TRƯỚC XML</button>
-  </div>
-
-  <div class="card">
-    <h2>2. Độ Nhạy FF OB55</h2>
-    <label>Chọn thiết bị iPhone</label>
-    <select id="devSelect"></select>
-    <label>Kiểu chơi</label>
-    <select id="playStyle">
-      <option value="nhe">NHẸ</option>
-      <option value="tb" selected>TRUNG BÌNH</option>
-      <option value="manh">MẠNH</option>
-    </select>
-    <table id="sensTable">
-      <thead><tr><th>Thông số</th><th>Giá trị</th></tr></thead>
-      <tbody></tbody>
-    </table>
-    <button class="btn ghost" onclick="saveSensitivity()">LƯU CẤU HÌNH</button>
-  </div>
-
-  <div class="card">
-    <h2>3. Kết Nối & Điều Khiển</h2>
-    <div class="func-row"><span>Nhẹ Tâm</span><div class="switch" data-fn="nhetam"></div></div>
-    <div class="func-row"><span>Bám Tâm</span><div class="switch" data-fn="bamtam"></div></div>
-    <div class="func-row"><span>Khóa Tâm</span><div class="switch" data-fn="khoatam"></div></div>
-    <div class="func-row"><span>Khóa Di Chuyển Vùng Đầu</span><div class="switch" data-fn="khoavung"></div></div>
-    <button class="btn" onclick="syncFunctions()">ĐỒNG BỘ LÊN SERVER</button>
-  </div>
-
-  <button class="btn ghost" onclick="logout()" style="margin-top:20px">ĐĂNG XUẤT KEY</button>
 </div>
-
-</div>
-
-<div id="loading">
-  <div class="loader"></div>
-  <div id="loadPct">0%</div>
-  <div id="loadMsg">ĐANG KHỞI TẠO...</div>
-</div>
-
-<div class="toast" id="toast"></div>
 
 <script>
-/* ===================================================
-   CẤU HÌNH SERVER
-=================================================== */
-const SERVER_URL = "https://sever-lock.onrender.com";
+(function() {
+  'use strict';
 
-/* ---------- HELPERS ---------- */
-const $ = id => document.getElementById(id);
-const toast = (msg, ms=2500) => {
-  const t = $("toast"); t.textContent = msg; t.classList.add("show");
-  clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove("show"), ms);
-};
-const fmtTime = ms => {
-  if (ms <= 0) return "HẾT HẠN";
-  const d = Math.floor(ms/86400000);
-  const h = Math.floor(ms%86400000/3600000);
-  const m = Math.floor(ms%3600000/60000);
-  const s = Math.floor(ms%60000/1000);
-  if (d > 0) return d + " ngày " + h + "g " + m + "p";
-  if (h > 0) return h + "g " + m + "p " + s + "s";
-  return m + "p " + s + "s";
-};
+  // ============ CẤU HÌNH ============
+  const KEY_PREFIX = 'PTROT';
+  const KEY_LENGTH = 12;
+  const LOADING_DURATION = 15000; // 15 giây
+  const KEY_EXPIRE_DAYS = 7;       // Thời hạn key (ngày)
 
-/* ---------- DEVICE ---------- */
-function getDeviceId(){
-  let id = localStorage.getItem("sl_deviceid");
-  if (!id){
-    id = "iOS-" + Math.random().toString(36).slice(2,10).toUpperCase()
-       + "-" + Date.now().toString(36).toUpperCase();
-    localStorage.setItem("sl_deviceid", id);
+  // Danh sách key hợp lệ. Để [] để chấp nhận mọi key đúng định dạng
+  const VALID_KEYS = [
+    'PTROT1234567',
+    'PTROTABCDEFG',
+    'PTROTUNLOCK1',
+    'PTROT8888888'
+  ];
+
+  // ============ STORAGE KEYS ============
+  const LS_DEVICE_ID    = 'unlock_device_id';
+  const LS_DEVICE_NAME  = 'unlock_device_name';
+  const LS_ACTIVATED    = 'unlock_activated_key';
+  const LS_EXPIRE_AT    = 'unlock_key_expire_at';
+  const LS_AIM_STATE    = 'unlock_aim_state';
+  const LS_DNS_STATE    = 'unlock_dns_state';
+  const LS_DNS_CONFIG   = 'unlock_dns_config';
+
+  // ============ TRẠNG THÁI ============
+  let currentKey = '';
+  let expireTimestamp = 0;
+  let countdownInterval = null;
+  let loadingInterval = null;
+  let isLoading = false;
+  let audioCtx = null;
+  let toastTimer = null;
+  let dnsPressTimer = null;
+  let dnsLongPressDone = false;
+
+  // ============ DOM ============
+  const $ = id => document.getElementById(id);
+  const screenKey = $('screenKey');
+  const screenLoading = $('screenLoading');
+  const screenMain = $('screenMain');
+  const keyInput = $('keyInput');
+  const activateBtn = $('activateBtn');
+  const errorMsg = $('errorMsg');
+  const loadingPercentEl = $('loadingPercent');
+  const loadingBarFill = $('loadingBarFill');
+  const loadingText = $('loadingText');
+  const deviceIcon = $('deviceIcon');
+  const deviceNameDisplay = $('deviceNameDisplay');
+  const deviceBadge = $('deviceBadge');
+  const timeRemainingDisplay = $('timeRemainingDisplay');
+  const dnsCircle = $('dnsCircle');
+  const dnsLabel = $('dnsLabel');
+  const dnsHint = $('dnsHint');
+  const aimBtn = $('aimBtn');
+  const aimStatus = $('aimStatus');
+  const viewInfoBtn = $('viewInfoBtn');
+  const logoutBtn = $('logoutBtn');
+  const downloadBtn = $('downloadBtn');
+  const cfgName = $('cfgName');
+  const cfgDns1 = $('cfgDns1');
+  const cfgDns2 = $('cfgDns2');
+  const cfgUrl = $('cfgUrl');
+  const logoutModal = $('logoutModal');
+  const cancelLogout = $('cancelLogout');
+  const confirmLogout = $('confirmLogout');
+
+  // ============ TIỆN ÍCH ============
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    $(id).classList.add('active');
   }
-  return id;
-}
-function getDeviceName(){
-  const ua = navigator.userAgent;
-  if (/iPhone/.test(ua)) return "iPhone";
-  if (/iPad/.test(ua)) return "iPad";
-  if (/Android/.test(ua)) return "Android";
-  return "Thiết bị iOS";
-}
-const DEVICE_ID = getDeviceId();
-const DEVICE_NAME = getDeviceName();
 
-/* ---------- API ---------- */
-async function api(path, opts={}){
-  try{
-    const r = await fetch(SERVER_URL + path, {
-      headers:{"Content-Type":"application/json"},
-      ...opts
-    });
-    return await r.json();
-  }catch(e){
-    return {ok:false, error:"Không kết nối được server"};
+  function showToast(msg, duration = 2400) {
+    const old = document.querySelector('.toast');
+    if (old) old.remove();
+    if (toastTimer) clearTimeout(toastTimer);
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    toastTimer = setTimeout(() => {
+      t.style.opacity = '0';
+      t.style.transform = 'translate(-50%, 20px)';
+      setTimeout(() => t.remove(), 320);
+    }, duration);
   }
-}
 
-/* ===================================================
-   KEY ACTIVATION
-=================================================== */
-let currentSession = null;
-let timerInterval = null;
-
-async function activateKey(){
-  const key = $("keyInput").value.trim().toUpperCase();
-  if (!/^SERENITY-[A-Z0-9]{4}-[A-Z0-9]{4}-FF$/.test(key)){
-    toast("❌ Sai định dạng key");
-    return;
+  function playSound(freq = 880, dur = 0.25) {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
+      osc.start();
+      osc.stop(audioCtx.currentTime + dur);
+    } catch (e) {}
   }
-  toast("⏳ Đang xác thực...");
-  const res = await api("/api/activate", {
-    method:"POST",
-    body: JSON.stringify({key, deviceId: DEVICE_ID, deviceName: DEVICE_NAME})
-  });
-  if (!res.ok){ toast("❌ " + (res.error || "Key không hợp lệ")); return; }
 
-  currentSession = {
-    key, deviceId: DEVICE_ID, deviceName: DEVICE_NAME,
-    type: res.type, expiresAt: res.expiresAt, user: res.user
-  };
-  localStorage.setItem("sl_session", JSON.stringify(currentSession));
+  function speak(text, rate = 1) {
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'vi-VN';
+    u.rate = rate;
+    u.pitch = 1;
+    u.volume = 1;
+    window.speechSynthesis.speak(u);
+  }
 
-  $("infoDevice").textContent = DEVICE_NAME;
-  $("infoType").textContent = res.type;
-  $("infoTime").textContent = fmtTime(res.expiresAt - Date.now());
-  $("infoStatus").innerHTML = '<span class="badge on">HỢP LỆ</span>';
-  $("keyInfo").style.display = "block";
-
-  await runLoading();
-  enterMain();
-}
-
-function runLoading(){
-  return new Promise(resolve => {
-    const ld = $("loading"); ld.classList.add("show");
-    let p = 0;
-    const msgs = ["ĐANG XÁC THỰC...","ĐANG KẾT NỐI SERVER...","ĐANG TẢI CẤU HÌNH...","HOÀN TẤT!"];
-    const total = 20000, step = 100;
-    const iv = setInterval(()=>{
-      p += (step/total)*100;
-      if (p >= 100){ p = 100; clearInterval(iv); }
-      $("loadPct").textContent = Math.floor(p) + "%";
-      $("loadMsg").textContent = msgs[Math.min(3, Math.floor(p/30))];
-      if (p >= 100){
-        setTimeout(()=>{
-          ld.classList.remove("show");
-          speakWelcome();
-          resolve();
-        }, 400);
-      }
-    }, step);
-  });
-}
-
-function speakWelcome(){
-  try{
-    const u = new SpeechSynthesisUtterance("Chào mừng bạn đã vào SERENITY LOCK");
-    u.lang = "vi-VN"; u.rate = 1; u.pitch = 1; u.volume = 1;
-    speechSynthesis.cancel();
-    speechSynthesis.speak(u);
-  }catch(e){}
-}
-
-function enterMain(){
-  $("page-key").classList.add("hidden");
-  $("page-main").classList.remove("hidden");
-  refreshMainInfo();
-  startCountdown();
-  loadDevices();
-  loadFunctions();
-  updateSensTable();
-  pingServer();
-  readFnFromURL();
-}
-
-function refreshMainInfo(){
-  if (!currentSession) return;
-  $("mUser").textContent = currentSession.user || "Người dùng";
-  $("mDevice").textContent = currentSession.deviceName;
-  $("mType").textContent = currentSession.type;
-  $("mTime").textContent = fmtTime(currentSession.expiresAt - Date.now());
-}
-
-async function pingServer(){
-  const res = await api("/api/ping");
-  const el = $("mServer");
-  if (res.ok) el.innerHTML = '<span class="badge on">ĐÃ KẾT NỐI</span>';
-  else el.innerHTML = '<span class="badge off">MẤT KẾT NỐI</span>';
-}
-
-function startCountdown(){
-  clearInterval(timerInterval);
-  timerInterval = setInterval(()=>{
-    if (!currentSession) return;
-    const left = currentSession.expiresAt - Date.now();
-    $("mTime").textContent = fmtTime(left);
-    if (left <= 0){
-      clearInterval(timerInterval);
-      autoLock();
+  // ============ THIẾT BỊ ============
+  function getDeviceId() {
+    let id = localStorage.getItem(LS_DEVICE_ID);
+    if (!id) {
+      id = 'dev_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 8);
+      localStorage.setItem(LS_DEVICE_ID, id);
     }
-  }, 1000);
-}
-
-function autoLock(){
-  localStorage.removeItem("sl_session");
-  currentSession = null;
-  clearInterval(timerInterval);
-  $("page-main").classList.add("hidden");
-  $("page-key").classList.remove("hidden");
-  $("keyInput").value = "";
-  $("keyInfo").style.display = "none";
-  toast("⏰ Key đã hết hạn - App tự khóa");
-  try{ speechSynthesis.cancel(); }catch(e){}
-}
-
-function logout(){
-  if (!confirm("Đăng xuất key khỏi thiết bị này?")) return;
-  autoLock();
-}
-
-/* ===================================================
-   ĐỌC QUERY ?fn= TỪ URL
-=================================================== */
-function readFnFromURL(){
-  try{
-    const params = new URLSearchParams(location.search);
-    const fn = params.get("fn");
-    if (!fn) return;
-    const arr = fn.split(",").filter(Boolean);
-    if (arr.length === 0) return;
-    arr.forEach(k=>{
-      if (FUNC_STATE[k] !== undefined){
-        FUNC_STATE[k] = true;
-        const sw = document.querySelector('.switch[data-fn="'+k+'"]');
-        if (sw) sw.classList.add("on");
-      }
-    });
-    setTimeout(()=>{ syncFunctions(); }, 1500);
-    toast("🔧 Đã bật " + arr.length + " chức năng từ URL");
-  }catch(e){ console.warn(e); }
-}
-
-/* ===================================================
-   MỤC 1: MOBILECONFIG
-=================================================== */
-document.querySelectorAll('.chk[data-fn]').forEach(el=>{
-  el.addEventListener("click", ()=> el.classList.toggle("on"));
-});
-function getCheckedFns(){
-  return [...document.querySelectorAll('.chk[data-fn].on')].map(e=>e.dataset.fn);
-}
-
-function uuid(){
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){
-    const r = Math.random()*16|0;
-    const v = c==='x' ? r : (r&0x3|0x8);
-    return v.toString(16);
-  });
-}
-function esc(s){
-  return String(s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-function buildMobileConfigXML(){
-  const rawName = $("mcName").value.trim() || "Serenity_Config";
-  const name = rawName.replace(/[^A-Za-z0-9_\-]/g,'_');
-  const dns1 = $("mcDns1").value.trim() || "1.1.1.1";
-  const dns2 = $("mcDns2").value.trim() || "1.0.0.1";
-  const url  = $("mcUrl").value.trim();
-  const fns  = getCheckedFns();
-
-  const safeName = esc(name);
-  const safeDns1 = esc(dns1);
-  const safeDns2 = esc(dns2);
-
-  const dnsPayload =
-'        <dict>\n' +
-'            <key>PayloadType</key>\n' +
-'            <string>com.apple.dnsSettings.managed</string>\n' +
-'            <key>PayloadIdentifier</key>\n' +
-'            <string>com.serenity.dns.main</string>\n' +
-'            <key>PayloadUUID</key>\n' +
-'            <string>' + uuid() + '</string>\n' +
-'            <key>PayloadVersion</key>\n' +
-'            <integer>1</integer>\n' +
-'            <key>PayloadDisplayName</key>\n' +
-'            <string>SERENITY DNS</string>\n' +
-'            <key>DNSSettings</key>\n' +
-'            <dict>\n' +
-'                <key>DNSProtocol</key>\n' +
-'                <string>HTTPS</string>\n' +
-'                <key>ServerURL</key>\n' +
-'                <string>https://' + safeDns1 + '/dns-query</string>\n' +
-'                <key>ServerAddresses</key>\n' +
-'                <array>\n' +
-'                    <string>' + safeDns1 + '</string>\n' +
-'                    <string>' + safeDns2 + '</string>\n' +
-'                </array>\n' +
-'            </dict>\n' +
-'        </dict>';
-
-  let webPayload = "";
-  if (url && /^https:\/\//i.test(url)){
-    let finalUrl = url;
-    if (fns.length > 0){
-      const sep = url.includes("?") ? "&" : "?";
-      finalUrl = url + sep + "fn=" + fns.join(",");
-    }
-    const safeFinalUrl = esc(finalUrl);
-    webPayload =
-'        ,\n' +
-'        <dict>\n' +
-'            <key>PayloadType</key>\n' +
-'            <string>com.apple.webClip.managed</string>\n' +
-'            <key>PayloadIdentifier</key>\n' +
-'            <string>com.serenity.webclip.' + uuid() + '</string>\n' +
-'            <key>PayloadUUID</key>\n' +
-'            <string>' + uuid() + '</string>\n' +
-'            <key>PayloadVersion</key>\n' +
-'            <integer>1</integer>\n' +
-'            <key>PayloadDisplayName</key>\n' +
-'            <string>' + safeName + '</string>\n' +
-'            <key>URL</key>\n' +
-'            <string>' + safeFinalUrl + '</string>\n' +
-'        </dict>';
+    return id;
   }
 
-  const xml =
-'<?xml version="1.0" encoding="UTF-8"?>\n' +
-'<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n' +
-'<plist version="1.0">\n' +
-'<dict>\n' +
-'    <key>PayloadContent</key>\n' +
-'    <array>\n' +
-dnsPayload + webPayload + '\n' +
-'    </array>\n' +
-'    <key>PayloadDisplayName</key>\n' +
-'    <string>' + safeName + '</string>\n' +
-'    <key>PayloadIdentifier</key>\n' +
-'    <string>com.serenity.lock.main</string>\n' +
-'    <key>PayloadUUID</key>\n' +
-'    <string>' + uuid() + '</string>\n' +
-'    <key>PayloadVersion</key>\n' +
-'    <integer>1</integer>\n' +
-'    <key>PayloadType</key>\n' +
-'    <string>Configuration</string>\n' +
-'</dict>\n' +
-'</plist>';
+  function getDeviceName() {
+    let name = localStorage.getItem(LS_DEVICE_NAME);
+    if (!name) {
+      const ua = navigator.userAgent;
+      let device = 'Thiết bị';
+      if (/iPhone/i.test(ua)) device = 'iPhone';
+      else if (/iPad/i.test(ua)) device = 'iPad';
+      else if (/Android/i.test(ua)) device = 'Android';
+      else if (/Mac/i.test(ua)) device = 'Mac';
+      else if (/Windows/i.test(ua)) device = 'Windows';
+      name = device + ' ' + Math.floor(1000 + Math.random() * 9000);
+      localStorage.setItem(LS_DEVICE_NAME, name);
+    }
+    return name;
+  }
 
-  return { xml: xml, name: name };
-}
+  function getDeviceIcon(name) {
+    if (/iPhone|iPad|Mac/i.test(name)) return '📱';
+    if (/Android/i.test(name)) return '📱';
+    if (/Windows/i.test(name)) return '💻';
+    return '📱';
+  }
 
-function createMobileConfig(){
-  try {
-    const result = buildMobileConfigXML();
-    const blob = new Blob([result.xml], {type:"application/x-apple-aspen-config"});
-    const blobUrl = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = blobUrl;
-    a.download = result.name + ".mobileconfig";
-    a.rel = "noopener";
-    a.style.display = "none";
-    document.body.appendChild(a);
-    a.click();
+  // ============ KEY ============
+  function isValidKeyFormat(key) {
+    if (!key || key.length !== KEY_LENGTH) return false;
+    if (!key.startsWith(KEY_PREFIX)) return false;
+    return true;
+  }
+
+  function isKeyAllowed(key) {
+    if (VALID_KEYS.length === 0) return true;
+    return VALID_KEYS.includes(key);
+  }
+
+  function activateKey(key) {
+    localStorage.setItem(LS_ACTIVATED, key);
+    const expire = Date.now() + KEY_EXPIRE_DAYS * 24 * 60 * 60 * 1000;
+    localStorage.setItem(LS_EXPIRE_AT, expire.toString());
+    expireTimestamp = expire;
+    currentKey = key;
+  }
+
+  // ============ ĐẾM NGƯỢC ============
+  function updateTimeRemaining() {
+    if (!expireTimestamp) return;
+    const diff = expireTimestamp - Date.now();
+    if (diff <= 0) {
+      handleExpired();
+      return;
+    }
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+
+    let display = '';
+    if (days > 0) display = `${days} ngày ${hours} giờ`;
+    else if (hours > 0) display = `${hours} giờ ${mins} phút`;
+    else if (mins > 0) display = `${mins} phút ${secs} giây`;
+    else display = `${secs} giây`;
+
+    if (timeRemainingDisplay) timeRemainingDisplay.textContent = display;
+  }
+
+  function startCountdown() {
+    if (countdownInterval) clearInterval(countdownInterval);
+    updateTimeRemaining();
+    countdownInterval = setInterval(updateTimeRemaining, 1000);
+  }
+
+  function handleExpired() {
+    if (countdownInterval) clearInterval(countdownInterval);
+    if (screenMain.classList.contains('active')) {
+      showToast('⚠️ Key đã hết hạn');
+      setTimeout(() => doLogout(true), 800);
+    }
+  }
+
+  // ============ ĐĂNG XUẤT ============
+  function doLogout(silent = false) {
+    if (countdownInterval) clearInterval(countdownInterval);
+    if (loadingInterval) clearInterval(loadingInterval);
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+
+    localStorage.removeItem(LS_ACTIVATED);
+    localStorage.removeItem(LS_EXPIRE_AT);
+
+    currentKey = '';
+    expireTimestamp = 0;
+    keyInput.value = '';
+    errorMsg.classList.remove('show');
+    keyInput.classList.remove('shake');
+
+    showScreen('screenKey');
+    if (!silent) showToast('👋 Đã đăng xuất');
+  }
+
+  // ============ DNS UI ============
+  function updateDnsUI(on) {
+    if (on) {
+      dnsCircle.classList.add('active');
+      dnsLabel.textContent = 'DNS ĐANG HOẠT ĐỘNG';
+      dnsHint.textContent = 'đang bảo vệ';
+    } else {
+      dnsCircle.classList.remove('active');
+      dnsLabel.textContent = 'DNS TẮT';
+      dnsHint.textContent = 'nhấn giữ 1 giây';
+    }
+  }
+
+  function loadDnsState() {
+    const on = localStorage.getItem(LS_DNS_STATE) === 'true';
+    updateDnsUI(on);
+  }
+
+  function toggleDns() {
+    if (isLoading) return;
+    isLoading = true;
+    const current = localStorage.getItem(LS_DNS_STATE) === 'true';
+    dnsCircle.style.opacity = '0.65';
+    dnsCircle.style.pointerEvents = 'none';
+
     setTimeout(() => {
-      try{ document.body.removeChild(a); }catch(e){}
-      URL.revokeObjectURL(blobUrl);
-    }, 3000);
-    toast("✅ Đã tạo: " + result.name + ".mobileconfig");
-  } catch(err){
-    console.error(err);
-    toast("❌ Lỗi: " + err.message);
+      const newState = !current;
+      localStorage.setItem(LS_DNS_STATE, newState.toString());
+      updateDnsUI(newState);
+      dnsCircle.style.opacity = '1';
+      dnsCircle.style.pointerEvents = 'auto';
+      isLoading = false;
+      playSound(newState ? 1200 : 500, 0.3);
+      showToast(newState ? '✅ DNS đã BẬT' : '⛔ DNS đã TẮT');
+    }, 450);
   }
-}
 
-function previewXML(){
-  try {
-    const result = buildMobileConfigXML();
-    const w = window.open("", "_blank");
-    if (!w){ toast("⚠️ Safari chặn popup — cho phép đi"); return; }
-    const safe = result.xml.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-    w.document.write(
-      "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>XML Preview</title>" +
-      "<style>body{background:#000;color:#FFD700;font-family:monospace;padding:16px;font-size:11px;}" +
-      "pre{white-space:pre-wrap;word-break:break-all;}</style></head><body>" +
-      "<h2>XML — " + result.name + "</h2><pre>" + safe + "</pre></body></html>"
-    );
-    w.document.close();
-  } catch(err){
-    toast("❌ Lỗi: " + err.message);
+  // Nhấn giữ 1s cho DNS
+  function dnsPressStart(e) {
+    e.preventDefault();
+    if (isLoading) return;
+    dnsLongPressDone = false;
+    dnsCircle.style.transform = 'scale(0.96)';
+    dnsPressTimer = setTimeout(() => {
+      dnsLongPressDone = true;
+      toggleDns();
+      dnsCircle.style.transform = 'scale(1)';
+    }, 1000);
   }
-}
 
-/* ===================================================
-   MỤC 2: ĐỘ NHẠY
-=================================================== */
-const DEVICES = [
-  {id:"iphone6", name:"iPhone 6/6s"},
-  {id:"iphone7", name:"iPhone 7/8"},
-  {id:"iphonex", name:"iPhone X/XS/11 Pro"},
-  {id:"iphone11", name:"iPhone 11/12/13"},
-  {id:"iphone14", name:"iPhone 14/15/16"},
-  {id:"ipadmini", name:"iPad Mini"},
-  {id:"ipad", name:"iPad Pro"}
-];
+  function dnsPressEnd() {
+    if (dnsPressTimer) {
+      clearTimeout(dnsPressTimer);
+      dnsPressTimer = null;
+    }
+    dnsCircle.style.transform = 'scale(1)';
+    if (!dnsLongPressDone) {
+      showToast('💡 Nhấn giữ 1 giây để bật/tắt');
+    }
+  }
 
-const SENS_MAP = {
-  iphone6:  {nhe:[80,90,95,100,110,60,70], tb:[100,110,120,130,140,70,85], manh:[120,130,140,150,160,85,100]},
-  iphone7:  {nhe:[85,95,100,105,115,62,72], tb:[105,115,125,135,145,72,87], manh:[125,135,145,155,165,87,102]},
-  iphonex:  {nhe:[88,98,103,108,118,64,74], tb:[108,118,128,138,148,74,89], manh:[128,138,148,158,168,89,104]},
-  iphone11: {nhe:[90,100,105,110,120,66,76], tb:[110,120,130,140,150,76,91], manh:[130,140,150,160,170,91,106]},
-  iphone14: {nhe:[95,105,110,115,125,68,78], tb:[115,125,135,145,155,78,93], manh:[135,145,155,165,175,93,108]},
-  ipadmini: {nhe:[92,102,107,112,122,65,75], tb:[112,122,132,142,152,75,90], manh:[132,142,152,162,172,90,105]},
-  ipad:     {nhe:[98,108,113,118,128,70,80], tb:[118,128,138,148,158,80,95], manh:[138,148,158,168,178,95,110]}
-};
+  // ============ AIM ============
+  function updateAimUI(on) {
+    if (on) {
+      aimStatus.textContent = 'BẬT';
+      aimStatus.classList.add('on');
+    } else {
+      aimStatus.textContent = 'TẮT';
+      aimStatus.classList.remove('on');
+    }
+  }
 
-const SENS_LABELS = [
-  "Nhìn xung quanh","Hồng tâm","Độ nhạy 2x","Độ nhạy 4x",
-  "Độ nhạy 8x","Súng ngắm - Kích thước","Súng ngắm - Vị trí"
-];
+  function loadAimState() {
+    const on = localStorage.getItem(LS_AIM_STATE) === 'true';
+    updateAimUI(on);
+  }
 
-function loadDevices(){
-  const sel = $("devSelect");
-  sel.innerHTML = "";
-  DEVICES.forEach(d=>{
-    const o = document.createElement("option");
-    o.value = d.id; o.textContent = d.name;
-    sel.appendChild(o);
-  });
-  sel.addEventListener("change", updateSensTable);
-  $("playStyle").addEventListener("change", updateSensTable);
-}
+  // ============ TẢI CẤU HÌNH ============
+  function buildMobileconfig(name, dns1, dns2, url) {
+    const uuid = (crypto.randomUUID ? crypto.randomUUID() : 'uuid-' + Date.now() + '-' + Math.random().toString(36).substr(2,9));
+    const uuid2 = (crypto.randomUUID ? crypto.randomUUID() : 'uuid-' + Date.now() + 1 + '-' + Math.random().toString(36).substr(2,9));
 
-function updateSensTable(){
-  const dev = $("devSelect").value || "iphone11";
-  const style = $("playStyle").value || "tb";
-  const vals = (SENS_MAP[dev] && SENS_MAP[dev][style]) || SENS_MAP.iphone11.tb;
-  const tbody = $("sensTable").querySelector("tbody");
-  tbody.innerHTML = SENS_LABELS.map((lbl, i)=>
-    '<tr><td>' + lbl + '</td><td>' + vals[i] + (i<5?"%":"px") + '</td></tr>'
-  ).join("");
-}
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>PayloadContent</key>
+  <array>
+    <dict>
+      <key>DNSSettings</key>
+      <dict>
+        <key>DNSProtocol</key>
+        <string>HTTPS</string>
+        <key>ServerURL</key>
+        <string>${escapeXml(url)}</string>
+        <key>ServerAddresses</key>
+        <array>
+          <string>${escapeXml(dns1)}</string>
+          <string>${escapeXml(dns2)}</string>
+        </array>
+      </dict>
+      <key>PayloadDescription</key>
+      <string>Cấu hình DNS cho ${escapeXml(name)}</string>
+      <key>PayloadDisplayName</key>
+      <string>${escapeXml(name)}</string>
+      <key>PayloadIdentifier</key>
+      <string>app.unlock.dns.${uuid}</string>
+      <key>PayloadType</key>
+      <string>com.apple.dnsSettings.managed</string>
+      <key>PayloadUUID</key>
+      <string>${uuid}</string>
+      <key>PayloadVersion</key>
+      <integer>1</integer>
+    </dict>
+  </array>
+  <key>PayloadDescription</key>
+  <string>Cấu hình DNS tùy chỉnh từ UN LOCK</string>
+  <key>PayloadDisplayName</key>
+  <string>${escapeXml(name)}</string>
+  <key>PayloadIdentifier</key>
+  <string>app.unlock.profile.${uuid2}</string>
+  <key>PayloadRemovalDisallowed</key>
+  <false/>
+  <key>PayloadType</key>
+  <string>Configuration</string>
+  <key>PayloadUUID</key>
+  <string>${uuid2}</string>
+  <key>PayloadVersion</key>
+  <integer>1</integer>
+</dict>
+</plist>`;
+  }
 
-async function saveSensitivity(){
-  const dev = $("devSelect").value;
-  const style = $("playStyle").value;
-  const vals = SENS_MAP[dev][style];
-  const res = await api("/api/sensitivity", {
-    method:"POST",
-    body: JSON.stringify({
-      key: currentSession.key,
-      deviceId: DEVICE_ID,
-      device: dev, style, values: vals
-    })
-  });
-  if (res.ok) toast("✅ Đã lưu cấu hình vào Server");
-  else toast("❌ Lỗi lưu: " + (res.error||""));
-}
+  function escapeXml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
+  }
 
-/* ===================================================
-   MỤC 3: FUNCTIONS
-=================================================== */
-const FUNC_STATE = {nhetam:false, bamtam:false, khoatam:false, khoavung:false};
+  function downloadConfig() {
+    if (isLoading) return;
+    isLoading = true;
+    downloadBtn.classList.add('loading');
 
-document.querySelectorAll('.switch[data-fn]').forEach(sw=>{
-  sw.addEventListener("click", ()=>{
-    sw.classList.toggle("on");
-    FUNC_STATE[sw.dataset.fn] = sw.classList.contains("on");
-  });
-});
+    const name = (cfgName.value.trim() || 'UN LOCK DNS');
+    const dns1 = (cfgDns1.value.trim() || '1.1.1.1');
+    const dns2 = (cfgDns2.value.trim() || '1.0.0.1');
+    const url  = (cfgUrl.value.trim()  || 'https://ms.garena.com');
 
-async function loadFunctions(){
-  const res = await api("/api/functions?key=" + encodeURIComponent(currentSession.key)
-    + "&deviceId=" + DEVICE_ID);
-  if (res.ok && res.functions){
-    Object.assign(FUNC_STATE, res.functions);
-    document.querySelectorAll('.switch[data-fn]').forEach(sw=>{
-      if (FUNC_STATE[sw.dataset.fn]) sw.classList.add("on");
-      else sw.classList.remove("on");
+    // Lưu cấu hình
+    localStorage.setItem(LS_DNS_CONFIG, JSON.stringify({ name, dns1, dns2, url }));
+
+    setTimeout(() => {
+      try {
+        const content = buildMobileconfig(name, dns1, dns2, url);
+        const blob = new Blob([content], { type: 'application/x-apple-aspen-config' });
+        const urlObj = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = urlObj;
+        a.download = name.replace(/[^a-zA-Z0-9-_]/g, '_') + '.mobileconfig';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(urlObj), 1000);
+        playSound(1100, 0.3);
+        showToast('📥 Đã tải cấu hình ' + a.download);
+      } catch (e) {
+        showToast('❌ Lỗi tạo cấu hình');
+      }
+      downloadBtn.classList.remove('loading');
+      isLoading = false;
+    }, 700);
+  }
+
+  // ============ LOAD CẤU HÌNH ĐÃ LƯU ============
+  function loadSavedConfig() {
+    try {
+      const raw = localStorage.getItem(LS_DNS_CONFIG);
+      if (!raw) return;
+      const c = JSON.parse(raw);
+      if (c.name) cfgName.value = c.name;
+      if (c.dns1) cfgDns1.value = c.dns1;
+      if (c.dns2) cfgDns2.value = c.dns2;
+      if (c.url)  cfgUrl.value  = c.url;
+    } catch (e) {}
+  }
+
+  // ============ HOÀN TẤT LOADING ============
+  function finishLoading() {
+    showScreen('screenMain');
+
+    const name = getDeviceName();
+    deviceNameDisplay.textContent = name;
+    deviceIcon.textContent = getDeviceIcon(name);
+    deviceBadge.textContent = 'ID: ' + getDeviceId().slice(-6).toUpperCase();
+
+    expireTimestamp = parseInt(localStorage.getItem(LS_EXPIRE_AT) || '0', 10);
+    startCountdown();
+    loadAimState();
+    loadDnsState();
+    loadSavedConfig();
+
+    const daysLeft = Math.max(0, Math.ceil((expireTimestamp - Date.now()) / 86400000));
+
+    setTimeout(() => speak('Chào mừng bạn đến với UN LOCK'), 300);
+    setTimeout(() => {
+      speak(`Thời gian sử dụng của bạn còn lại ${daysLeft} ngày`);
+    }, 2000);
+  }
+
+  // ============ KÍCH HOẠT KEY ============
+  function handleActivate() {
+    const rawKey = (keyInput.value || '').trim().toUpperCase();
+    errorMsg.classList.remove('show');
+    keyInput.classList.remove('shake');
+
+    if (!isValidKeyFormat(rawKey)) {
+      errorMsg.textContent = '❌ Key không hợp lệ. Định dạng: PTROT + 7 ký tự (12 ký tự)';
+      errorMsg.classList.add('show');
+      keyInput.classList.add('shake');
+      setTimeout(() => keyInput.classList.remove('shake'), 500);
+      playSound(220, 0.4);
+      return;
+    }
+
+    if (!isKeyAllowed(rawKey)) {
+      errorMsg.textContent = '❌ Key không tồn tại trong hệ thống.';
+      errorMsg.classList.add('show');
+      keyInput.classList.add('shake');
+      setTimeout(() => keyInput.classList.remove('shake'), 500);
+      playSound(220, 0.4);
+      return;
+    }
+
+    // Kiểm tra key đã dùng trên máy khác
+    const savedKey = localStorage.getItem(LS_ACTIVATED);
+    if (savedKey && savedKey !== rawKey) {
+      errorMsg.textContent = '⚠️ Thiết bị đã kích hoạt key khác. Vui lòng đăng xuất trước.';
+      errorMsg.classList.add('show');
+      keyInput.classList.add('shake');
+      setTimeout(() => keyInput.classList.remove('shake'), 500);
+      return;
+    }
+
+    // OK, kích hoạt
+    activateKey(rawKey);
+    getDeviceId();
+    getDeviceName();
+    playSound(1000, 0.3);
+
+    // Chuyển sang loading 15s
+    showScreen('screenLoading');
+    let startTime = Date.now();
+    loadingPercentEl.textContent = '0%';
+    loadingBarFill.style.width = '0%';
+    loadingText.textContent = 'ĐANG KẾT NỐI ...';
+
+    if (loadingInterval) clearInterval(loadingInterval);
+    loadingInterval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      let p = Math.min(Math.floor((elapsed / LOADING_DURATION) * 100), 100);
+
+      loadingPercentEl.textContent = p + '%';
+      loadingBarFill.style.width = p + '%';
+
+      if (p < 30) loadingText.textContent = 'ĐANG XÁC THỰC KEY ...';
+      else if (p < 60) loadingText.textContent = 'ĐANG THIẾT LẬP KẾT NỐI ...';
+      else if (p < 90) loadingText.textContent = 'ĐANG ĐỒNG BỘ DỮ LIỆU ...';
+      else loadingText.textContent = 'HOÀN TẤT ...';
+
+      if (p >= 100) {
+        clearInterval(loadingInterval);
+        loadingInterval = null;
+        setTimeout(finishLoading, 250);
+      }
+    }, 100);
+  }
+
+  // ============ GẮN SỰ KIỆN ============
+  function bindEvents() {
+    // KEY INPUT
+    keyInput.addEventListener('input', () => {
+      keyInput.value = keyInput.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      errorMsg.classList.remove('show');
+    });
+    keyInput.addEventListener('keypress', e => {
+      if (e.key === 'Enter') handleActivate();
+    });
+
+    // KÍCH HOẠT
+    activateBtn.addEventListener('click', () => {
+      if (activateBtn.classList.contains('loading')) return;
+      activateBtn.classList.add('loading');
+      setTimeout(() => {
+        activateBtn.classList.remove('loading');
+        handleActivate();
+      }, 300);
+    });
+
+    // DNS - nhấn giữ
+    ['mousedown', 'touchstart'].forEach(ev => {
+      dnsCircle.addEventListener(ev, dnsPressStart, { passive: false });
+    });
+    ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach(ev => {
+      dnsCircle.addEventListener(ev, dnsPressEnd);
+    });
+
+    // AIM
+    aimBtn.addEventListener('click', () => {
+      if (aimBtn.classList.contains('loading')) return;
+      aimBtn.classList.add('loading');
+      setTimeout(() => {
+        const cur = localStorage.getItem(LS_AIM_STATE) === 'true';
+        const next = !cur;
+        localStorage.setItem(LS_AIM_STATE, next.toString());
+        updateAimUI(next);
+        playSound(next ? 1000 : 400, 0.25);
+        showToast(next ? '🎯 AIM đã BẬT' : '🎯 AIM đã TẮT');
+        aimBtn.classList.remove('loading');
+      }, 400);
+    });
+
+    // XEM THÔNG TIN
+    viewInfoBtn.addEventListener('click', () => {
+      if (viewInfoBtn.classList.contains('loading')) return;
+      viewInfoBtn.classList.add('loading');
+      setTimeout(() => {
+        const dnsOn = localStorage.getItem(LS_DNS_STATE) === 'true';
+        const dnsState = dnsOn ? '🟢 ĐANG BẬT' : '⚪ ĐANG TẮT';
+        const dns1 = cfgDns1.value.trim() || '1.1.1.ns1';
+        const dns2 = cfgD2.value.trim() || '1.0.0.1';
+        const url = cfgUrl.value.trim() || 'https://ms.garena.com';
+        const name = cfgName.value.trim() || 'UN LOCK DNS';
+
+        showToast(`DNS: ${dnsState} · ${dns1} / ${dns2} · Garena: ${url}`, 4500);
+        viewInfoBtn.classList.remove('loading');
+      }, 400);
+    });
+
+    // TẢI CẤU HÌNH
+    downloadBtn.addEventListener('click', downloadConfig);
+
+    // ĐĂNG XUẤT - mở modal
+    logoutBtn.addEventListener('click', () => {
+      if (logoutBtn.classList.contains('loading')) return;
+      logoutBtn.classList.add('loading');
+      setTimeout(() => {
+        logoutBtn.classList.remove('loading');
+        logoutModal.classList.add('show');
+      }, 300);
+    });
+
+    cancelLogout.addEventListener('click', () => {
+      logoutModal.classList.remove('show');
+    });
+
+    confirmLogout.addEventListener('click', () => {
+      logoutModal.classList.remove('show');
+      doLogout(false);
+    });
+
+    logoutModal.addEventListener('click', e => {
+      if (e.target === logoutModal) logoutModal.classList.remove('show');
     });
   }
-}
 
-async function syncFunctions(){
-  const res = await api("/api/functions", {
-    method:"POST",
-    body: JSON.stringify({
-      key: currentSession.key,
-      deviceId: DEVICE_ID,
-      functions: FUNC_STATE
-    })
-  });
-  if (res.ok) toast("✅ Đã đồng bộ lên Server");
-  else toast("❌ Lỗi: " + (res.error||""));
-}
+  // ============ KHỞI TẠO ============
+  function init() {
+    getDeviceId();
+    getDeviceName();
+    bindEvents();
 
-/* ===================================================
-   INIT
-=================================================== */
-(async function init(){
-  const saved = localStorage.getItem("sl_session");
-  if (saved){
-    try{
-      const s = JSON.parse(saved);
-      if (s.expiresAt > Date.now()){
-        const res = await api("/api/verify", {
-          method:"POST",
-          body: JSON.stringify({key:s.key, deviceId:DEVICE_ID})
-        });
-        if (res.ok){
-          currentSession = s;
-          enterMain();
-          return;
-        }
+    // Âm thanh mở app - chờ tương tác đầu tiên
+    document.body.addEventListener('click', function once() {
+      playSound(880, 0.2);
+      document.body.removeEventListener('click', once);
+    }, { once: true });
+    document.body.addEventListener('touchstart', function once() {
+      playSound(880, 0.2);
+      document.body.removeEventListener('touchstart', once);
+    }, { once: true });
+
+    // Kiểm tra key đã lưu
+    const savedKey = localStorage.getItem(LS_ACTIVATED);
+    const savedExpire = parseInt(localStorage.getItem(LS_EXPIRE_AT) || '0', 10);
+
+    if (savedKey && savedExpire > Date.now()) {
+      currentKey = savedKey;
+      expireTimestamp = savedExpire;
+      keyInput.value = savedKey;
+
+      // Vào thẳng màn hình chính
+      const name = getDeviceName();
+      deviceNameDisplay.textContent = name;
+      deviceIcon.textContent = getDeviceIcon(name);
+      deviceBadge.textContent = 'ID: ' + getDeviceId().slice(-6).toUpperCase();
+      startCountdown();
+      loadAimState();
+      loadDnsState();
+      loadSavedConfig();
+      showScreen('screenMain');
+
+      const daysLeft = Math.max(0, Math.ceil((expireTimestamp - Date.now()) / 86400000));
+      setTimeout(() => speak('Chào mừng bạn đến với UN LOCK'), 500);
+      setTimeout(() => speak(`Thời gian sử dụng của bạn còn lại ${daysLeft} ngày`), 2200);
+    } else {
+      if (savedKey && savedExpire <= Date.now()) {
+        localStorage.removeItem(LS_ACTIVATED);
+        localStorage.removeItem(LS_EXPIRE_AT);
       }
-      localStorage.removeItem("sl_session");
-    }catch(e){}
+      showScreen('screenKey');
+    }
   }
+
+  // Dọn dẹp
+  window.addEventListener('beforeunload', () => {
+    if (countdownInterval) clearInterval(countdownInterval);
+    if (loadingInterval) clearInterval(loadingInterval);
+    if (toastTimer) clearTimeout(toastTimer);
+    if (dnsPressTimer) clearTimeout(dnsPressTimer);
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+  });
+
+  init();
 })();
 </script>
 </body>
