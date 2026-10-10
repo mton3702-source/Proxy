@@ -1,0 +1,71 @@
+{
+  "version": "1.0",
+  "updated_at": "2026-10-10T00:00:00.000Z",
+  "keys": [
+    {
+      "key": "PTROT1234567",
+      "device_id": null,
+      "device_name": null,
+      "activated_at": null,
+      "expire_at": null,
+      "duration_days": 7,
+      "status": "unused",
+      "max_devices": 1,
+      "devices": [],
+      "note": "Key demo 7 ngày",
+      "created_at": "2026-10-10T00:00:00.000Z"
+    },
+    {
+      "key": "PTROTABCDEFG",
+      "device_id": null,
+      "device_name": null,
+      "activated_at": null,
+      "expire_at": null,
+      "duration_days": 30,
+      "status": "unused",
+      "max_devices": 1,
+      "devices": [],
+      "note": "Key VIP 30 ngày",
+      "created_at": "2026-10-10T00:00:00.000Z"
+    },
+    {
+      "key": "PTROTUNLOCK1",
+      "device_id": null,
+      "device_name": null,
+      "activated_at": null,
+      "expire_at": null,
+      "duration_days": 1,
+      "status": "unused",
+      "max_devices": 1,
+      "devices": [],
+      "note": "Key test 1 ngày",
+      "created_at": "2026-10-10T00:00:00.000Z"
+    },
+    {
+      "key": "PTROTVIP9999",
+      "device_id": null,
+      "device_name": null,
+      "activated_at": null,
+      "expire_at": null,
+      "duration_days": 365,
+      "status": "unused",
+      "max_devices": 3,
+      "devices": [],
+      "note": "Key VIP năm",
+      "created_at": "2026-10-10T00:00:00.000Z"
+    },
+    {
+      "key": "PTROT8888888",
+      "device_id": null,
+      "device_name": null,
+      "activated_at": null,
+      "expire_at": null,
+      "duration_days": 7,
+      "status": "unused",
+      "max_devices": 1,
+      "devices": [],
+      "note": "Key demo 7 ngày",
+      "created_at": "2026-10-10T00:00:00.000Z"
+    }
+  ]
+}
