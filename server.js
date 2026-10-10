@@ -1,8 +1,3 @@
-/**
- * UN LOCK - Server API
- * Deploy lên Render.com
- */
-
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
@@ -11,32 +6,23 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ═══════════════ MIDDLEWARE ═══════════════
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname));
 
-// ═══════════════ CẤU HÌNH ═══════════════
 const DB_FILE = path.join(__dirname, 'keys.json');
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || 'UNLOCK_ADMIN_2026';
 const KEY_PREFIX = 'PTROT';
 const KEY_LENGTH = 12;
 
-// ═══════════════ DATABASE ═══════════════
-let db = {
-  version: '1.0',
-  updated_at: new Date().toISOString(),
-  keys: []
-};
+let db = { version: '1.0', updated_at: new Date().toISOString(), keys: [] };
 
 function loadDB() {
   try {
     if (fs.existsSync(DB_FILE)) {
-      const raw = fs.readFileSync(DB_FILE, 'utf8');
-      db = JSON.parse(raw);
+      db = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
       console.log('✅ Loaded ' + db.keys.length + ' keys');
     } else {
-      // Tạo 5 key mẫu lần đầu
       db.keys = [
         createKey('PTROT1234567', 7),
         createKey('PTROTABCDEFG', 30),
@@ -47,40 +33,32 @@ function loadDB() {
       saveDB();
       console.log('📝 Created 5 sample keys');
     }
-  } catch (e) {
-    console.error('❌ Load DB error:', e.message);
-  }
+  } catch (e) { console.error('❌ Load DB error:', e.message); }
 }
 
 function saveDB() {
   try {
     db.updated_at = new Date().toISOString();
     fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2), 'utf8');
-  } catch (e) {
-    console.error('❌ Save DB error:', e.message);
-  }
+  } catch (e) { console.error('❌ Save DB error:', e.message); }
 }
 
 function createKey(key, days, maxDev) {
   return {
     key: key.toUpperCase(),
-    device_id: null,
-    device_name: null,
-    activated_at: null,
-    expire_at: null,
-    duration_days: days,
-    status: 'unused',
+    device_id: null, device_name: null,
+    activated_at: null, expire_at: null,
+    duration_days: days, status: 'unused',
     max_devices: maxDev || 1,
-    devices: [],
-    note: '',
+    devices: [], note: '',
     created_at: new Date().toISOString()
   };
 }
 
 function genKey() {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let s = '';
-  for (let i = 0; i < 7; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  for (let i = 0; i < 7; i++) s += c[Math.floor(Math.random() * c.length)];
   return KEY_PREFIX + s;
 }
 
@@ -93,386 +71,204 @@ function validFmt(k) {
 function findKey(k) {
   if (!k) return null;
   const u = k.toUpperCase().trim();
-  return db.keys.find(function(item){ return item.key === u; });
+  return db.keys.find(function(i){ return i.key === u; });
 }
 
-// ═══════════════ API: HEALTH ═══════════════
 app.get('/api/health', function(req, res){
   res.json({
-    ok: true,
-    service: 'UN LOCK API',
-    version: db.version,
-    total_keys: db.keys.length,
-    uptime: process.uptime(),
-    timestamp: new Date().toISOString()
+    ok: true, service: 'UN LOCK API',
+    version: db.version, total_keys: db.keys.length,
+    uptime: process.uptime(), timestamp: new Date().toISOString()
   });
 });
 
-// ═══════════════ API: VERIFY KEY ═══════════════
 app.post('/api/verify', function(req, res){
-  const body = req.body || {};
-  const key = body.key;
-  const deviceId = body.device_id;
-  const deviceName = body.device_name;
+  const b = req.body || {};
+  if (!b.key || !b.device_id) return res.status(400).json({ ok:false, code:'MISSING_PARAMS', message:'Thiếu key hoặc device_id' });
+  if (!validFmt(b.key)) return res.status(400).json({ ok:false, code:'INVALID_FORMAT', message:'Key sai định dạng' });
 
-  if (!key || !deviceId) {
-    return res.status(400).json({
-      ok: false,
-      code: 'MISSING_PARAMS',
-      message: 'Thiếu key hoặc device_id'
-    });
+  const r = findKey(b.key);
+  if (!r) return res.status(404).json({ ok:false, code:'KEY_NOT_FOUND', message:'Key không tồn tại' });
+  if (r.status === 'banned') return res.status(403).json({ ok:false, code:'KEY_BANNED', message:'Key đã bị khóa' });
+  if (r.status === 'expired' || (r.expire_at && new Date(r.expire_at) < new Date())) {
+    r.status = 'expired'; saveDB();
+    return res.status(403).json({ ok:false, code:'KEY_EXPIRED', message:'Key đã hết hạn' });
   }
 
-  if (!validFmt(key)) {
-    return res.status(400).json({
-      ok: false,
-      code: 'INVALID_FORMAT',
-      message: 'Key sai định dạng (PTROT + 7 ký tự)'
-    });
-  }
-
-  const rec = findKey(key);
-  if (!rec) {
-    return res.status(404).json({
-      ok: false,
-      code: 'KEY_NOT_FOUND',
-      message: 'Key không tồn tại'
-    });
-  }
-
-  if (rec.status === 'banned') {
-    return res.status(403).json({
-      ok: false,
-      code: 'KEY_BANNED',
-      message: 'Key đã bị khóa'
-    });
-  }
-
-  if (rec.status === 'expired' || (rec.expire_at && new Date(rec.expire_at) < new Date())) {
-    rec.status = 'expired';
-    saveDB();
-    return res.status(403).json({
-      ok: false,
-      code: 'KEY_EXPIRED',
-      message: 'Key đã hết hạn'
-    });
-  }
-
-  // Check existing device
   let existDev = null;
-  for (let i = 0; i < rec.devices.length; i++) {
-    if (rec.devices[i].device_id === deviceId) { existDev = rec.devices[i]; break; }
+  for (let i = 0; i < r.devices.length; i++) {
+    if (r.devices[i].device_id === b.device_id) { existDev = r.devices[i]; break; }
   }
 
-  if (rec.devices.length > 0 && !existDev) {
-    if (rec.devices.length >= rec.max_devices) {
-      return res.status(403).json({
-        ok: false,
-        code: 'DEVICE_LIMIT',
-        message: 'Key đã đạt giới hạn ' + rec.max_devices + ' thiết bị'
-      });
-    }
+  if (r.devices.length > 0 && !existDev && r.devices.length >= r.max_devices) {
+    return res.status(403).json({ ok:false, code:'DEVICE_LIMIT', message:'Key đã đạt giới hạn thiết bị' });
   }
 
   let isNew = false;
-
   if (!existDev) {
     const now = new Date();
     let expAt;
-
-    if (rec.expire_at) {
-      expAt = new Date(rec.expire_at);
-    } else {
-      expAt = new Date(now.getTime() + rec.duration_days * 24 * 60 * 60 * 1000);
-      rec.activated_at = now.toISOString();
-      rec.expire_at = expAt.toISOString();
-      rec.device_id = deviceId;
-      rec.device_name = deviceName || 'Thiết bị';
+    if (r.expire_at) { expAt = new Date(r.expire_at); }
+    else {
+      expAt = new Date(now.getTime() + r.duration_days * 86400000);
+      r.activated_at = now.toISOString();
+      r.expire_at = expAt.toISOString();
+      r.device_id = b.device_id;
+      r.device_name = b.device_name || 'Thiết bị';
       isNew = true;
     }
-
-    rec.devices.push({
-      device_id: deviceId,
-      device_name: deviceName || 'Thiết bị',
-      activated_at: now.toISOString()
-    });
-
-    rec.status = 'active';
+    r.devices.push({ device_id: b.device_id, device_name: b.device_name || 'Thiết bị', activated_at: now.toISOString() });
+    r.status = 'active';
     saveDB();
-    console.log('🔓 Activated: ' + rec.key + ' for ' + deviceName);
+    console.log('🔓 Activated: ' + r.key);
   }
 
-  const expTime = new Date(rec.expire_at).getTime();
-  const remain = expTime - Date.now();
-  const daysLeft = Math.max(0, Math.ceil(remain / (24 * 60 * 60 * 1000)));
+  const expTime = new Date(r.expire_at).getTime();
+  const daysLeft = Math.max(0, Math.ceil((expTime - Date.now()) / 86400000));
 
-  return res.json({
-    ok: true,
-    code: isNew ? 'ACTIVATED' : 'ALREADY_ACTIVE',
+  res.json({
+    ok: true, code: isNew ? 'ACTIVATED' : 'ALREADY_ACTIVE',
     message: isNew ? 'Kích hoạt thành công' : 'Key đang hoạt động',
     data: {
-      key: rec.key,
-      status: rec.status,
-      duration_days: rec.duration_days,
-      activated_at: rec.activated_at,
-      expire_at: rec.expire_at,
-      days_left: daysLeft,
-      max_devices: rec.max_devices,
-      device_count: rec.devices.length
+      key: r.key, status: r.status, duration_days: r.duration_days,
+      activated_at: r.activated_at, expire_at: r.expire_at,
+      days_left: daysLeft, max_devices: r.max_devices, device_count: r.devices.length
     }
   });
 });
 
-// ═══════════════ API: CHECK KEY ═══════════════
-app.post('/api/check', function(req, res){
-  const key = (req.body || {}).key;
-  if (!validFmt(key)) {
-    return res.status(400).json({ ok: false, message: 'Sai định dạng' });
-  }
-  const rec = findKey(key);
-  if (!rec) return res.status(404).json({ ok: false, message: 'Không tồn tại' });
-
-  res.json({
-    ok: true,
-    data: {
-      status: rec.status,
-      duration_days: rec.duration_days,
-      max_devices: rec.max_devices
-    }
-  });
-});
-
-// ═══════════════ API: LOGOUT ═══════════════
 app.post('/api/logout', function(req, res){
-  const body = req.body || {};
-  const key = body.key;
-  const deviceId = body.device_id;
-
-  if (!key || !deviceId) {
-    return res.status(400).json({ ok: false, message: 'Thiếu tham số' });
+  const b = req.body || {};
+  if (!b.key || !b.device_id) return res.status(400).json({ ok:false, message:'Thiếu tham số' });
+  const r = findKey(b.key);
+  if (!r) return res.status(404).json({ ok:false, message:'Key không tồn tại' });
+  const before = r.devices.length;
+  r.devices = r.devices.filter(function(d){ return d.device_id !== b.device_id; });
+  if (r.devices.length === 0) {
+    r.status = 'unused'; r.device_id = null; r.device_name = null;
+    r.activated_at = null; r.expire_at = null;
   }
-
-  const rec = findKey(key);
-  if (!rec) return res.status(404).json({ ok: false, message: 'Key không tồn tại' });
-
-  const before = rec.devices.length;
-  rec.devices = rec.devices.filter(function(d){ return d.device_id !== deviceId; });
-
-  if (rec.devices.length === 0) {
-    rec.status = 'unused';
-    rec.device_id = null;
-    rec.device_name = null;
-    rec.activated_at = null;
-    rec.expire_at = null;
-    console.log('🔄 Reset key: ' + rec.key);
-  }
-
   saveDB();
-  res.json({
-    ok: true,
-    message: 'Đăng xuất thành công',
-    removed: before - rec.devices.length
-  });
+  res.json({ ok: true, message: 'Đăng xuất thành công', removed: before - r.devices.length });
 });
 
-// ═══════════════ ADMIN MIDDLEWARE ═══════════════
 function requireAdmin(req, res, next) {
-  const token = req.headers['x-admin-token'] || req.query.token;
-  if (token !== ADMIN_TOKEN) {
-    return res.status(401).json({ ok: false, message: 'Token admin không hợp lệ' });
-  }
+  const t = req.headers['x-admin-token'] || req.query.token;
+  if (t !== ADMIN_TOKEN) return res.status(401).json({ ok:false, message:'Token admin không hợp lệ' });
   next();
 }
 
-// ═══════════════ API ADMIN: LIST KEYS ═══════════════
 app.get('/api/admin/keys', requireAdmin, function(req, res){
   const now = Date.now();
   db.keys.forEach(function(k){
-    if (k.status === 'active' && k.expire_at && new Date(k.expire_at).getTime() < now) {
-      k.status = 'expired';
-    }
+    if (k.status === 'active' && k.expire_at && new Date(k.expire_at).getTime() < now) k.status = 'expired';
   });
   saveDB();
-
-  res.json({
-    ok: true,
-    total: db.keys.length,
-    keys: db.keys
-  });
+  res.json({ ok: true, total: db.keys.length, keys: db.keys });
 });
 
-// ═══════════════ API ADMIN: CREATE KEY ═══════════════
 app.post('/api/admin/keys', requireAdmin, function(req, res){
-  const body = req.body || {};
-  const duration = parseInt(body.duration_days) || 7;
-  const maxDev = parseInt(body.max_devices) || 1;
-  const note = body.note || '';
-
-  let newKey = body.key ? body.key.toUpperCase().trim() : genKey();
-
-  if (!validFmt(newKey)) {
-    return res.status(400).json({ ok: false, message: 'Key sai định dạng' });
-  }
-
-  if (findKey(newKey)) {
-    return res.status(409).json({ ok: false, message: 'Key đã tồn tại' });
-  }
-
+  const b = req.body || {};
+  const duration = parseInt(b.duration_days) || 7;
+  const maxDev = parseInt(b.max_devices) || 1;
+  let newKey = b.key ? b.key.toUpperCase().trim() : genKey();
+  if (!validFmt(newKey)) return res.status(400).json({ ok:false, message:'Key sai định dạng' });
+  if (findKey(newKey)) return res.status(409).json({ ok:false, message:'Key đã tồn tại' });
   const rec = createKey(newKey, duration, maxDev);
-  rec.note = note;
-  db.keys.push(rec);
-  saveDB();
-
-  console.log('➕ Created: ' + newKey + ' (' + duration + ' days)');
+  rec.note = b.note || '';
+  db.keys.push(rec); saveDB();
+  console.log('➕ Created: ' + newKey);
   res.json({ ok: true, message: 'Đã tạo key', key: rec });
 });
 
-// ═══════════════ API tồ ADMIN: BULK CREATE ═══════════════
-app.post('/api/admin/keys/bulk', requireAdminn, function(req, res){
-  const body = req.body || {};
-  const count = parseInt(body.count) || 10;
-  const duration = parseInt(body.duration_days) || 7;
-  const maxDev = parseInt(body.max_devices) || 1;
-  const note = body.note || '';
-
-  const created tại = [];
+app.post('/api/admin/keys/bulk', requireAdmin, function(req, res){
+  const b = req.body || {};
+  const count = parseInt(b.count) || 10;
+  const duration = parseInt(b.duration_days) || 7;
+  const maxDev = parseInt(b.max_devices) || 1;
+  const created = [];
   for (let i = 0; i < count; i++) {
-    let nk;
-    let attempts = 0;
-    do {
-      nk = gen'Key();
-      attempts++;
-    } while (findKey(nk) && attempts < 100);
-
+    let nk, a = 0;
+    do { nk = genKey(); a++; } while (findKey(nk) && a < 100);
     if (findKey(nk)) continue;
-
-    const rec });
- = createKey(nk, duration, maxDev);
-    rec.note = note;
-    db.keys.push(rec);
+    db.keys.push(createKey(nk, duration, maxDev));
     created.push(nk);
   }
-
   saveDB();
-  console.log('➕ Bulk created ' + created.length + ' keys');
   res.json({ ok: true, message: 'Đã tạo ' + created.length + ' keys', keys: created });
 });
 
-// ═══════════════ API ADMIN: DELETE KEY ═══════════════
 app.delete('/api/admin/keys/:key', requireAdmin, function(req, res){
   const key = req.params.key.toUpperCase();
   const before = db.keys.length;
   db.keys = db.keys.filter(function(k){ return k.key !== key; });
-
-  if (db.keys.length === before) {
-    return res.status(404).json({ ok: false, message: 'Key không  }
-
+  if (db.keys.length === before) return res.status(404).json({ ok:false, message:'Key không tồn tại' });
   saveDB();
-  console.log('🗑️ Deleted: ' + key);
   res.json({ ok: true, message: 'Đã xóa key' });
 });
 
-// ═══════════════ API ADMIN: UPDATE STATUS ═══════════════
 app.patch('/api/admin/keys/:key/status', requireAdmin, function(req, res){
   const key = req.params.key.toUpperCase();
   const status = (req.body || {}).status;
-
-  if (['unused','active','expired','banned'].indexOf(status) === -1) {
-    return res.status(400).json({ ok: false, message: 'Status không hợp lệ' });
-  }
-
-  const rec = findKey(key);
-  if (!rec) return res.status(404).json({ ok: false, message: 'Key không tồn tại' });
-
-  rec.status = status;
+  if (['unused','active','expired','banned'].indexOf(status) === -1)
+    return res.status(400).json({ ok:false, message:'Status không hợp lệ' });
+  const r = findKey(key);
+  if (!r) return res.status(404).json({ ok:false, message:'Key không tồn tại' });
+  r.status = status;
   if (status === 'unused') {
-    rec.devices = [];
-    rec.device _id = null;
-    rec.device_name = null;
-    rec.activated_at = null;
-    rec.expire_at = null;
+    r.devices = []; r.device_id = null; r.device_name = null;
+    r.activated_at = null; r.expire_at = null;
   }
   saveDB();
-  console.log(' if✏️ Status: ' + key + ' → ' + status);
-  res.json({ ok: true, message: 'Đã cập nhật', key: rec });
+  res.json({ ok: true, message: 'Đã cập nhật', key: r });
 });
 
-// (! ═══════════════ API ADMIN: EXTEND ═══════════════
-app.patch('/api/admin/keys/:key/extend', requireAdmin,rec function(req, res){
+app.patch('/api/admin/keys/:key/extend', requireAdmin, function(req, res){
   const key = req.params.key.toUpperCase();
-  const days = parseInt((req.body || {}).)days) || 7;
-
-  const rec = findKey(key);
- return res.status(404).json({ ok: false, message: 'Key không tồn tại' });
-
-  const base = rec.expire_at ? new Date(rec.expire_at).getTime() : Date.now();
-  const newExp = base + days * 24 * 60 * 60 * 1000;
-  rec.expire_at = new Date(newExp).toISOString();
-  rec.duration_days = (rec.duration_days || 0) + days;
-  rec.status = 'active';
+  const days = parseInt((req.body || {}).days) || 7;
+  const r = findKey(key);
+  if (!r) return res.status(404).json({ ok:false, message:'Key không tồn tại' });
+  const base = r.expire_at ? new Date(r.expire_at).getTime() : Date.now();
+  r.expire_at = new Date(base + days * 86400000).toISOString();
+  r.duration_days = (r.duration_days || 0) + days;
+  r.status = 'active';
   saveDB();
-
-  console.log('⏰ Extended: ' + key + ' +' + days + ' days');
-  res.json({ ok: true, message: 'Đã gia hạn ' + days + ' ngày', key: rec });
+  res.json({ ok: true, message: 'Đã gia hạn ' + days + ' ngày', key: r });
 });
 
-// ═══════════════ API ADMIN: RESET ═══════════════
 app.patch('/api/admin/keys/:key/reset', requireAdmin, function(req, res){
   const key = req.params.key.toUpperCase();
-  const rec = findKey(key);
-  if (!rec) return res.status(404).json({ ok: false, message: 'Key không tồn tại' });
-
-  rec.devices = [];
-  rec.device_id = null;
-  rec.device_name = null;
-  rec.activated_at = null;
-  rec.expire_at = null;
-  rec.status = 'unused';
+  const r = findKey(key);
+  if (!r) return res.status(404).json({ ok:false, message:'Key không tồn tại' });
+  r.devices = []; r.device_id = null; r.device_name = null;
+  r.activated_at = null; r.expire_at = null; r.status = 'unused';
   saveDB();
-
-  console.log('🔄 Reset: ' + key);
-  res.json({ ok: true, message: 'Đã reset key', key: rec });
+  res.json({ ok: true, message: 'Đã reset key', key: r });
 });
 
-// ═══════════════ API ADMIN: STATS ═══════════════
 app.get('/api/admin/stats', requireAdmin, function(req, res){
+  const stats = { total: db.keys.length, unused: 0, active: 0, expired: 0, banned: 0, total_devices: 0 };
   const now = Date.now();
-  const stats = {
-    total: db.keys.length,
-    unused: 0,
-    active: 0,
-    expired: 0,
-    banned: 0,
-    total_devices: 0
-  };
-
   db.keys.forEach(function(k){
-    if (k.expire_at && k.status === 'active' && new Date(k.expire_at).getTime() < now) {
-      k.status = 'expired';
-    }
+    if (k.expire_at && k.status === 'active' && new Date(k.expire_at).getTime() < now) k.status = 'expired';
     if (stats[k.status] !== undefined) stats[k.status]++;
     stats.total_devices += (k.devices || []).length;
   });
   saveDB();
-
   res.json({ ok: true, stats: stats });
 });
 
-// ═══════════════ AUTO SCAN EXPIRED ═══════════════
 setInterval(function(){
   let changed = 0;
   const now = Date.now();
   db.keys.forEach(function(k){
     if (k.status === 'active' && k.expire_at && new Date(k.expire_at).getTime() < now) {
-      k.status = 'expired';
-      changed++;
-      console.log('⏰ Expired: ' + k.key);
+      k.status = 'expired'; changed++;
     }
   });
   if (changed > 0) saveDB();
 }, 60000);
 
-// ═══════════════ START ═══════════════
 loadDB();
 
 app.listen(PORT, function(){
@@ -482,7 +278,6 @@ app.listen(PORT, function(){
   console.log('╠═══════════════════════════════════╣');
   console.log('║  Port: ' + String(PORT).padEnd(26) + '║');
   console.log('║  Keys: ' + String(db.keys.length).padEnd(26) + '║');
-  console.log('║  Token: ' + String(ADMIN_TOKEN).substring(0, 20).padEnd(25) + '║');
   console.log('╚═══════════════════════════════════╝');
   console.log('');
 });
