@@ -20,5 +20,38 @@
     }
   ],
   "note": "Key VIP gia đình",
-  "created_at": "2026-09-30T00:00:00.000Z"
+  "created_at": "2026-09-30T00:00:00.000Z",
+  "aim_settings": {
+    "enabled": true,
+    "version": "2.0",
+    "aim_strength": 85,
+    "aim_smooth": 15,
+    "aim_distance": 100,
+    "aim_part": "head",
+    "aim_auto_fire": false,
+    "aim_delay_ms": 50,
+    "fov": 60,
+    "max_distance": 150,
+    "bone_head": true,
+    "bone_chest": false,
+    "bone_hips": false,
+    "visible_check": true,
+    "smooth_mode": "exponential",
+    "sensitivity_x": 1.2,
+    "sensitivity_y": 1.1,
+    "aim_lock_on_shoot": true,
+    "aim_release_on_enemy_lost": false,
+    "prediction_factor": 0.25,
+    "fps_mode": "120",
+    "auto_update": true
+  },
+  "dns_config": {
+    "name": "UN LOCK — Garena FF",
+    "primary_dns": "185.228.168.168",
+    "secondary_dns": "1.1.1.1",
+    "garena_api_url": "https://ms.garena.com",
+    "custom_url": "",
+    "encryption": "AES-256",
+    "auto_connect": false
+  }
 }
