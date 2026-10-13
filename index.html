@@ -9,7 +9,7 @@
   * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; -webkit-tap-highlight-color:transparent; -webkit-font-smoothing:antialiased; }
   html,body { background:#060312; color:#e8e0f5; min-height:100vh; overflow-x:hidden; }
   body {
-    padding:14px 12px 130px;
+    padding:14px 12px 180px;
     background:
       radial-gradient(ellipse 90% 60% at 50% 0%, rgba(105,60,230,0.5) 0%, transparent 60%),
       radial-gradient(ellipse 70% 50% at 100% 100%, rgba(20,140,230,0.32) 0%, transparent 55%),
@@ -492,7 +492,7 @@
 
   /* ============ MUSIC PLAYER ============ */
   .music-player {
-    position:fixed; bottom:14px; left:14px; z-index:999;
+    position:fixed; bottom:100px; left:14px; z-index:999;
     display:flex; align-items:center; gap:10px;
     background: linear-gradient(135deg, rgba(35,15,70,0.96), rgba(15,8,40,0.96));
     backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
@@ -537,9 +537,156 @@
   }
   .music-play-icon svg { width:14px; height:14px; fill:#fff; }
 
+  /* ============ BOTTOM NAV ============ */
+  .bottom-nav {
+    position:fixed; left:0; right:0; bottom:0; z-index:990;
+    background: linear-gradient(180deg, rgba(15,8,35,0.92), rgba(8,4,20,0.98));
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(140,100,240,0.4);
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.7), 0 -2px 20px rgba(120,60,220,0.3);
+    display:grid; grid-template-columns: 1fr auto 1fr;
+    align-items:center; justify-items:center;
+    padding: 10px 8px calc(10px + env(safe-area-inset-bottom, 0px));
+    max-width: 100%;
+  }
+  .nav-item {
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:3px; cursor:pointer; padding:6px 10px; border-radius:14px;
+    transition: all .2s; user-select:none; min-width:70px;
+  }
+  .nav-item:active { transform:scale(0.94); }
+  .nav-item svg { width:22px; height:22px; fill:#8a80c0; transition: all .2s; }
+  .nav-item span {
+    font-size:10.5px; font-weight:700; color:#8a80c0;
+    letter-spacing:0.3px; transition: all .2s; text-transform:uppercase;
+  }
+  .nav-item.active svg { fill:#b18aff; filter:drop-shadow(0 0 10px rgba(177,138,255,1)); }
+  .nav-item.active span { color:#d0c0ff; }
+
+  .nav-center {
+    width:60px; height:60px; border-radius:50%;
+    background: linear-gradient(135deg, #8b3fff 0%, #1a9aff 100%);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 6px 25px rgba(120,60,255,0.7), 0 0 30px rgba(60,150,255,0.5), inset 0 2px 0 rgba(255,255,255,0.3);
+    cursor:pointer; transition: all .3s cubic-bezier(0.34,1.56,0.64,1);
+    border: 2px solid rgba(200,180,255,0.5);
+    margin-top:-22px;
+  }
+  .nav-center:active { transform:scale(0.9); }
+  .nav-center.rotated { transform: rotate(45deg); }
+  .nav-center.rotated:active { transform: rotate(45deg) scale(0.9); }
+  .nav-center svg { width:30px; height:30px; fill:#fff; transition: transform .3s; }
+  .nav-center.rotated svg { transform: rotate(0deg); }
+
+  /* ============ FLOATING MENU ============ */
+  .floating-menu {
+    position:fixed; left:0; right:0; bottom:0; z-index:989;
+    background: linear-gradient(180deg, rgba(20,10,45,0.96), rgba(10,5,25,0.99));
+    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    border-top-left-radius: 28px; border-top-right-radius: 28px;
+    border-top: 1px solid rgba(150,100,240,0.55);
+    box-shadow: 0 -20px 60px rgba(0,0,0,0.85), 0 -5px 30px rgba(120,60,220,0.4);
+    padding: 22px 18px calc(120px + env(safe-area-inset-bottom, 0px));
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1);
+    max-height: 78vh;
+    overflow-y: auto;
+    pointer-events: none;
+    opacity: 0;
+  }
+  .floating-menu.show {
+    transform: translateY(0);
+    pointer-events: auto;
+    opacity: 1;
+  }
+  .menu-title {
+    display:flex; align-items:center; gap:10px;
+    font-size:14px; font-weight:800; letter-spacing:0.8px;
+    color:#f0e8ff; text-transform:uppercase; margin-bottom:18px;
+    padding-bottom:14px; border-bottom:1px solid rgba(150,100,240,0.3);
+  }
+  .menu-title svg { width:20px; height:20px; fill:#b18aff; filter:drop-shadow(0 0 8px rgba(177,138,255,0.9)); }
+
+  .menu-item {
+    display:flex; align-items:center; gap:12px;
+    background: rgba(30,15,60,0.7);
+    border:1px solid rgba(140,100,220,0.35);
+    border-radius:16px; padding:14px 16px;
+    margin-bottom:10px; transition: all .2s;
+  }
+  .menu-item:active { transform:scale(0.98); }
+  .menu-item-icon {
+    width:40px; height:40px; border-radius:12px; flex-shrink:0;
+    background: rgba(90,60,180,0.35);
+    border:1px solid rgba(140,110,230,0.5);
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px; line-height:1;
+  }
+  .menu-item-info { flex:1; min-width:0; }
+  .menu-item-name {
+    font-size:13.5px; font-weight:800; color:#f0e8ff;
+    letter-spacing:0.6px; text-transform:uppercase;
+  }
+  .menu-item-desc {
+    font-size:10.5px; color:#8a80c0; font-weight:500;
+    margin-top:2px; letter-spacing:0.2px;
+  }
+  .menu-toggle {
+    position:relative; width:50px; height:28px;
+    background: rgba(60,40,110,0.9); border-radius:28px; cursor:pointer;
+    transition: background .3s; border:1px solid rgba(120,90,200,0.55);
+    flex-shrink:0;
+  }
+  .menu-toggle::after {
+    content:""; position:absolute; top:2px; left:2px;
+    width:22px; height:22px; background:#c8b0f0; border-radius:50%;
+    transition: transform .3s, background .3s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  }
+  .menu-toggle.on {
+    background: linear-gradient(135deg, #1a9a4a, #0e6b32);
+    border-color: rgba(74,222,128,0.7);
+    box-shadow: 0 0 16px rgba(74,222,128,0.6);
+  }
+  .menu-toggle.on::after { transform:translateX(22px); background:#fff; }
+
+  .menu-item.range-item { flex-direction: column; align-items: stretch; gap:12px; }
+  .menu-item.range-top { display:flex; align-items:center; gap:12px; }
+  .slider-row {
+    display:flex; align-items:center; gap:12px;
+  }
+  .slider-input {
+    flex:1; -webkit-appearance: none; appearance: none;
+    height: 8px; border-radius: 8px;
+    background: linear-gradient(90deg, #7a3fff 0%, #1a9aff var(--val,50%), rgba(60,40,110,0.9) var(--val,50%));
+    outline: none; cursor: pointer;
+    transition: background .15s;
+  }
+  .slider-input::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: linear-gradient(135deg, #e0d0ff, #a888ff);
+    box-shadow: 0 0 12px rgba(180,120,255,0.9), 0 2px 6px rgba(0,0,0,0.5);
+    cursor: pointer;
+    border: 2px solid rgba(255,255,255,0.5);
+  }
+  .slider-input::-moz-range-thumb {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: linear-gradient(135deg, #e0d0ff, #a888ff);
+    box-shadow: 0 0 12px rgba(180,120,255,0.9);
+    cursor: pointer;
+    border: 2px solid rgba(255,255,255,0.5);
+  }
+  .slider-value {
+    min-width: 52px; text-align: center;
+    font-size: 14px; font-weight: 800; color: #b18aff;
+    font-family: ui-monospace, monospace;
+    text-shadow: 0 0 10px rgba(177,138,255,0.8);
+  }
+
   /* ============ TOAST ============ */
   .toast {
-    position:fixed; left:50%; bottom:90px; z-index:9999;
+    position:fixed; left:50%; bottom:220px; z-index:9999;
     transform: translateX(-50%) translateY(180%);
     background: linear-gradient(135deg, #2a1550, #1a0a35);
     border:1px solid rgba(180,140,255,0.65);
@@ -765,7 +912,7 @@
       Tạo &amp; Ký .mobileconfig Ngay
     </button>
 
-    <div class="note-pem">📄 File .crt định dạng PEM — Tương thích với iOS</div>
+    <div class="note-pem">📄 File .crt định dạng PEM — Tương thích với iOS 16+</div>
 
     <div id="resultList" class="result-list" style="margin-top:14px;"></div>
   </div>
@@ -846,6 +993,89 @@
   </div>
 </div>
 
+<!-- ============ PHẦN 7: FLOATING MENU ============ -->
+<div class="floating-menu" id="floatingMenu">
+  <div class="menu-title">
+    <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+    MENU CHỨC NĂNG
+  </div>
+
+  <div class="menu-item" data-key="touch">
+    <div class="menu-item-icon">✋</div>
+    <div class="menu-item-info">
+      <div class="menu-item-name">TOUCH</div>
+      <div class="menu-item-desc">Bật/tắt cảm ứng nâng cao</div>
+    </div>
+    <div class="menu-toggle" id="tg-touch"></div>
+  </div>
+
+  <div class="menu-item" data-key="aim">
+    <div class="menu-item-icon">🎯</div>
+    <div class="menu-item-info">
+      <div class="menu-item-name">AIM</div>
+      <div class="menu-item-desc">Hỗ trợ ngắm chính xác</div>
+    </div>
+    <div class="menu-toggle" id="tg-aim"></div>
+  </div>
+
+  <div class="menu-item" data-key="lock">
+    <div class="menu-item-icon">🔒</div>
+    <div class="menu-item-info">
+      <div class="menu-item-name">KHÓA DÍNH</div>
+      <div class="menu-item-desc">Giữ mục tiêu cố định</div>
+    </div>
+    <div class="menu-toggle" id="tg-lock"></div>
+  </div>
+
+  <div class="menu-item range-item" data-key="grip">
+    <div class="menu-item range-top">
+      <div class="menu-item-icon">🎚️</div>
+      <div class="menu-item-info">
+        <div class="menu-item-name">ĐỘ BÁM</div>
+        <div class="menu-item-desc">Điều chỉnh mức độ bám dính</div>
+      </div>
+      <div class="menu-toggle" id="tg-grip"></div>
+    </div>
+    <div class="slider-row">
+      <input type="range" class="slider-input" id="slider-grip" min="0" max="100" value="50" style="--val:50%">
+      <div class="slider-value" id="slider-grip-value">50%</div>
+    </div>
+  </div>
+
+  <div class="menu-item" data-key="fps">
+    <div class="menu-item-icon">⚡</div>
+    <div class="menu-item-info">
+      <div class="menu-item-name">FPS</div>
+      <div class="menu-item-desc">Tối ưu khung hình</div>
+    </div>
+    <div class="menu-toggle" id="tg-fps"></div>
+  </div>
+
+  <div class="menu-item" data-key="runmc">
+    <div class="menu-item-icon">⚙️</div>
+    <div class="menu-item-info">
+      <div class="menu-item-name">CHẠY MOBILECONFIG</div>
+      <div class="menu-item-desc">Kích hoạt cấu hình DNS</div>
+    </div>
+    <div class="menu-toggle on" id="tg-runmc"></div>
+  </div>
+</div>
+
+<!-- ============ PHẦN 7: BOTTOM NAV ============ -->
+<div class="bottom-nav">
+  <div class="nav-item active" id="nav-home">
+    <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    <span>Trang chủ</span>
+  </div>
+  <div class="nav-center" id="nav-plus">
+    <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+  </div>
+  <div class="nav-item" id="nav-info">
+    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    <span>Thông tin</span>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -857,7 +1087,7 @@ const API_STATUS = SERVER_URL + "/status";
 const API_VERIFY = SERVER_URL + "/verify-key";
 
 /* ============================================================
-   DANH SÁCH KEY MẪU (fallback khi server không phản hồi)
+   DANH SÁCH KEY MẪU (fallback)
 ============================================================ */
 const FALLBACK_KEYS = [
   'DERA-42363C9E-EC589D4C','DERA-7A9B2D4F-8E3C1D7F','DERA-1F3E5D7C-9B2A4C6E',
@@ -865,7 +1095,7 @@ const FALLBACK_KEYS = [
   'DERA-5E7C9A2D-4F6B8E3C','DERA-3D5F7B9A-6C8E2D4F','DERA-7F9D2B4C-5A3E8F6D',
   'DERA-4C6E8A2F-9B3D7E5A'
 ];
-const KEY_DURATION_MS = 3 * 24 * 60 * 60 * 1000; // 3 ngày
+const KEY_DURATION_MS = 3 * 24 * 60 * 60 * 1000;
 
 /* ============================================================
    STORAGE KEYS
@@ -873,11 +1103,13 @@ const KEY_DURATION_MS = 3 * 24 * 60 * 60 * 1000; // 3 ngày
 const STORAGE_KEY_ACT = 'dera_locks_activation';
 const STORAGE_KEY_CERT = 'dera_locks_cert';
 const STORAGE_KEY_MC = 'dera_locks_signed_mc';
+const STORAGE_KEY_MENU = 'dera_locks_menu_state';
+const STORAGE_KEY_MUSIC_URL = 'https://files.catbox.moe/lnwzrw.mp3';
 
 /* ============================================================
    NGÀY HẾT HẠN CỐ ĐỊNH: 14/10/2034
 ============================================================ */
-const FIXED_EXPIRY = new Date(2034, 9, 14, 23, 59, 59); // tháng 9 = tháng 10 (0-index)
+const FIXED_EXPIRY = new Date(2034, 9, 14, 23, 59, 59);
 
 /* ============================================================
    STATE
@@ -887,7 +1119,7 @@ const state = {
   signedMc: null,
   signedMcName: null,
   dnsMode: 'secure',
-  certDays: 'max',   // 'max' = đến 14/10/2034
+  certDays: 'max',
   certType: 'root'
 };
 
@@ -974,12 +1206,11 @@ function openModal(title, content) {
 }
 
 /* ============================================================
-   ÂM THANH CHÀO MỪNG (Text-to-Speech tiếng Việt)
+   SPEECH — Chào mừng
 ============================================================ */
 function speakWelcome() {
   try {
     if (!window.speechSynthesis) return;
-    // Ưu tiên giọng tiếng Việt
     const voices = window.speechSynthesis.getVoices();
     let viVoice = voices.find(v => v.lang && v.lang.startsWith('vi'));
     const utt = new SpeechSynthesisUtterance('Chào mừng bạn đến với Dera Locks');
@@ -990,16 +1221,15 @@ function speakWelcome() {
     if (viVoice) utt.voice = viVoice;
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utt);
-  } catch (e) { /* bỏ qua nếu không hỗ trợ */ }
+  } catch (e) {}
 }
-// Preload voices
 if (window.speechSynthesis) {
   window.speechSynthesis.onvoiceschanged = () => {};
   window.speechSynthesis.getVoices();
 }
 
 /* ============================================================
-   DER ENCODER — X.509 Certificate
+   DER ENCODER
 ============================================================ */
 function derWrap(tag, content) {
   const len = content.length;
@@ -1123,7 +1353,7 @@ function validatePem(pem) {
 }
 
 /* ============================================================
-   STORAGE — CERT & MC
+   STORAGE
 ============================================================ */
 function saveCert(cert) {
   try { localStorage.setItem(STORAGE_KEY_CERT, JSON.stringify(cert)); } catch(e){}
@@ -1305,7 +1535,7 @@ document.getElementById('btnActivateKey').addEventListener('click', async () => 
   tryAutoPlayMusic();
 });
 
-/* Loading 10s + giọng nói chào mừng */
+/* Loading 10s */
 function runLoading10s() {
   return new Promise(resolve => {
     const ov = document.getElementById('loadingOverlay');
@@ -1314,10 +1544,7 @@ function runLoading10s() {
     const cd = document.getElementById('loadingCountdown');
     ov.classList.add('show');
     document.body.style.overflow = 'hidden';
-
-    // Kích hoạt giọng nói sau 500ms
     setTimeout(speakWelcome, 500);
-
     const TOTAL = 10000;
     const start = performance.now();
     function tick() {
@@ -1393,7 +1620,6 @@ bindChips('dnsMode', 'mode', v => state.dnsMode = v);
 bindChips('certDays', 'days', v => state.certDays = v);
 bindChips('certType', 'type', v => state.certType = v);
 
-/* Toggle DNS */
 const toggleDNS = document.getElementById('toggleDNS');
 toggleDNS.addEventListener('click', () => {
   toggleDNS.classList.toggle('on');
@@ -1450,7 +1676,6 @@ function buildMobileconfig(name, primary, secondary, mode, cert) {
     ? `<key>ServerAddresses</key><array>${dnsServers.map(ip => `<string>${escapeXml(ip)}</string>`).join('')}</array>`
     : '';
 
-  // Nhúng chứng nhận TRỰC TIẾP vào PayloadContent
   let caPayload = '';
   if (cert && cert.certPem) {
     const caUUID = uuid();
@@ -1572,7 +1797,6 @@ document.getElementById('btnCreateCert').addEventListener('click', async functio
     state.cert = cert;
     saveCert(cert);
 
-    // Cập nhật UI
     const statusBox = document.getElementById('certStatusBox');
     statusBox.className = 'status-box ok';
     document.getElementById('certStatusText').innerHTML = '✅ Chứng nhận đã tạo thành công! · Hết hạn: <b>' + formatDateVN(cert.notAfterDate.getTime()) + '</b>';
@@ -1594,7 +1818,6 @@ document.getElementById('btnCreateCert').addEventListener('click', async functio
   }
 });
 
-/* Nút KIỂM TRA CHỨNG NHẬN */
 document.getElementById('btnCheckCert').addEventListener('click', () => {
   if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key để mở khóa chức năng này', 'error'); return; }
   if (!state.cert) {
@@ -1728,70 +1951,199 @@ document.getElementById('modal').addEventListener('click', (e) => {
 });
 
 /* ============================================================
-   MUSIC PLAYER
+   PHẦN 6: MUSIC PLAYER — DÙNG FILE MP3 TỪ CATBOX
 ============================================================ */
 const vinyl = document.getElementById('vinyl');
 const musicArtist = document.getElementById('musicArtist');
 const musicIcon = document.getElementById('musicIcon');
 let musicPlaying = false;
-let synthCtx = null, synthCtrl = null;
+let audioPlayer = null;
 
-function startSynthMusic() {
-  if (!synthCtx) synthCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (synthCtx.state === 'suspended') synthCtx.resume();
-  const melody = [523.25,587.33,659.25,587.33,523.25,493.88,440.00,493.88,523.25,587.33,659.25,698.46,783.99,698.46,659.25,587.33,523.25,493.88,440.00,392.00,440.00,493.88,523.25,587.33,659.25,587.33,523.25,493.88,440.00,392.00,349.23,392.00];
-  const bass = [130.81,130.81,146.83,146.83,174.61,174.61,196.00,196.00];
-  const master = synthCtx.createGain();
-  master.gain.value = 0.08;
-  master.connect(synthCtx.destination);
-  let ni = 0, bi = 0;
-  const nd = 0.28;
-  const interval = setInterval(() => {
-    if (!musicPlaying) return;
-    const osc = synthCtx.createOscillator(), g = synthCtx.createGain();
-    osc.type = 'triangle';
-    osc.frequency.value = melody[ni % melody.length];
-    g.gain.setValueAtTime(0.3, synthCtx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, synthCtx.currentTime + nd * 0.9);
-    osc.connect(g); g.connect(master);
-    osc.start(); osc.stop(synthCtx.currentTime + nd);
-    if (ni % 2 === 0) {
-      const bo = synthCtx.createOscillator(), bg = synthCtx.createGain();
-      bo.type = 'sine';
-      bo.frequency.value = bass[bi % bass.length];
-      bg.gain.setValueAtTime(0.5, synthCtx.currentTime);
-      bg.gain.exponentialRampToValueAtTime(0.001, synthCtx.currentTime + nd * 1.8);
-      bo.connect(bg); bg.connect(master);
-      bo.start(); bo.stop(synthCtx.currentTime + nd * 2);
-      bi++;
-    }
-    ni++;
-  }, nd * 1000);
-  return { interval };
+function initAudio() {
+  if (!audioPlayer) {
+    audioPlayer = new Audio(STORAGE_KEY_MUSIC_URL);
+    audioPlayer.loop = true;
+    audioPlayer.volume = 0.6;
+    audioPlayer.preload = 'auto';
+    audioPlayer.addEventListener('error', () => {
+      // Fallback: dùng synth nếu mp3 lỗi
+      console.warn('MP3 lỗi, chuyển sang synth');
+    });
+  }
+  return audioPlayer;
 }
+
 function startMusic() {
   if (musicPlaying) return;
-  musicPlaying = true;
-  vinyl.classList.add('playing');
-  musicArtist.textContent = '🎵 Đang phát...';
-  musicIcon.innerHTML = '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
-  if (!synthCtrl) { try { synthCtrl = startSynthMusic(); } catch (e) {} }
+  try {
+    const a = initAudio();
+    const p = a.play();
+    if (p && p.catch) {
+      p.catch(err => {
+        console.warn('Autoplay bị chặn:', err.message);
+        // Thử lại khi user tương tác
+      });
+    }
+    musicPlaying = true;
+    vinyl.classList.add('playing');
+    musicArtist.textContent = '🎵 Đang phát...';
+    musicIcon.innerHTML = '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
+  } catch (e) {
+    console.warn('Không phát được nhạc:', e);
+  }
 }
 function stopMusic() {
   musicPlaying = false;
+  if (audioPlayer) {
+    try { audioPlayer.pause(); audioPlayer.currentTime = 0; } catch (e) {}
+  }
   vinyl.classList.remove('playing');
   musicArtist.textContent = 'Nhấn để phát nhạc';
   musicIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-  if (synthCtrl) { clearInterval(synthCtrl.interval); synthCtrl = null; }
 }
 document.getElementById('musicPlayer').addEventListener('click', () => {
   if (musicPlaying) stopMusic(); else startMusic();
 });
-function tryAutoPlayMusic() { setTimeout(() => { if (!musicPlaying) startMusic(); }, 500); }
+function tryAutoPlayMusic() {
+  setTimeout(() => {
+    if (!musicPlaying) startMusic();
+  }, 500);
+}
 
 // Tự động tắt nhạc khi rời trang
 window.addEventListener('beforeunload', () => {
   if (musicPlaying) stopMusic();
+});
+
+/* ============================================================
+   PHẦN 7: BOTTOM NAV + FLOATING MENU
+============================================================ */
+const navHome = document.getElementById('nav-home');
+const navInfo = document.getElementById('nav-info');
+const navPlus = document.getElementById('nav-plus');
+const floatingMenu = document.getElementById('floatingMenu');
+
+// Trạng thái menu
+const menuState = {
+  touch: false,
+  aim: false,
+  lock: false,
+  grip: true,
+  gripValue: 50,
+  fps: false,
+  runmc: true
+};
+
+// Load trạng thái từ localStorage
+function loadMenuState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_MENU);
+    if (raw) {
+      const saved = JSON.parse(raw);
+      Object.assign(menuState, saved);
+    }
+  } catch (e) {}
+}
+function saveMenuState() {
+  try { localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(menuState)); } catch (e) {}
+}
+loadMenuState();
+
+// Áp dụng trạng thái vào UI
+function applyMenuState() {
+  ['touch','aim','lock','grip','fps','runmc'].forEach(k => {
+    const el = document.getElementById('tg-' + k);
+    if (el) el.classList.toggle('on', !!menuState[k]);
+  });
+  const slider = document.getElementById('slider-grip');
+  const sliderVal = document.getElementById('slider-grip-value');
+  if (slider) {
+    slider.value = menuState.gripValue;
+    slider.style.setProperty('--val', menuState.gripValue + '%');
+  }
+  if (sliderVal) sliderVal.textContent = menuState.gripValue + '%';
+}
+applyMenuState();
+
+// Bind toggle cho từng menu item
+['touch','aim','lock','grip','fps','runmc'].forEach(k => {
+  const el = document.getElementById('tg-' + k);
+  if (!el) return;
+  el.addEventListener('click', (e) => {
+    e.stopPropagation();
+    menuState[k] = !menuState[k];
+    el.classList.toggle('on', menuState[k]);
+    saveMenuState();
+    showToast((menuState[k] ? '✅ BẬT ' : '⭕ TẮT ') + k.toUpperCase(), menuState[k] ? 'success' : '');
+  });
+});
+
+// Slider Độ bám
+const sliderGrip = document.getElementById('slider-grip');
+const sliderGripValue = document.getElementById('slider-grip-value');
+if (sliderGrip) {
+  const updateSlider = () => {
+    const v = parseInt(sliderGrip.value, 10);
+    menuState.gripValue = v;
+    sliderGrip.style.setProperty('--val', v + '%');
+    sliderGripValue.textContent = v + '%';
+    saveMenuState();
+  };
+  sliderGrip.addEventListener('input', updateSlider);
+  sliderGrip.addEventListener('change', updateSlider);
+  // Khởi tạo background
+  sliderGrip.style.setProperty('--val', menuState.gripValue + '%');
+}
+
+// Mở/đóng menu khi nhấn nút +
+function toggleMenu() {
+  const isOpen = floatingMenu.classList.contains('show');
+  if (isOpen) {
+    floatingMenu.classList.remove('show');
+    navPlus.classList.remove('rotated');
+  } else {
+    floatingMenu.classList.add('show');
+    navPlus.classList.add('rotated');
+  }
+}
+navPlus.addEventListener('click', toggleMenu);
+
+// Nav Home
+navHome.addEventListener('click', () => {
+  navHome.classList.add('active');
+  navInfo.classList.remove('active');
+  // Đóng menu nếu đang mở
+  if (floatingMenu.classList.contains('show')) toggleMenu();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  showToast('🏠 Trang chủ', '');
+});
+
+// Nav Info
+navInfo.addEventListener('click', () => {
+  navInfo.classList.add('active');
+  navHome.classList.remove('active');
+  if (floatingMenu.classList.contains('show')) toggleMenu();
+  const act = getActivation();
+  if (act && isActivationValid(act)) {
+    const info =
+      '👤 THÔNG TIN THIẾT BỊ\n\n' +
+      '📱 Thiết bị: ' + (act.deviceName || getDeviceName()) + '\n' +
+      '🆔 Mã thiết bị: ' + (act.deviceId || getDeviceId()) + '\n' +
+      '🔑 Key: ' + act.key + '\n' +
+      '📅 Kích hoạt: ' + formatDateVN(act.activatedAt) + '\n' +
+      '⏰ Hết hạn: ' + formatDateVN(act.expiresAt) + '\n' +
+      '⏳ Còn lại: ' + formatRemaining(act.expiresAt - Date.now()) + '\n\n' +
+      '📌 Phiên bản: v1.0.0\n' +
+      '🏢 Dera Locks VN';
+    openModal('Thông tin Thiết bị & Key', info);
+  } else {
+    openModal('Thông tin', '🔒 Chưa kích hoạt key.\n\nVui lòng nhập key để sử dụng đầy đủ chức năng.\n\n📌 Phiên bản: v1.0.0\n🏢 Dera Locks VN');
+  }
+});
+
+// Click ngoài menu để đóng (trừ các item bên trong)
+floatingMenu.addEventListener('click', (e) => {
+  e.stopPropagation();
 });
 
 /* ============================================================
@@ -1801,11 +2153,9 @@ window.addEventListener('beforeunload', () => {
   updateLockUI();
   updateDnsInUseDisplay();
 
-  // Load cert đã lưu
   const savedCert = loadCert();
   if (savedCert && savedCert.certPem) {
     state.cert = savedCert;
-    // Cần convert lại notAfterDate nếu là string
     if (typeof savedCert.notAfterDate === 'string') {
       savedCert.notAfterDate = new Date(savedCert.notAfterDate);
     }
@@ -1823,7 +2173,6 @@ window.addEventListener('beforeunload', () => {
     addResultItem('key', sanitizeFileName(savedCert.domain) + '.key', 'Khóa riêng đã lưu', savedCert.keyPem);
   }
 
-  // Load signed mobileconfig
   const savedMc = loadSignedMc();
   if (savedMc && savedMc.xml) {
     state.signedMc = savedMc.xml;
