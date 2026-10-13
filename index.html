@@ -3,86 +3,90 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0a0612">
+<meta name="theme-color" content="#0a0520">
 <title>DERA LOCKS · Secure Proxy</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; -webkit-tap-highlight-color:transparent; -webkit-font-smoothing:antialiased; }
-  html,body { background:#060410; color:#e8e0f5; min-height:100vh; overflow-x:hidden; }
+  html,body { background:#060312; color:#e8e0f5; min-height:100vh; overflow-x:hidden; }
   body {
     padding:14px 12px 130px;
     background:
-      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(90,60,220,0.45) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(30,120,220,0.28) 0%, transparent 55%),
-      radial-gradient(ellipse 60% 40% at 0% 100%, rgba(140,50,220,0.22) 0%, transparent 55%),
-      #060410;
+      radial-gradient(ellipse 90% 60% at 50% 0%, rgba(105,60,230,0.5) 0%, transparent 60%),
+      radial-gradient(ellipse 70% 50% at 100% 100%, rgba(20,140,230,0.32) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 50% at 0% 100%, rgba(150,50,240,0.28) 0%, transparent 55%),
+      linear-gradient(180deg, #0d0425 0%, #060312 100%);
     display:flex; flex-direction:column; align-items:center; gap:14px;
   }
   .wrap { width:100%; max-width:440px; display:flex; flex-direction:column; gap:14px; }
 
   /* ============ KEY BOX ============ */
   .key-activation {
-    background: linear-gradient(145deg, rgba(45,20,90,0.85) 0%, rgba(20,10,45,0.9) 100%);
+    background: linear-gradient(145deg, rgba(50,22,105,0.9) 0%, rgba(20,10,50,0.95) 100%);
     border-radius:24px; padding:18px;
-    border:1px solid rgba(150,100,255,0.35);
-    box-shadow: 0 0 40px rgba(120,60,240,0.3), inset 0 0 30px rgba(80,40,180,0.2);
+    border:1px solid rgba(150,100,255,0.4);
+    box-shadow: 0 0 45px rgba(120,60,240,0.35), inset 0 0 35px rgba(80,40,180,0.25);
     position:relative; overflow:hidden;
   }
   .key-activation::before {
-    content:""; position:absolute; top:-60px; right:-60px; width:200px; height:200px;
-    background: radial-gradient(circle, rgba(140,90,255,0.4), transparent 70%);
+    content:""; position:absolute; top:-70px; right:-70px; width:220px; height:220px;
+    background: radial-gradient(circle, rgba(140,90,255,0.45), transparent 70%);
     pointer-events:none;
   }
   .key-title {
     display:flex; align-items:center; gap:10px;
-    font-size:15px; font-weight:800; letter-spacing:0.5px; color:#e8d8ff;
-    margin-bottom:14px; text-shadow:0 0 14px rgba(180,120,255,0.7);
+    font-size:15px; font-weight:800; letter-spacing:0.6px; color:#f0e0ff;
+    margin-bottom:6px; text-shadow:0 0 16px rgba(180,120,255,0.8);
     position:relative;
   }
-  .key-title svg { width:22px; height:22px; fill:#b18aff; filter:drop-shadow(0 0 10px rgba(177,138,255,0.9)); }
+  .key-title svg { width:22px; height:22px; fill:#b18aff; filter:drop-shadow(0 0 10px rgba(177,138,255,1)); }
+  .key-brand-sub {
+    font-size:11.5px; color:#8a80c0; font-weight:600; letter-spacing:0.4px;
+    margin-bottom:14px; padding-left:32px;
+  }
   .key-input-row { display:flex; gap:8px; position:relative; }
   .key-input {
-    flex:1; background:rgba(15,8,30,0.9);
-    border:1.5px solid rgba(140,100,220,0.5); border-radius:14px;
-    padding:14px 16px; font-size:14px; color:#f0e8ff; outline:none; font-weight:700;
+    flex:1; background:rgba(10,5,25,0.95);
+    border:1.5px solid rgba(140,100,220,0.55); border-radius:14px;
+    padding:14px 16px; font-size:13.5px; color:#f0e8ff; outline:none; font-weight:700;
     letter-spacing:0.8px; transition:all .2s; font-family:ui-monospace,'SF Mono',Menlo,monospace;
   }
-  .key-input::placeholder { color:#6a5f90; font-weight:500; letter-spacing:0.3px; font-family:-apple-system,sans-serif; }
-  .key-input:focus { border-color:#b18aff; box-shadow:0 0 20px rgba(140,90,240,0.6); background:rgba(25,12,50,0.95); }
-  .key-input.error { border-color:#ff5c7a; box-shadow:0 0 20px rgba(255,90,120,0.6); animation:shake 0.4s; }
+  .key-input::placeholder { color:#6a5f90; font-weight:500; letter-spacing:0.3px; font-family:-apple-system,sans-serif; font-size:12.5px; }
+  .key-input:focus { border-color:#b18aff; box-shadow:0 0 22px rgba(140,90,240,0.65); background:rgba(20,10,45,0.98); }
+  .key-input.error { border-color:#ff5c7a; box-shadow:0 0 22px rgba(255,90,120,0.65); animation:shake 0.4s; }
   @keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-6px);} 75%{transform:translateX(6px);} }
   .btn-activate-key {
-    background: linear-gradient(135deg, #8b5eff 0%, #4a7aff 100%);
-    color:#fff; border:none; border-radius:14px; padding:0 20px;
+    background: linear-gradient(135deg, #8b3fff 0%, #5a1fd0 100%);
+    color:#fff; border:none; border-radius:14px; padding:0 18px;
     font-size:13px; font-weight:800; cursor:pointer; letter-spacing:0.4px; white-space:nowrap;
-    box-shadow: 0 6px 20px rgba(120,80,255,0.6), inset 0 1px 0 rgba(255,255,255,0.25);
+    box-shadow: 0 6px 22px rgba(130,60,255,0.7), inset 0 1px 0 rgba(255,255,255,0.25);
     transition:transform .12s, filter .12s; font-family:inherit;
   }
   .btn-activate-key:active { transform:scale(0.95); filter:brightness(0.9); }
   .btn-activate-key:disabled { opacity:0.6; cursor:not-allowed; }
-  .key-msg { margin-top:10px; font-size:13px; font-weight:600; text-align:center; min-height:18px; letter-spacing:0.2px; }
+  .key-msg { margin-top:10px; font-size:13px; font-weight:700; text-align:center; min-height:18px; letter-spacing:0.2px; }
   .key-msg.error { color:#ff8ca0; }
   .key-msg.success { color:#4ade80; }
 
   /* ============ KEY INFO ============ */
   .key-info {
     display:none;
-    background: linear-gradient(145deg, rgba(20,80,60,0.55) 0%, rgba(10,40,30,0.75) 100%);
-    border:1px solid rgba(74,222,128,0.4); border-radius:20px; padding:16px;
-    box-shadow: 0 0 30px rgba(74,222,128,0.25), inset 0 0 25px rgba(40,120,80,0.2);
+    background: linear-gradient(145deg, rgba(20,90,65,0.6) 0%, rgba(10,45,35,0.8) 100%);
+    border:1px solid rgba(74,222,128,0.45); border-radius:20px; padding:16px;
+    box-shadow: 0 0 35px rgba(74,222,128,0.3), inset 0 0 30px rgba(40,120,80,0.2);
   }
-  .key-info.show { display:block; animation:slideDown 0.45s cubic-bezier(0.34,1.56,0.64,1); }
+  .key-info.show { display:block; animation:slideDown 0.5s cubic-bezier(0.34,1.56,0.64,1); }
   @keyframes slideDown { from { opacity:0; transform:translateY(-15px) scale(0.96); } to { opacity:1; transform:translateY(0) scale(1); } }
   .key-info-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; gap:8px; }
   .key-info-title { display:flex; align-items:center; gap:8px; font-size:13.5px; font-weight:800; color:#7dffb0; letter-spacing:0.5px; }
   .key-info-title svg { width:18px; height:18px; fill:#4ade80; filter:drop-shadow(0 0 8px rgba(74,222,128,0.9)); }
   .key-info-badge {
-    background: rgba(74,222,128,0.2); border:1px solid rgba(74,222,128,0.55);
+    background: rgba(74,222,128,0.22); border:1px solid rgba(74,222,128,0.6);
     color:#7dffb0; padding:5px 12px; border-radius:20px; font-size:10.5px; font-weight:800;
     letter-spacing:0.5px; white-space:nowrap;
   }
   .key-info-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
   .key-info-item {
-    background: rgba(5,20,15,0.65); border:1px solid rgba(74,222,128,0.25);
+    background: rgba(5,22,15,0.7); border:1px solid rgba(74,222,128,0.28);
     border-radius:12px; padding:10px 12px;
   }
   .key-info-label { font-size:9.5px; font-weight:800; letter-spacing:1.2px; color:#5fa678; text-transform:uppercase; margin-bottom:5px; }
@@ -96,14 +100,14 @@
   /* ============ LOCKED ============ */
   .hero-card, .server-card, .section-card { transition:filter 0.5s, opacity 0.5s; }
   .locked .hero-card, .locked .server-card, .locked .section-card {
-    filter: blur(4px) grayscale(70%); opacity:0.4; pointer-events:none; user-select:none;
+    filter: blur(4px) grayscale(75%); opacity:0.35; pointer-events:none; user-select:none;
   }
   .locked-note {
     display:none; text-align:center; padding:14px;
-    background: linear-gradient(135deg, rgba(255,90,120,0.15), rgba(150,40,60,0.15));
-    border:1px solid rgba(255,90,120,0.4); border-radius:16px;
+    background: linear-gradient(135deg, rgba(255,90,120,0.18), rgba(150,40,60,0.18));
+    border:1px solid rgba(255,90,120,0.45); border-radius:16px;
     font-size:12.5px; font-weight:700; color:#ff8ca0; letter-spacing:0.3px;
-    margin-bottom:8px; box-shadow: 0 0 25px rgba(255,90,120,0.2);
+    margin-bottom:8px; box-shadow: 0 0 28px rgba(255,90,120,0.25);
   }
   .locked .locked-note { display:block; }
 
@@ -111,30 +115,30 @@
   .hero-card {
     background: linear-gradient(165deg, #1e0d3e 0%, #12062a 100%);
     border-radius:24px; padding:0 0 22px;
-    border:1px solid rgba(150,90,240,0.3);
-    box-shadow: 0 0 40px rgba(120,50,220,0.3), inset 0 0 50px rgba(90,40,180,0.15);
+    border:1px solid rgba(150,90,240,0.35);
+    box-shadow: 0 0 45px rgba(120,50,220,0.35), inset 0 0 55px rgba(90,40,180,0.18);
     overflow:hidden;
   }
   .hero-banner {
     width:100%; height:190px;
     background:
-      radial-gradient(ellipse at 50% 50%, rgba(200,90,255,0.55) 0%, transparent 60%),
-      linear-gradient(135deg, #2a0d4a 0%, #1a0530 40%, #3d1060 60%, #1e0542 100%);
+      radial-gradient(ellipse at 50% 50%, rgba(200,90,255,0.6) 0%, transparent 60%),
+      linear-gradient(135deg, #2a0d4a 0%, #1a0530 30%, #1a2a60 70%, #0d0442 100%);
     position:relative; overflow:hidden;
     display:flex; align-items:center; justify-content:center;
   }
   .hero-banner::before {
     content:""; position:absolute; inset:0;
     background:
-      repeating-linear-gradient(45deg, transparent 0 18px, rgba(180,100,255,0.07) 18px 19px),
-      repeating-linear-gradient(-45deg, transparent 0 22px, rgba(100,200,255,0.06) 22px 23px);
+      repeating-linear-gradient(45deg, transparent 0 18px, rgba(180,100,255,0.08) 18px 19px),
+      repeating-linear-gradient(-45deg, transparent 0 22px, rgba(100,200,255,0.07) 22px 23px);
     pointer-events:none;
   }
   .hero-banner::after {
     content:""; position:absolute; inset:0;
     background:
-      radial-gradient(circle at 20% 30%, rgba(220,130,255,0.4), transparent 40%),
-      radial-gradient(circle at 80% 70%, rgba(120,80,255,0.35), transparent 45%);
+      radial-gradient(circle at 20% 30%, rgba(220,130,255,0.45), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(60,140,255,0.4), transparent 45%);
     pointer-events:none;
   }
   .hero-title {
@@ -142,48 +146,48 @@
     font-size:60px; font-weight:900; letter-spacing:3px; line-height:0.85;
     text-align:center; z-index:2; position:relative;
     transform: perspective(400px) rotateX(8deg);
-    background: linear-gradient(180deg, #ffffff 0%, #e0c8ff 50%, #a86dff 100%);
+    background: linear-gradient(180deg, #ffffff 0%, #e0c8ff 45%, #7fd0ff 100%);
     -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-    filter: drop-shadow(0 0 10px rgba(180,100,255,0.9)) drop-shadow(0 4px 12px rgba(0,0,0,0.9));
+    filter: drop-shadow(0 0 12px rgba(180,100,255,1)) drop-shadow(0 4px 14px rgba(0,0,0,0.95));
   }
   .app-icon-wrap {
     width:104px; height:104px; margin:-52px auto 14px;
     position:relative; z-index:5; border-radius:26px; padding:4px;
-    background: linear-gradient(145deg, #e0d0ff, #a888ff, #6a3fc0);
-    box-shadow: 0 0 30px rgba(180,100,255,0.85), 0 10px 28px rgba(0,0,0,0.75), inset 0 0 15px rgba(255,255,255,0.35);
+    background: linear-gradient(145deg, #e0d0ff, #a888ff, #4ac8ff);
+    box-shadow: 0 0 35px rgba(180,100,255,0.9), 0 10px 30px rgba(0,0,0,0.8), inset 0 0 18px rgba(255,255,255,0.4);
   }
   .app-icon {
     width:100%; height:100%; border-radius:22px;
     background:
-      radial-gradient(circle at 30% 20%, rgba(200,140,255,0.6) 0%, transparent 55%),
-      linear-gradient(160deg, #2a0d4a 0%, #12032a 60%, #3a1060 100%);
+      radial-gradient(circle at 30% 20%, rgba(200,140,255,0.65) 0%, transparent 55%),
+      linear-gradient(160deg, #2a0d4a 0%, #12032a 55%, #1040a0 100%);
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     position:relative; overflow:hidden;
-    border:1px solid rgba(200,160,255,0.45);
+    border:1px solid rgba(200,160,255,0.5);
   }
   .app-icon-text {
     font-family:'Impact','Arial Black',sans-serif; font-weight:900;
     font-size:24px; line-height:0.85; text-align:center; letter-spacing:0.5px;
     z-index:2; position:relative;
-    background: linear-gradient(180deg, #ffffff 0%, #d0b0ff 50%, #9d5fff 100%);
+    background: linear-gradient(180deg, #ffffff 0%, #d0b0ff 50%, #7fd0ff 100%);
     -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
   }
   .app-icon-text small { display:block; font-size:14px; letter-spacing:1.2px; margin-top:2px; }
   .app-name {
     text-align:center; font-size:25px; font-weight:900; letter-spacing:2px;
-    color:#f2e8ff; text-shadow:0 0 14px rgba(160,100,255,0.7), 0 2px 4px rgba(0,0,0,0.85);
+    color:#f2e8ff; text-shadow:0 0 16px rgba(160,100,255,0.8), 0 2px 4px rgba(0,0,0,0.9);
     margin-bottom:6px;
   }
   .app-sub { text-align:center; font-size:13.5px; font-weight:500; color:#a8c0e8; margin-bottom:16px; letter-spacing:0.4px; }
   .app-sub .dot { color:#6a7fa0; margin:0 6px; }
   .badges { display:flex; justify-content:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
   .badge-version {
-    background: rgba(60,40,100,0.7); border:1px solid rgba(140,100,220,0.55);
+    background: rgba(60,40,120,0.75); border:1px solid rgba(140,100,255,0.6);
     color:#d0c0f0; padding:6px 16px; border-radius:30px; font-size:12.5px; font-weight:700; letter-spacing:0.3px;
   }
   .ios-box {
-    margin:0 18px; background: rgba(25,18,45,0.7);
-    border:1px solid rgba(100,80,180,0.45); border-radius:16px; padding:12px; text-align:center;
+    margin:0 18px; background: rgba(25,18,55,0.75);
+    border:1px solid rgba(100,80,200,0.5); border-radius:16px; padding:12px; text-align:center;
   }
   .ios-title {
     display:flex; align-items:center; justify-content:center; gap:7px;
@@ -195,43 +199,50 @@
 
   /* ============ SERVER CARD ============ */
   .server-card {
-    background: linear-gradient(145deg, rgba(45,20,90,0.7) 0%, rgba(20,10,45,0.85) 100%);
+    background: linear-gradient(145deg, rgba(50,22,105,0.75) 0%, rgba(20,10,50,0.9) 100%);
     border-radius:20px; padding:16px 18px;
-    border:1px solid rgba(150,100,255,0.35);
-    box-shadow: 0 0 30px rgba(120,60,240,0.25);
+    border:1px solid rgba(150,100,255,0.4);
+    box-shadow: 0 0 35px rgba(120,60,240,0.3);
     transition: all .4s;
   }
   .server-card.online {
-    border-color: rgba(74,222,128,0.5);
-    box-shadow: 0 0 35px rgba(74,222,128,0.3);
+    border-color: rgba(74,222,128,0.55);
+    box-shadow: 0 0 40px rgba(74,222,128,0.35);
   }
   .server-card.offline {
-    border-color: rgba(255,90,120,0.5);
-    box-shadow: 0 0 35px rgba(255,90,120,0.3);
+    border-color: rgba(255,90,120,0.55);
+    box-shadow: 0 0 40px rgba(255,90,120,0.35);
   }
   .server-header {
-    display:flex; align-items:center; gap:10px; margin-bottom:12px;
+    display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;
   }
-  .server-header svg { width:20px; height:20px; fill:#b18aff; filter:drop-shadow(0 0 8px rgba(177,138,255,0.8)); }
+  .server-header-left { display:flex; align-items:center; gap:10px; }
+  .server-header svg { width:20px; height:20px; fill:#b18aff; filter:drop-shadow(0 0 8px rgba(177,138,255,0.9)); }
   .server-header .title { font-size:13.5px; font-weight:800; letter-spacing:0.6px; color:#e8d8ff; text-transform:uppercase; }
+  .server-version {
+    font-size:11px; font-weight:800; letter-spacing:0.5px;
+    color:#b18aff; background:rgba(120,80,220,0.25);
+    border:1px solid rgba(160,120,255,0.5);
+    padding:4px 10px; border-radius:20px;
+  }
   .server-btn {
     width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
-    padding:14px; border-radius:14px; font-size:15px; font-weight:800; letter-spacing:0.3px;
-    border:none; cursor:pointer; transition: all .3s; font-family:inherit; color:#fff;
+    padding:14px; border-radius:14px; font-size:14.5px; font-weight:800; letter-spacing:0.3px;
+    border:none; cursor:pointer; transition: all .3s; font-family:inherit;
   }
-  .server-btn.online { background: linear-gradient(135deg,#1a9a4a 0%,#0e6b32 100%); box-shadow: 0 6px 22px rgba(30,160,80,0.55), inset 0 1px 0 rgba(255,255,255,0.2); }
-  .server-btn.offline { background: linear-gradient(135deg,#d0304e 0%,#8a0f28 100%); box-shadow: 0 6px 22px rgba(220,50,80,0.55), inset 0 1px 0 rgba(255,255,255,0.2); }
-  .server-btn.checking { background: linear-gradient(135deg,#6a3fd0,#4a2a9a); box-shadow: 0 6px 22px rgba(100,50,200,0.55); cursor:wait; }
+  .server-btn.online { background: rgba(74,222,128,0.2); color:#7dffb0; border:1.5px solid rgba(74,222,128,0.55); box-shadow: inset 0 0 20px rgba(74,222,128,0.15); }
+  .server-btn.offline { background: rgba(255,90,120,0.18); color:#ff8ca0; border:1.5px solid rgba(255,90,120,0.55); box-shadow: inset 0 0 20px rgba(255,90,120,0.15); }
+  .server-btn.checking { background: rgba(140,100,240,0.25); color:#d0c0f0; border:1.5px solid rgba(160,120,255,0.55); cursor:wait; }
   .server-btn:active { transform:scale(0.97); filter:brightness(0.95); }
-  .server-btn svg { width:20px; height:20px; fill:#fff; flex-shrink:0; }
+  .server-btn svg { width:20px; height:20px; fill:currentColor; flex-shrink:0; }
   .server-info { margin-top:10px; font-size:11.5px; color:#8a80c0; text-align:center; font-weight:600; letter-spacing:0.3px; min-height:14px; }
 
   /* ============ SECTION CARD ============ */
   .section-card {
     background: linear-gradient(165deg, #150a28 0%, #0c0518 100%);
     border-radius:22px; padding:20px 18px;
-    border:1px solid rgba(130,90,220,0.3);
-    box-shadow: 0 0 30px rgba(110,50,200,0.2), inset 0 0 35px rgba(80,40,150,0.12);
+    border:1px solid rgba(130,90,220,0.35);
+    box-shadow: 0 0 32px rgba(110,50,200,0.22), inset 0 0 38px rgba(80,40,150,0.14);
     position:relative;
   }
   .section-title {
@@ -240,10 +251,10 @@
     margin-bottom:8px;
   }
   .section-title svg { width:22px; height:22px; flex-shrink:0; }
-  .section-title.dns svg { fill:#b18aff; filter:drop-shadow(0 0 8px rgba(177,138,255,0.7)); }
-  .section-title.crt svg { fill:#ffa94d; filter:drop-shadow(0 0 8px rgba(255,169,77,0.7)); }
-  .section-title.sign svg { fill:#4ac8ff; filter:drop-shadow(0 0 8px rgba(74,200,255,0.7)); }
-  .section-title.run svg { fill:#4ade80; filter:drop-shadow(0 0 8px rgba(74,222,128,0.7)); }
+  .section-title.dns svg { fill:#b18aff; filter:drop-shadow(0 0 8px rgba(177,138,255,0.8)); }
+  .section-title.crt svg { fill:#ffa94d; filter:drop-shadow(0 0 8px rgba(255,169,77,0.8)); }
+  .section-title.sign svg { fill:#4ac8ff; filter:drop-shadow(0 0 8px rgba(74,200,255,0.8)); }
+  .section-title.run svg { fill:#4ade80; filter:drop-shadow(0 0 8px rgba(74,222,128,0.8)); }
   .section-sub {
     font-size:11.5px; color:#8a80c0; font-weight:500; letter-spacing:0.2px;
     margin-bottom:16px; padding-left:32px;
@@ -257,46 +268,42 @@
   }
   .field-label .hint { text-transform:none; font-weight:500; letter-spacing:0.2px; color:#7d72a8; font-size:11px; }
   .text-input {
-    width:100%; background: rgba(15,8,30,0.85);
-    border:1.5px solid rgba(120,90,200,0.4); border-radius:14px;
+    width:100%; background: rgba(15,8,30,0.9);
+    border:1.5px solid rgba(120,90,200,0.45); border-radius:14px;
     padding:13px 16px; font-size:14.5px; color:#f0e8ff; outline:none; font-weight:600;
     transition: border-color .2s, box-shadow .2s; font-family:inherit;
   }
   .text-input::placeholder { color:#6a5f90; font-weight:500; }
-  .text-input:focus { border-color:#a888ff; box-shadow:0 0 18px rgba(140,90,240,0.5); background:rgba(25,15,50,0.95); }
+  .text-input:focus { border-color:#a888ff; box-shadow:0 0 20px rgba(140,90,240,0.55); background:rgba(25,15,50,0.95); }
 
   .chips { display:flex; gap:8px; flex-wrap:wrap; }
   .chip {
     flex:1; min-width:70px; text-align:center; padding:11px 8px; border-radius:12px;
-    background: rgba(15,8,30,0.85); border:1.5px solid rgba(120,90,200,0.4);
+    background: rgba(15,8,30,0.9); border:1.5px solid rgba(120,90,200,0.45);
     color:#a99ad0; font-size:12.5px; font-weight:700; cursor:pointer;
     transition: all .2s; letter-spacing:0.3px; user-select:none;
   }
   .chip.active {
-    background: linear-gradient(135deg,#6a3fd0 0%,#4a2a9a 100%);
+    background: linear-gradient(135deg,#7a3fff 0%,#4a1fd0 100%);
     color:#fff; border-color:#b18aff;
-    box-shadow: 0 4px 16px rgba(140,90,240,0.6);
+    box-shadow: 0 4px 18px rgba(140,90,240,0.65);
   }
 
   .btn-sign {
     width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
     padding:16px; border-radius:14px; color:#fff; font-size:15px; font-weight:800;
-    letter-spacing:0.4px; border:1px solid rgba(180,140,255,0.35); cursor:pointer;
+    letter-spacing:0.4px; border:1px solid rgba(180,140,255,0.4); cursor:pointer;
     transition: transform .12s, filter .12s; margin-top:6px; font-family:inherit;
-    box-shadow: 0 8px 22px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
   }
   .btn-sign:active { transform:scale(0.97); filter:brightness(0.93); }
   .btn-sign:disabled { opacity:0.55; cursor:not-allowed; }
   .btn-sign svg { width:22px; height:22px; fill:#fff; flex-shrink:0; }
-  .btn-dns { background: linear-gradient(135deg, #7a4aff 0%, #4a7aff 100%); }
+  .btn-dns { background: linear-gradient(135deg, #7a3fff 0%, #4a7aff 100%); }
   .btn-crt { background: linear-gradient(135deg, #ff8a3d 0%, #d9601a 100%); }
-  .btn-sign-mc { background: linear-gradient(135deg, #4ac8ff 0%, #2a7ae0 100%); }
+  .btn-check-crt { background: linear-gradient(135deg, #3a8aff 0%, #1a5acc 100%); margin-top:10px; }
+  .btn-sign-mc { background: linear-gradient(135deg, #1a9a4a 0%, #0e6b32 100%); }
   .btn-run { background: linear-gradient(135deg, #1a9a4a 0%, #0e6b32 100%); }
-  .btn-secondary {
-    background: linear-gradient(135deg, rgba(80,50,150,0.7), rgba(50,30,100,0.7));
-    border:1px solid rgba(140,110,220,0.4);
-    margin-top:8px; padding:12px; font-size:13px;
-  }
 
   .note {
     font-size:11.5px; color:#6a6090; text-align:center; margin-top:12px;
@@ -305,47 +312,50 @@
   .note .link { color:#8a80c0; }
   .note-pem {
     font-size:11.5px; color:#7fc9a0; text-align:center; margin-top:10px; font-weight:600;
-    padding:9px 12px; background: rgba(74,222,128,0.1);
-    border:1px solid rgba(74,222,128,0.3); border-radius:11px; letter-spacing:0.2px;
+    padding:9px 12px; background: rgba(74,222,128,0.12);
+    border:1px solid rgba(74,222,128,0.35); border-radius:11px; letter-spacing:0.2px;
   }
 
   /* ============ STATUS BOX ============ */
   .status-box {
-    background: rgba(15,8,30,0.85);
-    border:1.5px solid rgba(120,90,200,0.4); border-radius:14px;
+    background: rgba(15,8,30,0.9);
+    border:1.5px solid rgba(120,90,200,0.45); border-radius:14px;
     padding:13px 16px; display:flex; align-items:center; gap:10px;
     margin-bottom:12px; font-size:12.5px; font-weight:700; color:#a99ad0;
     letter-spacing:0.2px; line-height:1.4;
   }
   .status-box .dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; background:#6a5f90; }
   .status-box.ok {
-    border-color: rgba(74,222,128,0.5); background: rgba(20,60,40,0.4); color:#7dffb0;
+    border-color: rgba(74,222,128,0.55); background: rgba(20,60,40,0.45); color:#7dffb0;
   }
-  .status-box.ok .dot { background:#4ade80; box-shadow:0 0 10px #4ade80; animation: pulse 1.8s infinite; }
+  .status-box.ok .dot { background:#4ade80; box-shadow:0 0 12px #4ade80; animation: pulse 1.8s infinite; }
   .status-box.warn {
-    border-color: rgba(255,169,77,0.5); background: rgba(60,40,10,0.4); color:#ffc98a;
+    border-color: rgba(255,169,77,0.55); background: rgba(60,40,10,0.45); color:#ffc98a;
   }
-  .status-box.warn .dot { background:#ffa94d; box-shadow:0 0 10px #ffa94d; }
-  @keyframes pulse { 0%,100% { opacity:0.7; transform:scale(1); } 50% { opacity:1; transform:scale(1.25); } }
+  .status-box.warn .dot { background:#ffa94d; box-shadow:0 0 12px #ffa94d; }
+  .status-box.off {
+    border-color: rgba(120,90,200,0.45); background: rgba(20,15,40,0.6); color:#a99ad0;
+  }
+  @keyframes pulse { 0%,100% { opacity:0.7; transform:scale(1); } 50% { opacity:1; transform:scale(1.3); } }
 
   /* ============ RESULT LIST ============ */
   .result-list { display:flex; flex-direction:column; gap:8px; }
   .result-item {
     display:flex; align-items:center; gap:12px;
-    background: rgba(15,8,30,0.75); border:1px solid rgba(120,90,200,0.3);
+    background: rgba(15,8,30,0.8); border:1px solid rgba(120,90,200,0.35);
     border-radius:14px; padding:12px 14px; transition:all .2s;
   }
   .result-item .icon {
     width:38px; height:38px; border-radius:10px; flex-shrink:0;
     display:flex; align-items:center; justify-content:center;
-    background: rgba(90,60,180,0.3); border:1px solid rgba(140,110,230,0.4);
+    background: rgba(90,60,180,0.35); border:1px solid rgba(140,110,230,0.5);
   }
   .result-item .icon svg { width:20px; height:20px; fill:#b8a0ff; }
-  .result-item.crt .icon { background: rgba(255,140,60,0.2); border-color: rgba(255,169,77,0.45); }
+  .result-item.crt .icon { background: rgba(255,140,60,0.25); border-color: rgba(255,169,77,0.55); }
   .result-item.crt .icon svg { fill:#ffa94d; }
-  .result-item.key .icon { background: rgba(180,60,255,0.2); border-color: rgba(200,120,255,0.45); }
+  .result-item.key .icon { background: rgba(180,60,255,0.25); border-color: rgba(200,120,255,0.55); }
   .result-item.key .icon svg { fill:#c88aff; }
-  .result-item.mc .icon { background: rgba(74,200,255,0.2); border-color: rgba(74,200,255,0.45); }
+  .result-item.mc .icon { background: rgba(74,200,255,0.25); border-color: rgba(74,200,255,0.55); }
   .result-item.mc .icon svg { fill:#4ac8ff; }
   .result-item .info { flex:1; min-width:0; }
   .result-item .info .name {
@@ -362,98 +372,100 @@
   }
   .icon-btn:active { transform:scale(0.9); filter:brightness(0.9); }
   .icon-btn svg { width:16px; height:16px; fill:#fff; }
-  .icon-btn.view { background: linear-gradient(135deg,#4a7aff,#2a4ad0); box-shadow: 0 3px 10px rgba(70,120,255,0.5); }
-  .icon-btn.dl { background: linear-gradient(135deg,#1a9a4a,#0e6b32); box-shadow: 0 3px 10px rgba(30,160,80,0.5); }
+  .icon-btn.view { background: linear-gradient(135deg,#4a7aff,#2a4ad0); box-shadow: 0 3px 10px rgba(70,120,255,0.55); }
+  .icon-btn.dl { background: linear-gradient(135deg,#1a9a4a,#0e6b32); box-shadow: 0 3px 10px rgba(30,160,80,0.55); }
 
   /* ============ TOGGLE ============ */
   .toggle-row {
     display:flex; align-items:center; justify-content:space-between;
-    background: rgba(15,8,30,0.85);
-    border:1.5px solid rgba(120,90,200,0.4); border-radius:14px;
+    background: rgba(15,8,30,0.9);
+    border:1.5px solid rgba(120,90,200,0.45); border-radius:14px;
     padding:13px 16px; margin-bottom:12px; gap:10px;
   }
   .toggle-label { font-size:13.5px; font-weight:700; color:#d0c0f0; letter-spacing:0.3px; }
   .toggle {
-    position:relative; width:52px; height:30px;
-    background: rgba(60,40,100,0.85); border-radius:30px; cursor:pointer;
-    transition: background .25s; border:1px solid rgba(120,90,200,0.5);
+    position:relative; width:54px; height:32px;
+    background: rgba(60,40,110,0.9); border-radius:32px; cursor:pointer;
+    transition: background .3s; border:1px solid rgba(120,90,200,0.55);
     flex-shrink:0;
   }
   .toggle::after {
     content:""; position:absolute; top:3px; left:3px;
-    width:22px; height:22px; background:#c8b0f0; border-radius:50%;
-    transition: transform .25s, background .25s;
+    width:24px; height:24px; background:#c8b0f0; border-radius:50%;
+    transition: transform .3s, background .3s;
     box-shadow: 0 2px 6px rgba(0,0,0,0.5);
   }
   .toggle.on {
-    background: linear-gradient(135deg, #4ade80, #1a9a4a);
-    border-color: rgba(100,255,160,0.55);
+    background: linear-gradient(135deg, #7a3fff, #1a9aff);
+    border-color: rgba(140,180,255,0.65);
+    box-shadow: 0 0 20px rgba(90,150,255,0.6);
   }
   .toggle.on::after { transform:translateX(22px); background:#fff; }
 
   /* ============ LOADING OVERLAY ============ */
   .loading-overlay {
     position:fixed; inset:0; z-index:9998;
-    background: rgba(5,2,12,0.88);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    background: rgba(4,2,12,0.92);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     display:none; align-items:center; justify-content:center; flex-direction:column; padding:24px;
   }
   .loading-overlay.show { display:flex; animation:fadeIn 0.35s; }
   @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
-  .loading-circle { width:120px; height:120px; position:relative; margin-bottom:26px; }
+  .loading-circle { width:130px; height:130px; position:relative; margin-bottom:26px; }
   .loading-circle::before {
     content:""; position:absolute; inset:0; border-radius:50%;
-    border:4px solid rgba(140,90,240,0.2);
+    border:4px solid rgba(140,90,240,0.25);
   }
   .loading-circle::after {
     content:""; position:absolute; inset:0; border-radius:50%;
     border:4px solid transparent;
     border-top-color:#b18aff; border-right-color:#4ac8ff;
     animation: spin 1s linear infinite;
-    filter: drop-shadow(0 0 14px rgba(177,138,255,0.9));
+    filter: drop-shadow(0 0 16px rgba(177,138,255,1));
   }
   @keyframes spin { to { transform:rotate(360deg); } }
   .loading-percent {
     position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-    font-size:24px; font-weight:900; color:#fff;
-    text-shadow: 0 0 14px rgba(180,120,255,0.9);
+    font-size:26px; font-weight:900; color:#fff;
+    text-shadow: 0 0 16px rgba(180,120,255,1);
     font-family: ui-monospace,monospace;
   }
   .loading-text {
     font-size:16px; font-weight:700; color:#d8c8ff; letter-spacing:0.5px;
     margin-bottom:18px; text-align:center;
-    text-shadow: 0 0 14px rgba(180,120,255,0.7);
+    text-shadow: 0 0 16px rgba(180,120,255,0.9);
   }
   .loading-bar-wrap {
     width:100%; max-width:320px; height:8px;
-    background: rgba(60,40,100,0.65); border-radius:8px; overflow:hidden;
-    border:1px solid rgba(120,90,200,0.35);
+    background: rgba(60,40,110,0.7); border-radius:8px; overflow:hidden;
+    border:1px solid rgba(120,90,200,0.4);
   }
   .loading-bar-fill {
     height:100%; width:0%;
     background: linear-gradient(90deg, #8b5eff, #4ac8ff);
     border-radius:8px; transition: width 0.1s linear;
-    box-shadow: 0 0 14px rgba(140,120,255,0.8);
+    box-shadow: 0 0 16px rgba(140,120,255,0.9);
   }
   .loading-countdown {
-    font-size:14px; font-weight:700; color:#b8a0ff;
-    margin-top:14px; letter-spacing:0.5px;
+    font-size:15px; font-weight:800; color:#b8a0ff;
+    margin-top:14px; letter-spacing:0.6px;
+    text-shadow: 0 0 12px rgba(180,120,255,0.7);
   }
   .loading-sub { font-size:11.5px; color:#8a80c0; font-weight:500; margin-top:12px; letter-spacing:0.3px; text-align:center; }
 
   /* ============ MODAL ============ */
   .modal {
     position:fixed; inset:0; z-index:9997;
-    background: rgba(5,2,12,0.92);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    background: rgba(4,2,12,0.94);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
     display:none; align-items:center; justify-content:center; padding:16px;
   }
   .modal.show { display:flex; animation: fadeIn 0.25s; }
   .modal-content {
     background: linear-gradient(165deg, #1a0d2e, #0f0820);
-    border:1px solid rgba(150,90,240,0.5);
+    border:1px solid rgba(150,90,240,0.55);
     border-radius:22px; padding:20px; width:100%; max-width:420px; max-height:85vh;
-    overflow-y:auto; box-shadow: 0 0 50px rgba(120,60,240,0.4);
+    overflow-y:auto; box-shadow: 0 0 60px rgba(120,60,240,0.5);
   }
   .modal-title {
     font-size:15px; font-weight:800; color:#f0e8ff;
@@ -464,17 +476,17 @@
     font-family: ui-monospace,'SF Mono',Menlo,monospace;
     font-size:10px; color:#c8b8e8; word-break:break-all;
     line-height:1.5; white-space:pre-wrap;
-    background: rgba(10,5,20,0.75);
+    background: rgba(10,5,20,0.8);
     padding:14px; border-radius:12px;
-    border:1px solid rgba(120,90,200,0.3);
+    border:1px solid rgba(120,90,200,0.35);
     max-height:55vh; overflow-y:auto;
   }
   .modal-close {
     width:100%; margin-top:14px; padding:13px; border-radius:12px;
-    background: linear-gradient(135deg,#6a3fd0,#4a2a9a);
+    background: linear-gradient(135deg,#7a3fff,#4a1fd0);
     color:#fff; border:none; font-size:14px; font-weight:800;
     cursor:pointer; font-family:inherit; letter-spacing:0.4px;
-    box-shadow: 0 6px 18px rgba(100,50,200,0.5);
+    box-shadow: 0 6px 22px rgba(100,50,200,0.6);
   }
   .modal-close:active { transform:scale(0.97); filter:brightness(0.93); }
 
@@ -482,35 +494,35 @@
   .music-player {
     position:fixed; bottom:14px; left:14px; z-index:999;
     display:flex; align-items:center; gap:10px;
-    background: linear-gradient(135deg, rgba(30,15,60,0.95), rgba(15,8,35,0.95));
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    border:1px solid rgba(150,100,240,0.5);
+    background: linear-gradient(135deg, rgba(35,15,70,0.96), rgba(15,8,40,0.96));
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border:1px solid rgba(150,100,240,0.55);
     border-radius:50px; padding:7px 16px 7px 7px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 0 25px rgba(120,60,220,0.45);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.75), 0 0 30px rgba(120,60,220,0.55);
     max-width: calc(100% - 28px); cursor:pointer;
     transition: transform .15s;
   }
   .music-player:active { transform:scale(0.95); }
   .vinyl {
-    width:44px; height:44px; border-radius:50%; flex-shrink:0;
+    width:46px; height:46px; border-radius:50%; flex-shrink:0;
     background:
       radial-gradient(circle at center, #2a0d4a 22%, #0a0316 23%, #1a0d2e 24%, #0a0316 70%, #1a0d2e 72%, #0a0316 74%);
     position:relative;
-    box-shadow: inset 0 0 0 2px rgba(180,120,255,0.5), 0 0 14px rgba(140,80,240,0.6);
+    box-shadow: inset 0 0 0 2px rgba(180,120,255,0.55), 0 0 16px rgba(140,80,240,0.7);
   }
   .vinyl::after {
     content:""; position:absolute; top:50%; left:50%;
-    transform:translate(-50%,-50%); width:11px; height:11px;
+    transform:translate(-50%,-50%); width:12px; height:12px;
     border-radius:50%;
     background: linear-gradient(135deg,#b18aff,#4ac8ff);
-    box-shadow: 0 0 10px rgba(177,138,255,1);
+    box-shadow: 0 0 12px rgba(177,138,255,1);
   }
   .vinyl.playing { animation: spin 3s linear infinite; }
-  .music-info { min-width:0; overflow:hidden; }
+  .music-info { min-width:0; overflow:hidden; flex:1; }
   .music-title {
     font-size:11px; font-weight:800; color:#e8d8ff;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-    letter-spacing:0.2px; text-shadow: 0 0 8px rgba(180,120,255,0.6);
+    letter-spacing:0.2px; text-shadow: 0 0 10px rgba(180,120,255,0.7);
   }
   .music-artist {
     font-size:9.5px; font-weight:600; color:#8a80c0;
@@ -518,28 +530,28 @@
     letter-spacing:0.2px; margin-top:1px;
   }
   .music-play-icon {
-    width:28px; height:28px; border-radius:50%;
+    width:30px; height:30px; border-radius:50%;
     background: linear-gradient(135deg,#8b5eff,#4a7aff);
     display:flex; align-items:center; justify-content:center;
-    flex-shrink:0; box-shadow: 0 2px 10px rgba(120,80,255,0.7);
+    flex-shrink:0; box-shadow: 0 2px 12px rgba(120,80,255,0.8);
   }
-  .music-play-icon svg { width:13px; height:13px; fill:#fff; }
+  .music-play-icon svg { width:14px; height:14px; fill:#fff; }
 
   /* ============ TOAST ============ */
   .toast {
     position:fixed; left:50%; bottom:90px; z-index:9999;
     transform: translateX(-50%) translateY(180%);
     background: linear-gradient(135deg, #2a1550, #1a0a35);
-    border:1px solid rgba(180,140,255,0.6);
+    border:1px solid rgba(180,140,255,0.65);
     color:#f0e8ff; padding:14px 22px; border-radius:14px;
     font-size:13.5px; font-weight:700;
-    box-shadow: 0 12px 35px rgba(0,0,0,0.7), 0 0 25px rgba(140,90,255,0.5);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.75), 0 0 28px rgba(140,90,255,0.55);
     transition: transform .35s cubic-bezier(0.34,1.56,0.64,1);
     max-width:340px; text-align:center; letter-spacing:0.2px;
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
-  .toast.success { border-color: rgba(74,222,128,0.65); box-shadow: 0 12px 35px rgba(0,0,0,0.7), 0 0 25px rgba(74,222,128,0.45); }
-  .toast.error { border-color: rgba(255,90,120,0.65); box-shadow: 0 12px 35px rgba(0,0,0,0.7), 0 0 25px rgba(255,90,120,0.45); }
+  .toast.success { border-color: rgba(74,222,128,0.7); box-shadow: 0 12px 35px rgba(0,0,0,0.75), 0 0 28px rgba(74,222,128,0.5); }
+  .toast.error { border-color: rgba(255,90,120,0.7); box-shadow: 0 12px 35px rgba(0,0,0,0.75), 0 0 28px rgba(255,90,120,0.5); }
 
   /* ============ FOOTER ============ */
   .footer {
@@ -547,8 +559,8 @@
     padding:14px 0 6px; font-weight:600; letter-spacing:0.3px; line-height:1.6;
   }
   .footer .sep {
-    display:inline-block; width:40px; height:2px;
-    background: linear-gradient(90deg, transparent, #7a4aff, transparent);
+    display:block; width:60px; height:2px;
+    background: linear-gradient(90deg, transparent, #7a3fff, #4ac8ff, transparent);
     margin: 0 auto 10px; border-radius:2px;
   }
 
@@ -574,11 +586,12 @@
   <div class="key-activation">
     <div class="key-title">
       <svg viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
-      NHẬP KEY KÍCH HOẠT
+      DERA LOCKS — Secure Proxy
     </div>
+    <div class="key-brand-sub">Nhập key để mở khóa toàn bộ chức năng</div>
     <div class="key-input-row">
-      <input type="text" class="key-input" id="keyInput" placeholder="DERA-XXXXXXXX-XXXXXXXX" autocomplete="off" spellcheck="false" maxlength="22">
-      <button class="btn-activate-key" id="btnActivateKey">KÍCH HOẠT</button>
+      <input type="text" class="key-input" id="keyInput" placeholder="VD: DERA-XXXXXXXX-XXXXXXXX" autocomplete="off" spellcheck="false" maxlength="22">
+      <button class="btn-activate-key" id="btnActivateKey">Kích Hoạt Key Ngay</button>
     </div>
     <div class="key-msg" id="keyMsg"></div>
   </div>
@@ -616,7 +629,7 @@
     </div>
   </div>
 
-  <div class="locked-note" id="lockedNote">🔒 Nhập Key để mở khóa tất cả chức năng</div>
+  <div class="locked-note" id="lockedNote">🔒 Vui lòng nhập key để mở khóa chức năng này</div>
 
   <!-- ============ HERO ============ -->
   <div class="hero-card">
@@ -647,8 +660,11 @@
   <!-- ============ PHẦN 2: TRẠNG THÁI SERVER ============ -->
   <div class="server-card" id="serverCard">
     <div class="server-header">
-      <svg viewBox="0 0 24 24"><path d="M4 1h16c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V3c0-1.1.9-2 2-2zm0 12h16c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2v-6c0-1.1.9-2 2-2zm3-9v2h2V4H7zm0 12v2h2v-2H7zm4-12v2h7V4h-7zm0 12v2h7v-2h-7z"/></svg>
-      <div class="title">TRẠNG THÁI SERVER</div>
+      <div class="server-header-left">
+        <svg viewBox="0 0 24 24"><path d="M4 1h16c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V3c0-1.1.9-2 2-2zm0 12h16c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2v-6c0-1.1.9-2 2-2zm3-9v2h2V4H7zm0 12v2h2v-2H7zm4-12v2h7V4h-7zm0 12v2h7v-2h-7z"/></svg>
+        <div class="title">Trạng Thái Server</div>
+      </div>
+      <div class="server-version">v1.0.0</div>
     </div>
     <button class="server-btn checking" id="btnServerStatus">
       <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
@@ -661,7 +677,7 @@
   <div class="section-card">
     <div class="section-title dns">
       <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 15l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>
-      TẠO DNS ANTIBAN
+      Tạo DNS Antibal
     </div>
     <div class="section-sub">Cấu hình DNS bảo mật, tối ưu cho iOS</div>
 
@@ -689,16 +705,16 @@
       <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" fill="none" stroke="white" stroke-width="2"/></svg>
       Tạo DNS Ngay
     </button>
-    <div class="note">Tạo file <span class="link">.mobileconfig</span> cấu hình DNS sẵn sàng tải về</div>
+    <div class="note">Tạo file <span class="link">DeraSecure.mobileconfig</span> chứa toàn bộ cấu hình DNS</div>
   </div>
 
   <!-- ============ PHẦN 4: TẠO CHỨNG NHẬN + KÝ SỐ ============ -->
   <div class="section-card">
     <div class="section-title crt">
       <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"/></svg>
-      TẠO CHỨNG NHẬN
+      Tạo Chứng Nhận &amp; Ký Số
     </div>
-    <div class="section-sub">Sinh khóa RSA + chứng nhận X.509 self-signed</div>
+    <div class="section-sub">Sinh khóa RSA 2048-bit, chứng nhận X.509 self-signed</div>
 
     <div class="field">
       <div class="field-label">TÊN MIỀN / DNS</div>
@@ -712,9 +728,9 @@
       <div class="field-label">THỜI HẠN</div>
       <div class="chips" id="certDays">
         <div class="chip" data-days="30">30 ngày</div>
-        <div class="chip active" data-days="90">90 ngày</div>
+        <div class="chip" data-days="90">90 ngày</div>
         <div class="chip" data-days="365">365 ngày</div>
-        <div class="chip" data-days="730">2 năm</div>
+        <div class="chip active" data-days="max">14/10/2034</div>
       </div>
     </div>
     <div class="field">
@@ -724,10 +740,19 @@
         <div class="chip" data-type="ssl">SSL Domains</div>
       </div>
     </div>
+    <div class="field">
+      <div class="field-label">MẬT KHẨU BẢO MẬT <span class="hint">(Tùy chọn)</span></div>
+      <input type="password" class="text-input" id="certPassword" placeholder="Để trống = không đặt" autocomplete="off">
+    </div>
 
     <button class="btn-sign btn-crt" id="btnCreateCert">
       <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
       Tạo Chứng Nhận Ngay
+    </button>
+
+    <button class="btn-sign btn-check-crt" id="btnCheckCert">
+      <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+      Kiểm tra Chứng Nhận
     </button>
 
     <div class="status-box warn" id="certStatusBox" style="margin-top:14px;">
@@ -735,64 +760,39 @@
       <span id="certStatusText">⚠️ Chưa có chứng nhận</span>
     </div>
 
-    <div class="note-pem">📄 File .crt định dạng PEM — Tương thích với iOS </div>
-  </div>
-
-  <!-- ============ PHẦN 4b: KÝ SỐ VÀO DNS ============ -->
-  <div class="section-card">
-    <div class="section-title sign">
-      <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg>
-      KÝ SỐ VÀO DNS
-    </div>
-    <div class="section-sub">Nhúng chứng nhận TRỰC TIẾP vào file .mobileconfig</div>
-
-    <div class="field">
-      <div class="field-label">CHỨNG NHẬN ĐÍNH KÈM</div>
-      <div class="status-box warn" id="attachCertBox" style="margin-bottom:0;">
-        <span class="dot"></span>
-        <span id="attachCertText">⚠️ Chưa có chứng nhận để đính kèm</span>
-      </div>
-    </div>
-
-    <div class="toggle-row">
-      <span class="toggle-label">✅ Ký số file bằng chứng nhận</span>
-      <div class="toggle on" id="toggleSign"></div>
-    </div>
-
     <button class="btn-sign btn-sign-mc" id="btnSignDNS">
       <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
       Tạo &amp; Ký .mobileconfig Ngay
     </button>
 
-    <div class="note">File đã ký sẽ hiển thị "Đã xác thực bởi Dera Locks" trên iPhone</div>
+    <div class="note-pem">📄 File .crt định dạng PEM — Tương thích với iOS</div>
 
-    <!-- Danh sách file kết quả -->
-    <div id="resultList" style="margin-top:14px;"></div>
+    <div id="resultList" class="result-list" style="margin-top:14px;"></div>
   </div>
 
   <!-- ============ PHẦN 5: KÍCH HOẠT DNS ============ -->
   <div class="section-card">
     <div class="section-title run">
       <svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
-      KÍCH HOẠT DNS TRỰC TIẾP
+      Kích Hoạt DNS Trực Tiếp
     </div>
     <div class="section-sub">Cài đặt cấu hình DNS trực tiếp trên iPhone</div>
 
-    <div class="status-box" id="dnsStatusBox">
+    <div class="status-box off" id="dnsStatusBox">
       <span class="dot"></span>
       <span id="dnsStatusText">⭕ Chưa kích hoạt</span>
     </div>
-    <div class="status-box" id="dnsInUseBox" style="border-color:rgba(177,138,255,0.4); background:rgba(45,20,80,0.4); color:#b8c8e8;">
-      <span class="dot" style="background:#b18aff; box-shadow:0 0 8px #b18aff;"></span>
+    <div class="status-box" id="dnsInUseBox" style="border-color:rgba(177,138,255,0.45); background:rgba(45,20,80,0.45); color:#b8c8e8;">
+      <span class="dot" style="background:#b18aff; box-shadow:0 0 10px #b18aff;"></span>
       <span id="dnsInUseText">DNS đang dùng: <b>DeraSecure</b></span>
     </div>
-    <div class="status-box" id="crtStatusBox">
+    <div class="status-box warn" id="crtInUseBox">
       <span class="dot"></span>
-      <span id="crtStatusText">📄 Chứng nhận: Chưa cài</span>
+      <span id="crtInUseText">📄 Chứng nhận: ⚠️ Chưa cài</span>
     </div>
 
     <div class="toggle-row">
-      <span class="toggle-label">BẬT / TẮT DNS</span>
+      <span class="toggle-label">Bật / Tắt DNS</span>
       <div class="toggle on" id="toggleDNS"></div>
     </div>
 
@@ -805,7 +805,7 @@
 
   <!-- FOOTER -->
   <div class="footer">
-    <div class="sep"></div>
+    <span class="sep"></span>
     © 2026 Dera Locks VN. Tất cả quyền được bảo lưu
   </div>
 
@@ -819,7 +819,7 @@
   <div class="loading-text">🔄 Đang xác thực thông tin...</div>
   <div class="loading-bar-wrap"><div class="loading-bar-fill" id="loadingBarFill"></div></div>
   <div class="loading-countdown" id="loadingCountdown">Vui lòng chờ: 10s</div>
-  <div class="loading-sub">Vui lòng không tắt trang trong quá trình xác thực</div>
+  <div class="loading-sub">🔊 Chào mừng bạn đến với Dera Locks</div>
 </div>
 
 <!-- MODAL -->
@@ -857,7 +857,7 @@ const API_STATUS = SERVER_URL + "/status";
 const API_VERIFY = SERVER_URL + "/verify-key";
 
 /* ============================================================
-   DANH SÁCH KEY HỢP LỆ (fallback khi server không phản hồi)
+   DANH SÁCH KEY MẪU (fallback khi server không phản hồi)
 ============================================================ */
 const FALLBACK_KEYS = [
   'DERA-42363C9E-EC589D4C','DERA-7A9B2D4F-8E3C1D7F','DERA-1F3E5D7C-9B2A4C6E',
@@ -865,7 +865,7 @@ const FALLBACK_KEYS = [
   'DERA-5E7C9A2D-4F6B8E3C','DERA-3D5F7B9A-6C8E2D4F','DERA-7F9D2B4C-5A3E8F6D',
   'DERA-4C6E8A2F-9B3D7E5A'
 ];
-const KEY_DURATION_MS = 3 * 24 * 60 * 60 * 1000;
+const KEY_DURATION_MS = 3 * 24 * 60 * 60 * 1000; // 3 ngày
 
 /* ============================================================
    STORAGE KEYS
@@ -875,6 +875,11 @@ const STORAGE_KEY_CERT = 'dera_locks_cert';
 const STORAGE_KEY_MC = 'dera_locks_signed_mc';
 
 /* ============================================================
+   NGÀY HẾT HẠN CỐ ĐỊNH: 14/10/2034
+============================================================ */
+const FIXED_EXPIRY = new Date(2034, 9, 14, 23, 59, 59); // tháng 9 = tháng 10 (0-index)
+
+/* ============================================================
    STATE
 ============================================================ */
 const state = {
@@ -882,9 +887,8 @@ const state = {
   signedMc: null,
   signedMcName: null,
   dnsMode: 'secure',
-  certDays: 90,
-  certType: 'root',
-  signEnabled: true
+  certDays: 'max',   // 'max' = đến 14/10/2034
+  certType: 'root'
 };
 
 /* ============================================================
@@ -970,6 +974,31 @@ function openModal(title, content) {
 }
 
 /* ============================================================
+   ÂM THANH CHÀO MỪNG (Text-to-Speech tiếng Việt)
+============================================================ */
+function speakWelcome() {
+  try {
+    if (!window.speechSynthesis) return;
+    // Ưu tiên giọng tiếng Việt
+    const voices = window.speechSynthesis.getVoices();
+    let viVoice = voices.find(v => v.lang && v.lang.startsWith('vi'));
+    const utt = new SpeechSynthesisUtterance('Chào mừng bạn đến với Dera Locks');
+    utt.lang = 'vi-VN';
+    utt.rate = 0.95;
+    utt.pitch = 1.05;
+    utt.volume = 0.9;
+    if (viVoice) utt.voice = viVoice;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utt);
+  } catch (e) { /* bỏ qua nếu không hỗ trợ */ }
+}
+// Preload voices
+if (window.speechSynthesis) {
+  window.speechSynthesis.onvoiceschanged = () => {};
+  window.speechSynthesis.getVoices();
+}
+
+/* ============================================================
    DER ENCODER — X.509 Certificate
 ============================================================ */
 function derWrap(tag, content) {
@@ -1013,7 +1042,7 @@ function encodeTime(date) {
   return derWrap(0x18, new TextEncoder().encode(s));
 }
 
-async function generateCertificate(domain, org, days, type) {
+async function generateCertificate(domain, org, daysOrMax, type) {
   const keyPair = await crypto.subtle.generateKey(
     { name: 'RSASSA-PKCS1-v1_5', modulusLength: 2048, publicExponent: new Uint8Array([1,0,1]), hash: 'SHA-256' },
     true, ['sign', 'verify']
@@ -1022,7 +1051,12 @@ async function generateCertificate(domain, org, days, type) {
   const subject = encodeDN({ CN: domain, O: org, C: 'VN' });
   const now = new Date();
   const notBefore = new Date(now.getTime() - 60 * 1000);
-  const notAfter = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+  let notAfter;
+  if (daysOrMax === 'max') {
+    notAfter = FIXED_EXPIRY;
+  } else {
+    notAfter = new Date(now.getTime() + parseInt(daysOrMax, 10) * 24 * 60 * 60 * 1000);
+  }
   const serial = new Uint8Array(16);
   crypto.getRandomValues(serial);
   serial[0] &= 0x7F;
@@ -1057,9 +1091,11 @@ async function generateCertificate(domain, org, days, type) {
 
   return {
     certPem, keyPem,
-    domain, org, days, type,
+    domain, org, type,
+    daysLabel: daysOrMax === 'max' ? 'Đến 14/10/2034' : (daysOrMax + ' ngày'),
     notBefore: notBefore.toISOString(),
     notAfter: notAfter.toISOString(),
+    notAfterDate: notAfter,
     serial: Array.from(serial).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase(),
     createdAt: Date.now()
   };
@@ -1155,7 +1191,7 @@ function updateLockUI() {
     keyInput.disabled = true;
     btnKey.disabled = true;
     btnKey.textContent = 'ĐÃ KÍCH HOẠT';
-    keyMsg.textContent = '✅ Key đang hoạt động';
+    keyMsg.textContent = '✅ Trạng thái Key: Đã kích hoạt';
     keyMsg.className = 'key-msg success';
     document.getElementById('infoKey').textContent = act.key;
     document.getElementById('infoDevice').textContent = act.deviceName || getDeviceName();
@@ -1168,7 +1204,7 @@ function updateLockUI() {
     keyInfo.classList.remove('show');
     keyInput.disabled = false;
     btnKey.disabled = false;
-    btnKey.textContent = 'KÍCH HOẠT';
+    btnKey.textContent = 'Kích Hoạt Key Ngay';
   }
 }
 
@@ -1227,11 +1263,10 @@ document.getElementById('btnActivateKey').addEventListener('click', async () => 
     console.warn('Server fallback:', e.message);
   }
 
-  // Fallback kiểm tra key local
   if (!valid && FALLBACK_KEYS.includes(key)) valid = true;
 
   btnKey.disabled = false;
-  btnKey.textContent = 'KÍCH HOẠT';
+  btnKey.textContent = 'Kích Hoạt Key Ngay';
 
   if (!valid) {
     keyInput.classList.add('error');
@@ -1249,7 +1284,6 @@ document.getElementById('btnActivateKey').addEventListener('click', async () => 
     activatedAt = serverAct.activatedAt || now;
     expiresAt = serverAct.expiresAt || (now + KEY_DURATION_MS);
   } else {
-    // Nếu key đã từng kích hoạt trên máy này → giữ nguyên hạn cũ
     const current = getActivation();
     if (current && current.key === key) {
       activatedAt = current.activatedAt;
@@ -1265,13 +1299,13 @@ document.getElementById('btnActivateKey').addEventListener('click', async () => 
     expiresAt
   });
   updateLockUI();
-  keyMsg.textContent = '✅ Kích hoạt thành công!';
+  keyMsg.textContent = '✅ Trạng thái Key: Đã kích hoạt';
   keyMsg.className = 'key-msg success';
   showToast('✅ Kích hoạt thành công!', 'success');
   tryAutoPlayMusic();
 });
 
-/* Loading 10s */
+/* Loading 10s + giọng nói chào mừng */
 function runLoading10s() {
   return new Promise(resolve => {
     const ov = document.getElementById('loadingOverlay');
@@ -1280,6 +1314,10 @@ function runLoading10s() {
     const cd = document.getElementById('loadingCountdown');
     ov.classList.add('show');
     document.body.style.overflow = 'hidden';
+
+    // Kích hoạt giọng nói sau 500ms
+    setTimeout(speakWelcome, 500);
+
     const TOTAL = 10000;
     const start = performance.now();
     function tick() {
@@ -1307,7 +1345,7 @@ async function checkServerStatus() {
   const info = document.getElementById('serverInfo');
   const card = document.getElementById('serverCard');
   btn.className = 'server-btn checking';
-  btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg> Đang kiểm tra...';
+  btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg> Đang kiểm tra kết nối...';
   info.textContent = 'Đang kết nối tới server...';
   try {
     const ctrl = new AbortController();
@@ -1327,7 +1365,7 @@ async function checkServerStatus() {
     }
   } catch (err) {
     btn.className = 'server-btn offline';
-    btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg> ⭕ Mất kết nối Server';
+    btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg> ⭕ Mất kết nối Server — Nhấn thử lại';
     card.classList.add('offline');
     card.classList.remove('online');
     info.textContent = 'Không thể kết nối · Nhấn để thử lại';
@@ -1352,15 +1390,9 @@ function bindChips(containerId, attr, onChange) {
   });
 }
 bindChips('dnsMode', 'mode', v => state.dnsMode = v);
-bindChips('certDays', 'days', v => state.certDays = parseInt(v, 10));
+bindChips('certDays', 'days', v => state.certDays = v);
 bindChips('certType', 'type', v => state.certType = v);
 
-/* Toggle Sign */
-const toggleSign = document.getElementById('toggleSign');
-toggleSign.addEventListener('click', () => {
-  state.signEnabled = !state.signEnabled;
-  toggleSign.classList.toggle('on', state.signEnabled);
-});
 /* Toggle DNS */
 const toggleDNS = document.getElementById('toggleDNS');
 toggleDNS.addEventListener('click', () => {
@@ -1375,11 +1407,11 @@ function updateDnsInUseDisplay() {
   const on = toggleDNS.classList.contains('on');
   if (on) {
     el.innerHTML = 'DNS đang dùng: <b>' + escapeHtml(name) + '</b>';
-    box.style.borderColor = 'rgba(177,138,255,0.4)';
+    box.style.borderColor = 'rgba(177,138,255,0.45)';
     box.style.color = '#b8c8e8';
   } else {
     el.innerHTML = 'DNS đang dùng: <b>Đã tắt</b>';
-    box.style.borderColor = 'rgba(120,90,200,0.4)';
+    box.style.borderColor = 'rgba(120,90,200,0.45)';
     box.style.color = '#8a80b0';
   }
 }
@@ -1433,7 +1465,7 @@ function buildMobileconfig(name, primary, secondary, mode, cert) {
       <key>PayloadDescription</key>
       <string>Chứng nhận CA gốc — Ký bởi Dera Locks</string>
       <key>PayloadDisplayName</key>
-      <string>${escapeXml(cert.org || 'Dera Locks VN')} Root CA</string>
+      <string>${escapeXml(cert.domain)}</string>
       <key>PayloadIdentifier</key>
       <string>com.deralocks.cert.${caUUID}</string>
       <key>PayloadType</key>
@@ -1502,7 +1534,7 @@ function buildMobileconfig(name, primary, secondary, mode, cert) {
    PHẦN 3: TẠO DNS
 ============================================================ */
 document.getElementById('btnCreateDNS').addEventListener('click', () => {
-  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key trước', 'error'); return; }
+  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key để mở khóa chức năng này', 'error'); return; }
   const name = document.getElementById('dnsName').value.trim() || 'DeraSecure';
   const primary = document.getElementById('dnsPrimary').value.trim();
   const secondary = document.getElementById('dnsSecondary').value.trim();
@@ -1518,7 +1550,7 @@ document.getElementById('btnCreateDNS').addEventListener('click', () => {
    PHẦN 4: TẠO CHỨNG NHẬN
 ============================================================ */
 document.getElementById('btnCreateCert').addEventListener('click', async function() {
-  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key trước', 'error'); return; }
+  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key để mở khóa chức năng này', 'error'); return; }
   const btn = this;
   const domain = document.getElementById('certDomain').value.trim();
   const org = document.getElementById('certOrg').value.trim() || 'Dera Locks VN';
@@ -1543,17 +1575,16 @@ document.getElementById('btnCreateCert').addEventListener('click', async functio
     // Cập nhật UI
     const statusBox = document.getElementById('certStatusBox');
     statusBox.className = 'status-box ok';
-    document.getElementById('certStatusText').innerHTML = '✅ Đã tạo chứng nhận cho <b>' + escapeHtml(domain) + '</b> · ' + days + ' ngày';
+    document.getElementById('certStatusText').innerHTML = '✅ Chứng nhận đã tạo thành công! · Hết hạn: <b>' + formatDateVN(cert.notAfterDate.getTime()) + '</b>';
 
-    const attachBox = document.getElementById('attachCertBox');
-    attachBox.className = 'status-box ok';
-    document.getElementById('attachCertText').innerHTML = '✅ Sẽ đính kèm: <b>' + escapeHtml(domain) + '</b>';
+    const crtBox = document.getElementById('crtInUseBox');
+    crtBox.className = 'status-box ok';
+    document.getElementById('crtInUseText').innerHTML = '✅ ' + escapeHtml(domain) + ' (Hết hạn ' + cert.notAfterDate.toLocaleDateString('vi-VN') + ')';
 
-    // Hiển thị trong kết quả
-    addResultItem('crt', sanitizeFileName(domain) + '.crt', 'Chứng nhận PEM · ' + days + ' ngày', cert.certPem);
+    addResultItem('crt', sanitizeFileName(domain) + '.crt', 'Chứng nhận PEM · ' + cert.daysLabel, cert.certPem);
     addResultItem('key', sanitizeFileName(domain) + '.key', 'Khóa riêng · PKCS#8', cert.keyPem);
 
-    showToast('✅ Đã tạo chứng nhận ' + domain, 'success');
+    showToast('✅ Chứng nhận đã tạo thành công!', 'success');
   } catch (err) {
     console.error(err);
     showToast('❌ Lỗi: ' + err.message, 'error');
@@ -1563,19 +1594,41 @@ document.getElementById('btnCreateCert').addEventListener('click', async functio
   }
 });
 
+/* Nút KIỂM TRA CHỨNG NHẬN */
+document.getElementById('btnCheckCert').addEventListener('click', () => {
+  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key để mở khóa chức năng này', 'error'); return; }
+  if (!state.cert) {
+    showToast('⚠️ Chưa có chứng nhận. Vui lòng tạo trước!', 'error');
+    return;
+  }
+  const c = state.cert;
+  const info =
+    '✅ TRẠNG THÁI: Hợp lệ\n\n' +
+    '📌 Tên miền: ' + c.domain + '\n' +
+    '🏢 Tổ chức: ' + c.org + '\n' +
+    '📅 Ngày tạo: ' + formatDateVN(c.createdAt) + '\n' +
+    '⏰ Ngày hết hạn: ' + formatDateVN(c.notAfterDate.getTime()) + '\n' +
+    '🔐 Loại: ' + (c.type === 'root' ? 'Root CA' : 'SSL Domains') + '\n' +
+    '🆔 Serial: ' + c.serial + '\n' +
+    '📄 Thời hạn: ' + c.daysLabel + '\n\n' +
+    '--- NỘI DUNG PEM ---\n' + c.certPem;
+  openModal('Kiểm tra Chứng nhận — ' + c.domain, info);
+  showToast('✅ Chứng nhận Hợp lệ', 'success');
+});
+
 /* ============================================================
    PHẦN 4b: KÝ SỐ VÀO DNS
 ============================================================ */
 document.getElementById('btnSignDNS').addEventListener('click', async function() {
-  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key trước', 'error'); return; }
+  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key để mở khóa chức năng này', 'error'); return; }
+  if (!state.cert) {
+    showToast('⚠️ Chưa có chứng nhận. Vui lòng tạo trước!', 'error');
+    return;
+  }
   const name = document.getElementById('dnsName').value.trim() || 'DeraSecure';
   const primary = document.getElementById('dnsPrimary').value.trim();
   const secondary = document.getElementById('dnsSecondary').value.trim();
   if (!primary) { showToast('⚠️ Vui lòng nhập DNS chính ở phần Tạo DNS', 'error'); return; }
-  if (state.signEnabled && !state.cert) {
-    showToast('⚠️ Vui lòng tạo chứng nhận ở trên trước', 'error');
-    return;
-  }
 
   const btn = this;
   btn.disabled = true;
@@ -1584,24 +1637,16 @@ document.getElementById('btnSignDNS').addEventListener('click', async function()
 
   try {
     await new Promise(r => setTimeout(r, 400));
-    const cert = state.signEnabled ? state.cert : null;
-    const xml = buildMobileconfig(name, primary, secondary, state.dnsMode, cert);
-    const fname = 'DeraLocks_DNS.mobileconfig';
+    const xml = buildMobileconfig(name, primary, secondary, state.dnsMode, state.cert);
+    const fname = 'DeraSecure_Signed.mobileconfig';
     state.signedMc = xml;
     state.signedMcName = fname;
     saveSignedMc(xml, fname);
 
     downloadFile(fname, xml, 'application/x-apple-aspen-config');
-    addResultItem('mc', fname, cert ? 'Đã ký bởi ' + (cert.org || 'Dera Locks') : 'Chưa ký', xml);
+    addResultItem('mc', fname, 'Đã ký bởi ' + (state.cert.org || 'Dera Locks'), xml);
 
-    // Cập nhật trạng thái chứng nhận trong phần kích hoạt
-    if (cert) {
-      const crtBox = document.getElementById('crtStatusBox');
-      crtBox.className = 'status-box ok';
-      document.getElementById('crtStatusText').innerHTML = '✅ Chứng nhận: Đã nhúng vào profile';
-    }
-
-    showToast(cert ? '✅ Đã ký & tải file .mobileconfig' : '📥 Đã tạo file .mobileconfig', 'success');
+    showToast('✅ Đã ký & tải file .mobileconfig', 'success');
   } catch (err) {
     console.error(err);
     showToast('❌ Lỗi: ' + err.message, 'error');
@@ -1651,7 +1696,11 @@ function addResultItem(type, name, desc, content) {
    PHẦN 5: KÍCH HOẠT DNS
 ============================================================ */
 document.getElementById('btnActivateDNS').addEventListener('click', () => {
-  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key trước', 'error'); return; }
+  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key để mở khóa chức năng này', 'error'); return; }
+  if (!state.cert) {
+    showToast('⚠️ Chưa có chứng nhận. Vui lòng tạo trước!', 'error');
+    return;
+  }
   if (!state.signedMc) {
     showToast('⚠️ Vui lòng tạo & ký file .mobileconfig trước', 'error');
     return;
@@ -1660,12 +1709,12 @@ document.getElementById('btnActivateDNS').addEventListener('click', () => {
     showToast('⚠️ DNS đang tắt, vui lòng bật trước', 'error');
     return;
   }
-  const name = state.signedMcName || 'DeraLocks_DNS.mobileconfig';
+  const name = state.signedMcName || 'DeraSecure_Signed.mobileconfig';
   downloadFile(name, state.signedMc, 'application/x-apple-aspen-config');
   const statusBox = document.getElementById('dnsStatusBox');
   statusBox.className = 'status-box ok';
   document.getElementById('dnsStatusText').innerHTML = '✅ Đã kích hoạt';
-  showToast('⚡ Đang mở trang cài đặt cấu hình...', 'success');
+  showToast('✅ DNS đã kích hoạt thành công!', 'success');
 });
 
 /* ============================================================
@@ -1740,6 +1789,11 @@ document.getElementById('musicPlayer').addEventListener('click', () => {
 });
 function tryAutoPlayMusic() { setTimeout(() => { if (!musicPlaying) startMusic(); }, 500); }
 
+// Tự động tắt nhạc khi rời trang
+window.addEventListener('beforeunload', () => {
+  if (musicPlaying) stopMusic();
+});
+
 /* ============================================================
    INIT
 ============================================================ */
@@ -1751,14 +1805,20 @@ function tryAutoPlayMusic() { setTimeout(() => { if (!musicPlaying) startMusic()
   const savedCert = loadCert();
   if (savedCert && savedCert.certPem) {
     state.cert = savedCert;
+    // Cần convert lại notAfterDate nếu là string
+    if (typeof savedCert.notAfterDate === 'string') {
+      savedCert.notAfterDate = new Date(savedCert.notAfterDate);
+    }
     const statusBox = document.getElementById('certStatusBox');
     statusBox.className = 'status-box ok';
-    document.getElementById('certStatusText').innerHTML = '✅ Đã tải chứng nhận: <b>' + escapeHtml(savedCert.domain) + '</b>';
+    document.getElementById('certStatusText').innerHTML = '✅ Đã tải chứng nhận: <b>' + escapeHtml(savedCert.domain) + '</b> · Hết hạn: ' + formatDateVN(savedCert.notAfterDate.getTime());
     document.getElementById('certDomain').value = savedCert.domain || 'dns.deralocks.cc';
     document.getElementById('certOrg').value = savedCert.org || 'Dera Locks VN';
-    const attachBox = document.getElementById('attachCertBox');
-    attachBox.className = 'status-box ok';
-    document.getElementById('attachCertText').innerHTML = '✅ Sẽ đính kèm: <b>' + escapeHtml(savedCert.domain) + '</b>';
+
+    const crtBox = document.getElementById('crtInUseBox');
+    crtBox.className = 'status-box ok';
+    document.getElementById('crtInUseText').innerHTML = '✅ ' + escapeHtml(savedCert.domain) + ' (Hết hạn ' + savedCert.notAfterDate.toLocaleDateString('vi-VN') + ')';
+
     addResultItem('crt', sanitizeFileName(savedCert.domain) + '.crt', 'Chứng nhận đã lưu', savedCert.certPem);
     addResultItem('key', sanitizeFileName(savedCert.domain) + '.key', 'Khóa riêng đã lưu', savedCert.keyPem);
   }
@@ -1769,8 +1829,6 @@ function tryAutoPlayMusic() { setTimeout(() => { if (!musicPlaying) startMusic()
     state.signedMc = savedMc.xml;
     state.signedMcName = savedMc.name;
     addResultItem('mc', savedMc.name, 'File .mobileconfig đã lưu', savedMc.xml);
-    const statusBox = document.getElementById('dnsStatusBox');
-    document.getElementById('crtStatusText').innerHTML = '📄 Chứng nhận: ' + (savedCert ? 'Đã tạo' : 'Chưa cài');
   }
 })();
 </script>
