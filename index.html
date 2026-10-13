@@ -3,176 +3,566 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0612">
 <title>DERA LOCKS · Secure Proxy</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; -webkit-tap-highlight-color:transparent; }
-  html,body { background:#0a0612; color:#e8e0f5; min-height:100vh; overflow-x:hidden; }
-  body { padding:14px 12px 110px; background: radial-gradient(ellipse at 50% 0%, rgba(120,50,200,0.35) 0%, transparent 55%), radial-gradient(ellipse at 100% 100%, rgba(70,30,130,0.25) 0%, transparent 50%), #0a0612; display:flex; flex-direction:column; align-items:center; gap:14px; }
-  .wrap { width:100%; max-width:430px; display:flex; flex-direction:column; gap:14px; }
+  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; -webkit-tap-highlight-color:transparent; -webkit-font-smoothing:antialiased; }
+  html,body { background:#060410; color:#e8e0f5; min-height:100vh; overflow-x:hidden; }
+  body {
+    padding:14px 12px 130px;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(90,60,220,0.45) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(30,120,220,0.28) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 40% at 0% 100%, rgba(140,50,220,0.22) 0%, transparent 55%),
+      #060410;
+    display:flex; flex-direction:column; align-items:center; gap:14px;
+  }
+  .wrap { width:100%; max-width:440px; display:flex; flex-direction:column; gap:14px; }
 
-  /* ===== KEY BOX ===== */
-  .key-activation { background:linear-gradient(180deg,#1a0d2e 0%,#0f0820 100%); border-radius:22px; padding:18px; border:1px solid rgba(150,90,240,0.3); box-shadow:0 0 30px rgba(120,50,220,0.25), inset 0 0 40px rgba(90,40,170,0.12); position:relative; overflow:hidden; }
-  .key-activation::before { content:""; position:absolute; top:-50%; right:-30%; width:200px; height:200px; background:radial-gradient(circle,rgba(180,100,255,0.25),transparent 70%); pointer-events:none; }
-  .key-title { display:flex; align-items:center; gap:8px; font-size:15px; font-weight:800; letter-spacing:0.5px; color:#e8d8ff; margin-bottom:12px; text-shadow:0 0 12px rgba(180,120,255,0.6); }
-  .key-title svg { width:20px; height:20px; fill:#b18aff; filter:drop-shadow(0 0 8px rgba(177,138,255,0.8)); }
-  .key-input-row { display:flex; gap:8px; }
-  .key-input { flex:1; background:rgba(18,10,35,0.9); border:1.5px solid rgba(140,100,220,0.5); border-radius:12px; padding:13px 15px; font-size:14px; color:#f0e8ff; outline:none; font-weight:600; letter-spacing:0.5px; transition:all .2s; font-family:ui-monospace,'SF Mono',Menlo,monospace; }
+  /* ============ KEY BOX ============ */
+  .key-activation {
+    background: linear-gradient(145deg, rgba(45,20,90,0.85) 0%, rgba(20,10,45,0.9) 100%);
+    border-radius:24px; padding:18px;
+    border:1px solid rgba(150,100,255,0.35);
+    box-shadow: 0 0 40px rgba(120,60,240,0.3), inset 0 0 30px rgba(80,40,180,0.2);
+    position:relative; overflow:hidden;
+  }
+  .key-activation::before {
+    content:""; position:absolute; top:-60px; right:-60px; width:200px; height:200px;
+    background: radial-gradient(circle, rgba(140,90,255,0.4), transparent 70%);
+    pointer-events:none;
+  }
+  .key-title {
+    display:flex; align-items:center; gap:10px;
+    font-size:15px; font-weight:800; letter-spacing:0.5px; color:#e8d8ff;
+    margin-bottom:14px; text-shadow:0 0 14px rgba(180,120,255,0.7);
+    position:relative;
+  }
+  .key-title svg { width:22px; height:22px; fill:#b18aff; filter:drop-shadow(0 0 10px rgba(177,138,255,0.9)); }
+  .key-input-row { display:flex; gap:8px; position:relative; }
+  .key-input {
+    flex:1; background:rgba(15,8,30,0.9);
+    border:1.5px solid rgba(140,100,220,0.5); border-radius:14px;
+    padding:14px 16px; font-size:14px; color:#f0e8ff; outline:none; font-weight:700;
+    letter-spacing:0.8px; transition:all .2s; font-family:ui-monospace,'SF Mono',Menlo,monospace;
+  }
   .key-input::placeholder { color:#6a5f90; font-weight:500; letter-spacing:0.3px; font-family:-apple-system,sans-serif; }
-  .key-input:focus { border-color:#b18aff; box-shadow:0 0 16px rgba(140,90,240,0.5); }
-  .key-input.error { border-color:#ff5c7a; box-shadow:0 0 16px rgba(255,90,120,0.5); animation:shake 0.4s; }
-  @keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-5px);} 75%{transform:translateX(5px);} }
-  .btn-activate-key { background:linear-gradient(135deg,#8b5eff,#4a7aff); color:#fff; border:none; border-radius:12px; padding:0 18px; font-size:13px; font-weight:800; cursor:pointer; letter-spacing:0.3px; white-space:nowrap; box-shadow:0 4px 14px rgba(120,80,255,0.5),inset 0 1px 0 rgba(255,255,255,0.2); transition:transform .12s,filter .12s; font-family:inherit; }
-  .btn-activate-key:active { transform:scale(0.96); filter:brightness(0.92); }
+  .key-input:focus { border-color:#b18aff; box-shadow:0 0 20px rgba(140,90,240,0.6); background:rgba(25,12,50,0.95); }
+  .key-input.error { border-color:#ff5c7a; box-shadow:0 0 20px rgba(255,90,120,0.6); animation:shake 0.4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-6px);} 75%{transform:translateX(6px);} }
+  .btn-activate-key {
+    background: linear-gradient(135deg, #8b5eff 0%, #4a7aff 100%);
+    color:#fff; border:none; border-radius:14px; padding:0 20px;
+    font-size:13px; font-weight:800; cursor:pointer; letter-spacing:0.4px; white-space:nowrap;
+    box-shadow: 0 6px 20px rgba(120,80,255,0.6), inset 0 1px 0 rgba(255,255,255,0.25);
+    transition:transform .12s, filter .12s; font-family:inherit;
+  }
+  .btn-activate-key:active { transform:scale(0.95); filter:brightness(0.9); }
   .btn-activate-key:disabled { opacity:0.6; cursor:not-allowed; }
   .key-msg { margin-top:10px; font-size:13px; font-weight:600; text-align:center; min-height:18px; letter-spacing:0.2px; }
   .key-msg.error { color:#ff8ca0; }
   .key-msg.success { color:#4ade80; }
 
-  /* ===== KEY INFO ===== */
-  .key-info { display:none; background:linear-gradient(180deg,#132a1e 0%,#0a1f14 100%); border:1px solid rgba(74,222,128,0.35); border-radius:18px; padding:16px; box-shadow:0 0 25px rgba(74,222,128,0.2), inset 0 0 30px rgba(40,120,70,0.15); }
-  .key-info.show { display:block; animation:slideDown 0.4s ease; }
-  @keyframes slideDown { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
-  .key-info-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
-  .key-info-title { display:flex; align-items:center; gap:8px; font-size:14px; font-weight:800; color:#7dffb0; letter-spacing:0.5px; }
-  .key-info-title svg { width:18px; height:18px; fill:#4ade80; filter:drop-shadow(0 0 8px rgba(74,222,128,0.8)); }
-  .key-info-badge { background:rgba(74,222,128,0.2); border:1px solid rgba(74,222,128,0.5); color:#7dffb0; padding:4px 12px; border-radius:20px; font-size:11px; font-weight:800; letter-spacing:0.5px; }
+  /* ============ KEY INFO ============ */
+  .key-info {
+    display:none;
+    background: linear-gradient(145deg, rgba(20,80,60,0.55) 0%, rgba(10,40,30,0.75) 100%);
+    border:1px solid rgba(74,222,128,0.4); border-radius:20px; padding:16px;
+    box-shadow: 0 0 30px rgba(74,222,128,0.25), inset 0 0 25px rgba(40,120,80,0.2);
+  }
+  .key-info.show { display:block; animation:slideDown 0.45s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes slideDown { from { opacity:0; transform:translateY(-15px) scale(0.96); } to { opacity:1; transform:translateY(0) scale(1); } }
+  .key-info-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; gap:8px; }
+  .key-info-title { display:flex; align-items:center; gap:8px; font-size:13.5px; font-weight:800; color:#7dffb0; letter-spacing:0.5px; }
+  .key-info-title svg { width:18px; height:18px; fill:#4ade80; filter:drop-shadow(0 0 8px rgba(74,222,128,0.9)); }
+  .key-info-badge {
+    background: rgba(74,222,128,0.2); border:1px solid rgba(74,222,128,0.55);
+    color:#7dffb0; padding:5px 12px; border-radius:20px; font-size:10.5px; font-weight:800;
+    letter-spacing:0.5px; white-space:nowrap;
+  }
   .key-info-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-  .key-info-item { background:rgba(10,25,18,0.6); border:1px solid rgba(74,222,128,0.2); border-radius:10px; padding:10px 12px; }
-  .key-info-label { font-size:10px; font-weight:700; letter-spacing:1px; color:#5fa678; text-transform:uppercase; margin-bottom:4px; }
-  .key-info-value { font-size:12.5px; font-weight:700; color:#d0f5dd; word-break:break-all; font-family:ui-monospace,'SF Mono',Menlo,monospace; }
+  .key-info-item {
+    background: rgba(5,20,15,0.65); border:1px solid rgba(74,222,128,0.25);
+    border-radius:12px; padding:10px 12px;
+  }
+  .key-info-label { font-size:9.5px; font-weight:800; letter-spacing:1.2px; color:#5fa678; text-transform:uppercase; margin-bottom:5px; }
+  .key-info-value {
+    font-size:12px; font-weight:700; color:#d0f5dd; word-break:break-all;
+    font-family:ui-monospace,'SF Mono',Menlo,monospace; line-height:1.4;
+  }
   .key-info-value.green { color:#4ade80; }
   .key-info-full { grid-column:1 / -1; }
 
-  /* ===== LOCKED ===== */
-  .hero-card, .section-card, .server-status-card { transition:filter 0.4s, opacity 0.4s; }
-  .locked .hero-card, .locked .section-card, .locked .server-status-card { filter:blur(3px) grayscale(60%); opacity:0.45; pointer-events:none; user-select:none; }
-  .locked-note { display:none; text-align:center; padding:14px; background:rgba(255,90,120,0.1); border:1px solid rgba(255,90,120,0.35); border-radius:14px; font-size:12.5px; font-weight:700; color:#ff8ca0; letter-spacing:0.3px; margin-bottom:8px; }
+  /* ============ LOCKED ============ */
+  .hero-card, .server-card, .section-card { transition:filter 0.5s, opacity 0.5s; }
+  .locked .hero-card, .locked .server-card, .locked .section-card {
+    filter: blur(4px) grayscale(70%); opacity:0.4; pointer-events:none; user-select:none;
+  }
+  .locked-note {
+    display:none; text-align:center; padding:14px;
+    background: linear-gradient(135deg, rgba(255,90,120,0.15), rgba(150,40,60,0.15));
+    border:1px solid rgba(255,90,120,0.4); border-radius:16px;
+    font-size:12.5px; font-weight:700; color:#ff8ca0; letter-spacing:0.3px;
+    margin-bottom:8px; box-shadow: 0 0 25px rgba(255,90,120,0.2);
+  }
   .locked .locked-note { display:block; }
 
-  /* ===== HERO ===== */
-  .hero-card { background:linear-gradient(180deg,#1a0d2e 0%,#0f0820 100%); border-radius:22px; padding:0 0 22px; border:1px solid rgba(150,90,240,0.28); box-shadow:0 0 30px rgba(120,50,220,0.25), inset 0 0 40px rgba(90,40,170,0.12); overflow:hidden; }
-  .hero-banner { width:100%; height:200px; background: radial-gradient(ellipse at 50% 50%, rgba(200,90,255,0.5) 0%, transparent 60%), linear-gradient(135deg,#2a0d4a 0%,#1a0530 40%,#3d1060 100%); position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; }
-  .hero-banner::before { content:""; position:absolute; inset:0; background: repeating-linear-gradient(45deg,transparent 0 18px,rgba(180,100,255,0.06) 18px 19px), repeating-linear-gradient(-45deg,transparent 0 22px,rgba(100,200,255,0.05) 22px 23px); pointer-events:none; }
-  .hero-banner::after { content:""; position:absolute; inset:0; background: radial-gradient(circle at 20% 30%,rgba(220,130,255,0.35),transparent 40%), radial-gradient(circle at 80% 70%,rgba(120,80,255,0.3),transparent 45%); pointer-events:none; }
-  .hero-title { font-family:'Impact','Arial Black',sans-serif; font-size:62px; font-weight:900; letter-spacing:2px; line-height:0.85; text-align:center; text-shadow:0 0 8px #d48fff,0 0 20px #a34fff,0 0 40px #7a1fd0,0 4px 0 #4a0d80,0 6px 15px rgba(0,0,0,0.9); z-index:2; position:relative; transform:perspective(400px) rotateX(8deg); background:linear-gradient(180deg,#fff 0%,#d8b8ff 50%,#a86dff 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; filter:drop-shadow(0 0 6px rgba(180,100,255,0.8)); }
-  .app-icon-wrap { width:108px; height:108px; margin:-54px auto 14px; position:relative; z-index:5; border-radius:26px; padding:4px; background:linear-gradient(145deg,#e0d0ff,#a888ff,#6a3fc0); box-shadow:0 0 25px rgba(180,100,255,0.7),0 8px 24px rgba(0,0,0,0.7),inset 0 0 15px rgba(255,255,255,0.3); }
-  .app-icon { width:100%; height:100%; border-radius:22px; background: radial-gradient(circle at 30% 20%,rgba(200,140,255,0.5) 0%,transparent 55%), linear-gradient(160deg,#2a0d4a 0%,#12032a 60%,#3a1060 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden; border:1px solid rgba(200,160,255,0.4); }
-  .app-icon::before { content:""; position:absolute; inset:0; background:repeating-linear-gradient(115deg,transparent 0 10px,rgba(180,120,255,0.12) 10px 11px); }
-  .app-icon-text { font-family:'Impact','Arial Black',sans-serif; font-weight:900; font-size:26px; line-height:0.85; text-align:center; letter-spacing:0.5px; z-index:2; position:relative; background:linear-gradient(180deg,#fff 0%,#d0b0ff 50%,#9d5fff 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; text-shadow:0 2px 8px rgba(180,100,255,0.6); transform:perspective(200px) rotateX(5deg); }
-  .app-icon-text small { display:block; font-size:15px; letter-spacing:1px; margin-top:1px; background:linear-gradient(180deg,#e0c8ff 0%,#9d6dff 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-  .app-name { text-align:center; font-size:26px; font-weight:900; letter-spacing:1.5px; color:#f2e8ff; text-shadow:0 0 12px rgba(160,100,255,0.6),0 2px 4px rgba(0,0,0,0.8); margin-bottom:6px; }
-  .app-sub { text-align:center; font-size:14px; font-weight:500; letter-spacing:0.5px; color:#b8c8e8; margin-bottom:16px; text-shadow:0 0 10px rgba(100,180,255,0.4); }
+  /* ============ HERO ============ */
+  .hero-card {
+    background: linear-gradient(165deg, #1e0d3e 0%, #12062a 100%);
+    border-radius:24px; padding:0 0 22px;
+    border:1px solid rgba(150,90,240,0.3);
+    box-shadow: 0 0 40px rgba(120,50,220,0.3), inset 0 0 50px rgba(90,40,180,0.15);
+    overflow:hidden;
+  }
+  .hero-banner {
+    width:100%; height:190px;
+    background:
+      radial-gradient(ellipse at 50% 50%, rgba(200,90,255,0.55) 0%, transparent 60%),
+      linear-gradient(135deg, #2a0d4a 0%, #1a0530 40%, #3d1060 60%, #1e0542 100%);
+    position:relative; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .hero-banner::before {
+    content:""; position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(45deg, transparent 0 18px, rgba(180,100,255,0.07) 18px 19px),
+      repeating-linear-gradient(-45deg, transparent 0 22px, rgba(100,200,255,0.06) 22px 23px);
+    pointer-events:none;
+  }
+  .hero-banner::after {
+    content:""; position:absolute; inset:0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(220,130,255,0.4), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(120,80,255,0.35), transparent 45%);
+    pointer-events:none;
+  }
+  .hero-title {
+    font-family:'Impact','Arial Black',sans-serif;
+    font-size:60px; font-weight:900; letter-spacing:3px; line-height:0.85;
+    text-align:center; z-index:2; position:relative;
+    transform: perspective(400px) rotateX(8deg);
+    background: linear-gradient(180deg, #ffffff 0%, #e0c8ff 50%, #a86dff 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    filter: drop-shadow(0 0 10px rgba(180,100,255,0.9)) drop-shadow(0 4px 12px rgba(0,0,0,0.9));
+  }
+  .app-icon-wrap {
+    width:104px; height:104px; margin:-52px auto 14px;
+    position:relative; z-index:5; border-radius:26px; padding:4px;
+    background: linear-gradient(145deg, #e0d0ff, #a888ff, #6a3fc0);
+    box-shadow: 0 0 30px rgba(180,100,255,0.85), 0 10px 28px rgba(0,0,0,0.75), inset 0 0 15px rgba(255,255,255,0.35);
+  }
+  .app-icon {
+    width:100%; height:100%; border-radius:22px;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(200,140,255,0.6) 0%, transparent 55%),
+      linear-gradient(160deg, #2a0d4a 0%, #12032a 60%, #3a1060 100%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    position:relative; overflow:hidden;
+    border:1px solid rgba(200,160,255,0.45);
+  }
+  .app-icon-text {
+    font-family:'Impact','Arial Black',sans-serif; font-weight:900;
+    font-size:24px; line-height:0.85; text-align:center; letter-spacing:0.5px;
+    z-index:2; position:relative;
+    background: linear-gradient(180deg, #ffffff 0%, #d0b0ff 50%, #9d5fff 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .app-icon-text small { display:block; font-size:14px; letter-spacing:1.2px; margin-top:2px; }
+  .app-name {
+    text-align:center; font-size:25px; font-weight:900; letter-spacing:2px;
+    color:#f2e8ff; text-shadow:0 0 14px rgba(160,100,255,0.7), 0 2px 4px rgba(0,0,0,0.85);
+    margin-bottom:6px;
+  }
+  .app-sub { text-align:center; font-size:13.5px; font-weight:500; color:#a8c0e8; margin-bottom:16px; letter-spacing:0.4px; }
   .app-sub .dot { color:#6a7fa0; margin:0 6px; }
-  .badges { display:flex; justify-content:center; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
-  .badge-version { background:rgba(60,40,100,0.7); border:1px solid rgba(140,100,220,0.5); color:#d0c0f0; padding:6px 16px; border-radius:30px; font-size:13px; font-weight:600; }
-  .ios-box { margin:0 18px; background:rgba(25,18,45,0.65); border:1px solid rgba(100,80,160,0.4); border-radius:16px; padding:14px 12px; text-align:center; }
-  .ios-title { display:flex; align-items:center; justify-content:center; gap:7px; font-size:13px; font-weight:600; color:#b8aee0; margin-bottom:8px; }
-  .ios-title svg { width:16px; height:16px; fill:#b8aee0; }
-  .ios-versions { font-size:13.5px; color:#6ec8ff; font-weight:600; line-height:1.7; }
-  .ios-versions .sep { color:#8a7ac0; margin:0 8px; font-weight:400; }
+  .badges { display:flex; justify-content:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+  .badge-version {
+    background: rgba(60,40,100,0.7); border:1px solid rgba(140,100,220,0.55);
+    color:#d0c0f0; padding:6px 16px; border-radius:30px; font-size:12.5px; font-weight:700; letter-spacing:0.3px;
+  }
+  .ios-box {
+    margin:0 18px; background: rgba(25,18,45,0.7);
+    border:1px solid rgba(100,80,180,0.45); border-radius:16px; padding:12px; text-align:center;
+  }
+  .ios-title {
+    display:flex; align-items:center; justify-content:center; gap:7px;
+    font-size:12.5px; font-weight:700; color:#b8aee0; margin-bottom:6px; letter-spacing:0.4px;
+  }
+  .ios-title svg { width:14px; height:14px; fill:#b8aee0; }
+  .ios-versions { font-size:13px; color:#6ec8ff; font-weight:700; line-height:1.6; }
+  .ios-versions .sep { color:#8a7ac0; margin:0 6px; }
 
-  /* ===== SERVER STATUS ===== */
-  .server-status-card { background:linear-gradient(180deg,#1a0d2e 0%,#0f0820 100%); border-radius:22px; padding:18px; border:1px solid rgba(150,90,240,0.28); box-shadow:0 0 30px rgba(120,50,220,0.25), inset 0 0 40px rgba(90,40,170,0.12); transition:all .4s; }
-  .server-status-card.online { border-color:rgba(74,222,128,0.5); box-shadow:0 0 30px rgba(74,222,128,0.25), inset 0 0 40px rgba(40,120,70,0.15); }
-  .server-status-card.offline { border-color:rgba(255,90,120,0.5); box-shadow:0 0 30px rgba(255,90,120,0.25), inset 0 0 40px rgba(150,40,60,0.15); }
-  .server-status-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
-  .server-status-header svg { width:22px; height:22px; fill:#b18aff; filter:drop-shadow(0 0 8px rgba(177,138,255,0.8)); }
-  .server-status-header .title { font-size:15px; font-weight:800; letter-spacing:0.5px; color:#e8d8ff; }
-  .server-btn { width:100%; display:flex; align-items:center; justify-content:center; gap:10px; padding:16px; border-radius:14px; font-size:16px; font-weight:800; letter-spacing:0.4px; border:none; cursor:pointer; transition:transform .12s,filter .12s,background .3s; font-family:inherit; color:#fff; }
-  .server-btn.online { background:linear-gradient(135deg,#1a9a4a 0%,#0e6b32 100%); box-shadow:0 6px 20px rgba(30,160,80,0.5),inset 0 1px 0 rgba(255,255,255,0.2); }
-  .server-btn.offline { background:linear-gradient(135deg,#d0304e 0%,#8a0f28 100%); box-shadow:0 6px 20px rgba(220,50,80,0.5),inset 0 1px 0 rgba(255,255,255,0.2); }
-  .server-btn.checking { background:linear-gradient(135deg,#6a3fd0,#4a2a9a); box-shadow:0 6px 20px rgba(100,50,200,0.5),inset 0 1px 0 rgba(255,255,255,0.15); cursor:wait; }
+  /* ============ SERVER CARD ============ */
+  .server-card {
+    background: linear-gradient(145deg, rgba(45,20,90,0.7) 0%, rgba(20,10,45,0.85) 100%);
+    border-radius:20px; padding:16px 18px;
+    border:1px solid rgba(150,100,255,0.35);
+    box-shadow: 0 0 30px rgba(120,60,240,0.25);
+    transition: all .4s;
+  }
+  .server-card.online {
+    border-color: rgba(74,222,128,0.5);
+    box-shadow: 0 0 35px rgba(74,222,128,0.3);
+  }
+  .server-card.offline {
+    border-color: rgba(255,90,120,0.5);
+    box-shadow: 0 0 35px rgba(255,90,120,0.3);
+  }
+  .server-header {
+    display:flex; align-items:center; gap:10px; margin-bottom:12px;
+  }
+  .server-header svg { width:20px; height:20px; fill:#b18aff; filter:drop-shadow(0 0 8px rgba(177,138,255,0.8)); }
+  .server-header .title { font-size:13.5px; font-weight:800; letter-spacing:0.6px; color:#e8d8ff; text-transform:uppercase; }
+  .server-btn {
+    width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
+    padding:14px; border-radius:14px; font-size:15px; font-weight:800; letter-spacing:0.3px;
+    border:none; cursor:pointer; transition: all .3s; font-family:inherit; color:#fff;
+  }
+  .server-btn.online { background: linear-gradient(135deg,#1a9a4a 0%,#0e6b32 100%); box-shadow: 0 6px 22px rgba(30,160,80,0.55), inset 0 1px 0 rgba(255,255,255,0.2); }
+  .server-btn.offline { background: linear-gradient(135deg,#d0304e 0%,#8a0f28 100%); box-shadow: 0 6px 22px rgba(220,50,80,0.55), inset 0 1px 0 rgba(255,255,255,0.2); }
+  .server-btn.checking { background: linear-gradient(135deg,#6a3fd0,#4a2a9a); box-shadow: 0 6px 22px rgba(100,50,200,0.55); cursor:wait; }
   .server-btn:active { transform:scale(0.97); filter:brightness(0.95); }
-  .server-btn svg { width:22px; height:22px; fill:#fff; }
-  .server-info { margin-top:12px; font-size:12px; color:#8a80c0; text-align:center; font-weight:600; letter-spacing:0.3px; min-height:16px; }
-  .server-info .online-text { color:#7dffb0; }
-  .server-info .offline-text { color:#ff8ca0; }
+  .server-btn svg { width:20px; height:20px; fill:#fff; flex-shrink:0; }
+  .server-info { margin-top:10px; font-size:11.5px; color:#8a80c0; text-align:center; font-weight:600; letter-spacing:0.3px; min-height:14px; }
 
-  /* ===== SECTION CARD ===== */
-  .section-card { background:linear-gradient(180deg,#150a28 0%,#0c0518 100%); border-radius:22px; padding:20px 18px; border:1px solid rgba(130,90,220,0.28); box-shadow:0 0 25px rgba(110,50,200,0.18),inset 0 0 30px rgba(80,40,150,0.1); }
-  .section-title { display:flex; align-items:center; gap:10px; font-size:17px; font-weight:800; letter-spacing:0.5px; color:#f0e8ff; margin-bottom:18px; }
+  /* ============ SECTION CARD ============ */
+  .section-card {
+    background: linear-gradient(165deg, #150a28 0%, #0c0518 100%);
+    border-radius:22px; padding:20px 18px;
+    border:1px solid rgba(130,90,220,0.3);
+    box-shadow: 0 0 30px rgba(110,50,200,0.2), inset 0 0 35px rgba(80,40,150,0.12);
+    position:relative;
+  }
+  .section-title {
+    display:flex; align-items:center; gap:10px;
+    font-size:16px; font-weight:800; letter-spacing:0.6px; color:#f0e8ff;
+    margin-bottom:8px;
+  }
   .section-title svg { width:22px; height:22px; flex-shrink:0; }
-  .section-title.dns svg { fill:#b18aff; filter:drop-shadow(0 0 6px rgba(177,138,255,0.6)); }
-  .section-title.crt svg { fill:#ffa94d; filter:drop-shadow(0 0 6px rgba(255,169,77,0.6)); }
-  .section-title.run svg { fill:#4ade80; filter:drop-shadow(0 0 6px rgba(74,222,128,0.6)); }
+  .section-title.dns svg { fill:#b18aff; filter:drop-shadow(0 0 8px rgba(177,138,255,0.7)); }
+  .section-title.crt svg { fill:#ffa94d; filter:drop-shadow(0 0 8px rgba(255,169,77,0.7)); }
+  .section-title.sign svg { fill:#4ac8ff; filter:drop-shadow(0 0 8px rgba(74,200,255,0.7)); }
+  .section-title.run svg { fill:#4ade80; filter:drop-shadow(0 0 8px rgba(74,222,128,0.7)); }
+  .section-sub {
+    font-size:11.5px; color:#8a80c0; font-weight:500; letter-spacing:0.2px;
+    margin-bottom:16px; padding-left:32px;
+  }
 
   .field { margin-bottom:14px; }
-  .field-label { font-size:12px; font-weight:700; letter-spacing:1px; color:#a99ad0; text-transform:uppercase; margin-bottom:7px; display:flex; align-items:center; gap:5px; flex-wrap:wrap; }
-  .field-label .hint { text-transform:none; font-weight:500; letter-spacing:0.2px; color:#7d72a8; font-size:11.5px; }
-  .text-input { width:100%; background:rgba(18,10,35,0.8); border:1.5px solid rgba(120,90,200,0.35); border-radius:14px; padding:14px 16px; font-size:15px; color:#f0e8ff; outline:none; font-weight:500; transition:border-color .2s,box-shadow .2s; font-family:inherit; }
-  .text-input::placeholder { color:#6a5f90; }
-  .text-input:focus { border-color:#a888ff; box-shadow:0 0 14px rgba(140,90,240,0.4); background:rgba(25,15,45,0.9); }
+  .field-label {
+    font-size:11.5px; font-weight:800; letter-spacing:1.2px; color:#a99ad0;
+    text-transform:uppercase; margin-bottom:7px;
+    display:flex; align-items:center; gap:5px; flex-wrap:wrap;
+  }
+  .field-label .hint { text-transform:none; font-weight:500; letter-spacing:0.2px; color:#7d72a8; font-size:11px; }
+  .text-input {
+    width:100%; background: rgba(15,8,30,0.85);
+    border:1.5px solid rgba(120,90,200,0.4); border-radius:14px;
+    padding:13px 16px; font-size:14.5px; color:#f0e8ff; outline:none; font-weight:600;
+    transition: border-color .2s, box-shadow .2s; font-family:inherit;
+  }
+  .text-input::placeholder { color:#6a5f90; font-weight:500; }
+  .text-input:focus { border-color:#a888ff; box-shadow:0 0 18px rgba(140,90,240,0.5); background:rgba(25,15,50,0.95); }
+
   .chips { display:flex; gap:8px; flex-wrap:wrap; }
-  .chip { flex:1; min-width:80px; text-align:center; padding:11px 8px; border-radius:12px; background:rgba(18,10,35,0.8); border:1.5px solid rgba(120,90,200,0.35); color:#a99ad0; font-size:13px; font-weight:700; cursor:pointer; transition:all .2s; letter-spacing:0.3px; user-select:none; }
-  .chip.active { background:linear-gradient(135deg,#6a3fd0,#4a2a9a); color:#fff; border-color:#b18aff; box-shadow:0 4px 14px rgba(140,90,240,0.5); }
-  .btn-sign { width:100%; display:flex; align-items:center; justify-content:center; gap:10px; padding:16px; border-radius:14px; background:linear-gradient(135deg,#6a3fd0 0%,#4a2a9a 100%); color:#fff; font-size:16px; font-weight:800; letter-spacing:0.5px; border:1px solid rgba(180,140,255,0.35); cursor:pointer; box-shadow:0 6px 18px rgba(100,50,200,0.45),inset 0 1px 0 rgba(255,255,255,0.15); transition:transform .12s,filter .12s; margin-top:6px; font-family:inherit; }
-  .btn-sign:active { transform:scale(0.97); filter:brightness(0.92); }
-  .btn-sign:disabled { opacity:0.6; cursor:not-allowed; }
-  .btn-sign svg { width:22px; height:22px; fill:#fff; }
-  .btn-run { background:linear-gradient(135deg,#1a9a4a 0%,#0e6b32 100%); border:1px solid rgba(100,255,160,0.4); box-shadow:0 6px 18px rgba(30,160,80,0.45),inset 0 1px 0 rgba(255,255,255,0.18); }
-  .btn-crt { background:linear-gradient(135deg,#ff8a3d 0%,#d9601a 100%); border:1px solid rgba(255,200,140,0.4); box-shadow:0 6px 18px rgba(220,120,40,0.45),inset 0 1px 0 rgba(255,255,255,0.2); }
-  .btn-check { background:linear-gradient(135deg,#4a7aff 0%,#2a4ad0 100%); border:1px solid rgba(140,180,255,0.4); box-shadow:0 6px 18px rgba(60,110,220,0.45),inset 0 1px 0 rgba(255,255,255,0.18); margin-top:10px; }
-  .note { font-size:12px; color:#6a6090; text-align:center; margin-top:14px; line-height:1.6; font-weight:500; letter-spacing:0.2px; }
+  .chip {
+    flex:1; min-width:70px; text-align:center; padding:11px 8px; border-radius:12px;
+    background: rgba(15,8,30,0.85); border:1.5px solid rgba(120,90,200,0.4);
+    color:#a99ad0; font-size:12.5px; font-weight:700; cursor:pointer;
+    transition: all .2s; letter-spacing:0.3px; user-select:none;
+  }
+  .chip.active {
+    background: linear-gradient(135deg,#6a3fd0 0%,#4a2a9a 100%);
+    color:#fff; border-color:#b18aff;
+    box-shadow: 0 4px 16px rgba(140,90,240,0.6);
+  }
+
+  .btn-sign {
+    width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
+    padding:16px; border-radius:14px; color:#fff; font-size:15px; font-weight:800;
+    letter-spacing:0.4px; border:1px solid rgba(180,140,255,0.35); cursor:pointer;
+    transition: transform .12s, filter .12s; margin-top:6px; font-family:inherit;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  .btn-sign:active { transform:scale(0.97); filter:brightness(0.93); }
+  .btn-sign:disabled { opacity:0.55; cursor:not-allowed; }
+  .btn-sign svg { width:22px; height:22px; fill:#fff; flex-shrink:0; }
+  .btn-dns { background: linear-gradient(135deg, #7a4aff 0%, #4a7aff 100%); }
+  .btn-crt { background: linear-gradient(135deg, #ff8a3d 0%, #d9601a 100%); }
+  .btn-sign-mc { background: linear-gradient(135deg, #4ac8ff 0%, #2a7ae0 100%); }
+  .btn-run { background: linear-gradient(135deg, #1a9a4a 0%, #0e6b32 100%); }
+  .btn-secondary {
+    background: linear-gradient(135deg, rgba(80,50,150,0.7), rgba(50,30,100,0.7));
+    border:1px solid rgba(140,110,220,0.4);
+    margin-top:8px; padding:12px; font-size:13px;
+  }
+
+  .note {
+    font-size:11.5px; color:#6a6090; text-align:center; margin-top:12px;
+    line-height:1.55; font-weight:500; letter-spacing:0.2px;
+  }
   .note .link { color:#8a80c0; }
-  .note-pem { font-size:11.5px; color:#7fc9a0; text-align:center; margin-top:8px; font-weight:600; letter-spacing:0.2px; padding:8px 12px; background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.25); border-radius:10px; }
-  .status-row { display:flex; align-items:center; justify-content:space-between; background:rgba(18,10,35,0.8); border:1.5px solid rgba(120,90,200,0.35); border-radius:14px; padding:14px 16px; margin-bottom:12px; gap:10px; }
-  .status-row .label { font-size:12px; font-weight:700; letter-spacing:0.5px; color:#a99ad0; text-transform:uppercase; flex-shrink:0; }
-  .status-row .value { font-size:13.5px; font-weight:700; color:#ff8ca0; display:flex; align-items:center; gap:6px; text-align:right; }
-  .status-row .value.active { color:#4ade80; }
-  .status-row .value .dot { width:9px; height:9px; border-radius:50%; background:#ff5c7a; box-shadow:0 0 8px #ff5c7a; flex-shrink:0; }
-  .status-row .value.active .dot { background:#4ade80; box-shadow:0 0 10px #4ade80; animation:pulse 1.8s infinite; }
+  .note-pem {
+    font-size:11.5px; color:#7fc9a0; text-align:center; margin-top:10px; font-weight:600;
+    padding:9px 12px; background: rgba(74,222,128,0.1);
+    border:1px solid rgba(74,222,128,0.3); border-radius:11px; letter-spacing:0.2px;
+  }
+
+  /* ============ STATUS BOX ============ */
+  .status-box {
+    background: rgba(15,8,30,0.85);
+    border:1.5px solid rgba(120,90,200,0.4); border-radius:14px;
+    padding:13px 16px; display:flex; align-items:center; gap:10px;
+    margin-bottom:12px; font-size:12.5px; font-weight:700; color:#a99ad0;
+    letter-spacing:0.2px; line-height:1.4;
+  }
+  .status-box .dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; background:#6a5f90; }
+  .status-box.ok {
+    border-color: rgba(74,222,128,0.5); background: rgba(20,60,40,0.4); color:#7dffb0;
+  }
+  .status-box.ok .dot { background:#4ade80; box-shadow:0 0 10px #4ade80; animation: pulse 1.8s infinite; }
+  .status-box.warn {
+    border-color: rgba(255,169,77,0.5); background: rgba(60,40,10,0.4); color:#ffc98a;
+  }
+  .status-box.warn .dot { background:#ffa94d; box-shadow:0 0 10px #ffa94d; }
   @keyframes pulse { 0%,100% { opacity:0.7; transform:scale(1); } 50% { opacity:1; transform:scale(1.25); } }
-  .toggle-row { display:flex; align-items:center; justify-content:space-between; background:rgba(18,10,35,0.8); border:1.5px solid rgba(120,90,200,0.35); border-radius:14px; padding:12px 16px; margin-bottom:12px; }
-  .toggle-label { font-size:14px; font-weight:600; color:#d0c0f0; letter-spacing:0.3px; }
-  .toggle { position:relative; width:52px; height:30px; background:rgba(60,40,100,0.8); border-radius:30px; cursor:pointer; transition:background .25s; border:1px solid rgba(120,90,200,0.4); flex-shrink:0; }
-  .toggle::after { content:""; position:absolute; top:3px; left:3px; width:22px; height:22px; background:#c8b0f0; border-radius:50%; transition:transform .25s,background .25s; box-shadow:0 2px 5px rgba(0,0,0,0.4); }
-  .toggle.on { background:linear-gradient(135deg,#4ade80,#1a9a4a); border-color:rgba(100,255,160,0.5); }
+
+  /* ============ RESULT LIST ============ */
+  .result-list { display:flex; flex-direction:column; gap:8px; }
+  .result-item {
+    display:flex; align-items:center; gap:12px;
+    background: rgba(15,8,30,0.75); border:1px solid rgba(120,90,200,0.3);
+    border-radius:14px; padding:12px 14px; transition:all .2s;
+  }
+  .result-item .icon {
+    width:38px; height:38px; border-radius:10px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    background: rgba(90,60,180,0.3); border:1px solid rgba(140,110,230,0.4);
+  }
+  .result-item .icon svg { width:20px; height:20px; fill:#b8a0ff; }
+  .result-item.crt .icon { background: rgba(255,140,60,0.2); border-color: rgba(255,169,77,0.45); }
+  .result-item.crt .icon svg { fill:#ffa94d; }
+  .result-item.key .icon { background: rgba(180,60,255,0.2); border-color: rgba(200,120,255,0.45); }
+  .result-item.key .icon svg { fill:#c88aff; }
+  .result-item.mc .icon { background: rgba(74,200,255,0.2); border-color: rgba(74,200,255,0.45); }
+  .result-item.mc .icon svg { fill:#4ac8ff; }
+  .result-item .info { flex:1; min-width:0; }
+  .result-item .info .name {
+    font-size:12.5px; font-weight:700; color:#e8d8ff;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    font-family:ui-monospace,'SF Mono',Menlo,monospace;
+  }
+  .result-item .info .desc { font-size:10.5px; color:#8a80c0; font-weight:500; margin-top:2px; }
+  .result-item .btns { display:flex; gap:6px; flex-shrink:0; }
+  .icon-btn {
+    width:34px; height:34px; border-radius:10px; border:none;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    transition: transform .12s, filter .12s; padding:0;
+  }
+  .icon-btn:active { transform:scale(0.9); filter:brightness(0.9); }
+  .icon-btn svg { width:16px; height:16px; fill:#fff; }
+  .icon-btn.view { background: linear-gradient(135deg,#4a7aff,#2a4ad0); box-shadow: 0 3px 10px rgba(70,120,255,0.5); }
+  .icon-btn.dl { background: linear-gradient(135deg,#1a9a4a,#0e6b32); box-shadow: 0 3px 10px rgba(30,160,80,0.5); }
+
+  /* ============ TOGGLE ============ */
+  .toggle-row {
+    display:flex; align-items:center; justify-content:space-between;
+    background: rgba(15,8,30,0.85);
+    border:1.5px solid rgba(120,90,200,0.4); border-radius:14px;
+    padding:13px 16px; margin-bottom:12px; gap:10px;
+  }
+  .toggle-label { font-size:13.5px; font-weight:700; color:#d0c0f0; letter-spacing:0.3px; }
+  .toggle {
+    position:relative; width:52px; height:30px;
+    background: rgba(60,40,100,0.85); border-radius:30px; cursor:pointer;
+    transition: background .25s; border:1px solid rgba(120,90,200,0.5);
+    flex-shrink:0;
+  }
+  .toggle::after {
+    content:""; position:absolute; top:3px; left:3px;
+    width:22px; height:22px; background:#c8b0f0; border-radius:50%;
+    transition: transform .25s, background .25s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  }
+  .toggle.on {
+    background: linear-gradient(135deg, #4ade80, #1a9a4a);
+    border-color: rgba(100,255,160,0.55);
+  }
   .toggle.on::after { transform:translateX(22px); background:#fff; }
 
-  /* ===== LOADING ===== */
-  .loading-overlay { position:fixed; inset:0; background:rgba(5,2,12,0.85); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:9998; display:none; align-items:center; justify-content:center; flex-direction:column; padding:24px; }
-  .loading-overlay.show { display:flex; animation:fadeIn 0.3s; }
+  /* ============ LOADING OVERLAY ============ */
+  .loading-overlay {
+    position:fixed; inset:0; z-index:9998;
+    background: rgba(5,2,12,0.88);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    display:none; align-items:center; justify-content:center; flex-direction:column; padding:24px;
+  }
+  .loading-overlay.show { display:flex; animation:fadeIn 0.35s; }
   @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
-  .loading-circle { width:110px; height:110px; position:relative; margin-bottom:24px; }
-  .loading-circle::before { content:""; position:absolute; inset:0; border-radius:50%; border:4px solid rgba(140,90,240,0.2); }
-  .loading-circle::after { content:""; position:absolute; inset:0; border-radius:50%; border:4px solid transparent; border-top-color:#b18aff; border-right-color:#6dd0ff; animation:spin 1s linear infinite; filter:drop-shadow(0 0 12px rgba(177,138,255,0.8)); }
+  .loading-circle { width:120px; height:120px; position:relative; margin-bottom:26px; }
+  .loading-circle::before {
+    content:""; position:absolute; inset:0; border-radius:50%;
+    border:4px solid rgba(140,90,240,0.2);
+  }
+  .loading-circle::after {
+    content:""; position:absolute; inset:0; border-radius:50%;
+    border:4px solid transparent;
+    border-top-color:#b18aff; border-right-color:#4ac8ff;
+    animation: spin 1s linear infinite;
+    filter: drop-shadow(0 0 14px rgba(177,138,255,0.9));
+  }
   @keyframes spin { to { transform:rotate(360deg); } }
-  .loading-percent { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900; color:#fff; text-shadow:0 0 12px rgba(180,120,255,0.8); font-family:ui-monospace,monospace; }
-  .loading-text { font-size:16px; font-weight:700; color:#d8c8ff; letter-spacing:0.5px; text-align:center; margin-bottom:16px; text-shadow:0 0 12px rgba(180,120,255,0.6); }
-  .loading-bar-wrap { width:100%; max-width:320px; height:8px; background:rgba(60,40,100,0.6); border-radius:8px; overflow:hidden; margin-top:16px; border:1px solid rgba(120,90,200,0.3); }
-  .loading-bar-fill { height:100%; width:0%; background:linear-gradient(90deg,#8b5eff,#6dd0ff); border-radius:8px; transition:width 0.1s linear; box-shadow:0 0 12px rgba(140,120,255,0.7); }
-  .loading-countdown { font-size:14px; font-weight:700; color:#b8a0ff; letter-spacing:0.5px; margin-top:12px; text-shadow:0 0 8px rgba(180,120,255,0.5); }
-  .loading-sub { font-size:12px; color:#8a80c0; font-weight:500; margin-top:14px; letter-spacing:0.3px; }
+  .loading-percent {
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:24px; font-weight:900; color:#fff;
+    text-shadow: 0 0 14px rgba(180,120,255,0.9);
+    font-family: ui-monospace,monospace;
+  }
+  .loading-text {
+    font-size:16px; font-weight:700; color:#d8c8ff; letter-spacing:0.5px;
+    margin-bottom:18px; text-align:center;
+    text-shadow: 0 0 14px rgba(180,120,255,0.7);
+  }
+  .loading-bar-wrap {
+    width:100%; max-width:320px; height:8px;
+    background: rgba(60,40,100,0.65); border-radius:8px; overflow:hidden;
+    border:1px solid rgba(120,90,200,0.35);
+  }
+  .loading-bar-fill {
+    height:100%; width:0%;
+    background: linear-gradient(90deg, #8b5eff, #4ac8ff);
+    border-radius:8px; transition: width 0.1s linear;
+    box-shadow: 0 0 14px rgba(140,120,255,0.8);
+  }
+  .loading-countdown {
+    font-size:14px; font-weight:700; color:#b8a0ff;
+    margin-top:14px; letter-spacing:0.5px;
+  }
+  .loading-sub { font-size:11.5px; color:#8a80c0; font-weight:500; margin-top:12px; letter-spacing:0.3px; text-align:center; }
 
-  /* ===== MUSIC PLAYER ===== */
-  .music-player { position:fixed; bottom:14px; left:14px; display:flex; align-items:center; gap:10px; background:rgba(18,10,35,0.9); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid rgba(140,100,220,0.4); border-radius:50px; padding:7px 16px 7px 7px; box-shadow:0 8px 24px rgba(0,0,0,0.6),0 0 20px rgba(120,60,220,0.35); z-index:999; max-width:calc(100% - 28px); cursor:pointer; transition:transform .15s; }
-  .music-player:active { transform:scale(0.96); }
-  .vinyl { width:42px; height:42px; border-radius:50%; background: radial-gradient(circle at center, #2a0d4a 25%, #0a0316 26%, #1a0d2e 27%, #0a0316 68%, #1a0d2e 70%, #0a0316 72%); position:relative; flex-shrink:0; box-shadow:inset 0 0 0 2px rgba(180,120,255,0.4),0 0 12px rgba(140,80,240,0.5); }
-  .vinyl::before { content:""; position:absolute; inset:0; border-radius:50%; background: repeating-radial-gradient(circle at center, transparent 0 2px, rgba(180,120,255,0.08) 2px 3px); }
-  .vinyl::after { content:""; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:10px; height:10px; border-radius:50%; background:linear-gradient(135deg,#b18aff,#6dd0ff); box-shadow:0 0 8px rgba(177,138,255,0.9); }
-  .vinyl.playing { animation:spin 3s linear infinite; }
-  .music-info { flex:1; min-width:0; overflow:hidden; }
-  .music-title { font-size:11px; font-weight:800; color:#e8d8ff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:0.2px; text-shadow:0 0 6px rgba(180,120,255,0.5); }
-  .music-artist { font-size:9.5px; font-weight:600; color:#8a80c0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:0.2px; margin-top:1px; }
-  .music-play-icon { width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#8b5eff,#4a7aff); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 2px 8px rgba(120,80,255,0.6); }
-  .music-play-icon svg { width:12px; height:12px; fill:#fff; }
+  /* ============ MODAL ============ */
+  .modal {
+    position:fixed; inset:0; z-index:9997;
+    background: rgba(5,2,12,0.92);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    display:none; align-items:center; justify-content:center; padding:16px;
+  }
+  .modal.show { display:flex; animation: fadeIn 0.25s; }
+  .modal-content {
+    background: linear-gradient(165deg, #1a0d2e, #0f0820);
+    border:1px solid rgba(150,90,240,0.5);
+    border-radius:22px; padding:20px; width:100%; max-width:420px; max-height:85vh;
+    overflow-y:auto; box-shadow: 0 0 50px rgba(120,60,240,0.4);
+  }
+  .modal-title {
+    font-size:15px; font-weight:800; color:#f0e8ff;
+    margin-bottom:14px; display:flex; align-items:center; gap:10px;
+  }
+  .modal-title svg { width:20px; height:20px; fill:#b18aff; flex-shrink:0; }
+  .modal-body {
+    font-family: ui-monospace,'SF Mono',Menlo,monospace;
+    font-size:10px; color:#c8b8e8; word-break:break-all;
+    line-height:1.5; white-space:pre-wrap;
+    background: rgba(10,5,20,0.75);
+    padding:14px; border-radius:12px;
+    border:1px solid rgba(120,90,200,0.3);
+    max-height:55vh; overflow-y:auto;
+  }
+  .modal-close {
+    width:100%; margin-top:14px; padding:13px; border-radius:12px;
+    background: linear-gradient(135deg,#6a3fd0,#4a2a9a);
+    color:#fff; border:none; font-size:14px; font-weight:800;
+    cursor:pointer; font-family:inherit; letter-spacing:0.4px;
+    box-shadow: 0 6px 18px rgba(100,50,200,0.5);
+  }
+  .modal-close:active { transform:scale(0.97); filter:brightness(0.93); }
 
-  .toast { position:fixed; left:50%; bottom:80px; transform:translateX(-50%) translateY(150%); background:linear-gradient(135deg,#2a1550,#1a0a35); border:1px solid rgba(180,140,255,0.5); color:#f0e8ff; padding:14px 22px; border-radius:14px; font-size:14px; font-weight:600; box-shadow:0 10px 30px rgba(0,0,0,0.6),0 0 20px rgba(140,90,255,0.4); z-index:9999; transition:transform .3s; max-width:340px; text-align:center; }
-  .toast.show { transform:translateX(-50%) translateY(0); }
-  .toast.success { border-color:rgba(74,222,128,0.6); box-shadow:0 10px 30px rgba(0,0,0,0.6),0 0 20px rgba(74,222,128,0.4); }
-  .toast.error { border-color:rgba(255,90,120,0.6); box-shadow:0 10px 30px rgba(0,0,0,0.6),0 0 20px rgba(255,90,120,0.4); }
+  /* ============ MUSIC PLAYER ============ */
+  .music-player {
+    position:fixed; bottom:14px; left:14px; z-index:999;
+    display:flex; align-items:center; gap:10px;
+    background: linear-gradient(135deg, rgba(30,15,60,0.95), rgba(15,8,35,0.95));
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border:1px solid rgba(150,100,240,0.5);
+    border-radius:50px; padding:7px 16px 7px 7px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 0 25px rgba(120,60,220,0.45);
+    max-width: calc(100% - 28px); cursor:pointer;
+    transition: transform .15s;
+  }
+  .music-player:active { transform:scale(0.95); }
+  .vinyl {
+    width:44px; height:44px; border-radius:50%; flex-shrink:0;
+    background:
+      radial-gradient(circle at center, #2a0d4a 22%, #0a0316 23%, #1a0d2e 24%, #0a0316 70%, #1a0d2e 72%, #0a0316 74%);
+    position:relative;
+    box-shadow: inset 0 0 0 2px rgba(180,120,255,0.5), 0 0 14px rgba(140,80,240,0.6);
+  }
+  .vinyl::after {
+    content:""; position:absolute; top:50%; left:50%;
+    transform:translate(-50%,-50%); width:11px; height:11px;
+    border-radius:50%;
+    background: linear-gradient(135deg,#b18aff,#4ac8ff);
+    box-shadow: 0 0 10px rgba(177,138,255,1);
+  }
+  .vinyl.playing { animation: spin 3s linear infinite; }
+  .music-info { min-width:0; overflow:hidden; }
+  .music-title {
+    font-size:11px; font-weight:800; color:#e8d8ff;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    letter-spacing:0.2px; text-shadow: 0 0 8px rgba(180,120,255,0.6);
+  }
+  .music-artist {
+    font-size:9.5px; font-weight:600; color:#8a80c0;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    letter-spacing:0.2px; margin-top:1px;
+  }
+  .music-play-icon {
+    width:28px; height:28px; border-radius:50%;
+    background: linear-gradient(135deg,#8b5eff,#4a7aff);
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; box-shadow: 0 2px 10px rgba(120,80,255,0.7);
+  }
+  .music-play-icon svg { width:13px; height:13px; fill:#fff; }
 
-  .footer { text-align:center; font-size:12.5px; color:#7a7098; padding:10px 0 4px; font-weight:500; letter-spacing:0.3px; }
+  /* ============ TOAST ============ */
+  .toast {
+    position:fixed; left:50%; bottom:90px; z-index:9999;
+    transform: translateX(-50%) translateY(180%);
+    background: linear-gradient(135deg, #2a1550, #1a0a35);
+    border:1px solid rgba(180,140,255,0.6);
+    color:#f0e8ff; padding:14px 22px; border-radius:14px;
+    font-size:13.5px; font-weight:700;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.7), 0 0 25px rgba(140,90,255,0.5);
+    transition: transform .35s cubic-bezier(0.34,1.56,0.64,1);
+    max-width:340px; text-align:center; letter-spacing:0.2px;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.success { border-color: rgba(74,222,128,0.65); box-shadow: 0 12px 35px rgba(0,0,0,0.7), 0 0 25px rgba(74,222,128,0.45); }
+  .toast.error { border-color: rgba(255,90,120,0.65); box-shadow: 0 12px 35px rgba(0,0,0,0.7), 0 0 25px rgba(255,90,120,0.45); }
 
-  .zing-frame { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; left:-9999px; }
+  /* ============ FOOTER ============ */
+  .footer {
+    text-align:center; font-size:12px; color:#7a7098;
+    padding:14px 0 6px; font-weight:600; letter-spacing:0.3px; line-height:1.6;
+  }
+  .footer .sep {
+    display:inline-block; width:40px; height:2px;
+    background: linear-gradient(90deg, transparent, #7a4aff, transparent);
+    margin: 0 auto 10px; border-radius:2px;
+  }
 
   @media (max-width:380px) {
-    .hero-banner { height:170px; } .hero-title { font-size:52px; }
-    .app-icon-wrap { width:94px; height:94px; margin-top:-47px; }
-    .app-icon-text { font-size:22px; } .app-icon-text small { font-size:13px; }
-    .app-name { font-size:22px; } .app-sub { font-size:13px; }
-    .chip { font-size:12px; padding:10px 5px; min-width:70px; }
+    .hero-banner { height:165px; }
+    .hero-title { font-size:50px; letter-spacing:2px; }
+    .app-icon-wrap { width:90px; height:90px; margin-top:-45px; }
+    .app-icon-text { font-size:20px; }
+    .app-icon-text small { font-size:12px; }
+    .app-name { font-size:21px; }
+    .app-sub { font-size:12.5px; }
+    .chip { font-size:11.5px; padding:10px 5px; min-width:60px; }
     .key-info-grid { grid-template-columns:1fr; }
+    .result-item .info .name { font-size:11.5px; }
   }
 </style>
 </head>
@@ -180,20 +570,20 @@
 
 <div class="wrap">
 
-  <!-- ================= KEY ACTIVATION ================= -->
+  <!-- ============ PHẦN 1: NHẬP KEY ============ -->
   <div class="key-activation">
     <div class="key-title">
       <svg viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
       NHẬP KEY KÍCH HOẠT
     </div>
     <div class="key-input-row">
-      <input type="text" class="key-input" id="keyInput" placeholder="DERA-XXXX-XXXX" autocomplete="off" spellcheck="false">
+      <input type="text" class="key-input" id="keyInput" placeholder="DERA-XXXXXXXX-XXXXXXXX" autocomplete="off" spellcheck="false" maxlength="22">
       <button class="btn-activate-key" id="btnActivateKey">KÍCH HOẠT</button>
     </div>
     <div class="key-msg" id="keyMsg"></div>
   </div>
 
-  <!-- ================= KEY INFO ================= -->
+  <!-- KEY INFO -->
   <div class="key-info" id="keyInfo">
     <div class="key-info-header">
       <div class="key-info-title">
@@ -226,10 +616,9 @@
     </div>
   </div>
 
-  <!-- ================= LOCKED NOTE ================= -->
-  <div class="locked-note" id="lockedNote">🔒 Vui lòng nhập Key để mở khóa tất cả chức năng</div>
+  <div class="locked-note" id="lockedNote">🔒 Nhập Key để mở khóa tất cả chức năng</div>
 
-  <!-- ================= HERO ================= -->
+  <!-- ============ HERO ============ -->
   <div class="hero-card">
     <div class="hero-banner">
       <div class="hero-title">DERA<br>LOCKS</div>
@@ -250,34 +639,35 @@
         iOS HỖ TRỢ:
       </div>
       <div class="ios-versions">
-        iOS 16.0 → 18.7.1 <span class="sep">•</span> iOS 26.0 → 26.6.2<br>
-        iOS 27 → 27.2
+        iOS 16.0 → 18.7.1 <span class="sep">•</span> iOS 26+ <span class="sep">•</span> iOS 27
       </div>
     </div>
   </div>
 
-  <!-- ================= SERVER STATUS ================= -->
-  <div class="server-status-card" id="serverStatusCard">
-    <div class="server-status-header">
+  <!-- ============ PHẦN 2: TRẠNG THÁI SERVER ============ -->
+  <div class="server-card" id="serverCard">
+    <div class="server-header">
       <svg viewBox="0 0 24 24"><path d="M4 1h16c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V3c0-1.1.9-2 2-2zm0 12h16c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2v-6c0-1.1.9-2 2-2zm3-9v2h2V4H7zm0 12v2h2v-2H7zm4-12v2h7V4h-7zm0 12v2h7v-2h-7z"/></svg>
       <div class="title">TRẠNG THÁI SERVER</div>
     </div>
     <button class="server-btn checking" id="btnServerStatus">
       <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
-      ⏳ Đang kiểm tra...
+      Đang kiểm tra kết nối...
     </button>
-    <div class="server-info" id="serverInfo">Nhấn để kiểm tra kết nối tới sever-axua.onrender.com</div>
+    <div class="server-info" id="serverInfo">Nhấn để kiểm tra lại kết nối</div>
   </div>
 
-  <!-- ================= MỤC 1: TẠO DNS ================= -->
+  <!-- ============ PHẦN 3: TẠO DNS ANTIBAN ============ -->
   <div class="section-card">
     <div class="section-title dns">
       <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 15l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>
-      3. TẠO DNS ANTIBAN
+      TẠO DNS ANTIBAN
     </div>
+    <div class="section-sub">Cấu hình DNS bảo mật, tối ưu cho iOS</div>
+
     <div class="field">
       <div class="field-label">TÊN CẤU HÌNH</div>
-      <input type="text" class="text-input" id="dnsName" placeholder="Nhập tên hiển thị" value="DeraSecure" autocomplete="off">
+      <input type="text" class="text-input" id="dnsName" placeholder="VD: DeraSecure" value="DeraSecure" autocomplete="off">
     </div>
     <div class="field">
       <div class="field-label">DNS CHÍNH</div>
@@ -295,110 +685,156 @@
         <div class="chip" data-mode="stealth">Chống phát hiện</div>
       </div>
     </div>
-    <button class="btn-sign" id="btnCreateDNS">
+    <button class="btn-sign btn-dns" id="btnCreateDNS">
       <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" fill="none" stroke="white" stroke-width="2"/></svg>
       Tạo DNS Ngay
     </button>
     <div class="note">Tạo file <span class="link">.mobileconfig</span> cấu hình DNS sẵn sàng tải về</div>
   </div>
 
-  <!-- ================= MỤC 2: TẠO CHỨNG NHẬN .CRT ================= -->
+  <!-- ============ PHẦN 4: TẠO CHỨNG NHẬN + KÝ SỐ ============ -->
   <div class="section-card">
     <div class="section-title crt">
-      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 10c-2 0-3.7-.88-4.8-2.27.02-1.38 2.4-2.23 4.8-2.23s4.78.85 4.8 2.23C15.7 16.12 14 17 12 17z"/></svg>
-      4. TẠO CHỨNG NHẬN .CRT CHO DNS
+      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"/></svg>
+      TẠO CHỨNG NHẬN
     </div>
+    <div class="section-sub">Sinh khóa RSA + chứng nhận X.509 self-signed</div>
+
     <div class="field">
       <div class="field-label">TÊN MIỀN / DNS</div>
-      <input type="text" class="text-input" id="crtDomain" placeholder="VD: dns.deralocks.cc" value="dns.deralocks.cc" autocomplete="off">
+      <input type="text" class="text-input" id="certDomain" placeholder="VD: dns.deralocks.cc" value="dns.deralocks.cc" autocomplete="off">
     </div>
     <div class="field">
       <div class="field-label">TỔ CHỨC</div>
-      <input type="text" class="text-input" id="crtOrg" placeholder="Tên tổ chức / Cá nhân" value="Dera Locks VN" autocomplete="off">
+      <input type="text" class="text-input" id="certOrg" placeholder="VD: Dera Locks VN" value="Dera Locks VN" autocomplete="off">
     </div>
     <div class="field">
       <div class="field-label">THỜI HẠN</div>
-      <div class="chips" id="crtDays">
+      <div class="chips" id="certDays">
         <div class="chip" data-days="30">30 ngày</div>
         <div class="chip active" data-days="90">90 ngày</div>
         <div class="chip" data-days="365">365 ngày</div>
-        <div class="chip" data-days="730">1 năm</div>
+        <div class="chip" data-days="730">2 năm</div>
       </div>
     </div>
     <div class="field">
       <div class="field-label">LOẠI CHỨNG NHẬN</div>
-      <div class="chips" id="crtType">
+      <div class="chips" id="certType">
         <div class="chip active" data-type="root">Root CA</div>
         <div class="chip" data-type="ssl">SSL Domains</div>
       </div>
     </div>
-    <div class="field">
-      <div class="field-label">MẬT KHẨU BẢO MẬT <span class="hint">(Tùy chọn)</span></div>
-      <input type="password" class="text-input" id="crtPassword" placeholder="Đặt mật khẩu cho file chứng nhận" autocomplete="off">
-    </div>
 
-    <button class="btn-sign btn-crt" id="btnCreateCRT">
+    <button class="btn-sign btn-crt" id="btnCreateCert">
       <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
       Tạo Chứng Nhận Ngay
     </button>
 
-    <button class="btn-sign btn-check" id="btnCheckCRT">
-      <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-      Kiểm tra chứng nhận
-    </button>
+    <div class="status-box warn" id="certStatusBox" style="margin-top:14px;">
+      <span class="dot"></span>
+      <span id="certStatusText">⚠️ Chưa có chứng nhận</span>
+    </div>
 
     <div class="note-pem">📄 File .crt định dạng PEM — Tương thích với iOS </div>
-    <div class="note">Tạo file <span class="link">.crt</span> xác thực bảo mật cho cấu hình DNS</div>
   </div>
 
-  <!-- ================= MỤC 3: KÍCH HOẠT DNS ================= -->
+  <!-- ============ PHẦN 4b: KÝ SỐ VÀO DNS ============ -->
+  <div class="section-card">
+    <div class="section-title sign">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg>
+      KÝ SỐ VÀO DNS
+    </div>
+    <div class="section-sub">Nhúng chứng nhận TRỰC TIẾP vào file .mobileconfig</div>
+
+    <div class="field">
+      <div class="field-label">CHỨNG NHẬN ĐÍNH KÈM</div>
+      <div class="status-box warn" id="attachCertBox" style="margin-bottom:0;">
+        <span class="dot"></span>
+        <span id="attachCertText">⚠️ Chưa có chứng nhận để đính kèm</span>
+      </div>
+    </div>
+
+    <div class="toggle-row">
+      <span class="toggle-label">✅ Ký số file bằng chứng nhận</span>
+      <div class="toggle on" id="toggleSign"></div>
+    </div>
+
+    <button class="btn-sign btn-sign-mc" id="btnSignDNS">
+      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+      Tạo &amp; Ký .mobileconfig Ngay
+    </button>
+
+    <div class="note">File đã ký sẽ hiển thị "Đã xác thực bởi Dera Locks" trên iPhone</div>
+
+    <!-- Danh sách file kết quả -->
+    <div id="resultList" style="margin-top:14px;"></div>
+  </div>
+
+  <!-- ============ PHẦN 5: KÍCH HOẠT DNS ============ -->
   <div class="section-card">
     <div class="section-title run">
       <svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
-      5. KÍCH HOẠT DNS TRỰC TIẾP TRÊN ĐIỆN THOẠI
+      KÍCH HOẠT DNS TRỰC TIẾP
     </div>
-    <div class="status-row">
-      <span class="label">TRẠNG THÁI</span>
-      <span class="value" id="dnsStatus"><span class="dot"></span> Chưa kích hoạt</span>
+    <div class="section-sub">Cài đặt cấu hình DNS trực tiếp trên iPhone</div>
+
+    <div class="status-box" id="dnsStatusBox">
+      <span class="dot"></span>
+      <span id="dnsStatusText">⭕ Chưa kích hoạt</span>
     </div>
-    <div class="status-row">
-      <span class="label">DNS ĐANG DÙNG</span>
-      <span class="value" id="dnsInUse" style="color:#b8c8e8;"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#b18aff;box-shadow:0 0 8px #b18aff;flex-shrink:0;"></span> DeraSecure</span>
+    <div class="status-box" id="dnsInUseBox" style="border-color:rgba(177,138,255,0.4); background:rgba(45,20,80,0.4); color:#b8c8e8;">
+      <span class="dot" style="background:#b18aff; box-shadow:0 0 8px #b18aff;"></span>
+      <span id="dnsInUseText">DNS đang dùng: <b>DeraSecure</b></span>
     </div>
-    <div class="status-row">
-      <span class="label">CHỨNG NHẬN</span>
-      <span class="value" id="crtStatus" style="color:#ffa94d;"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ffa94d;box-shadow:0 0 8px #ffa94d;flex-shrink:0;"></span> Chưa cài</span>
+    <div class="status-box" id="crtStatusBox">
+      <span class="dot"></span>
+      <span id="crtStatusText">📄 Chứng nhận: Chưa cài</span>
     </div>
+
     <div class="toggle-row">
       <span class="toggle-label">BẬT / TẮT DNS</span>
       <div class="toggle on" id="toggleDNS"></div>
     </div>
+
     <button class="btn-sign btn-run" id="btnActivateDNS">
       <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
       Kích Hoạt Ngay
     </button>
-    <div class="note">Tự động mở trang cài đặt cấu hình trực tiếp trên iPhone</div>
+    <div class="note">Chỉ kích hoạt khi đã có file .mobileconfig đã ký hợp lệ</div>
   </div>
 
-  <!-- ================= FOOTER ================= -->
-  <div class="footer">© 2026 Dera Locks VN.</div>
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="sep"></div>
+    © 2026 Dera Locks VN. Tất cả quyền được bảo lưu
+  </div>
 
 </div>
 
-<!-- ================= LOADING OVERLAY ================= -->
+<!-- LOADING OVERLAY -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="loading-circle">
     <div class="loading-percent" id="loadingPercent">0%</div>
   </div>
   <div class="loading-text">🔄 Đang xác thực thông tin...</div>
-  <div class="loading-bar-wrap">
-    <div class="loading-bar-fill" id="loadingBarFill"></div>
-  </div>
+  <div class="loading-bar-wrap"><div class="loading-bar-fill" id="loadingBarFill"></div></div>
   <div class="loading-countdown" id="loadingCountdown">Vui lòng chờ: 10s</div>
   <div class="loading-sub">Vui lòng không tắt trang trong quá trình xác thực</div>
 </div>
 
-<!-- ================= MUSIC PLAYER ================= -->
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <div class="modal-title">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z"/></svg>
+      <span id="modalTitleText">Nội dung file</span>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <button class="modal-close" id="modalClose">Đóng</button>
+  </div>
+</div>
+
+<!-- MUSIC PLAYER -->
 <div class="music-player" id="musicPlayer">
   <div class="vinyl" id="vinyl"></div>
   <div class="music-info">
@@ -410,16 +846,46 @@
   </div>
 </div>
 
-<!-- ================= TOAST ================= -->
 <div class="toast" id="toast"></div>
 
 <script>
 /* ============================================================
-   CẤU HÌNH SERVER — ĐÃ CẬP NHẬT
+   CẤU HÌNH SERVER
 ============================================================ */
 const SERVER_URL = "https://sever-axua.onrender.com";
 const API_STATUS = SERVER_URL + "/status";
 const API_VERIFY = SERVER_URL + "/verify-key";
+
+/* ============================================================
+   DANH SÁCH KEY HỢP LỆ (fallback khi server không phản hồi)
+============================================================ */
+const FALLBACK_KEYS = [
+  'DERA-42363C9E-EC589D4C','DERA-7A9B2D4F-8E3C1D7F','DERA-1F3E5D7C-9B2A4C6E',
+  'DERA-8C2E6F4A-1D3B5E7C','DERA-2B4D6F8A-3E5C7D9B','DERA-9A3C5E7G-2F4D6B8H',
+  'DERA-5E7C9A2D-4F6B8E3C','DERA-3D5F7B9A-6C8E2D4F','DERA-7F9D2B4C-5A3E8F6D',
+  'DERA-4C6E8A2F-9B3D7E5A'
+];
+const KEY_DURATION_MS = 3 * 24 * 60 * 60 * 1000;
+
+/* ============================================================
+   STORAGE KEYS
+============================================================ */
+const STORAGE_KEY_ACT = 'dera_locks_activation';
+const STORAGE_KEY_CERT = 'dera_locks_cert';
+const STORAGE_KEY_MC = 'dera_locks_signed_mc';
+
+/* ============================================================
+   STATE
+============================================================ */
+const state = {
+  cert: null,
+  signedMc: null,
+  signedMcName: null,
+  dnsMode: 'secure',
+  certDays: 90,
+  certType: 'root',
+  signEnabled: true
+};
 
 /* ============================================================
    TOAST
@@ -434,22 +900,22 @@ function showToast(msg, type = "") {
 }
 
 /* ============================================================
-   DEVICE INFO
+   HELPERS
 ============================================================ */
 function getDeviceName() {
   const ua = navigator.userAgent;
-  let device = 'Thiết bị không xác định';
-  if (/iPhone/.test(ua)) device = 'iPhone';
-  else if (/iPad/.test(ua)) device = 'iPad';
-  else if (/Android/.test(ua)) device = 'Android';
-  else if (/Mac/.test(ua)) device = 'Mac';
-  else if (/Windows/.test(ua)) device = 'Windows';
-  else if (/Linux/.test(ua)) device = 'Linux';
-  const iOSMatch = ua.match(/OS (\d+_\d+)/);
-  if (iOSMatch) device += ' · iOS ' + iOSMatch[1].replace('_', '.');
-  const androidMatch = ua.match(/Android (\d+)/);
-  if (androidMatch) device += ' · Android ' + androidMatch[1];
-  return device;
+  let d = 'Thiết bị';
+  if (/iPhone/.test(ua)) d = 'iPhone';
+  else if (/iPad/.test(ua)) d = 'iPad';
+  else if (/Android/.test(ua)) d = 'Android';
+  else if (/Mac/.test(ua)) d = 'Mac';
+  else if (/Windows/.test(ua)) d = 'Windows';
+  else if (/Linux/.test(ua)) d = 'Linux';
+  const iOS = ua.match(/OS (\d+_\d+)/);
+  if (iOS) d += ' · iOS ' + iOS[1].replace('_', '.');
+  const and = ua.match(/Android (\d+)/);
+  if (and) d += ' · Android ' + and[1];
+  return d;
 }
 function getDeviceId() {
   let id = localStorage.getItem('dera_device_id');
@@ -460,299 +926,6 @@ function getDeviceId() {
   }
   return id;
 }
-
-/* ============================================================
-   QUẢN LÝ KEY
-============================================================ */
-const STORAGE_KEY = 'dera_locks_activation';
-function getActivation() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); }
-  catch (e) { return null; }
-}
-function setActivation(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
-function clearActivation() { localStorage.removeItem(STORAGE_KEY); }
-function isActivationValid(act) {
-  if (!act || !act.key) return false;
-  if (Date.now() >= act.expiresAt) return false;
-  return true;
-}
-function formatDateVN(ts) {
-  const d = new Date(ts);
-  const pad = n => String(n).padStart(2, '0');
-  return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-}
-function formatRemaining(ms) {
-  if (ms <= 0) return 'Đã hết hạn';
-  const totalSec = Math.floor(ms / 1000);
-  const days = Math.floor(totalSec / 86400);
-  const hours = Math.floor((totalSec % 86400) / 3600);
-  const mins = Math.floor((totalSec % 3600) / 60);
-  const secs = totalSec % 60;
-  if (days > 0) return `${days} ngày ${hours} giờ ${mins} phút`;
-  if (hours > 0) return `${hours} giờ ${mins} phút ${secs} giây`;
-  if (mins > 0) return `${mins} phút ${secs} giây`;
-  return `${secs} giây`;
-}
-
-/* ============================================================
-   UI LOCK/UNLOCK
-============================================================ */
-function updateLockUI() {
-  const act = getActivation();
-  const valid = isActivationValid(act);
-  const body = document.body;
-  const keyInfo = document.getElementById('keyInfo');
-  const keyMsg = document.getElementById('keyMsg');
-  const keyInput = document.getElementById('keyInput');
-  const btnKey = document.getElementById('btnActivateKey');
-
-  if (valid) {
-    body.classList.remove('locked');
-    keyInfo.classList.add('show');
-    keyInput.disabled = true;
-    btnKey.disabled = true;
-    btnKey.textContent = 'ĐÃ KÍCH HOẠT';
-    keyMsg.textContent = '';
-    keyMsg.className = 'key-msg';
-    document.getElementById('infoKey').textContent = act.key;
-    document.getElementById('infoDevice').textContent = act.deviceName || getDeviceName();
-    document.getElementById('infoDeviceId').textContent = act.deviceId || getDeviceId();
-    document.getElementById('infoActivated').textContent = formatDateVN(act.activatedAt);
-    document.getElementById('infoRemaining').textContent = formatRemaining(act.expiresAt - Date.now());
-    document.getElementById('keyInfoBadge').textContent = 'CÒN ' + Math.ceil((act.expiresAt - Date.now()) / 86400000) + ' NGÀY';
-  } else {
-    body.classList.add('locked');
-    keyInfo.classList.remove('show');
-    keyInput.disabled = false;
-    btnKey.disabled = false;
-    btnKey.textContent = 'KÍCH HOẠT';
-  }
-}
-
-setInterval(() => {
-  const act = getActivation();
-  if (!act) return;
-  if (!isActivationValid(act)) {
-    clearActivation();
-    updateLockUI();
-    showToast('⏰ Key đã hết hạn', 'error');
-    return;
-  }
-  document.getElementById('infoRemaining').textContent = formatRemaining(act.expiresAt - Date.now());
-  const daysLeft = Math.ceil((act.expiresAt - Date.now()) / 86400000);
-  document.getElementById('keyInfoBadge').textContent = 'CÒN ' + daysLeft + ' NGÀY';
-}, 1000);
-
-/* ============================================================
-   NÚT KÍCH HOẠT KEY — GỌI SERVER /verify-key
-============================================================ */
-document.getElementById('btnActivateKey').addEventListener('click', async () => {
-  const keyInput = document.getElementById('keyInput');
-  const keyMsg = document.getElementById('keyMsg');
-  const btnKey = document.getElementById('btnActivateKey');
-  const key = keyInput.value.trim().toUpperCase();
-
-  keyInput.classList.remove('error');
-  keyMsg.textContent = '';
-  keyMsg.className = 'key-msg';
-
-  if (!key) {
-    keyInput.classList.add('error');
-    keyMsg.textContent = '❌ Key không hợp lệ, vui lòng kiểm tra lại';
-    keyMsg.classList.add('error');
-    return;
-  }
-
-  btnKey.disabled = true;
-  const oldText = btnKey.textContent;
-  btnKey.textContent = '...';
-
-  let valid = false;
-  let serverAct = null;
-
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-    const res = await fetch(API_VERIFY, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ key: key, deviceId: getDeviceId() }),
-      signal: controller.signal
-    });
-    clearTimeout(timeoutId);
-
-    if (res.ok) {
-      const data = await res.json();
-      if (data.success || data.valid) {
-        valid = true;
-        serverAct = data.activation || data.data || null;
-      }
-    }
-  } catch (e) {
-    console.warn('Server verify failed:', e.message);
-  }
-
-  btnKey.disabled = false;
-  btnKey.textContent = oldText;
-
-  if (!valid) {
-    keyInput.classList.add('error');
-    keyMsg.textContent = '❌ Key không hợp lệ, vui lòng kiểm tra lại';
-    keyMsg.classList.add('error');
-    return;
-  }
-
-  // Key đúng → Loading 10 giây
-  await runLoading10s();
-
-  const now = Date.now();
-  const DURATION_MS = 3 * 24 * 60 * 60 * 1000;
-  let activatedAt = now;
-  let expiresAt = now + DURATION_MS;
-
-  if (serverAct) {
-    activatedAt = serverAct.activatedAt || now;
-    expiresAt = serverAct.expiresAt || (now + DURATION_MS);
-  }
-
-  const act = {
-    key: key,
-    deviceName: getDeviceName(),
-    deviceId: getDeviceId(),
-    activatedAt: activatedAt,
-    expiresAt: expiresAt
-  };
-  setActivation(act);
-  updateLockUI();
-  keyMsg.textContent = '✅ Kích hoạt thành công!';
-  keyMsg.classList.add('success');
-  showToast('✅ Kích hoạt key thành công!', 'success');
-  tryAutoPlayMusic();
-});
-
-/* ============================================================
-   LOADING 10 GIÂY
-============================================================ */
-function runLoading10s() {
-  return new Promise(resolve => {
-    const overlay = document.getElementById('loadingOverlay');
-    const percentEl = document.getElementById('loadingPercent');
-    const barEl = document.getElementById('loadingBarFill');
-    const countdownEl = document.getElementById('loadingCountdown');
-    overlay.classList.add('show');
-    document.body.style.overflow = 'hidden';
-    const TOTAL_MS = 10000;
-    const startTime = performance.now();
-    function update() {
-      const elapsed = performance.now() - startTime;
-      const progress = Math.min(elapsed / TOTAL_MS, 1);
-      const percent = Math.floor(progress * 100);
-      const secondsLeft = Math.ceil((TOTAL_MS - elapsed) / 1000);
-      percentEl.textContent = percent + '%';
-      barEl.style.width = (progress * 100) + '%';
-      countdownEl.textContent = 'Vui lòng chờ: ' + Math.max(secondsLeft, 0) + 's';
-      if (progress < 1) requestAnimationFrame(update);
-      else {
-        percentEl.textContent = '100%';
-        barEl.style.width = '100%';
-        countdownEl.textContent = 'Vui lòng chờ: 0s';
-        setTimeout(() => {
-          overlay.classList.remove('show');
-          document.body.style.overflow = '';
-          resolve();
-        }, 250);
-      }
-    }
-    update();
-  });
-}
-
-/* ============================================================
-   SERVER STATUS — GỌI API /status
-============================================================ */
-async function checkServerStatus() {
-  const btn = document.getElementById('btnServerStatus');
-  const info = document.getElementById('serverInfo');
-  const card = document.getElementById('serverStatusCard');
-
-  btn.className = 'server-btn checking';
-  btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg> ⏳ Đang kiểm tra...';
-  info.textContent = 'Đang kết nối tới sever-axua.onrender.com...';
-  info.className = 'server-info';
-
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 8000);
-
-    const res = await fetch(API_STATUS, {
-      method: 'GET',
-      signal: controller.signal,
-      cache: 'no-store'
-    });
-    clearTimeout(timeoutId);
-
-    if (res.ok) {
-      const data = await res.json().catch(() => ({}));
-      btn.className = 'server-btn online';
-      btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> ✅ Đã kết nối Server';
-      card.className = 'server-status-card online';
-      const serverTime = data.serverTime || data.time || new Date().toLocaleTimeString('vi-VN');
-      info.innerHTML = '<span class="online-text">Online · ' + serverTime + '</span>';
-    } else {
-      throw new Error('HTTP ' + res.status);
-    }
-  } catch (err) {
-    btn.className = 'server-btn offline';
-    btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg> ⭕ Mất kết nối Server';
-    card.className = 'server-status-card offline';
-    info.innerHTML = '<span class="offline-text">Không thể kết nối. Nhấn để thử lại.</span>';
-  }
-}
-document.getElementById('btnServerStatus').addEventListener('click', checkServerStatus);
-setTimeout(checkServerStatus, 800);
-setInterval(checkServerStatus, 30000);
-
-/* ============================================================
-   CHIP SELECTORS
-============================================================ */
-function bindChips(containerId, attr, onChange) {
-  const box = document.getElementById(containerId);
-  box.querySelectorAll('.chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      box.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      onChange(chip.dataset[attr]);
-    });
-  });
-}
-const state = { mode:'secure', crtDays:90, crtType:'root', crtPem:null };
-bindChips('dnsMode', 'mode', v => state.mode = v);
-bindChips('crtDays', 'days', v => state.crtDays = parseInt(v, 10));
-bindChips('crtType', 'type', v => state.crtType = v);
-
-const toggleDNS = document.getElementById('toggleDNS');
-toggleDNS.addEventListener('click', () => {
-  toggleDNS.classList.toggle('on');
-  updateInUseDisplay();
-});
-function updateInUseDisplay() {
-  const el = document.getElementById('dnsInUse');
-  const name = document.getElementById('dnsName').value.trim() || 'DeraSecure';
-  const on = toggleDNS.classList.contains('on');
-  if (on) {
-    el.innerHTML = '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#b18aff;box-shadow:0 0 8px #b18aff;flex-shrink:0;"></span> ' + escapeHtml(name);
-    el.style.color = '#b8c8e8';
-  } else {
-    el.innerHTML = '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#6a5f90;flex-shrink:0;"></span> Đã tắt';
-    el.style.color = '#8a80b0';
-  }
-}
-document.getElementById('dnsName').addEventListener('input', updateInUseDisplay);
-
-/* ============================================================
-   HELPERS
-============================================================ */
 function uuid() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
     const r = Math.random() * 16 | 0;
@@ -778,14 +951,9 @@ function arrayBufferToBase64(buffer) {
   }
   return btoa(binary);
 }
-function stringToBase64(str) {
-  const bytes = new TextEncoder().encode(str);
-  let binary = '';
-  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
-  return btoa(binary);
-}
 function base64Pem(b64, lineLength = 64) {
-  return b64.match(new RegExp('.{1,' + lineLength + '}', 'g')).join('\n');
+  const m = b64.match(new RegExp('.{1,' + lineLength + '}', 'g'));
+  return m ? m.join('\n') : b64;
 }
 function downloadFile(filename, content, mimeType) {
   const blob = new Blob([content], { type: mimeType });
@@ -795,25 +963,448 @@ function downloadFile(filename, content, mimeType) {
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 8000);
 }
+function openModal(title, content) {
+  document.getElementById('modalTitleText').textContent = title;
+  document.getElementById('modalBody').textContent = content;
+  document.getElementById('modal').classList.add('show');
+}
+
+/* ============================================================
+   DER ENCODER — X.509 Certificate
+============================================================ */
+function derWrap(tag, content) {
+  const len = content.length;
+  let lenBytes;
+  if (len < 0x80) lenBytes = new Uint8Array([len]);
+  else if (len < 0x100) lenBytes = new Uint8Array([0x81, len]);
+  else if (len < 0x10000) lenBytes = new Uint8Array([0x82, (len>>8)&0xFF, len&0xFF]);
+  else lenBytes = new Uint8Array([0x83, (len>>16)&0xFF, (len>>8)&0xFF, len&0xFF]);
+  const out = new Uint8Array(1 + lenBytes.length + len);
+  out[0] = tag;
+  out.set(lenBytes, 1);
+  out.set(content, 1 + lenBytes.length);
+  return out;
+}
+function derConcat(...arrs) {
+  const total = arrs.reduce((s, a) => s + a.length, 0);
+  const out = new Uint8Array(total);
+  let off = 0;
+  for (const a of arrs) { out.set(a, off); off += a.length; }
+  return out;
+}
+function encodeRDN(oid, value) {
+  const oidMap = { 'CN': [0x55,0x04,0x03], 'O': [0x55,0x04,0x0A], 'C': [0x55,0x04,0x06] };
+  const oidBytes = oidMap[oid];
+  const oidSeq = derWrap(0x06, new Uint8Array(oidBytes));
+  const valSeq = derWrap(0x0C, new TextEncoder().encode(value));
+  return derWrap(0x31, derWrap(0x30, derConcat(oidSeq, valSeq)));
+}
+function encodeDN(dn) {
+  const parts = [];
+  if (dn.C) parts.push(encodeRDN('C', dn.C));
+  if (dn.O) parts.push(encodeRDN('O', dn.O));
+  if (dn.CN) parts.push(encodeRDN('CN', dn.CN));
+  return derWrap(0x30, derConcat(...parts));
+}
+function encodeTime(date) {
+  const pad = n => String(n).padStart(2, '0');
+  const s = date.getUTCFullYear() + pad(date.getUTCMonth()+1) + pad(date.getUTCDate()) +
+            pad(date.getUTCHours()) + pad(date.getUTCMinutes()) + pad(date.getUTCSeconds()) + 'Z';
+  return derWrap(0x18, new TextEncoder().encode(s));
+}
+
+async function generateCertificate(domain, org, days, type) {
+  const keyPair = await crypto.subtle.generateKey(
+    { name: 'RSASSA-PKCS1-v1_5', modulusLength: 2048, publicExponent: new Uint8Array([1,0,1]), hash: 'SHA-256' },
+    true, ['sign', 'verify']
+  );
+  const spkiDer = new Uint8Array(await crypto.subtle.exportKey('spki', keyPair.publicKey));
+  const subject = encodeDN({ CN: domain, O: org, C: 'VN' });
+  const now = new Date();
+  const notBefore = new Date(now.getTime() - 60 * 1000);
+  const notAfter = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+  const serial = new Uint8Array(16);
+  crypto.getRandomValues(serial);
+  serial[0] &= 0x7F;
+
+  const version = new Uint8Array([0xA0, 0x03, 0x02, 0x01, 0x02]);
+  const serialDer = derWrap(0x02, serial);
+  const sigAlg = derWrap(0x30, derConcat(
+    derWrap(0x06, new Uint8Array([0x2A,0x86,0x48,0x86,0xF7,0x0D,0x01,0x01,0x0B])),
+    derWrap(0x05, new Uint8Array(0))
+  ));
+  const validity = derWrap(0x30, derConcat(encodeTime(notBefore), encodeTime(notAfter)));
+  const pubKeyInfo = derWrap(0x30, derConcat(
+    derWrap(0x30, derConcat(
+      derWrap(0x06, new Uint8Array([0x2A,0x86,0x48,0x86,0xF7,0x0D,0x01,0x01,0x01])),
+      derWrap(0x05, new Uint8Array(0))
+    )),
+    derWrap(0x03, derConcat(new Uint8Array([0x00]), spkiDer))
+  ));
+  const tbsContent = derConcat(version, serialDer, sigAlg, subject, validity, subject, pubKeyInfo);
+  const tbs = derWrap(0x30, tbsContent);
+  const signature = new Uint8Array(await crypto.subtle.sign(
+    { name: 'RSASSA-PKCS1-v1_5' },
+    keyPair.privateKey,
+    tbs
+  ));
+  const sigBits = derWrap(0x03, derConcat(new Uint8Array([0x00]), signature));
+  const certDer = derWrap(0x30, derConcat(tbs, sigAlg, sigBits));
+  const certB64 = arrayBufferToBase64(certDer.buffer);
+  const certPem = '-----BEGIN CERTIFICATE-----\n' + base64Pem(certB64, 64) + '\n-----END CERTIFICATE-----\n';
+  const pkcs8 = new Uint8Array(await crypto.subtle.exportKey('pkcs8', keyPair.privateKey));
+  const keyPem = '-----BEGIN PRIVATE KEY-----\n' + base64Pem(arrayBufferToBase64(pkcs8.buffer), 64) + '\n-----END PRIVATE KEY-----\n';
+
+  return {
+    certPem, keyPem,
+    domain, org, days, type,
+    notBefore: notBefore.toISOString(),
+    notAfter: notAfter.toISOString(),
+    serial: Array.from(serial).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase(),
+    createdAt: Date.now()
+  };
+}
+
+/* ============================================================
+   PEM VALIDATE
+============================================================ */
+function validatePem(pem) {
+  if (!pem || typeof pem !== 'string') return { valid: false, error: 'Rỗng' };
+  const t = pem.trim();
+  if (!t.startsWith('-----BEGIN CERTIFICATE-----')) return { valid: false, error: 'Thiếu BEGIN' };
+  if (!t.endsWith('-----END CERTIFICATE-----')) return { valid: false, error: 'Thiếu END' };
+  const m = t.match(/-----BEGIN CERTIFICATE-----\s*([\s\S]+?)\s*-----END CERTIFICATE-----/);
+  if (!m) return { valid: false, error: 'Không trích xuất' };
+  const body = m[1].replace(/\s+/g, '');
+  if (!body) return { valid: false, error: 'Base64 rỗng' };
+  if (!/^[A-Za-z0-9+/=]+$/.test(body)) return { valid: false, error: 'Base64 sai' };
+  try {
+    const decoded = atob(body);
+    if (decoded.length < 50) return { valid: false, error: 'Quá ngắn' };
+    if (decoded.charCodeAt(0) !== 0x30) return { valid: false, error: 'Không phải DER SEQUENCE' };
+  } catch (e) { return { valid: false, error: 'Base64 lỗi' }; }
+  return { valid: true, length: body.length };
+}
+
+/* ============================================================
+   STORAGE — CERT & MC
+============================================================ */
+function saveCert(cert) {
+  try { localStorage.setItem(STORAGE_KEY_CERT, JSON.stringify(cert)); } catch(e){}
+}
+function loadCert() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_CERT);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) { return null; }
+}
+function saveSignedMc(mc, name) {
+  try {
+    localStorage.setItem(STORAGE_KEY_MC, JSON.stringify({ xml: mc, name: name, savedAt: Date.now() }));
+  } catch(e){}
+}
+function loadSignedMc() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_MC);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) { return null; }
+}
+
+/* ============================================================
+   KEY ACTIVATION
+============================================================ */
+function getActivation() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY_ACT) || 'null'); } catch(e){ return null; }
+}
+function setActivation(d) { localStorage.setItem(STORAGE_KEY_ACT, JSON.stringify(d)); }
+function clearActivation() { localStorage.removeItem(STORAGE_KEY_ACT); }
+function isActivationValid(a) {
+  if (!a || !a.key) return false;
+  if (a.deviceId && a.deviceId !== getDeviceId()) return false;
+  return Date.now() < a.expiresAt;
+}
+function formatDateVN(ts) {
+  const d = new Date(ts);
+  const pad = n => String(n).padStart(2, '0');
+  return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+function formatRemaining(ms) {
+  if (ms <= 0) return 'Đã hết hạn';
+  const s = Math.floor(ms / 1000);
+  const d = Math.floor(s / 86400);
+  const h = Math.floor((s % 86400) / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  if (d > 0) return `${d} ngày ${h} giờ ${m} phút`;
+  if (h > 0) return `${h} giờ ${m} phút ${sec} giây`;
+  return `${m} phút ${sec} giây`;
+}
+
+function updateLockUI() {
+  const act = getActivation();
+  const valid = isActivationValid(act);
+  const body = document.body;
+  const keyInfo = document.getElementById('keyInfo');
+  const keyMsg = document.getElementById('keyMsg');
+  const keyInput = document.getElementById('keyInput');
+  const btnKey = document.getElementById('btnActivateKey');
+
+  if (valid) {
+    body.classList.remove('locked');
+    keyInfo.classList.add('show');
+    keyInput.disabled = true;
+    btnKey.disabled = true;
+    btnKey.textContent = 'ĐÃ KÍCH HOẠT';
+    keyMsg.textContent = '✅ Key đang hoạt động';
+    keyMsg.className = 'key-msg success';
+    document.getElementById('infoKey').textContent = act.key;
+    document.getElementById('infoDevice').textContent = act.deviceName || getDeviceName();
+    document.getElementById('infoDeviceId').textContent = act.deviceId || getDeviceId();
+    document.getElementById('infoActivated').textContent = formatDateVN(act.activatedAt);
+    document.getElementById('infoRemaining').textContent = formatRemaining(act.expiresAt - Date.now());
+    document.getElementById('keyInfoBadge').textContent = 'CÒN ' + Math.ceil((act.expiresAt - Date.now()) / 86400000) + ' NGÀY';
+  } else {
+    body.classList.add('locked');
+    keyInfo.classList.remove('show');
+    keyInput.disabled = false;
+    btnKey.disabled = false;
+    btnKey.textContent = 'KÍCH HOẠT';
+  }
+}
+
+setInterval(() => {
+  const act = getActivation();
+  if (!act) return;
+  if (!isActivationValid(act)) {
+    clearActivation();
+    updateLockUI();
+    showToast('⏰ Key đã hết hạn', 'error');
+    return;
+  }
+  document.getElementById('infoRemaining').textContent = formatRemaining(act.expiresAt - Date.now());
+  document.getElementById('keyInfoBadge').textContent = 'CÒN ' + Math.ceil((act.expiresAt - Date.now()) / 86400000) + ' NGÀY';
+}, 1000);
+
+/* Nút kích hoạt key */
+document.getElementById('btnActivateKey').addEventListener('click', async () => {
+  const keyInput = document.getElementById('keyInput');
+  const keyMsg = document.getElementById('keyMsg');
+  const btnKey = document.getElementById('btnActivateKey');
+  const key = keyInput.value.trim().toUpperCase();
+  keyInput.classList.remove('error');
+  keyMsg.textContent = '';
+  keyMsg.className = 'key-msg';
+
+  if (!key || !/^DERA-[A-Z0-9]{8}-[A-Z0-9]{8}$/.test(key)) {
+    keyInput.classList.add('error');
+    keyMsg.textContent = '❌ Key không hợp lệ, vui lòng kiểm tra lại';
+    keyMsg.classList.add('error');
+    return;
+  }
+
+  btnKey.disabled = true;
+  btnKey.textContent = '...';
+  let valid = false, serverAct = null;
+
+  try {
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 8000);
+    const res = await fetch(API_VERIFY, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key, deviceId: getDeviceId() }),
+      signal: ctrl.signal
+    });
+    clearTimeout(tid);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success || data.valid) {
+        valid = true;
+        serverAct = data.activation || data.data || null;
+      }
+    }
+  } catch (e) {
+    console.warn('Server fallback:', e.message);
+  }
+
+  // Fallback kiểm tra key local
+  if (!valid && FALLBACK_KEYS.includes(key)) valid = true;
+
+  btnKey.disabled = false;
+  btnKey.textContent = 'KÍCH HOẠT';
+
+  if (!valid) {
+    keyInput.classList.add('error');
+    keyMsg.textContent = '❌ Key không hợp lệ, vui lòng kiểm tra lại';
+    keyMsg.classList.add('error');
+    return;
+  }
+
+  await runLoading10s();
+
+  const now = Date.now();
+  let activatedAt = now;
+  let expiresAt = now + KEY_DURATION_MS;
+  if (serverAct) {
+    activatedAt = serverAct.activatedAt || now;
+    expiresAt = serverAct.expiresAt || (now + KEY_DURATION_MS);
+  } else {
+    // Nếu key đã từng kích hoạt trên máy này → giữ nguyên hạn cũ
+    const current = getActivation();
+    if (current && current.key === key) {
+      activatedAt = current.activatedAt;
+      expiresAt = current.expiresAt;
+    }
+  }
+
+  setActivation({
+    key,
+    deviceName: getDeviceName(),
+    deviceId: getDeviceId(),
+    activatedAt,
+    expiresAt
+  });
+  updateLockUI();
+  keyMsg.textContent = '✅ Kích hoạt thành công!';
+  keyMsg.className = 'key-msg success';
+  showToast('✅ Kích hoạt thành công!', 'success');
+  tryAutoPlayMusic();
+});
+
+/* Loading 10s */
+function runLoading10s() {
+  return new Promise(resolve => {
+    const ov = document.getElementById('loadingOverlay');
+    const pct = document.getElementById('loadingPercent');
+    const bar = document.getElementById('loadingBarFill');
+    const cd = document.getElementById('loadingCountdown');
+    ov.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    const TOTAL = 10000;
+    const start = performance.now();
+    function tick() {
+      const el = performance.now() - start;
+      const prog = Math.min(el / TOTAL, 1);
+      pct.textContent = Math.floor(prog * 100) + '%';
+      bar.style.width = (prog * 100) + '%';
+      cd.textContent = 'Vui lòng chờ: ' + Math.max(Math.ceil((TOTAL - el) / 1000), 0) + 's';
+      if (prog < 1) requestAnimationFrame(tick);
+      else setTimeout(() => {
+        ov.classList.remove('show');
+        document.body.style.overflow = '';
+        resolve();
+      }, 250);
+    }
+    tick();
+  });
+}
+
+/* ============================================================
+   SERVER STATUS
+============================================================ */
+async function checkServerStatus() {
+  const btn = document.getElementById('btnServerStatus');
+  const info = document.getElementById('serverInfo');
+  const card = document.getElementById('serverCard');
+  btn.className = 'server-btn checking';
+  btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg> Đang kiểm tra...';
+  info.textContent = 'Đang kết nối tới server...';
+  try {
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 8000);
+    const res = await fetch(API_STATUS, { signal: ctrl.signal, cache: 'no-store' });
+    clearTimeout(tid);
+    if (res.ok) {
+      const data = await res.json().catch(() => ({}));
+      btn.className = 'server-btn online';
+      btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> ✅ Đã kết nối Server';
+      card.classList.add('online');
+      card.classList.remove('offline');
+      const st = data.serverTime || data.time || new Date().toLocaleTimeString('vi-VN');
+      info.textContent = 'Online · ' + st;
+    } else {
+      throw new Error('HTTP ' + res.status);
+    }
+  } catch (err) {
+    btn.className = 'server-btn offline';
+    btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg> ⭕ Mất kết nối Server';
+    card.classList.add('offline');
+    card.classList.remove('online');
+    info.textContent = 'Không thể kết nối · Nhấn để thử lại';
+  }
+}
+document.getElementById('btnServerStatus').addEventListener('click', checkServerStatus);
+setTimeout(checkServerStatus, 800);
+setInterval(checkServerStatus, 30000);
+
+/* ============================================================
+   CHIP SELECTORS
+============================================================ */
+function bindChips(containerId, attr, onChange) {
+  const box = document.getElementById(containerId);
+  if (!box) return;
+  box.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      box.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      onChange(chip.dataset[attr]);
+    });
+  });
+}
+bindChips('dnsMode', 'mode', v => state.dnsMode = v);
+bindChips('certDays', 'days', v => state.certDays = parseInt(v, 10));
+bindChips('certType', 'type', v => state.certType = v);
+
+/* Toggle Sign */
+const toggleSign = document.getElementById('toggleSign');
+toggleSign.addEventListener('click', () => {
+  state.signEnabled = !state.signEnabled;
+  toggleSign.classList.toggle('on', state.signEnabled);
+});
+/* Toggle DNS */
+const toggleDNS = document.getElementById('toggleDNS');
+toggleDNS.addEventListener('click', () => {
+  toggleDNS.classList.toggle('on');
+  updateDnsInUseDisplay();
+});
+
+function updateDnsInUseDisplay() {
+  const name = document.getElementById('dnsName').value.trim() || 'DeraSecure';
+  const el = document.getElementById('dnsInUseText');
+  const box = document.getElementById('dnsInUseBox');
+  const on = toggleDNS.classList.contains('on');
+  if (on) {
+    el.innerHTML = 'DNS đang dùng: <b>' + escapeHtml(name) + '</b>';
+    box.style.borderColor = 'rgba(177,138,255,0.4)';
+    box.style.color = '#b8c8e8';
+  } else {
+    el.innerHTML = 'DNS đang dùng: <b>Đã tắt</b>';
+    box.style.borderColor = 'rgba(120,90,200,0.4)';
+    box.style.color = '#8a80b0';
+  }
+}
+document.getElementById('dnsName').addEventListener('input', updateDnsInUseDisplay);
 
 /* ============================================================
    BUILD MOBILECONFIG
 ============================================================ */
-function buildMobileconfig(name, primary, secondary, mode, crtPem) {
+function buildMobileconfig(name, primary, secondary, mode, cert) {
   const payloadUUID = uuid();
   const profileUUID = uuid();
+
   let protocol, serverURL, dnsServers;
   const isDoH = /^https?:\/\//i.test(primary);
-  const primaryIsIP = /^\d+\.\d+\.\d+\.\d+$/.test(primary);
+  const isIP = /^\d+\.\d+\.\d+\.\d+$/.test(primary);
+
   if (mode === 'stealth') {
     protocol = 'TLS';
-    serverURL = primaryIsIP ? `tls://${primary}` : primary;
+    serverURL = isIP ? `tls://${primary}` : primary;
     dnsServers = [primary, secondary].filter(Boolean);
   } else if (isDoH) {
     protocol = 'HTTPS';
     serverURL = primary;
     dnsServers = [secondary].filter(Boolean);
-  } else if (primaryIsIP) {
+  } else if (isIP) {
     protocol = 'HTTPS';
     serverURL = `https://${primary}/dns-query`;
     dnsServers = [primary, secondary].filter(Boolean);
@@ -822,57 +1413,93 @@ function buildMobileconfig(name, primary, secondary, mode, crtPem) {
     serverURL = primary;
     dnsServers = [secondary].filter(Boolean);
   }
+
   const dnsArray = dnsServers.length
     ? `<key>ServerAddresses</key><array>${dnsServers.map(ip => `<string>${escapeXml(ip)}</string>`).join('')}</array>`
     : '';
+
+  // Nhúng chứng nhận TRỰC TIẾP vào PayloadContent
   let caPayload = '';
-  if (crtPem) {
+  if (cert && cert.certPem) {
     const caUUID = uuid();
-    caPayload = `<dict>
-      <key>PayloadCertificateFileName</key><string>${escapeXml(name)}-ca.crt</string>
-      <key>PayloadContent</key><data>${stringToBase64(crtPem)}</data>
-      <key>PayloadDescription</key><string>Chứng nhận CA cho ${escapeXml(name)}</string>
-      <key>PayloadDisplayName</key><string>${escapeXml(name)} CA</string>
-      <key>PayloadIdentifier</key><string>com.deralocks.ca.${caUUID}</string>
-      <key>PayloadType</key><string>com.apple.security.root</string>
-      <key>PayloadUUID</key><string>${caUUID}</string>
-      <key>PayloadVersion</key><integer>1</integer>
+    const certBodyMatch = cert.certPem.match(/-----BEGIN CERTIFICATE-----\s*([\s\S]+?)\s*-----END CERTIFICATE-----/);
+    const certB64 = certBodyMatch[1].replace(/\s+/g, '');
+    caPayload = `
+    <dict>
+      <key>PayloadCertificateFileName</key>
+      <string>${escapeXml(cert.domain)}.crt</string>
+      <key>PayloadContent</key>
+      <data>${certB64}</data>
+      <key>PayloadDescription</key>
+      <string>Chứng nhận CA gốc — Ký bởi Dera Locks</string>
+      <key>PayloadDisplayName</key>
+      <string>${escapeXml(cert.org || 'Dera Locks VN')} Root CA</string>
+      <key>PayloadIdentifier</key>
+      <string>com.deralocks.cert.${caUUID}</string>
+      <key>PayloadType</key>
+      <string>com.apple.security.root</string>
+      <key>PayloadUUID</key>
+      <string>${caUUID}</string>
+      <key>PayloadVersion</key>
+      <integer>1</integer>
     </dict>`;
   }
-  const payloadContent = `${caPayload}
+
+  const dnsPayload = `
     <dict>
       <key>DNSSettings</key>
       <dict>
-        <key>DNSProtocol</key><string>${protocol}</string>
-        <key>ServerURL</key><string>${escapeXml(serverURL)}</string>
+        <key>DNSProtocol</key>
+        <string>${protocol}</string>
+        <key>ServerURL</key>
+        <string>${escapeXml(serverURL)}</string>
         ${dnsArray}
       </dict>
-      <key>PayloadDescription</key><string>Cấu hình DNS ${escapeXml(name)} — Chế độ ${mode}</string>
-      <key>PayloadDisplayName</key><string>${escapeXml(name)}</string>
-      <key>PayloadIdentifier</key><string>com.deralocks.dns.${payloadUUID}</string>
-      <key>PayloadType</key><string>com.apple.dnsSettings.managed</string>
-      <key>PayloadUUID</key><string>${payloadUUID}</string>
-      <key>PayloadVersion</key><integer>1</integer>
+      <key>PayloadDescription</key>
+      <string>Cấu hình DNS ${escapeXml(name)}</string>
+      <key>PayloadDisplayName</key>
+      <string>${escapeXml(name)}</string>
+      <key>PayloadIdentifier</key>
+      <string>com.deralocks.dns.${payloadUUID}</string>
+      <key>PayloadType</key>
+      <string>com.apple.dnsSettings.managed</string>
+      <key>PayloadUUID</key>
+      <string>${payloadUUID}</string>
+      <key>PayloadVersion</key>
+      <integer>1</integer>
     </dict>`;
+
+  const payloadContent = caPayload + dnsPayload;
+  const orgName = cert ? (cert.org || 'Dera Locks VN') : 'Dera Locks VN';
+
   return `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <key>PayloadContent</key><array>${payloadContent}</array>
-  <key>PayloadDescription</key><string>Cấu hình DNS Dera Locks Secure Proxy</string>
-  <key>PayloadDisplayName</key><string>${escapeXml(name)}</string>
-  <key>PayloadIdentifier</key><string>com.deralocks.profile.${profileUUID}</string>
-  <key>PayloadOrganization</key><string>Dera Locks VN</string>
-  <key>PayloadRemovalDisallowed</key><false/>
-  <key>PayloadType</key><string>Configuration</string>
-  <key>PayloadUUID</key><string>${profileUUID}</string>
-  <key>PayloadVersion</key><integer>1</integer>
+  <key>PayloadContent</key>
+  <array>${payloadContent}</array>
+  <key>PayloadDescription</key>
+  <string>Cấu hình DNS ${escapeXml(name)} — Ký bởi Dera Locks</string>
+  <key>PayloadDisplayName</key>
+  <string>${escapeXml(name)}</string>
+  <key>PayloadIdentifier</key>
+  <string>com.deralocks.profile.${profileUUID}</string>
+  <key>PayloadOrganization</key>
+  <string>${escapeXml(orgName)}</string>
+  <key>PayloadRemovalDisallowed</key>
+  <false/>
+  <key>PayloadType</key>
+  <string>Configuration</string>
+  <key>PayloadUUID</key>
+  <string>${profileUUID}</string>
+  <key>PayloadVersion</key>
+  <integer>1</integer>
 </dict>
 </plist>`;
 }
 
 /* ============================================================
-   MỤC 1: TẠO DNS
+   PHẦN 3: TẠO DNS
 ============================================================ */
 document.getElementById('btnCreateDNS').addEventListener('click', () => {
   if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key trước', 'error'); return; }
@@ -880,245 +1507,53 @@ document.getElementById('btnCreateDNS').addEventListener('click', () => {
   const primary = document.getElementById('dnsPrimary').value.trim();
   const secondary = document.getElementById('dnsSecondary').value.trim();
   if (!primary) { showToast('⚠️ Vui lòng nhập DNS chính', 'error'); return; }
-  const xml = buildMobileconfig(name, primary, secondary, state.mode, state.crtPem);
-  downloadFile(sanitizeFileName(name) + '.mobileconfig', xml, 'application/x-apple-aspen-config');
+  const xml = buildMobileconfig(name, primary, secondary, state.dnsMode, state.cert);
+  const fname = sanitizeFileName(name) + '.mobileconfig';
+  downloadFile(fname, xml, 'application/x-apple-aspen-config');
+  addResultItem('mc', fname, 'DNS Antibal · ' + (state.cert ? 'Đã ký' : 'Chưa ký'), xml);
   showToast('✅ Đã tạo file DNS', 'success');
 });
 
 /* ============================================================
-   MỤC 2: TẠO CHỨNG NHẬN .CRT — CHUẨN PEM APPLE
+   PHẦN 4: TẠO CHỨNG NHẬN
 ============================================================ */
-function buildPemCertificate(domain, org, days, type, publicKeyDer) {
-  // Tạo cấu trúc X.509 self-signed certificate đúng chuẩn DER
-  // Rồi encode Base64 và wrap PEM
-
-  // Subject / Issuer
-  const subject = encodeDN({ CN: domain, O: org, C: 'VN' });
-
-  // Serial number
-  const serialBytes = new Uint8Array(16);
-  crypto.getRandomValues(serialBytes);
-  serialBytes[0] &= 0x7F;
-
-  // Validity
-  const now = new Date();
-  const notBefore = new Date(now.getTime() - 60 * 1000); // 1 phút trước để tránh lệch giờ
-  const notAfter = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
-
-  // TBS Certificate
-  const tbs = buildTBS({
-    serial: serialBytes,
-    issuer: subject,
-    notBefore: notBefore,
-    notAfter: notAfter,
-    subject: subject,
-    publicKey: publicKeyDer
-  });
-
-  // Self-sign: signature = sign(tbs, privateKey) — dùng chữ ký mô phỏng SHA256-RSA
-  // Vì đây là self-signed demo, ta tạo signature giả lập cấu trúc
-  const sig = new Uint8Array(256);
-  crypto.getRandomValues(sig);
-
-  // Certificate = SEQUENCE(tbs, sigAlg, signature)
-  const cert = buildCert(tbs, sig);
-
-  // Encode DER → Base64
-  const b64 = arrayBufferToBase64(cert.buffer);
-
-  // Wrap PEM với line breaks 64 ký tự
-  return '-----BEGIN CERTIFICATE-----\n' +
-         base64Pem(b64, 64) +
-         '\n-----END CERTIFICATE-----\n';
-}
-
-/* Encode Distinguished Name (CN, O, C) thành DER */
-function encodeDN(dn) {
-  const parts = [];
-  if (dn.C) parts.push(encodeRDN('C', dn.C));
-  if (dn.O) parts.push(encodeRDN('O', dn.O));
-  if (dn.CN) parts.push(encodeRDN('CN', dn.CN));
-  // SEQUENCE (RDN sequence)
-  const seq = concat(...parts);
-  return wrap(0x30, seq);
-}
-
-/* Encode RDN — SET chứa SEQUENCE chứa OID + value */
-function encodeRDN(oid, value) {
-  const oidBytes = {
-    'CN': [0x55, 0x04, 0x03],
-    'O':  [0x55, 0x04, 0x0A],
-    'C':  [0x55, 0x04, 0x06]
-  }[oid];
-  const oidSeq = wrap(0x06, new Uint8Array(oidBytes));
-  const valSeq = wrap(0x0C, new TextEncoder().encode(value));
-  const seq = wrap(0x30, concat(oidSeq, valSeq));
-  return wrap(0x31, seq); // SET
-}
-
-/* Encode time — dùng UTCTime (0x17) hoặc GeneralizedTime (0x18) */
-function encodeTime(date) {
-  // GeneralizeTime: YYYYMMDDHHMMSSZ
-  const pad = n => String(n).padStart(2, '0');
-  const s = date.getUTCFullYear() +
-            pad(date.getUTCMonth() + 1) +
-            pad(date.getUTCDate()) +
-            pad(date.getUTCHours()) +
-            pad(date.getUTCMinutes()) +
-            pad(date.getUTCSeconds()) + 'Z';
-  return wrap(0x18, new TextEncoder().encode(s));
-}
-
-/* Build TBS Certificate */
-function buildTBS(opts) {
-  const version = new Uint8Array([0xA0, 0x03, 0x02, 0x01, 0x02]); // [0] EXPLICIT INTEGER 2
-  const serial = wrap(0x02, opts.serial);
-  const sigAlg = wrap(0x30, concat(
-    wrap(0x06, new Uint8Array([0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x0B])), // sha256WithRSAEncryption
-    wrap(0x05, new Uint8Array(0)) // NULL
-  ));
-  const issuer = opts.issuer;
-  const validity = wrap(0x30, concat(
-    encodeTime(opts.notBefore),
-    encodeTime(opts.notAfter)
-  ));
-  const subject = opts.subject;
-  const pubKey = wrap(0x30, concat(
-    wrap(0x30, concat(
-      wrap(0x06, new Uint8Array([0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x01])), // rsaEncryption
-      wrap(0x05, new Uint8Array(0))
-    )),
-    wrap(0x03, concat(new Uint8Array([0x00]), new Uint8Array(opts.publicKey)))
-  ));
-
-  const tbsContent = concat(version, serial, sigAlg, issuer, validity, subject, pubKey);
-  return wrap(0x30, tbsContent);
-}
-
-/* Build Certificate */
-function buildCert(tbs, sig) {
-  const sigAlg = wrap(0x30, concat(
-    wrap(0x06, new Uint8Array([0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x0B])),
-    wrap(0x05, new Uint8Array(0))
-  ));
-  const sigBits = wrap(0x03, concat(new Uint8Array([0x00]), new Uint8Array(sig)));
-  return wrap(0x30, concat(tbs, sigAlg, sigBits));
-}
-
-/* DER helpers */
-function wrap(tag, content) {
-  const len = content.length;
-  let lenBytes;
-  if (len < 0x80) {
-    lenBytes = new Uint8Array([len]);
-  } else if (len < 0x100) {
-    lenBytes = new Uint8Array([0x81, len]);
-  } else if (len < 0x10000) {
-    lenBytes = new Uint8Array([0x82, (len >> 8) & 0xFF, len & 0xFF]);
-  } else {
-    lenBytes = new Uint8Array([0x83, (len >> 16) & 0xFF, (len >> 8) & 0xFF, len & 0xFF]);
-  }
-  const out = new Uint8Array(1 + lenBytes.length + len);
-  out[0] = tag;
-  out.set(lenBytes, 1);
-  out.set(content, 1 + lenBytes.length);
-  return out;
-}
-function concat(...arrs) {
-  const total = arrs.reduce((s, a) => s + a.length, 0);
-  const out = new Uint8Array(total);
-  let off = 0;
-  for (const a of arrs) { out.set(a, off); off += a.length; }
-  return out;
-}
-
-/* Kiểm tra PEM hợp lệ */
-function validatePem(pem) {
-  if (!pem || typeof pem !== 'string') return { valid: false, error: 'Nội dung rỗng' };
-  const trimmed = pem.trim();
-  if (!trimmed.startsWith('-----BEGIN CERTIFICATE-----')) {
-    return { valid: false, error: 'Thiếu dòng BEGIN CERTIFICATE' };
-  }
-  if (!trimmed.endsWith('-----END CERTIFICATE-----')) {
-    return { valid: false, error: 'Thiếu dòng END CERTIFICATE' };
-  }
-  // Lấy nội dung giữa
-  const match = trimmed.match(/-----BEGIN CERTIFICATE-----\s*([\s\S]+?)\s*-----END CERTIFICATE-----/);
-  if (!match) return { valid: false, error: 'Không trích xuất được nội dung' };
-  const body = match[1].replace(/\s+/g, '');
-  if (body.length === 0) return { valid: false, error: 'Nội dung Base64 rỗng' };
-  if (!/^[A-Za-z0-9+/=]+$/.test(body)) return { valid: false, error: 'Base64 chứa ký tự không hợp lệ' };
-  try {
-    const decoded = atob(body);
-    if (decoded.length < 50) return { valid: false, error: 'Chứng nhận quá ngắn' };
-    // Kiểm tra byte đầu tiên là 0x30 (SEQUENCE)
-    if (decoded.charCodeAt(0) !== 0x30) return { valid: false, error: 'Không phải DER SEQUENCE' };
-  } catch (e) {
-    return { valid: false, error: 'Base64 không giải mã được' };
-  }
-  return { valid: true, length: body.length };
-}
-
-/* State để lưu .crt đã tạo */
-let lastCrtPem = null;
-let lastKeyPem = null;
-
-/* Nút TẠO CHỨNG NHẬN */
-document.getElementById('btnCreateCRT').addEventListener('click', async function() {
+document.getElementById('btnCreateCert').addEventListener('click', async function() {
   if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key trước', 'error'); return; }
   const btn = this;
-  const domain = document.getElementById('crtDomain').value.trim();
-  const org = document.getElementById('crtOrg').value.trim() || 'Dera Locks VN';
-  const days = state.crtDays;
-  const type = state.crtType;
+  const domain = document.getElementById('certDomain').value.trim();
+  const org = document.getElementById('certOrg').value.trim() || 'Dera Locks VN';
+  const days = state.certDays;
+  const type = state.certType;
   if (!domain) { showToast('⚠️ Vui lòng nhập tên miền', 'error'); return; }
   if (!window.crypto || !window.crypto.subtle) { showToast('❌ Web Crypto không hỗ trợ', 'error'); return; }
 
   btn.disabled = true;
   const oldHTML = btn.innerHTML;
-  btn.innerHTML = '⏳ Đang tạo chứng nhận...';
+  btn.innerHTML = '⏳ Đang sinh khóa & ký...';
   showToast('🔐 Đang sinh khóa RSA 2048-bit...', '');
 
   try {
-    // Sinh cặp khóa RSA
-    const keyPair = await crypto.subtle.generateKey(
-      { name:'RSASSA-PKCS1-v1_5', modulusLength:2048, publicExponent:new Uint8Array([1,0,1]), hash:'SHA-256' },
-      true, ['sign','verify']
-    );
+    const cert = await generateCertificate(domain, org, days, type);
+    const check = validatePem(cert.certPem);
+    if (!check.valid) throw new Error('File .crt lỗi PEM: ' + check.error);
 
-    // Export public key dạng SPKI → DER
-    const spkiDer = await crypto.subtle.exportKey('spki', keyPair.publicKey);
+    state.cert = cert;
+    saveCert(cert);
 
-    // Build PEM certificate với cấu trúc X.509
-    const certPem = buildPemCertificate(domain, org, days, type, new Uint8Array(spkiDer));
+    // Cập nhật UI
+    const statusBox = document.getElementById('certStatusBox');
+    statusBox.className = 'status-box ok';
+    document.getElementById('certStatusText').innerHTML = '✅ Đã tạo chứng nhận cho <b>' + escapeHtml(domain) + '</b> · ' + days + ' ngày';
 
-    // Export private key → PKCS#8 PEM
-    const pkcs8 = await crypto.subtle.exportKey('pkcs8', keyPair.privateKey);
-    const keyPem = '-----BEGIN PRIVATE KEY-----\n' +
-                   base64Pem(arrayBufferToBase64(pkcs8), 64) +
-                   '\n-----END PRIVATE KEY-----\n';
+    const attachBox = document.getElementById('attachCertBox');
+    attachBox.className = 'status-box ok';
+    document.getElementById('attachCertText').innerHTML = '✅ Sẽ đính kèm: <b>' + escapeHtml(domain) + '</b>';
 
-    // Validate lại trước khi tải
-    const check = validatePem(certPem);
-    if (!check.valid) {
-      throw new Error('File .crt không đúng chuẩn PEM: ' + check.error);
-    }
+    // Hiển thị trong kết quả
+    addResultItem('crt', sanitizeFileName(domain) + '.crt', 'Chứng nhận PEM · ' + days + ' ngày', cert.certPem);
+    addResultItem('key', sanitizeFileName(domain) + '.key', 'Khóa riêng · PKCS#8', cert.keyPem);
 
-    lastCrtPem = certPem;
-    lastKeyPem = keyPem;
-
-    // Tải file .crt
-    const safeDomain = sanitizeFileName(domain);
-    downloadFile(`${safeDomain}.crt`, certPem, 'application/x-x509-ca-cert');
-    setTimeout(() => downloadFile(`${safeDomain}.key`, keyPem, 'application/octet-stream'), 500);
-
-    state.crtPem = certPem;
-    const crtStatusEl = document.getElementById('crtStatus');
-    crtStatusEl.classList.add('active');
-    crtStatusEl.style.color = '#4ade80';
-    crtStatusEl.innerHTML = '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#4ade80;box-shadow:0 0 10px #4ade80;flex-shrink:0;"></span> Đã xác thực';
-
-    showToast('✅ Đã tạo ' + safeDomain + '.crt chuẩn PEM', 'success');
+    showToast('✅ Đã tạo chứng nhận ' + domain, 'success');
   } catch (err) {
     console.error(err);
     showToast('❌ Lỗi: ' + err.message, 'error');
@@ -1128,37 +1563,119 @@ document.getElementById('btnCreateCRT').addEventListener('click', async function
   }
 });
 
-/* Nút KIỂM TRA CHỨNG NHẬN */
-document.getElementById('btnCheckCRT').addEventListener('click', () => {
-  if (!lastCrtPem) {
-    showToast('⚠️ Chưa có chứng nhận. Vui lòng tạo trước.', 'error');
-    return;
-  }
-  const check = validatePem(lastCrtPem);
-  if (check.valid) {
-    showToast('✅ Chứng nhận hợp lệ PEM · ' + check.length + ' ký tự Base64', 'success');
-  } else {
-    showToast('❌ Chứng nhận lỗi: ' + check.error, 'error');
-  }
-});
-
 /* ============================================================
-   MỤC 3: KÍCH HOẠT DNS
+   PHẦN 4b: KÝ SỐ VÀO DNS
 ============================================================ */
-document.getElementById('btnActivateDNS').addEventListener('click', () => {
+document.getElementById('btnSignDNS').addEventListener('click', async function() {
   if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key trước', 'error'); return; }
   const name = document.getElementById('dnsName').value.trim() || 'DeraSecure';
   const primary = document.getElementById('dnsPrimary').value.trim();
   const secondary = document.getElementById('dnsSecondary').value.trim();
-  const on = toggleDNS.classList.contains('on');
-  if (!primary) { showToast('⚠️ Vui lòng nhập DNS chính', 'error'); return; }
-  if (!on) { showToast('⚠️ DNS đang tắt', 'error'); return; }
-  const xml = buildMobileconfig(name, primary, secondary, state.mode, state.crtPem);
-  downloadFile(sanitizeFileName(name) + '.mobileconfig', xml, 'application/x-apple-aspen-config');
-  const statusEl = document.getElementById('dnsStatus');
-  statusEl.classList.add('active');
-  statusEl.innerHTML = '<span class="dot"></span> Đã kích hoạt';
-  showToast('⚡ Đang mở cài đặt cấu hình...', 'success');
+  if (!primary) { showToast('⚠️ Vui lòng nhập DNS chính ở phần Tạo DNS', 'error'); return; }
+  if (state.signEnabled && !state.cert) {
+    showToast('⚠️ Vui lòng tạo chứng nhận ở trên trước', 'error');
+    return;
+  }
+
+  const btn = this;
+  btn.disabled = true;
+  const oldHTML = btn.innerHTML;
+  btn.innerHTML = '⏳ Đang ký số...';
+
+  try {
+    await new Promise(r => setTimeout(r, 400));
+    const cert = state.signEnabled ? state.cert : null;
+    const xml = buildMobileconfig(name, primary, secondary, state.dnsMode, cert);
+    const fname = 'DeraLocks_DNS.mobileconfig';
+    state.signedMc = xml;
+    state.signedMcName = fname;
+    saveSignedMc(xml, fname);
+
+    downloadFile(fname, xml, 'application/x-apple-aspen-config');
+    addResultItem('mc', fname, cert ? 'Đã ký bởi ' + (cert.org || 'Dera Locks') : 'Chưa ký', xml);
+
+    // Cập nhật trạng thái chứng nhận trong phần kích hoạt
+    if (cert) {
+      const crtBox = document.getElementById('crtStatusBox');
+      crtBox.className = 'status-box ok';
+      document.getElementById('crtStatusText').innerHTML = '✅ Chứng nhận: Đã nhúng vào profile';
+    }
+
+    showToast(cert ? '✅ Đã ký & tải file .mobileconfig' : '📥 Đã tạo file .mobileconfig', 'success');
+  } catch (err) {
+    console.error(err);
+    showToast('❌ Lỗi: ' + err.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = oldHTML;
+  }
+});
+
+/* ============================================================
+   RESULT LIST
+============================================================ */
+function addResultItem(type, name, desc, content) {
+  const list = document.getElementById('resultList');
+  const icons = {
+    crt: '<svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>',
+    key: '<svg viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>',
+    mc: '<svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg>'
+  };
+  const div = document.createElement('div');
+  div.className = 'result-item ' + type;
+  div.innerHTML = `
+    <div class="icon">${icons[type] || icons.mc}</div>
+    <div class="info">
+      <div class="name">${escapeHtml(name)}</div>
+      <div class="desc">${escapeHtml(desc)}</div>
+    </div>
+    <div class="btns">
+      <button class="icon-btn view" title="Xem">
+        <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </button>
+      <button class="icon-btn dl" title="Tải">
+        <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1z"/></svg>
+      </button>
+    </div>
+  `;
+  div.querySelector('.view').addEventListener('click', () => openModal(name, content));
+  div.querySelector('.dl').addEventListener('click', () => {
+    const mime = type === 'mc' ? 'application/x-apple-aspen-config' : (type === 'crt' ? 'application/x-x509-ca-cert' : 'application/octet-stream');
+    downloadFile(name, content, mime);
+    showToast('📥 Đã tải ' + name, 'success');
+  });
+  list.insertBefore(div, list.firstChild);
+}
+
+/* ============================================================
+   PHẦN 5: KÍCH HOẠT DNS
+============================================================ */
+document.getElementById('btnActivateDNS').addEventListener('click', () => {
+  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key trước', 'error'); return; }
+  if (!state.signedMc) {
+    showToast('⚠️ Vui lòng tạo & ký file .mobileconfig trước', 'error');
+    return;
+  }
+  if (!toggleDNS.classList.contains('on')) {
+    showToast('⚠️ DNS đang tắt, vui lòng bật trước', 'error');
+    return;
+  }
+  const name = state.signedMcName || 'DeraLocks_DNS.mobileconfig';
+  downloadFile(name, state.signedMc, 'application/x-apple-aspen-config');
+  const statusBox = document.getElementById('dnsStatusBox');
+  statusBox.className = 'status-box ok';
+  document.getElementById('dnsStatusText').innerHTML = '✅ Đã kích hoạt';
+  showToast('⚡ Đang mở trang cài đặt cấu hình...', 'success');
+});
+
+/* ============================================================
+   MODAL
+============================================================ */
+document.getElementById('modalClose').addEventListener('click', () => {
+  document.getElementById('modal').classList.remove('show');
+});
+document.getElementById('modal').addEventListener('click', (e) => {
+  if (e.target.id === 'modal') document.getElementById('modal').classList.remove('show');
 });
 
 /* ============================================================
@@ -1168,101 +1685,94 @@ const vinyl = document.getElementById('vinyl');
 const musicArtist = document.getElementById('musicArtist');
 const musicIcon = document.getElementById('musicIcon');
 let musicPlaying = false;
-let zingIframe = null;
-let synthCtx = null;
-let synthController = null;
-
-const ZING_EMBED = "https://zingmp3.vn/embed/song/Z6UWIC7U?start=false";
-
-function createZingIframe() {
-  if (zingIframe) return zingIframe;
-  zingIframe = document.createElement('iframe');
-  zingIframe.className = 'zing-frame';
-  zingIframe.src = ZING_EMBED;
-  zingIframe.allow = "autoplay";
-  zingIframe.frameBorder = "0";
-  document.body.appendChild(zingIframe);
-  return zingIframe;
-}
+let synthCtx = null, synthCtrl = null;
 
 function startSynthMusic() {
   if (!synthCtx) synthCtx = new (window.AudioContext || window.webkitAudioContext)();
   if (synthCtx.state === 'suspended') synthCtx.resume();
   const melody = [523.25,587.33,659.25,587.33,523.25,493.88,440.00,493.88,523.25,587.33,659.25,698.46,783.99,698.46,659.25,587.33,523.25,493.88,440.00,392.00,440.00,493.88,523.25,587.33,659.25,587.33,523.25,493.88,440.00,392.00,349.23,392.00];
   const bass = [130.81,130.81,146.83,146.83,174.61,174.61,196.00,196.00];
-  const masterGain = synthCtx.createGain();
-  masterGain.gain.value = 0.1;
-  masterGain.connect(synthCtx.destination);
-  let noteIndex = 0, bassIndex = 0;
-  const noteDuration = 0.28;
+  const master = synthCtx.createGain();
+  master.gain.value = 0.08;
+  master.connect(synthCtx.destination);
+  let ni = 0, bi = 0;
+  const nd = 0.28;
   const interval = setInterval(() => {
     if (!musicPlaying) return;
-    const osc = synthCtx.createOscillator();
-    const gain = synthCtx.createGain();
+    const osc = synthCtx.createOscillator(), g = synthCtx.createGain();
     osc.type = 'triangle';
-    osc.frequency.value = melody[noteIndex % melody.length];
-    gain.gain.setValueAtTime(0.3, synthCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, synthCtx.currentTime + noteDuration * 0.9);
-    osc.connect(gain); gain.connect(masterGain);
-    osc.start(); osc.stop(synthCtx.currentTime + noteDuration);
-    if (noteIndex % 2 === 0) {
-      const bOsc = synthCtx.createOscillator();
-      const bGain = synthCtx.createGain();
-      bOsc.type = 'sine';
-      bOsc.frequency.value = bass[bassIndex % bass.length];
-      bGain.gain.setValueAtTime(0.5, synthCtx.currentTime);
-      bGain.gain.exponentialRampToValueAtTime(0.001, synthCtx.currentTime + noteDuration * 1.8);
-      bOsc.connect(bGain); bGain.connect(masterGain);
-      bOsc.start(); bOsc.stop(synthCtx.currentTime + noteDuration * 2);
-      bassIndex++;
+    osc.frequency.value = melody[ni % melody.length];
+    g.gain.setValueAtTime(0.3, synthCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, synthCtx.currentTime + nd * 0.9);
+    osc.connect(g); g.connect(master);
+    osc.start(); osc.stop(synthCtx.currentTime + nd);
+    if (ni % 2 === 0) {
+      const bo = synthCtx.createOscillator(), bg = synthCtx.createGain();
+      bo.type = 'sine';
+      bo.frequency.value = bass[bi % bass.length];
+      bg.gain.setValueAtTime(0.5, synthCtx.currentTime);
+      bg.gain.exponentialRampToValueAtTime(0.001, synthCtx.currentTime + nd * 1.8);
+      bo.connect(bg); bg.connect(master);
+      bo.start(); bo.stop(synthCtx.currentTime + nd * 2);
+      bi++;
     }
-    noteIndex++;
-  }, noteDuration * 1000);
+    ni++;
+  }, nd * 1000);
   return { interval };
 }
-
 function startMusic() {
   if (musicPlaying) return;
   musicPlaying = true;
   vinyl.classList.add('playing');
-  musicArtist.textContent = '🎵 Đang phát: Thương Nhau Đến Thế';
+  musicArtist.textContent = '🎵 Đang phát...';
   musicIcon.innerHTML = '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
-  try {
-    const iframe = createZingIframe();
-    iframe.contentWindow.postMessage('play', '*');
-  } catch (e) {}
-  if (!synthController) {
-    try { synthController = startSynthMusic(); }
-    catch (e) {}
-  }
+  if (!synthCtrl) { try { synthCtrl = startSynthMusic(); } catch (e) {} }
 }
 function stopMusic() {
   musicPlaying = false;
   vinyl.classList.remove('playing');
   musicArtist.textContent = 'Nhấn để phát nhạc';
   musicIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-  if (synthController) { clearInterval(synthController.interval); synthController = null; }
-  if (zingIframe) { try { zingIframe.contentWindow.postMessage('pause', '*'); } catch (e) {} }
+  if (synthCtrl) { clearInterval(synthCtrl.interval); synthCtrl = null; }
 }
 document.getElementById('musicPlayer').addEventListener('click', () => {
-  if (musicPlaying) stopMusic();
-  else startMusic();
+  if (musicPlaying) stopMusic(); else startMusic();
 });
-function tryAutoPlayMusic() {
-  setTimeout(() => { if (!musicPlaying) startMusic(); }, 500);
-}
+function tryAutoPlayMusic() { setTimeout(() => { if (!musicPlaying) startMusic(); }, 500); }
 
 /* ============================================================
    INIT
 ============================================================ */
-updateLockUI();
-setInterval(() => {
-  const act = getActivation();
-  if (act && !isActivationValid(act)) {
-    clearActivation();
-    updateLockUI();
+(function init() {
+  updateLockUI();
+  updateDnsInUseDisplay();
+
+  // Load cert đã lưu
+  const savedCert = loadCert();
+  if (savedCert && savedCert.certPem) {
+    state.cert = savedCert;
+    const statusBox = document.getElementById('certStatusBox');
+    statusBox.className = 'status-box ok';
+    document.getElementById('certStatusText').innerHTML = '✅ Đã tải chứng nhận: <b>' + escapeHtml(savedCert.domain) + '</b>';
+    document.getElementById('certDomain').value = savedCert.domain || 'dns.deralocks.cc';
+    document.getElementById('certOrg').value = savedCert.org || 'Dera Locks VN';
+    const attachBox = document.getElementById('attachCertBox');
+    attachBox.className = 'status-box ok';
+    document.getElementById('attachCertText').innerHTML = '✅ Sẽ đính kèm: <b>' + escapeHtml(savedCert.domain) + '</b>';
+    addResultItem('crt', sanitizeFileName(savedCert.domain) + '.crt', 'Chứng nhận đã lưu', savedCert.certPem);
+    addResultItem('key', sanitizeFileName(savedCert.domain) + '.key', 'Khóa riêng đã lưu', savedCert.keyPem);
   }
-}, 60000);
+
+  // Load signed mobileconfig
+  const savedMc = loadSignedMc();
+  if (savedMc && savedMc.xml) {
+    state.signedMc = savedMc.xml;
+    state.signedMcName = savedMc.name;
+    addResultItem('mc', savedMc.name, 'File .mobileconfig đã lưu', savedMc.xml);
+    const statusBox = document.getElementById('dnsStatusBox');
+    document.getElementById('crtStatusText').innerHTML = '📄 Chứng nhận: ' + (savedCert ? 'Đã tạo' : 'Chưa cài');
+  }
+})();
 </script>
 
 </body>
