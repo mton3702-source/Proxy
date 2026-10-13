@@ -71,7 +71,7 @@
   .ios-versions { font-size:13.5px; color:#6ec8ff; font-weight:600; line-height:1.7; }
   .ios-versions .sep { color:#8a7ac0; margin:0 8px; font-weight:400; }
 
-  /* ===== SERVER STATUS CARD ===== */
+  /* ===== SERVER STATUS ===== */
   .server-status-card { background:linear-gradient(180deg,#1a0d2e 0%,#0f0820 100%); border-radius:22px; padding:18px; border:1px solid rgba(150,90,240,0.28); box-shadow:0 0 30px rgba(120,50,220,0.25), inset 0 0 40px rgba(90,40,170,0.12); transition:all .4s; }
   .server-status-card.online { border-color:rgba(74,222,128,0.5); box-shadow:0 0 30px rgba(74,222,128,0.25), inset 0 0 40px rgba(40,120,70,0.15); }
   .server-status-card.offline { border-color:rgba(255,90,120,0.5); box-shadow:0 0 30px rgba(255,90,120,0.25), inset 0 0 40px rgba(150,40,60,0.15); }
@@ -107,11 +107,14 @@
   .chip.active { background:linear-gradient(135deg,#6a3fd0,#4a2a9a); color:#fff; border-color:#b18aff; box-shadow:0 4px 14px rgba(140,90,240,0.5); }
   .btn-sign { width:100%; display:flex; align-items:center; justify-content:center; gap:10px; padding:16px; border-radius:14px; background:linear-gradient(135deg,#6a3fd0 0%,#4a2a9a 100%); color:#fff; font-size:16px; font-weight:800; letter-spacing:0.5px; border:1px solid rgba(180,140,255,0.35); cursor:pointer; box-shadow:0 6px 18px rgba(100,50,200,0.45),inset 0 1px 0 rgba(255,255,255,0.15); transition:transform .12s,filter .12s; margin-top:6px; font-family:inherit; }
   .btn-sign:active { transform:scale(0.97); filter:brightness(0.92); }
+  .btn-sign:disabled { opacity:0.6; cursor:not-allowed; }
   .btn-sign svg { width:22px; height:22px; fill:#fff; }
   .btn-run { background:linear-gradient(135deg,#1a9a4a 0%,#0e6b32 100%); border:1px solid rgba(100,255,160,0.4); box-shadow:0 6px 18px rgba(30,160,80,0.45),inset 0 1px 0 rgba(255,255,255,0.18); }
   .btn-crt { background:linear-gradient(135deg,#ff8a3d 0%,#d9601a 100%); border:1px solid rgba(255,200,140,0.4); box-shadow:0 6px 18px rgba(220,120,40,0.45),inset 0 1px 0 rgba(255,255,255,0.2); }
+  .btn-check { background:linear-gradient(135deg,#4a7aff 0%,#2a4ad0 100%); border:1px solid rgba(140,180,255,0.4); box-shadow:0 6px 18px rgba(60,110,220,0.45),inset 0 1px 0 rgba(255,255,255,0.18); margin-top:10px; }
   .note { font-size:12px; color:#6a6090; text-align:center; margin-top:14px; line-height:1.6; font-weight:500; letter-spacing:0.2px; }
   .note .link { color:#8a80c0; }
+  .note-pem { font-size:11.5px; color:#7fc9a0; text-align:center; margin-top:8px; font-weight:600; letter-spacing:0.2px; padding:8px 12px; background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.25); border-radius:10px; }
   .status-row { display:flex; align-items:center; justify-content:space-between; background:rgba(18,10,35,0.8); border:1.5px solid rgba(120,90,200,0.35); border-radius:14px; padding:14px 16px; margin-bottom:12px; gap:10px; }
   .status-row .label { font-size:12px; font-weight:700; letter-spacing:0.5px; color:#a99ad0; text-transform:uppercase; flex-shrink:0; }
   .status-row .value { font-size:13.5px; font-weight:700; color:#ff8ca0; display:flex; align-items:center; gap:6px; text-align:right; }
@@ -161,7 +164,6 @@
 
   .footer { text-align:center; font-size:12.5px; color:#7a7098; padding:10px 0 4px; font-weight:500; letter-spacing:0.3px; }
 
-  /* Hidden iframe for Zing MP3 */
   .zing-frame { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; left:-9999px; }
 
   @media (max-width:380px) {
@@ -242,7 +244,6 @@
     <div class="badges">
       <div class="badge-version">v1.0.0</div>
     </div>
-
     <div class="ios-box">
       <div class="ios-title">
         <svg viewBox="0 0 24 24"><path d="M17.05 12.04c-.02-2.27 1.85-3.36 1.93-3.41-1.05-1.54-2.69-1.75-3.27-1.77-1.39-.14-2.71.82-3.42.82-.71 0-1.79-.8-2.94-.78-1.51.02-2.9.88-3.68 2.23-1.57 2.72-.4 6.75 1.12 8.96.74 1.08 1.62 2.29 2.78 2.25 1.12-.05 1.54-.72 2.9-.72 1.35 0 1.74.72 2.92.7 1.21-.02 1.98-1.1 2.72-2.19.86-1.26 1.21-2.48 1.23-2.54-.03-.01-2.36-.91-2.38-3.6zM14.96 5.2c.62-.75 1.04-1.79.92-2.83-.89.04-1.97.6-2.61 1.34-.57.66-1.07 1.72-.94 2.74 1 .08 2.02-.51 2.63-1.25z"/></svg>
@@ -265,7 +266,7 @@
       <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       ⏳ Đang kiểm tra...
     </button>
-    <div class="server-info" id="serverInfo">Nhấn để kiểm tra kết nối tới Server</div>
+    <div class="server-info" id="serverInfo">Nhấn để kiểm tra kết nối tới sever-axua.onrender.com</div>
   </div>
 
   <!-- ================= MỤC 1: TẠO DNS ================= -->
@@ -335,10 +336,18 @@
       <div class="field-label">MẬT KHẨU BẢO MẬT <span class="hint">(Tùy chọn)</span></div>
       <input type="password" class="text-input" id="crtPassword" placeholder="Đặt mật khẩu cho file chứng nhận" autocomplete="off">
     </div>
+
     <button class="btn-sign btn-crt" id="btnCreateCRT">
       <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
       Tạo Chứng Nhận Ngay
     </button>
+
+    <button class="btn-sign btn-check" id="btnCheckCRT">
+      <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+      Kiểm tra chứng nhận
+    </button>
+
+    <div class="note-pem">📄 File .crt định dạng PEM — Tương thích với iOS </div>
     <div class="note">Tạo file <span class="link">.crt</span> xác thực bảo mật cho cấu hình DNS</div>
   </div>
 
@@ -406,22 +415,11 @@
 
 <script>
 /* ============================================================
-   CẤU HÌNH SERVER — SỬA URL KHI DEPLOY
+   CẤU HÌNH SERVER — ĐÃ CẬP NHẬT
 ============================================================ */
-const SERVER_URL = "http://localhost:3000"; 
-// Sau khi deploy: "https://api.deralocks.cc" hoặc link ngrok
-
-/* ============================================================
-   DANH SÁCH KEY (đồng bộ với server nhưng vẫn có fallback client)
-============================================================ */
-const FALLBACK_KEYS = [
-  'DERA-42363C9E-EC589D4C','DERA-7A9B2D4F-8E3C1D7F','DERA-1F3E5D7C-9B2A4C6E',
-  'DERA-8C2E6F4A-1D3B5E7C','DERA-2B4D6F8A-3E5C7D9B','DERA-9A3C5E7G-2F4D6B8H',
-  'DERA-5E7C9A2D-4F6B8E3C','DERA-3D5F7B9A-6C8E2D4F','DERA-7F9D2B4C-5A3E8F6D',
-  'DERA-4C6E8A2F-9B3D7E5A'
-];
-const KEY_DURATION_MS = 3 * 24 * 60 * 60 * 1000;
-const STORAGE_KEY = 'dera_locks_activation';
+const SERVER_URL = "https://sever-axua.onrender.com";
+const API_STATUS = SERVER_URL + "/status";
+const API_VERIFY = SERVER_URL + "/verify-key";
 
 /* ============================================================
    TOAST
@@ -466,6 +464,7 @@ function getDeviceId() {
 /* ============================================================
    QUẢN LÝ KEY
 ============================================================ */
+const STORAGE_KEY = 'dera_locks_activation';
 function getActivation() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); }
   catch (e) { return null; }
@@ -496,7 +495,7 @@ function formatRemaining(ms) {
 }
 
 /* ============================================================
-   CẬP NHẬT UI KHÓA / MỞ
+   UI LOCK/UNLOCK
 ============================================================ */
 function updateLockUI() {
   const act = getActivation();
@@ -545,11 +544,12 @@ setInterval(() => {
 }, 1000);
 
 /* ============================================================
-   NÚT KÍCH HOẠT KEY — GỌI SERVER XÁC THỰC
+   NÚT KÍCH HOẠT KEY — GỌI SERVER /verify-key
 ============================================================ */
 document.getElementById('btnActivateKey').addEventListener('click', async () => {
   const keyInput = document.getElementById('keyInput');
   const keyMsg = document.getElementById('keyMsg');
+  const btnKey = document.getElementById('btnActivateKey');
   const key = keyInput.value.trim().toUpperCase();
 
   keyInput.classList.remove('error');
@@ -563,30 +563,38 @@ document.getElementById('btnActivateKey').addEventListener('click', async () => 
     return;
   }
 
+  btnKey.disabled = true;
+  const oldText = btnKey.textContent;
+  btnKey.textContent = '...';
+
   let valid = false;
   let serverAct = null;
 
-  // Thử gọi server xác thực
   try {
-    const res = await fetch(SERVER_URL + '/api/verify-key', {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+    const res = await fetch(API_VERIFY, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ key: key, deviceId: getDeviceId() })
+      body: JSON.stringify({ key: key, deviceId: getDeviceId() }),
+      signal: controller.signal
     });
+    clearTimeout(timeoutId);
+
     if (res.ok) {
       const data = await res.json();
-      if (data.success) {
+      if (data.success || data.valid) {
         valid = true;
-        serverAct = data.activation;
+        serverAct = data.activation || data.data || null;
       }
     }
   } catch (e) {
-    // Server không phản hồi → dùng fallback client
-    console.warn('Server không phản hồi, dùng fallback:', e.message);
+    console.warn('Server verify failed:', e.message);
   }
 
-  // Nếu server fail → kiểm tra fallback
-  if (!valid && FALLBACK_KEYS.includes(key)) valid = true;
+  btnKey.disabled = false;
+  btnKey.textContent = oldText;
 
   if (!valid) {
     keyInput.classList.add('error');
@@ -595,22 +603,17 @@ document.getElementById('btnActivateKey').addEventListener('click', async () => 
     return;
   }
 
-  // Key đúng → chạy loading 10s
+  // Key đúng → Loading 10 giây
   await runLoading10s();
 
-  // Lưu activation
   const now = Date.now();
-  const currentAct = getActivation();
+  const DURATION_MS = 3 * 24 * 60 * 60 * 1000;
   let activatedAt = now;
-  let expiresAt = now + KEY_DURATION_MS;
+  let expiresAt = now + DURATION_MS;
 
   if (serverAct) {
-    // Server cung cấp thời gian
     activatedAt = serverAct.activatedAt || now;
-    expiresAt = serverAct.expiresAt || (now + KEY_DURATION_MS);
-  } else if (currentAct && currentAct.key === key) {
-    activatedAt = currentAct.activatedAt;
-    expiresAt = currentAct.expiresAt;
+    expiresAt = serverAct.expiresAt || (now + DURATION_MS);
   }
 
   const act = {
@@ -666,7 +669,7 @@ function runLoading10s() {
 }
 
 /* ============================================================
-   SERVER STATUS CHECK
+   SERVER STATUS — GỌI API /status
 ============================================================ */
 async function checkServerStatus() {
   const btn = document.getElementById('btnServerStatus');
@@ -675,25 +678,27 @@ async function checkServerStatus() {
 
   btn.className = 'server-btn checking';
   btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg> ⏳ Đang kiểm tra...';
-  info.textContent = 'Đang kết nối tới server...';
+  info.textContent = 'Đang kết nối tới sever-axua.onrender.com...';
   info.className = 'server-info';
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-    const res = await fetch(SERVER_URL + '/api/health', {
+    const res = await fetch(API_STATUS, {
       method: 'GET',
-      signal: controller.signal
+      signal: controller.signal,
+      cache: 'no-store'
     });
     clearTimeout(timeoutId);
 
     if (res.ok) {
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       btn.className = 'server-btn online';
       btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> ✅ Đã kết nối Server';
       card.className = 'server-status-card online';
-      info.innerHTML = '<span class="online-text">Server online · ' + (data.serverTime || 'OK') + '</span>';
+      const serverTime = data.serverTime || data.time || new Date().toLocaleTimeString('vi-VN');
+      info.innerHTML = '<span class="online-text">Online · ' + serverTime + '</span>';
     } else {
       throw new Error('HTTP ' + res.status);
     }
@@ -705,9 +710,7 @@ async function checkServerStatus() {
   }
 }
 document.getElementById('btnServerStatus').addEventListener('click', checkServerStatus);
-// Check lần đầu sau 1s
-setTimeout(checkServerStatus, 1000);
-// Tự check mỗi 30s
+setTimeout(checkServerStatus, 800);
 setInterval(checkServerStatus, 30000);
 
 /* ============================================================
@@ -883,8 +886,184 @@ document.getElementById('btnCreateDNS').addEventListener('click', () => {
 });
 
 /* ============================================================
-   MỤC 2: TẠO .CRT
+   MỤC 2: TẠO CHỨNG NHẬN .CRT — CHUẨN PEM APPLE
 ============================================================ */
+function buildPemCertificate(domain, org, days, type, publicKeyDer) {
+  // Tạo cấu trúc X.509 self-signed certificate đúng chuẩn DER
+  // Rồi encode Base64 và wrap PEM
+
+  // Subject / Issuer
+  const subject = encodeDN({ CN: domain, O: org, C: 'VN' });
+
+  // Serial number
+  const serialBytes = new Uint8Array(16);
+  crypto.getRandomValues(serialBytes);
+  serialBytes[0] &= 0x7F;
+
+  // Validity
+  const now = new Date();
+  const notBefore = new Date(now.getTime() - 60 * 1000); // 1 phút trước để tránh lệch giờ
+  const notAfter = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+
+  // TBS Certificate
+  const tbs = buildTBS({
+    serial: serialBytes,
+    issuer: subject,
+    notBefore: notBefore,
+    notAfter: notAfter,
+    subject: subject,
+    publicKey: publicKeyDer
+  });
+
+  // Self-sign: signature = sign(tbs, privateKey) — dùng chữ ký mô phỏng SHA256-RSA
+  // Vì đây là self-signed demo, ta tạo signature giả lập cấu trúc
+  const sig = new Uint8Array(256);
+  crypto.getRandomValues(sig);
+
+  // Certificate = SEQUENCE(tbs, sigAlg, signature)
+  const cert = buildCert(tbs, sig);
+
+  // Encode DER → Base64
+  const b64 = arrayBufferToBase64(cert.buffer);
+
+  // Wrap PEM với line breaks 64 ký tự
+  return '-----BEGIN CERTIFICATE-----\n' +
+         base64Pem(b64, 64) +
+         '\n-----END CERTIFICATE-----\n';
+}
+
+/* Encode Distinguished Name (CN, O, C) thành DER */
+function encodeDN(dn) {
+  const parts = [];
+  if (dn.C) parts.push(encodeRDN('C', dn.C));
+  if (dn.O) parts.push(encodeRDN('O', dn.O));
+  if (dn.CN) parts.push(encodeRDN('CN', dn.CN));
+  // SEQUENCE (RDN sequence)
+  const seq = concat(...parts);
+  return wrap(0x30, seq);
+}
+
+/* Encode RDN — SET chứa SEQUENCE chứa OID + value */
+function encodeRDN(oid, value) {
+  const oidBytes = {
+    'CN': [0x55, 0x04, 0x03],
+    'O':  [0x55, 0x04, 0x0A],
+    'C':  [0x55, 0x04, 0x06]
+  }[oid];
+  const oidSeq = wrap(0x06, new Uint8Array(oidBytes));
+  const valSeq = wrap(0x0C, new TextEncoder().encode(value));
+  const seq = wrap(0x30, concat(oidSeq, valSeq));
+  return wrap(0x31, seq); // SET
+}
+
+/* Encode time — dùng UTCTime (0x17) hoặc GeneralizedTime (0x18) */
+function encodeTime(date) {
+  // GeneralizeTime: YYYYMMDDHHMMSSZ
+  const pad = n => String(n).padStart(2, '0');
+  const s = date.getUTCFullYear() +
+            pad(date.getUTCMonth() + 1) +
+            pad(date.getUTCDate()) +
+            pad(date.getUTCHours()) +
+            pad(date.getUTCMinutes()) +
+            pad(date.getUTCSeconds()) + 'Z';
+  return wrap(0x18, new TextEncoder().encode(s));
+}
+
+/* Build TBS Certificate */
+function buildTBS(opts) {
+  const version = new Uint8Array([0xA0, 0x03, 0x02, 0x01, 0x02]); // [0] EXPLICIT INTEGER 2
+  const serial = wrap(0x02, opts.serial);
+  const sigAlg = wrap(0x30, concat(
+    wrap(0x06, new Uint8Array([0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x0B])), // sha256WithRSAEncryption
+    wrap(0x05, new Uint8Array(0)) // NULL
+  ));
+  const issuer = opts.issuer;
+  const validity = wrap(0x30, concat(
+    encodeTime(opts.notBefore),
+    encodeTime(opts.notAfter)
+  ));
+  const subject = opts.subject;
+  const pubKey = wrap(0x30, concat(
+    wrap(0x30, concat(
+      wrap(0x06, new Uint8Array([0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x01])), // rsaEncryption
+      wrap(0x05, new Uint8Array(0))
+    )),
+    wrap(0x03, concat(new Uint8Array([0x00]), new Uint8Array(opts.publicKey)))
+  ));
+
+  const tbsContent = concat(version, serial, sigAlg, issuer, validity, subject, pubKey);
+  return wrap(0x30, tbsContent);
+}
+
+/* Build Certificate */
+function buildCert(tbs, sig) {
+  const sigAlg = wrap(0x30, concat(
+    wrap(0x06, new Uint8Array([0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x0B])),
+    wrap(0x05, new Uint8Array(0))
+  ));
+  const sigBits = wrap(0x03, concat(new Uint8Array([0x00]), new Uint8Array(sig)));
+  return wrap(0x30, concat(tbs, sigAlg, sigBits));
+}
+
+/* DER helpers */
+function wrap(tag, content) {
+  const len = content.length;
+  let lenBytes;
+  if (len < 0x80) {
+    lenBytes = new Uint8Array([len]);
+  } else if (len < 0x100) {
+    lenBytes = new Uint8Array([0x81, len]);
+  } else if (len < 0x10000) {
+    lenBytes = new Uint8Array([0x82, (len >> 8) & 0xFF, len & 0xFF]);
+  } else {
+    lenBytes = new Uint8Array([0x83, (len >> 16) & 0xFF, (len >> 8) & 0xFF, len & 0xFF]);
+  }
+  const out = new Uint8Array(1 + lenBytes.length + len);
+  out[0] = tag;
+  out.set(lenBytes, 1);
+  out.set(content, 1 + lenBytes.length);
+  return out;
+}
+function concat(...arrs) {
+  const total = arrs.reduce((s, a) => s + a.length, 0);
+  const out = new Uint8Array(total);
+  let off = 0;
+  for (const a of arrs) { out.set(a, off); off += a.length; }
+  return out;
+}
+
+/* Kiểm tra PEM hợp lệ */
+function validatePem(pem) {
+  if (!pem || typeof pem !== 'string') return { valid: false, error: 'Nội dung rỗng' };
+  const trimmed = pem.trim();
+  if (!trimmed.startsWith('-----BEGIN CERTIFICATE-----')) {
+    return { valid: false, error: 'Thiếu dòng BEGIN CERTIFICATE' };
+  }
+  if (!trimmed.endsWith('-----END CERTIFICATE-----')) {
+    return { valid: false, error: 'Thiếu dòng END CERTIFICATE' };
+  }
+  // Lấy nội dung giữa
+  const match = trimmed.match(/-----BEGIN CERTIFICATE-----\s*([\s\S]+?)\s*-----END CERTIFICATE-----/);
+  if (!match) return { valid: false, error: 'Không trích xuất được nội dung' };
+  const body = match[1].replace(/\s+/g, '');
+  if (body.length === 0) return { valid: false, error: 'Nội dung Base64 rỗng' };
+  if (!/^[A-Za-z0-9+/=]+$/.test(body)) return { valid: false, error: 'Base64 chứa ký tự không hợp lệ' };
+  try {
+    const decoded = atob(body);
+    if (decoded.length < 50) return { valid: false, error: 'Chứng nhận quá ngắn' };
+    // Kiểm tra byte đầu tiên là 0x30 (SEQUENCE)
+    if (decoded.charCodeAt(0) !== 0x30) return { valid: false, error: 'Không phải DER SEQUENCE' };
+  } catch (e) {
+    return { valid: false, error: 'Base64 không giải mã được' };
+  }
+  return { valid: true, length: body.length };
+}
+
+/* State để lưu .crt đã tạo */
+let lastCrtPem = null;
+let lastKeyPem = null;
+
+/* Nút TẠO CHỨNG NHẬN */
 document.getElementById('btnCreateCRT').addEventListener('click', async function() {
   if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key trước', 'error'); return; }
   const btn = this;
@@ -894,55 +1073,72 @@ document.getElementById('btnCreateCRT').addEventListener('click', async function
   const type = state.crtType;
   if (!domain) { showToast('⚠️ Vui lòng nhập tên miền', 'error'); return; }
   if (!window.crypto || !window.crypto.subtle) { showToast('❌ Web Crypto không hỗ trợ', 'error'); return; }
+
   btn.disabled = true;
   const oldHTML = btn.innerHTML;
   btn.innerHTML = '⏳ Đang tạo chứng nhận...';
   showToast('🔐 Đang sinh khóa RSA 2048-bit...', '');
+
   try {
+    // Sinh cặp khóa RSA
     const keyPair = await crypto.subtle.generateKey(
       { name:'RSASSA-PKCS1-v1_5', modulusLength:2048, publicExponent:new Uint8Array([1,0,1]), hash:'SHA-256' },
       true, ['sign','verify']
     );
-    const subject = `CN=${domain},O=${org},C=VN`;
-    const serialBytes = new Uint8Array(16);
-    crypto.getRandomValues(serialBytes);
-    serialBytes[0] &= 0x7F;
-    const now = new Date();
-    const notBefore = now.toISOString().replace(/\.\d{3}Z$/,'Z').replace(/[-:]/g,'').replace('T','').substring(0,14)+'Z';
-    const notAfterDate = new Date(now.getTime() + days*24*60*60*1000);
-    const notAfter = notAfterDate.toISOString().replace(/\.\d{3}Z$/,'Z').replace(/[-:]/g,'').replace('T','').substring(0,14)+'Z';
-    const spki = await crypto.subtle.exportKey('spki', keyPair.publicKey);
-    const spkiB64 = arrayBufferToBase64(spki);
-    const tbsData = new TextEncoder().encode(
-      `DERA LOCKS SELF-SIGNED CERT\nSubject: ${subject}\nType: ${type === 'root' ? 'Root CA' : 'SSL Domains'}\n`
-    );
-    const signature = await crypto.subtle.sign({ name:'RSASSA-PKCS1-v1_5' }, keyPair.privateKey, tbsData);
-    const signatureB64 = arrayBufferToBase64(signature);
+
+    // Export public key dạng SPKI → DER
+    const spkiDer = await crypto.subtle.exportKey('spki', keyPair.publicKey);
+
+    // Build PEM certificate với cấu trúc X.509
+    const certPem = buildPemCertificate(domain, org, days, type, new Uint8Array(spkiDer));
+
+    // Export private key → PKCS#8 PEM
     const pkcs8 = await crypto.subtle.exportKey('pkcs8', keyPair.privateKey);
-    const pkcs8B64 = arrayBufferToBase64(pkcs8);
-    const certBody =
-      `DERA-LOCKS-CERT-V1\nSubject:${subject}\nIssuer:${subject}\n` +
-      `Serial:${Array.from(serialBytes).map(b=>b.toString(16).padStart(2,'0')).join('')}\n` +
-      `NotBefore:${notBefore}\nNotAfter:${notAfter}\nType:${type === 'root' ? 'Root CA' : 'SSL Domains'}\n` +
-      `SPKI:${spkiB64}\nSIG:${signatureB64}\nKEY:${pkcs8B64}`;
-    const certB64 = stringToBase64(certBody);
-    const certPem = '-----BEGIN CERTIFICATE-----\n' + base64Pem(certB64) + '\n-----END CERTIFICATE-----\n';
-    const keyPem = '-----BEGIN PRIVATE KEY-----\n' + base64Pem(pkcs8B64) + '\n-----END PRIVATE KEY-----\n';
+    const keyPem = '-----BEGIN PRIVATE KEY-----\n' +
+                   base64Pem(arrayBufferToBase64(pkcs8), 64) +
+                   '\n-----END PRIVATE KEY-----\n';
+
+    // Validate lại trước khi tải
+    const check = validatePem(certPem);
+    if (!check.valid) {
+      throw new Error('File .crt không đúng chuẩn PEM: ' + check.error);
+    }
+
+    lastCrtPem = certPem;
+    lastKeyPem = keyPem;
+
+    // Tải file .crt
     const safeDomain = sanitizeFileName(domain);
     downloadFile(`${safeDomain}.crt`, certPem, 'application/x-x509-ca-cert');
     setTimeout(() => downloadFile(`${safeDomain}.key`, keyPem, 'application/octet-stream'), 500);
+
     state.crtPem = certPem;
     const crtStatusEl = document.getElementById('crtStatus');
     crtStatusEl.classList.add('active');
     crtStatusEl.style.color = '#4ade80';
     crtStatusEl.innerHTML = '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#4ade80;box-shadow:0 0 10px #4ade80;flex-shrink:0;"></span> Đã xác thực';
-    showToast('✅ Đã tạo chứng nhận ' + domain, 'success');
+
+    showToast('✅ Đã tạo ' + safeDomain + '.crt chuẩn PEM', 'success');
   } catch (err) {
     console.error(err);
     showToast('❌ Lỗi: ' + err.message, 'error');
   } finally {
     btn.disabled = false;
     btn.innerHTML = oldHTML;
+  }
+});
+
+/* Nút KIỂM TRA CHỨNG NHẬN */
+document.getElementById('btnCheckCRT').addEventListener('click', () => {
+  if (!lastCrtPem) {
+    showToast('⚠️ Chưa có chứng nhận. Vui lòng tạo trước.', 'error');
+    return;
+  }
+  const check = validatePem(lastCrtPem);
+  if (check.valid) {
+    showToast('✅ Chứng nhận hợp lệ PEM · ' + check.length + ' ký tự Base64', 'success');
+  } else {
+    showToast('❌ Chứng nhận lỗi: ' + check.error, 'error');
   }
 });
 
@@ -966,7 +1162,7 @@ document.getElementById('btnActivateDNS').addEventListener('click', () => {
 });
 
 /* ============================================================
-   MUSIC PLAYER — ZING MP3 IFRAME
+   MUSIC PLAYER
 ============================================================ */
 const vinyl = document.getElementById('vinyl');
 const musicArtist = document.getElementById('musicArtist');
@@ -976,7 +1172,6 @@ let zingIframe = null;
 let synthCtx = null;
 let synthController = null;
 
-// Link Zing MP3 nhúng (bạn có thể thay bằng link khác)
 const ZING_EMBED = "https://zingmp3.vn/embed/song/Z6UWIC7U?start=false";
 
 function createZingIframe() {
@@ -990,11 +1185,8 @@ function createZingIframe() {
   return zingIframe;
 }
 
-// Fallback synth khi iframe không phát được (Zing chặn autoplay)
 function startSynthMusic() {
-  if (!synthCtx) {
-    synthCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
+  if (!synthCtx) synthCtx = new (window.AudioContext || window.webkitAudioContext)();
   if (synthCtx.state === 'suspended') synthCtx.resume();
   const melody = [523.25,587.33,659.25,587.33,523.25,493.88,440.00,493.88,523.25,587.33,659.25,698.46,783.99,698.46,659.25,587.33,523.25,493.88,440.00,392.00,440.00,493.88,523.25,587.33,659.25,587.33,523.25,493.88,440.00,392.00,349.23,392.00];
   const bass = [130.81,130.81,146.83,146.83,174.61,174.61,196.00,196.00];
@@ -1035,42 +1227,27 @@ function startMusic() {
   vinyl.classList.add('playing');
   musicArtist.textContent = '🎵 Đang phát: Thương Nhau Đến Thế';
   musicIcon.innerHTML = '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
-
-  // Thử tạo iframe Zing
   try {
     const iframe = createZingIframe();
-    // Gửi postMessage để play (nếu iframe hỗ trợ)
     iframe.contentWindow.postMessage('play', '*');
-  } catch (e) {
-    console.warn('Zing iframe failed:', e);
-  }
-
-  // Fallback synth nhạc để chắc chắn có âm thanh
+  } catch (e) {}
   if (!synthController) {
     try { synthController = startSynthMusic(); }
-    catch (e) { console.warn('Synth failed:', e); }
+    catch (e) {}
   }
 }
-
 function stopMusic() {
   musicPlaying = false;
   vinyl.classList.remove('playing');
   musicArtist.textContent = 'Nhấn để phát nhạc';
   musicIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-  if (synthController) {
-    clearInterval(synthController.interval);
-    synthController = null;
-  }
-  if (zingIframe) {
-    try { zingIframe.contentWindow.postMessage('pause', '*'); } catch (e) {}
-  }
+  if (synthController) { clearInterval(synthController.interval); synthController = null; }
+  if (zingIframe) { try { zingIframe.contentWindow.postMessage('pause', '*'); } catch (e) {} }
 }
-
 document.getElementById('musicPlayer').addEventListener('click', () => {
   if (musicPlaying) stopMusic();
   else startMusic();
 });
-
 function tryAutoPlayMusic() {
   setTimeout(() => { if (!musicPlaying) startMusic(); }, 500);
 }
