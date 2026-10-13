@@ -1,12 +1,16 @@
 {
-  "name": "sever-axua",
+  "name": "dera-locks-server",
   "version": "1.0.0",
-  "main": "server.js",
+  "description": "Server quản lý key DERA LOCKS",
+  "main": "sever.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node sever.js"
   },
   "dependencies": {
-    "express": "^4.19.2",
+    "express": "^4.18.2",
     "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }
