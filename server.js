@@ -1,8 +1,3 @@
-/* ============================================================
-   DERA LOCKS SERVER — Quản lý key & kích hoạt
-   Cài đặt: npm init -y && npm install express cors
-   Chạy: node server.js
-============================================================ */
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
@@ -10,136 +5,135 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const KEYS_FILE = path.join(__dirname, 'keys.json');
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirname)); // Serve index.html
+app.use(express.static(__dirname));
 
-/* ============================================================
-   ĐỌC / GHI FILE KEYS.JSON
-============================================================ */
-function readKeys() {
-  try {
-    const raw = fs.readFileSync(KEYS_FILE, 'utf8');
-    return JSON.parse(raw);
-  } catch (e) {
-    console.error('Lỗi đọc keys.json:', e.message);
-    return { keys: [] };
-  }
-}
+// Đường dẫn file keys.json
+const KEYS_FILE = path.join(__dirname, 'keys.json');
 
-function writeKeys(data) {
-  try {
-    fs.writeFileSync(KEYS_FILE, JSON.stringify(data, null, 2), 'utf8');
-    return true;
-  } catch (e) {
-    console.error('Lỗi ghi keys.json:', e.message);
-    return false;
-  }
-}
-
-/* ============================================================
-   API HEALTH
-============================================================ */
-app.get('/api/health', (req, res) => {
-  const now = new Date();
-  const pad = n => String(n).padStart(2, '0');
-  const serverTime = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
-  res.json({
-    status: 'ok',
-    serverTime: serverTime,
-    uptime: Math.floor(process.uptime()) + 's',
-    version: '1.0.0'
-  });
-});
-
-/* ============================================================
-   API XÁC THỰC KEY
-============================================================ */
-app.post('/api/verify-key', (req, res) => {
-  const { key, deviceId } = req.body || {};
-  if (!key) {
-    return res.status(400).json({ success: false, error: 'Thiếu key' });
-  }
-
-  const data = readKeys();
-  const keyData = data.keys.find(k => k.key === key.toUpperCase());
-
-  if (!keyData) {
-    return res.status(401).json({ success: false, error: 'Key không hợp lệ' });
-  }
-
-  const now = Date.now();
-  const DURATION_MS = 3 * 24 * 60 * 60 * 1000; // 3 ngày
-
-  // Nếu key chưa từng kích hoạt → kích hoạt mới
-  if (!keyData.activatedAt) {
-    keyData.activatedAt = now;
-    keyData.expiresAt = now + DURATION_MS;
-    keyData.deviceId = deviceId || 'unknown';
-    keyData.activations = [{
-      deviceId: deviceId || 'unknown',
-      activatedAt: now,
-      expiresAt: keyData.expiresAt
-    }];
-    writeKeys(data);
-    return res.json({
-      success: true,
-      activation: {
-        key: keyData.key,
-        activatedAt: keyData.activatedAt,
-        expiresAt: keyData.expiresAt,
-        deviceId: keyData.deviceId
-      }
-    });
-  }
-
-  // Key đã kích hoạt → kiểm tra hạn
-  if (now >= keyData.expiresAt) {
-    return res.status(403).json({ success: false, error: 'Key đã hết hạn' });
-  }
-
-  // Kiểm tra thiết bị (tùy chọn)
-  if (deviceId && keyData.deviceId && keyData.deviceId !== deviceId) {
-    return res.status(403).json({ success: false, error: 'Key đã dùng trên thiết bị khác' });
-  }
-
-  return res.json({
-    success: true,
-    activation: {
-      key: keyData.key,
-      activatedAt: keyData.activatedAt,
-      expiresAt: keyData.expiresAt,
-      deviceId: keyData.deviceId
+// Tạo file keys.json nếu chưa có
+function initKeysFile() {
+    if (!fs.existsSync(KEYS_FILE)) {
+        const initialData = {
+            version: '1.0',
+            updated_at: new Date().toISOString(),
+            keys: [
+                { key: "DERA-42363C9E-EC589D4C", status: "unused", activated_at: null, expire_at: null, used_by: null, note: "Key 1 - 3 ngày" },
+                { key: "DERA-7A9B2D4F-8E3C1D7F", status: "unused", activated_at: null, expire_at: null, used_by: null, note: "Key 2 - 3 ngày" },
+                { key: "DERA-1F3E5D7C-9B2A4C6E", status: "unused", activated_at: null, expire_at: null, used_by: null, note: "Key 3 - 3 ngày" },
+                { key: "DERA-8C2E6F4A-1D3B5E7C", status: "unused", activated_at: null, expire_at: null, used_by: null, note: "Key 4 - 3 ngày" },
+                { key: "DERA-2B4D6F8A-3E5C7D9B", status: "unused", activated_at: null, expire_at: null, used_by: null, note: "Key 5 - 3 ngày" },
+                { key: "DERA-9A3C5E7G-2F4D6B8H", status: "unused", activated_at: null, expire_at: null, used_by: null, note: "Key 6 - 3 ngày" },
+                { key: "DERA-5E7C9A2D-4F6B8E3C", status: "unused", activated_at: null, expire_at: null, used_by: null, note: "Key 7 - 3 ngày" },
+                { key: "DERA-3D5F7B9A-6C8E2D4F", status: "unused", activated_at: null, expire_at: null, used_by: null, note: "Key 8 - 3 ngày" },
+                { key: "DERA-7F9D2B4C-5A3E8F6D", status: "unused", activated_at: null, expire_at: null, used_by: null, note: "Key 9 - 3 ngày" },
+                { key: "DERA-4C6E8A2F-9B3D7E5A", status: "unused", activated_at: null, expire_at: null, used_by: null, note: "Key 10 - 3 ngày" }
+            ]
+        };
+        fs.writeFileSync(KEYS_FILE, JSON.stringify(initialData, null, 2));
+        console.log('✅ Tạo file keys.json thành công');
     }
-  });
+}
+
+// Đọc dữ liệu key
+function loadKeys() {
+    try {
+        const data = fs.readFileSync(KEYS_FILE, 'utf8');
+        return JSON.parse(data);
+    } catch (err) {
+        return { keys: [] };
+    }
+}
+
+// Lưu dữ liệu key
+function saveKeys(data) {
+    data.updated_at = new Date().toISOString();
+    fs.writeFileSync(KEYS_FILE, JSON.stringify(data, null, 2));
+}
+
+// ===== API =====
+
+// Kiểm tra trạng thái server
+app.get('/status', (req, res) => {
+    res.json({
+        status: 'online',
+        message: '✅ DERA LOCKS Server đang hoạt động',
+        time: new Date().toISOString(),
+        version: '1.0.0'
+    });
 });
 
-/* ============================================================
-   API DANH SÁCH KEY (admin — không public)
-============================================================ */
-app.get('/api/keys', (req, res) => {
-  const data = readKeys();
-  res.json({
-    total: data.keys.length,
-    keys: data.keys.map(k => ({
-      key: k.key,
-      activatedAt: k.activatedAt,
-      expiresAt: k.expiresAt,
-      deviceId: k.deviceId,
-      status: !k.activatedAt ? 'chưa kích hoạt' : (Date.now() >= k.expiresAt ? 'hết hạn' : 'đang hoạt động')
-    }))
-  });
+// Xác thực key
+app.post('/verify-key', (req, res) => {
+    try {
+        const { key, deviceName, deviceId } = req.body;
+        const data = loadKeys();
+        const keyData = data.keys.find(k => k.key === key);
+
+        if (!keyData) {
+            return res.json({ valid: false, message: '❌ Key không hợp lệ' });
+        }
+
+        if (keyData.status === 'expired') {
+            return res.json({ valid: false, message: '❌ Key đã hết hạn' });
+        }
+
+        // Kiểm tra key đang dùng trên thiết bị khác
+        if (keyData.used_by && keyData.used_by.device_id !== deviceId) {
+            return res.json({ valid: false, message: '⚠️ Key đang được sử dụng trên thiết bị khác' });
+        }
+
+        // Kích hoạt key nếu chưa dùng
+        if (!keyData.activated_at) {
+            keyData.activated_at = new Date().toISOString();
+            keyData.used_by = {
+                device_name: deviceName || 'Thiết bị không xác định',
+                device_id: deviceId
+            };
+            const expireDate = new Date();
+            expireDate.setDate(expireDate.getDate() + 3);
+            keyData.expire_at = expireDate.toISOString();
+            keyData.status = 'active';
+            saveKeys(data);
+        }
+
+        // Kiểm tra hết hạn
+        const now = new Date();
+        const expireAt = new Date(keyData.expire_at);
+        if (now > expireAt) {
+            keyData.status = 'expired';
+            saveKeys(data);
+            return res.json({ valid: false, message: '❌ Key đã hết hạn' });
+        }
+
+        // Tính thời gian còn lại
+        const remainingMs = expireAt - now;
+        const days = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((remainingMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+
+        res.json({
+            valid: true,
+            message: '✅ Key hợp lệ',
+            key_info: {
+                key: keyData.key,
+                activated_at: keyData.activated_at,
+                expire_at: keyData.expire_at,
+                remaining: { days, hours, minutes },
+                device: keyData.used_by
+            }
+        });
+    } catch (err) {
+        res.json({ valid: false, message: '❌ Lỗi server: ' + err.message });
+    }
 });
 
-/* ============================================================
-   START
-============================================================ */
+// Khởi động server
 app.listen(PORT, () => {
-  console.log('===========================================');
-  console.log('🚀 DERA LOCKS SERVER đã khởi động');
-  console.log('📍 http://localhost:' + PORT);
-  console.log('📁 Keys file: ' + KEYS_FILE);
-  console.log('===========================================');
+    initKeysFile();
+    console.log(`✅ DERA LOCKS Server đang chạy tại cổng ${PORT}`);
+    console.log(`📌 Link: https://sever-axua.onrender.com`);
+    console.log(`📌 Trạng thái: https://sever-axua.onrender.com/status`);
 });
