@@ -2,890 +2,1091 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>UN LOCK</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DERA LOCKS · Secure Proxy</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:transparent}
-body{min-height:100vh;background:linear-gradient(160deg,#6B21A8,#0EA5E9);background-attachment:fixed;display:flex;align-items:center;justify-content:center;padding:14px;color:#fff;overflow-x:hidden}
-.app{width:100%;max-width:420px;min-height:calc(100vh - 28px);max-height:900px;background:rgba(15,12,30,.42);backdrop-filter:blur(24px);border-radius:40px;padding:22px 16px 26px;box-shadow:0 30px 60px -10px rgba(0,0,0,.55),inset 0 1px 1px rgba(255,255,255,.15);display:flex;flex-direction:column;position:relative;overflow:hidden}
-.app::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(107,33,168,.4),transparent 45%),radial-gradient(circle at 75% 80%,rgba(14,165,233,.35),transparent 45%);pointer-events:none;z-index:0}
-.screen{display:none;flex-direction:column;flex:1;width:100%;position:relative;z-index:1}
-.screen.active{display:flex}
+  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; -webkit-tap-highlight-color:transparent; }
+  html,body { background:#0a0612; color:#e8e0f5; min-height:100vh; overflow-x:hidden; }
+  body { padding:14px 12px 110px; background: radial-gradient(ellipse at 50% 0%, rgba(120,50,200,0.35) 0%, transparent 55%), radial-gradient(ellipse at 100% 100%, rgba(70,30,130,0.25) 0%, transparent 50%), #0a0612; display:flex; flex-direction:column; align-items:center; gap:14px; }
+  .wrap { width:100%; max-width:430px; display:flex; flex-direction:column; gap:14px; }
 
-/* STATUS BAR */
-.sbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(0,0,0,.38);border:1px solid rgba(255,255,255,.12);border-radius:16px;margin-bottom:12px;font-size:.66rem}
-.sdot{width:9px;height:9px;border-radius:50%;background:#94a3b8;flex-shrink:0}
-.sdot.on{background:#22c55e;box-shadow:0 0 10px #22c55e}
-.sdot.off{background:#ef4444;box-shadow:0 0 10px #ef4444}
-.sdot.chk{background:#eab308;box-shadow:0 0 10px #eab308}
-.stxt{flex:1;color:#cbd5e1;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.stxt.on{color:#86efac}
-.stxt.off{color:#fca5a5}
-.stxt.chk{color:#fde047}
-.sref{padding:3px 9px;border-radius:11px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);font-size:.6rem;font-weight:700;cursor:pointer}
+  /* ===== KEY BOX ===== */
+  .key-activation { background:linear-gradient(180deg,#1a0d2e 0%,#0f0820 100%); border-radius:22px; padding:18px; border:1px solid rgba(150,90,240,0.3); box-shadow:0 0 30px rgba(120,50,220,0.25), inset 0 0 40px rgba(90,40,170,0.12); position:relative; overflow:hidden; }
+  .key-activation::before { content:""; position:absolute; top:-50%; right:-30%; width:200px; height:200px; background:radial-gradient(circle,rgba(180,100,255,0.25),transparent 70%); pointer-events:none; }
+  .key-title { display:flex; align-items:center; gap:8px; font-size:15px; font-weight:800; letter-spacing:0.5px; color:#e8d8ff; margin-bottom:12px; text-shadow:0 0 12px rgba(180,120,255,0.6); }
+  .key-title svg { width:20px; height:20px; fill:#b18aff; filter:drop-shadow(0 0 8px rgba(177,138,255,0.8)); }
+  .key-input-row { display:flex; gap:8px; }
+  .key-input { flex:1; background:rgba(18,10,35,0.9); border:1.5px solid rgba(140,100,220,0.5); border-radius:12px; padding:13px 15px; font-size:14px; color:#f0e8ff; outline:none; font-weight:600; letter-spacing:0.5px; transition:all .2s; font-family:ui-monospace,'SF Mono',Menlo,monospace; }
+  .key-input::placeholder { color:#6a5f90; font-weight:500; letter-spacing:0.3px; font-family:-apple-system,sans-serif; }
+  .key-input:focus { border-color:#b18aff; box-shadow:0 0 16px rgba(140,90,240,0.5); }
+  .key-input.error { border-color:#ff5c7a; box-shadow:0 0 16px rgba(255,90,120,0.5); animation:shake 0.4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-5px);} 75%{transform:translateX(5px);} }
+  .btn-activate-key { background:linear-gradient(135deg,#8b5eff,#4a7aff); color:#fff; border:none; border-radius:12px; padding:0 18px; font-size:13px; font-weight:800; cursor:pointer; letter-spacing:0.3px; white-space:nowrap; box-shadow:0 4px 14px rgba(120,80,255,0.5),inset 0 1px 0 rgba(255,255,255,0.2); transition:transform .12s,filter .12s; font-family:inherit; }
+  .btn-activate-key:active { transform:scale(0.96); filter:brightness(0.92); }
+  .btn-activate-key:disabled { opacity:0.6; cursor:not-allowed; }
+  .key-msg { margin-top:10px; font-size:13px; font-weight:600; text-align:center; min-height:18px; letter-spacing:0.2px; }
+  .key-msg.error { color:#ff8ca0; }
+  .key-msg.success { color:#4ade80; }
 
-/* LOGO */
-.lw{display:flex;flex-direction:column;align-items:center;margin:6px 0 8px}
-.logo{font-size:2.9rem;font-weight:900;letter-spacing:8px;background:linear-gradient(135deg,#fff,#c4b5fd 50%,#7dd3fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 24px rgba(124,58,237,.8))}
-.lsub{font-size:.66rem;letter-spacing:5px;opacity:.65;margin-top:4px;color:#ddd6fe;font-weight:500}
-.lbdg{display:inline-block;margin-top:12px;padding:5px 16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:30px;font-size:.62rem;letter-spacing:2px;color:#bae6fd}
+  /* ===== KEY INFO ===== */
+  .key-info { display:none; background:linear-gradient(180deg,#132a1e 0%,#0a1f14 100%); border:1px solid rgba(74,222,128,0.35); border-radius:18px; padding:16px; box-shadow:0 0 25px rgba(74,222,128,0.2), inset 0 0 30px rgba(40,120,70,0.15); }
+  .key-info.show { display:block; animation:slideDown 0.4s ease; }
+  @keyframes slideDown { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
+  .key-info-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .key-info-title { display:flex; align-items:center; gap:8px; font-size:14px; font-weight:800; color:#7dffb0; letter-spacing:0.5px; }
+  .key-info-title svg { width:18px; height:18px; fill:#4ade80; filter:drop-shadow(0 0 8px rgba(74,222,128,0.8)); }
+  .key-info-badge { background:rgba(74,222,128,0.2); border:1px solid rgba(74,222,128,0.5); color:#7dffb0; padding:4px 12px; border-radius:20px; font-size:11px; font-weight:800; letter-spacing:0.5px; }
+  .key-info-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .key-info-item { background:rgba(10,25,18,0.6); border:1px solid rgba(74,222,128,0.2); border-radius:10px; padding:10px 12px; }
+  .key-info-label { font-size:10px; font-weight:700; letter-spacing:1px; color:#5fa678; text-transform:uppercase; margin-bottom:4px; }
+  .key-info-value { font-size:12.5px; font-weight:700; color:#d0f5dd; word-break:break-all; font-family:ui-monospace,'SF Mono',Menlo,monospace; }
+  .key-info-value.green { color:#4ade80; }
+  .key-info-full { grid-column:1 / -1; }
 
-/* INPUT */
-.ig{margin-top:16px}
-.ilb{display:block;font-size:.7rem;margin-bottom:8px;opacity:.85;letter-spacing:1.5px;color:#ddd6fe;font-weight:600;padding-left:6px}
-.kin{width:100%;padding:17px 16px;font-size:1.05rem;letter-spacing:2px;text-align:center;background:rgba(0,0,0,.35);border:2px solid rgba(255,255,255,.18);border-radius:22px;color:#fff;outline:none;font-weight:600;text-transform:uppercase}
-.kin:focus{border-color:#0EA5E9;background:rgba(0,0,0,.45);box-shadow:0 0 0 5px rgba(14,165,233,.2)}
-.kin::placeholder{color:rgba(255,255,255,.32);font-weight:400;text-transform:none;font-size:.9rem}
-.kin.shk{animation:shk .4s;border-color:#ef4444!important}
-@keyframes shk{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+  /* ===== LOCKED ===== */
+  .hero-card, .section-card, .server-status-card { transition:filter 0.4s, opacity 0.4s; }
+  .locked .hero-card, .locked .section-card, .locked .server-status-card { filter:blur(3px) grayscale(60%); opacity:0.45; pointer-events:none; user-select:none; }
+  .locked-note { display:none; text-align:center; padding:14px; background:rgba(255,90,120,0.1); border:1px solid rgba(255,90,120,0.35); border-radius:14px; font-size:12.5px; font-weight:700; color:#ff8ca0; letter-spacing:0.3px; margin-bottom:8px; }
+  .locked .locked-note { display:block; }
 
-/* BUTTON */
-.btn{position:relative;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:16px 20px;font-size:.9rem;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;letter-spacing:1px;user-select:none}
-.btn:active:not(.loading){transform:scale(.97);background:rgba(255,255,255,.16)}
-.bp{background:linear-gradient(135deg,#7C3AED,#0EA5E9);border:none;box-shadow:0 12px 28px -6px rgba(14,165,233,.6)}
-.btn.loading{pointer-events:none;opacity:.85}
-.btn.loading::after{content:'';position:absolute;right:18px;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
+  /* ===== HERO ===== */
+  .hero-card { background:linear-gradient(180deg,#1a0d2e 0%,#0f0820 100%); border-radius:22px; padding:0 0 22px; border:1px solid rgba(150,90,240,0.28); box-shadow:0 0 30px rgba(120,50,220,0.25), inset 0 0 40px rgba(90,40,170,0.12); overflow:hidden; }
+  .hero-banner { width:100%; height:200px; background: radial-gradient(ellipse at 50% 50%, rgba(200,90,255,0.5) 0%, transparent 60%), linear-gradient(135deg,#2a0d4a 0%,#1a0530 40%,#3d1060 100%); position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+  .hero-banner::before { content:""; position:absolute; inset:0; background: repeating-linear-gradient(45deg,transparent 0 18px,rgba(180,100,255,0.06) 18px 19px), repeating-linear-gradient(-45deg,transparent 0 22px,rgba(100,200,255,0.05) 22px 23px); pointer-events:none; }
+  .hero-banner::after { content:""; position:absolute; inset:0; background: radial-gradient(circle at 20% 30%,rgba(220,130,255,0.35),transparent 40%), radial-gradient(circle at 80% 70%,rgba(120,80,255,0.3),transparent 45%); pointer-events:none; }
+  .hero-title { font-family:'Impact','Arial Black',sans-serif; font-size:62px; font-weight:900; letter-spacing:2px; line-height:0.85; text-align:center; text-shadow:0 0 8px #d48fff,0 0 20px #a34fff,0 0 40px #7a1fd0,0 4px 0 #4a0d80,0 6px 15px rgba(0,0,0,0.9); z-index:2; position:relative; transform:perspective(400px) rotateX(8deg); background:linear-gradient(180deg,#fff 0%,#d8b8ff 50%,#a86dff 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; filter:drop-shadow(0 0 6px rgba(180,100,255,0.8)); }
+  .app-icon-wrap { width:108px; height:108px; margin:-54px auto 14px; position:relative; z-index:5; border-radius:26px; padding:4px; background:linear-gradient(145deg,#e0d0ff,#a888ff,#6a3fc0); box-shadow:0 0 25px rgba(180,100,255,0.7),0 8px 24px rgba(0,0,0,0.7),inset 0 0 15px rgba(255,255,255,0.3); }
+  .app-icon { width:100%; height:100%; border-radius:22px; background: radial-gradient(circle at 30% 20%,rgba(200,140,255,0.5) 0%,transparent 55%), linear-gradient(160deg,#2a0d4a 0%,#12032a 60%,#3a1060 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden; border:1px solid rgba(200,160,255,0.4); }
+  .app-icon::before { content:""; position:absolute; inset:0; background:repeating-linear-gradient(115deg,transparent 0 10px,rgba(180,120,255,0.12) 10px 11px); }
+  .app-icon-text { font-family:'Impact','Arial Black',sans-serif; font-weight:900; font-size:26px; line-height:0.85; text-align:center; letter-spacing:0.5px; z-index:2; position:relative; background:linear-gradient(180deg,#fff 0%,#d0b0ff 50%,#9d5fff 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; text-shadow:0 2px 8px rgba(180,100,255,0.6); transform:perspective(200px) rotateX(5deg); }
+  .app-icon-text small { display:block; font-size:15px; letter-spacing:1px; margin-top:1px; background:linear-gradient(180deg,#e0c8ff 0%,#9d6dff 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .app-name { text-align:center; font-size:26px; font-weight:900; letter-spacing:1.5px; color:#f2e8ff; text-shadow:0 0 12px rgba(160,100,255,0.6),0 2px 4px rgba(0,0,0,0.8); margin-bottom:6px; }
+  .app-sub { text-align:center; font-size:14px; font-weight:500; letter-spacing:0.5px; color:#b8c8e8; margin-bottom:16px; text-shadow:0 0 10px rgba(100,180,255,0.4); }
+  .app-sub .dot { color:#6a7fa0; margin:0 6px; }
+  .badges { display:flex; justify-content:center; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
+  .badge-version { background:rgba(60,40,100,0.7); border:1px solid rgba(140,100,220,0.5); color:#d0c0f0; padding:6px 16px; border-radius:30px; font-size:13px; font-weight:600; }
+  .ios-box { margin:0 18px; background:rgba(25,18,45,0.65); border:1px solid rgba(100,80,160,0.4); border-radius:16px; padding:14px 12px; text-align:center; }
+  .ios-title { display:flex; align-items:center; justify-content:center; gap:7px; font-size:13px; font-weight:600; color:#b8aee0; margin-bottom:8px; }
+  .ios-title svg { width:16px; height:16px; fill:#b8aee0; }
+  .ios-versions { font-size:13.5px; color:#6ec8ff; font-weight:600; line-height:1.7; }
+  .ios-versions .sep { color:#8a7ac0; margin:0 8px; font-weight:400; }
 
-.err{color:#fecaca;background:rgba(220,38,38,.22);padding:12px 14px;border-radius:16px;font-size:.78rem;text-align:center;margin:12px 0 6px;border-left:5px solid #ef4444;display:none;font-weight:500}
-.err.show{display:block}
+  /* ===== SERVER STATUS CARD ===== */
+  .server-status-card { background:linear-gradient(180deg,#1a0d2e 0%,#0f0820 100%); border-radius:22px; padding:18px; border:1px solid rgba(150,90,240,0.28); box-shadow:0 0 30px rgba(120,50,220,0.25), inset 0 0 40px rgba(90,40,170,0.12); transition:all .4s; }
+  .server-status-card.online { border-color:rgba(74,222,128,0.5); box-shadow:0 0 30px rgba(74,222,128,0.25), inset 0 0 40px rgba(40,120,70,0.15); }
+  .server-status-card.offline { border-color:rgba(255,90,120,0.5); box-shadow:0 0 30px rgba(255,90,120,0.25), inset 0 0 40px rgba(150,40,60,0.15); }
+  .server-status-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .server-status-header svg { width:22px; height:22px; fill:#b18aff; filter:drop-shadow(0 0 8px rgba(177,138,255,0.8)); }
+  .server-status-header .title { font-size:15px; font-weight:800; letter-spacing:0.5px; color:#e8d8ff; }
+  .server-btn { width:100%; display:flex; align-items:center; justify-content:center; gap:10px; padding:16px; border-radius:14px; font-size:16px; font-weight:800; letter-spacing:0.4px; border:none; cursor:pointer; transition:transform .12s,filter .12s,background .3s; font-family:inherit; color:#fff; }
+  .server-btn.online { background:linear-gradient(135deg,#1a9a4a 0%,#0e6b32 100%); box-shadow:0 6px 20px rgba(30,160,80,0.5),inset 0 1px 0 rgba(255,255,255,0.2); }
+  .server-btn.offline { background:linear-gradient(135deg,#d0304e 0%,#8a0f28 100%); box-shadow:0 6px 20px rgba(220,50,80,0.5),inset 0 1px 0 rgba(255,255,255,0.2); }
+  .server-btn.checking { background:linear-gradient(135deg,#6a3fd0,#4a2a9a); box-shadow:0 6px 20px rgba(100,50,200,0.5),inset 0 1px 0 rgba(255,255,255,0.15); cursor:wait; }
+  .server-btn:active { transform:scale(0.97); filter:brightness(0.95); }
+  .server-btn svg { width:22px; height:22px; fill:#fff; }
+  .server-info { margin-top:12px; font-size:12px; color:#8a80c0; text-align:center; font-weight:600; letter-spacing:0.3px; min-height:16px; }
+  .server-info .online-text { color:#7dffb0; }
+  .server-info .offline-text { color:#ff8ca0; }
 
-/* LOADING */
-.lds{justify-content:center;align-items:center;text-align:center;gap:30px}
-.spw{position:relative;width:160px;height:160px;display:flex;align-items:center;justify-content:center}
-.spr{position:absolute;inset:0;border-radius:50%;border:5px solid rgba(255,255,255,.1)}
-.spr::before{content:'';position:absolute;inset:-5px;border-radius:50%;border:5px solid transparent;border-top-color:#0EA5E9;border-right-color:#c084fc;animation:sp 1s linear infinite}
-.lpct{font-size:3.2rem;font-weight:900;background:linear-gradient(135deg,#fff,#7dd3fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
-.ltxt{font-size:.86rem;opacity:.9;letter-spacing:3px;color:#e0f2fe}
-.lbb{width:75%;height:8px;background:rgba(255,255,255,.12);border-radius:20px;overflow:hidden}
-.lbf{height:100%;width:0;background:linear-gradient(90deg,#c084fc,#38bdf8,#0EA5E9);border-radius:20px;transition:width .15s linear}
+  /* ===== SECTION CARD ===== */
+  .section-card { background:linear-gradient(180deg,#150a28 0%,#0c0518 100%); border-radius:22px; padding:20px 18px; border:1px solid rgba(130,90,220,0.28); box-shadow:0 0 25px rgba(110,50,200,0.18),inset 0 0 30px rgba(80,40,150,0.1); }
+  .section-title { display:flex; align-items:center; gap:10px; font-size:17px; font-weight:800; letter-spacing:0.5px; color:#f0e8ff; margin-bottom:18px; }
+  .section-title svg { width:22px; height:22px; flex-shrink:0; }
+  .section-title.dns svg { fill:#b18aff; filter:drop-shadow(0 0 6px rgba(177,138,255,0.6)); }
+  .section-title.crt svg { fill:#ffa94d; filter:drop-shadow(0 0 6px rgba(255,169,77,0.6)); }
+  .section-title.run svg { fill:#4ade80; filter:drop-shadow(0 0 6px rgba(74,222,128,0.6)); }
 
-/* MAIN */
-.ic{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:12px 16px;margin-bottom:10px}
-.dr{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.di{font-size:1.25rem}
-.dn{font-size:.95rem;font-weight:700;color:#f0f9ff;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.db{font-size:.6rem;background:rgba(14,165,233,.25);border:1px solid rgba(14,165,233,.5);color:#bae6fd;padding:3px 8px;border-radius:20px;font-weight:600}
-.tr{display:flex;justify-content:space-between;font-size:.78rem;color:#cbd5e1}
-.tr .val{font-weight:800;color:#7dd3fc;font-size:.88rem}
+  .field { margin-bottom:14px; }
+  .field-label { font-size:12px; font-weight:700; letter-spacing:1px; color:#a99ad0; text-transform:uppercase; margin-bottom:7px; display:flex; align-items:center; gap:5px; flex-wrap:wrap; }
+  .field-label .hint { text-transform:none; font-weight:500; letter-spacing:0.2px; color:#7d72a8; font-size:11.5px; }
+  .text-input { width:100%; background:rgba(18,10,35,0.8); border:1.5px solid rgba(120,90,200,0.35); border-radius:14px; padding:14px 16px; font-size:15px; color:#f0e8ff; outline:none; font-weight:500; transition:border-color .2s,box-shadow .2s; font-family:inherit; }
+  .text-input::placeholder { color:#6a5f90; }
+  .text-input:focus { border-color:#a888ff; box-shadow:0 0 14px rgba(140,90,240,0.4); background:rgba(25,15,45,0.9); }
+  .chips { display:flex; gap:8px; flex-wrap:wrap; }
+  .chip { flex:1; min-width:80px; text-align:center; padding:11px 8px; border-radius:12px; background:rgba(18,10,35,0.8); border:1.5px solid rgba(120,90,200,0.35); color:#a99ad0; font-size:13px; font-weight:700; cursor:pointer; transition:all .2s; letter-spacing:0.3px; user-select:none; }
+  .chip.active { background:linear-gradient(135deg,#6a3fd0,#4a2a9a); color:#fff; border-color:#b18aff; box-shadow:0 4px 14px rgba(140,90,240,0.5); }
+  .btn-sign { width:100%; display:flex; align-items:center; justify-content:center; gap:10px; padding:16px; border-radius:14px; background:linear-gradient(135deg,#6a3fd0 0%,#4a2a9a 100%); color:#fff; font-size:16px; font-weight:800; letter-spacing:0.5px; border:1px solid rgba(180,140,255,0.35); cursor:pointer; box-shadow:0 6px 18px rgba(100,50,200,0.45),inset 0 1px 0 rgba(255,255,255,0.15); transition:transform .12s,filter .12s; margin-top:6px; font-family:inherit; }
+  .btn-sign:active { transform:scale(0.97); filter:brightness(0.92); }
+  .btn-sign svg { width:22px; height:22px; fill:#fff; }
+  .btn-run { background:linear-gradient(135deg,#1a9a4a 0%,#0e6b32 100%); border:1px solid rgba(100,255,160,0.4); box-shadow:0 6px 18px rgba(30,160,80,0.45),inset 0 1px 0 rgba(255,255,255,0.18); }
+  .btn-crt { background:linear-gradient(135deg,#ff8a3d 0%,#d9601a 100%); border:1px solid rgba(255,200,140,0.4); box-shadow:0 6px 18px rgba(220,120,40,0.45),inset 0 1px 0 rgba(255,255,255,0.2); }
+  .note { font-size:12px; color:#6a6090; text-align:center; margin-top:14px; line-height:1.6; font-weight:500; letter-spacing:0.2px; }
+  .note .link { color:#8a80c0; }
+  .status-row { display:flex; align-items:center; justify-content:space-between; background:rgba(18,10,35,0.8); border:1.5px solid rgba(120,90,200,0.35); border-radius:14px; padding:14px 16px; margin-bottom:12px; gap:10px; }
+  .status-row .label { font-size:12px; font-weight:700; letter-spacing:0.5px; color:#a99ad0; text-transform:uppercase; flex-shrink:0; }
+  .status-row .value { font-size:13.5px; font-weight:700; color:#ff8ca0; display:flex; align-items:center; gap:6px; text-align:right; }
+  .status-row .value.active { color:#4ade80; }
+  .status-row .value .dot { width:9px; height:9px; border-radius:50%; background:#ff5c7a; box-shadow:0 0 8px #ff5c7a; flex-shrink:0; }
+  .status-row .value.active .dot { background:#4ade80; box-shadow:0 0 10px #4ade80; animation:pulse 1.8s infinite; }
+  @keyframes pulse { 0%,100% { opacity:0.7; transform:scale(1); } 50% { opacity:1; transform:scale(1.25); } }
+  .toggle-row { display:flex; align-items:center; justify-content:space-between; background:rgba(18,10,35,0.8); border:1.5px solid rgba(120,90,200,0.35); border-radius:14px; padding:12px 16px; margin-bottom:12px; }
+  .toggle-label { font-size:14px; font-weight:600; color:#d0c0f0; letter-spacing:0.3px; }
+  .toggle { position:relative; width:52px; height:30px; background:rgba(60,40,100,0.8); border-radius:30px; cursor:pointer; transition:background .25s; border:1px solid rgba(120,90,200,0.4); flex-shrink:0; }
+  .toggle::after { content:""; position:absolute; top:3px; left:3px; width:22px; height:22px; background:#c8b0f0; border-radius:50%; transition:transform .25s,background .25s; box-shadow:0 2px 5px rgba(0,0,0,0.4); }
+  .toggle.on { background:linear-gradient(135deg,#4ade80,#1a9a4a); border-color:rgba(100,255,160,0.5); }
+  .toggle.on::after { transform:translateX(22px); background:#fff; }
 
-/* DNS */
-.dw{display:flex;justify-content:center;align-items:center;margin:6px 0 14px;position:relative;height:180px}
-.dwv{position:absolute;width:170px;height:170px;border-radius:50%;border:2px solid rgba(14,165,233,.6);opacity:0;pointer-events:none}
-.dc.active ~ .dwv1{animation:wv 2.2s ease-out infinite}
-.dc.active ~ .dwv2{animation:wv 2.2s ease-out .7s infinite}
-.dc.active ~ .dwv3{animation:wv 2.2s ease-out 1.4s infinite}
-@keyframes wv{0%{transform:scale(.85);opacity:.8}100%{transform:scale(1.5);opacity:0}}
-.dc{width:170px;height:170px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(80,80,90,.5),rgba(30,30,40,.7));border:3px solid rgba(255,255,255,.15);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;user-select:none;position:relative;z-index:2;box-shadow:0 10px 30px rgba(0,0,0,.45)}
-.dc:active{transform:scale(.96)}
-.dc.active{background:radial-gradient(circle at 35% 30%,rgba(56,189,248,.55),rgba(14,165,233,.25));border-color:#38bdf8;box-shadow:0 0 40px rgba(14,165,233,.9),0 0 80px rgba(56,189,248,.5)}
-.dic{font-size:2.8rem;line-height:1;margin-bottom:4px}
-.dlb{font-size:.8rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#cbd5e1;text-shadow:0 2px 8px #000;text-align:center;padding:0 8px;line-height:1.2}
-.dc.active .dlb{color:#fff}
-.dh{font-size:.6rem;margin-top:5px;opacity:.75;color:#94a3b8}
-.dc.active .dh{color:#bae6fd}
+  /* ===== LOADING ===== */
+  .loading-overlay { position:fixed; inset:0; background:rgba(5,2,12,0.85); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:9998; display:none; align-items:center; justify-content:center; flex-direction:column; padding:24px; }
+  .loading-overlay.show { display:flex; animation:fadeIn 0.3s; }
+  @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+  .loading-circle { width:110px; height:110px; position:relative; margin-bottom:24px; }
+  .loading-circle::before { content:""; position:absolute; inset:0; border-radius:50%; border:4px solid rgba(140,90,240,0.2); }
+  .loading-circle::after { content:""; position:absolute; inset:0; border-radius:50%; border:4px solid transparent; border-top-color:#b18aff; border-right-color:#6dd0ff; animation:spin 1s linear infinite; filter:drop-shadow(0 0 12px rgba(177,138,255,0.8)); }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .loading-percent { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900; color:#fff; text-shadow:0 0 12px rgba(180,120,255,0.8); font-family:ui-monospace,monospace; }
+  .loading-text { font-size:16px; font-weight:700; color:#d8c8ff; letter-spacing:0.5px; text-align:center; margin-bottom:16px; text-shadow:0 0 12px rgba(180,120,255,0.6); }
+  .loading-bar-wrap { width:100%; max-width:320px; height:8px; background:rgba(60,40,100,0.6); border-radius:8px; overflow:hidden; margin-top:16px; border:1px solid rgba(120,90,200,0.3); }
+  .loading-bar-fill { height:100%; width:0%; background:linear-gradient(90deg,#8b5eff,#6dd0ff); border-radius:8px; transition:width 0.1s linear; box-shadow:0 0 12px rgba(140,120,255,0.7); }
+  .loading-countdown { font-size:14px; font-weight:700; color:#b8a0ff; letter-spacing:0.5px; margin-top:12px; text-shadow:0 0 8px rgba(180,120,255,0.5); }
+  .loading-sub { font-size:12px; color:#8a80c0; font-weight:500; margin-top:14px; letter-spacing:0.3px; }
 
-/* JSON PANEL */
-.jp{background:rgba(0,0,0,.42);border:1px solid rgba(14,165,233,.35);border-radius:18px;padding:10px 12px;margin-bottom:10px}
-.jh{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:6px;flex-wrap:wrap}
-.jt{font-size:.66rem;font-weight:700;letter-spacing:1.2px;color:#7dd3fc;display:flex;align-items:center;gap:6px}
-.jt .dt{width:7px;height:7px;border-radius:50%;background:#0EA5E9;box-shadow:0 0 10px #0EA5E9}
-.js{display:flex;gap:4px;flex-wrap:wrap}
-.jst{font-size:.54rem;padding:2px 7px;border-radius:10px;font-weight:700}
-.jst.unused{background:rgba(34,197,94,.2);color:#86efac}
-.jst.active{background:rgba(14,165,233,.25);color:#7dd3fc}
-.jst.expired{background:rgba(234,179,8,.2);color:#fde047}
-.jst.banned{background:rgba(239,68,68,.25);color:#fca5a5}
-.jl{max-height:130px;overflow-y:auto;font-family:ui-monospace,Monaco,monospace;scrollbar-width:thin}
-.jl::-webkit-scrollbar{width:3px}
-.jl::-webkit-scrollbar-thumb{background:rgba(14,165,233,.5);border-radius:3px}
-.jr{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:10px;background:rgba(255,255,255,.04);margin-bottom:4px;font-size:.6rem;border:1px solid rgba(255,255,255,.06)}
-.jk{font-weight:800;color:#7dd3fc;letter-spacing:.8px;font-size:.64rem}
-.jb{font-size:.48rem;padding:2px 6px;border-radius:7px;font-weight:800;text-transform:uppercase}
-.jb.badge-unused{background:rgba(34,197,94,.25);color:#86efac}
-.jb.badge-active{background:rgba(14,165,233,.3);color:#7dd3fc}
-.jb.badge-expired{background:rgba(234,179,8,.25);color:#fde047}
-.jb.badge-banned{background:rgba(239,68,68,.3);color:#fca5a5}
-.jm{color:#94a3b8;font-size:.54rem;margin-left:auto;text-align:right}
-.jm strong{color:#bae6fd;font-weight:700}
-.je{text-align:center;padding:12px;color:#94a3b8;font-size:.66rem;font-style:italic}
-.jld{text-align:center;padding:12px;color:#7dd3fc;font-size:.66rem}
+  /* ===== MUSIC PLAYER ===== */
+  .music-player { position:fixed; bottom:14px; left:14px; display:flex; align-items:center; gap:10px; background:rgba(18,10,35,0.9); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid rgba(140,100,220,0.4); border-radius:50px; padding:7px 16px 7px 7px; box-shadow:0 8px 24px rgba(0,0,0,0.6),0 0 20px rgba(120,60,220,0.35); z-index:999; max-width:calc(100% - 28px); cursor:pointer; transition:transform .15s; }
+  .music-player:active { transform:scale(0.96); }
+  .vinyl { width:42px; height:42px; border-radius:50%; background: radial-gradient(circle at center, #2a0d4a 25%, #0a0316 26%, #1a0d2e 27%, #0a0316 68%, #1a0d2e 70%, #0a0316 72%); position:relative; flex-shrink:0; box-shadow:inset 0 0 0 2px rgba(180,120,255,0.4),0 0 12px rgba(140,80,240,0.5); }
+  .vinyl::before { content:""; position:absolute; inset:0; border-radius:50%; background: repeating-radial-gradient(circle at center, transparent 0 2px, rgba(180,120,255,0.08) 2px 3px); }
+  .vinyl::after { content:""; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:10px; height:10px; border-radius:50%; background:linear-gradient(135deg,#b18aff,#6dd0ff); box-shadow:0 0 8px rgba(177,138,255,0.9); }
+  .vinyl.playing { animation:spin 3s linear infinite; }
+  .music-info { flex:1; min-width:0; overflow:hidden; }
+  .music-title { font-size:11px; font-weight:800; color:#e8d8ff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:0.2px; text-shadow:0 0 6px rgba(180,120,255,0.5); }
+  .music-artist { font-size:9.5px; font-weight:600; color:#8a80c0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:0.2px; margin-top:1px; }
+  .music-play-icon { width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#8b5eff,#4a7aff); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 2px 8px rgba(120,80,255,0.6); }
+  .music-play-icon svg { width:12px; height:12px; fill:#fff; }
 
-/* CONFIG */
-.cs{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:12px;margin-bottom:10px}
-.ct{font-size:.7rem;font-weight:700;letter-spacing:1.5px;color:#bae6fd;margin-bottom:10px;display:flex;align-items:center;gap:8px}
-.ct .dt{width:7px;height:7px;border-radius:50%;background:#0EA5E9;box-shadow:0 0 10px #0EA5E9}
-.cf{margin-bottom:8px}
-.cf:last-of-type{margin-bottom:12px}
-.cf label{display:block;font-size:.58rem;letter-spacing:1px;color:#cbd5e1;margin-bottom:4px;padding-left:4px;font-weight:600;text-transform:uppercase;opacity:.85}
-.cf input{width:100%;padding:10px 12px;font-size:.8rem;background:rgba(0,0,0,.3);border:1.5px solid rgba(255,255,255,.12);border-radius:12px;color:#fff;outline:none;font-weight:500}
-.cf input:focus{border-color:#0EA5E9}
-.bd{width:100%;background:linear-gradient(135deg,#7C3AED,#0EA5E9);border:none;border-radius:14px;padding:12px;font-size:.76rem;font-weight:700;letter-spacing:1px;color:#fff}
+  .toast { position:fixed; left:50%; bottom:80px; transform:translateX(-50%) translateY(150%); background:linear-gradient(135deg,#2a1550,#1a0a35); border:1px solid rgba(180,140,255,0.5); color:#f0e8ff; padding:14px 22px; border-radius:14px; font-size:14px; font-weight:600; box-shadow:0 10px 30px rgba(0,0,0,0.6),0 0 20px rgba(140,90,255,0.4); z-index:9999; transition:transform .3s; max-width:340px; text-align:center; }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  .toast.success { border-color:rgba(74,222,128,0.6); box-shadow:0 10px 30px rgba(0,0,0,0.6),0 0 20px rgba(74,222,128,0.4); }
+  .toast.error { border-color:rgba(255,90,120,0.6); box-shadow:0 10px 30px rgba(0,0,0,0.6),0 0 20px rgba(255,90,120,0.4); }
 
-/* FUNC */
-.fg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
-.fb{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:18px;padding:12px 10px;font-size:.72rem;font-weight:700;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;user-select:none;text-align:center;position:relative}
-.fb:active:not(.loading){transform:scale(.95);background:rgba(255,255,255,.16)}
-.fb.loading{pointer-events:none;opacity:.7}
-.fb.loading::after{content:'';position:absolute;top:6px;right:8px;width:12px;height:12px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
-.fb .em{font-size:1.5rem;line-height:1}
-.as{font-size:.54rem;padding:2px 9px;border-radius:10px;background:rgba(0,0,0,.35);color:#94a3b8;font-weight:700;letter-spacing:.8px;margin-top:2px}
-.as.on{background:rgba(14,165,233,.6);color:#fff}
+  .footer { text-align:center; font-size:12.5px; color:#7a7098; padding:10px 0 4px; font-weight:500; letter-spacing:0.3px; }
 
-.lob{margin-top:auto;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.7);font-size:.76rem;padding:12px;border-radius:18px;font-weight:600;letter-spacing:1.5px}
-.lob:active:not(.loading){background:rgba(239,68,68,.25);border-color:rgba(239,68,68,.5);color:#fecaca}
-.ftn{text-align:center;font-size:.54rem;opacity:.45;margin-top:10px;letter-spacing:2px;color:#cbd5e1;font-weight:500}
+  /* Hidden iframe for Zing MP3 */
+  .zing-frame { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; left:-9999px; }
 
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(15,12,30,.92);color:#fff;padding:12px 22px;border-radius:40px;font-size:.78rem;font-weight:600;border-left:5px solid #0EA5E9;box-shadow:0 15px 40px rgba(0,0,0,.7);z-index:9999;max-width:90vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
-.mo{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:10000;padding:24px}
-.mo.show{display:flex}
-.mb{background:rgba(30,20,50,.95);border:1px solid rgba(255,255,255,.18);border-radius:26px;padding:24px 20px;max-width:340px;width:100%;text-align:center}
-.mi{font-size:2.8rem;margin-bottom:10px}
-.mt{font-size:1rem;font-weight:800;margin-bottom:8px;color:#fff;letter-spacing:1px}
-.md{font-size:.74rem;color:#cbd5e1;margin-bottom:20px;line-height:1.5;opacity:.9}
-.ma{display:flex;gap:10px}
-.ma .btn{flex:1;padding:13px;font-size:.8rem;border-radius:14px}
-.bdg{background:linear-gradient(135deg,#dc2626,#ef4444);border:none}
-
-#screenMain{overflow-y:auto;overflow-x:hidden;padding-bottom:4px;scrollbar-width:none}
-#screenMain::-webkit-scrollbar{display:none}
+  @media (max-width:380px) {
+    .hero-banner { height:170px; } .hero-title { font-size:52px; }
+    .app-icon-wrap { width:94px; height:94px; margin-top:-47px; }
+    .app-icon-text { font-size:22px; } .app-icon-text small { font-size:13px; }
+    .app-name { font-size:22px; } .app-sub { font-size:13px; }
+    .chip { font-size:12px; padding:10px 5px; min-width:70px; }
+    .key-info-grid { grid-template-columns:1fr; }
+  }
 </style>
 </head>
 <body>
 
-<div class="app">
+<div class="wrap">
 
-<!-- SCREEN 1 -->
-<div class="screen active" id="screenKey">
-  <div class="sbar">
-    <div class="sdot chk" id="dot1"></div>
-    <div class="stxt chk" id="txt1">Đang kiểm tra...</div>
-    <div class="sref" id="ref1">🔄</div>
-  </div>
-  <div class="lw">
-    <div class="logo">UN LOCK</div>
-    <div class="lsub">MỞ KHÓA DNS</div>
-    <div class="lbdg">🔒 BẢO MẬT CAO</div>
-  </div>
-  <div class="ig">
-    <label class="ilb">🔑 NHẬP KEY KÍCH HOẠT</label>
-    <input type="text" class="kin" id="keyInput" placeholder="PTROTXXXXXXX" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false">
-  </div>
-  <div class="err" id="err"></div>
-  <button class="btn bp" id="btnAct" style="margin-top:14px;">🚀 KÍCH HOẠT</button>
-  <div class="jp" style="margin-top:12px;">
-    <div class="jh">
-      <div class="jt"><span class="dt"></span> JSON KEYS SERVER</div>
-      <div class="js" id="js1"></div>
+  <!-- ================= KEY ACTIVATION ================= -->
+  <div class="key-activation">
+    <div class="key-title">
+      <svg viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+      NHẬP KEY KÍCH HOẠT
     </div>
-    <div class="jl" id="jl1"><div class="jld">Đang tải keys...</div></div>
+    <div class="key-input-row">
+      <input type="text" class="key-input" id="keyInput" placeholder="DERA-XXXX-XXXX" autocomplete="off" spellcheck="false">
+      <button class="btn-activate-key" id="btnActivateKey">KÍCH HOẠT</button>
+    </div>
+    <div class="key-msg" id="keyMsg"></div>
   </div>
-  <div class="ftn" style="margin-top:auto;padding-top:12px;">KEY CÓ THỜI HẠN · GẮN VỚI THIẾT BỊ</div>
+
+  <!-- ================= KEY INFO ================= -->
+  <div class="key-info" id="keyInfo">
+    <div class="key-info-header">
+      <div class="key-info-title">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+        KEY ĐÃ KÍCH HOẠT
+      </div>
+      <div class="key-info-badge" id="keyInfoBadge">CÒN 3 NGÀY</div>
+    </div>
+    <div class="key-info-grid">
+      <div class="key-info-item key-info-full">
+        <div class="key-info-label">KEY</div>
+        <div class="key-info-value green" id="infoKey">—</div>
+      </div>
+      <div class="key-info-item">
+        <div class="key-info-label">THIẾT BỊ</div>
+        <div class="key-info-value" id="infoDevice">—</div>
+      </div>
+      <div class="key-info-item">
+        <div class="key-info-label">MÃ THIẾT BỊ</div>
+        <div class="key-info-value" id="infoDeviceId">—</div>
+      </div>
+      <div class="key-info-item">
+        <div class="key-info-label">KÍCH HOẠT LÚC</div>
+        <div class="key-info-value" id="infoActivated">—</div>
+      </div>
+      <div class="key-info-item">
+        <div class="key-info-label">CÒN LẠI</div>
+        <div class="key-info-value green" id="infoRemaining">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= LOCKED NOTE ================= -->
+  <div class="locked-note" id="lockedNote">🔒 Vui lòng nhập Key để mở khóa tất cả chức năng</div>
+
+  <!-- ================= HERO ================= -->
+  <div class="hero-card">
+    <div class="hero-banner">
+      <div class="hero-title">DERA<br>LOCKS</div>
+    </div>
+    <div class="app-icon-wrap">
+      <div class="app-icon">
+        <div class="app-icon-text">DERA<small>LOCKS</small></div>
+      </div>
+    </div>
+    <div class="app-name">DERA LOCKS</div>
+    <div class="app-sub">Dera Locks <span class="dot">·</span> Secure Proxy</div>
+    <div class="badges">
+      <div class="badge-version">v1.0.0</div>
+    </div>
+
+    <div class="ios-box">
+      <div class="ios-title">
+        <svg viewBox="0 0 24 24"><path d="M17.05 12.04c-.02-2.27 1.85-3.36 1.93-3.41-1.05-1.54-2.69-1.75-3.27-1.77-1.39-.14-2.71.82-3.42.82-.71 0-1.79-.8-2.94-.78-1.51.02-2.9.88-3.68 2.23-1.57 2.72-.4 6.75 1.12 8.96.74 1.08 1.62 2.29 2.78 2.25 1.12-.05 1.54-.72 2.9-.72 1.35 0 1.74.72 2.92.7 1.21-.02 1.98-1.1 2.72-2.19.86-1.26 1.21-2.48 1.23-2.54-.03-.01-2.36-.91-2.38-3.6zM14.96 5.2c.62-.75 1.04-1.79.92-2.83-.89.04-1.97.6-2.61 1.34-.57.66-1.07 1.72-.94 2.74 1 .08 2.02-.51 2.63-1.25z"/></svg>
+        iOS HỖ TRỢ:
+      </div>
+      <div class="ios-versions">
+        iOS 16.0 → 18.7.1 <span class="sep">•</span> iOS 26.0 → 26.6.2<br>
+        iOS 27 → 27.2
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SERVER STATUS ================= -->
+  <div class="server-status-card" id="serverStatusCard">
+    <div class="server-status-header">
+      <svg viewBox="0 0 24 24"><path d="M4 1h16c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V3c0-1.1.9-2 2-2zm0 12h16c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2v-6c0-1.1.9-2 2-2zm3-9v2h2V4H7zm0 12v2h2v-2H7zm4-12v2h7V4h-7zm0 12v2h7v-2h-7z"/></svg>
+      <div class="title">TRẠNG THÁI SERVER</div>
+    </div>
+    <button class="server-btn checking" id="btnServerStatus">
+      <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+      ⏳ Đang kiểm tra...
+    </button>
+    <div class="server-info" id="serverInfo">Nhấn để kiểm tra kết nối tới Server</div>
+  </div>
+
+  <!-- ================= MỤC 1: TẠO DNS ================= -->
+  <div class="section-card">
+    <div class="section-title dns">
+      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 15l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>
+      3. TẠO DNS ANTIBAN
+    </div>
+    <div class="field">
+      <div class="field-label">TÊN CẤU HÌNH</div>
+      <input type="text" class="text-input" id="dnsName" placeholder="Nhập tên hiển thị" value="DeraSecure" autocomplete="off">
+    </div>
+    <div class="field">
+      <div class="field-label">DNS CHÍNH</div>
+      <input type="text" class="text-input" id="dnsPrimary" placeholder="VD: 1.1.1.1" value="1.1.1.1" autocomplete="off">
+    </div>
+    <div class="field">
+      <div class="field-label">DNS PHỤ <span class="hint">(Tùy chọn)</span></div>
+      <input type="text" class="text-input" id="dnsSecondary" placeholder="VD: 1.0.0.1" value="1.0.0.1" autocomplete="off">
+    </div>
+    <div class="field">
+      <div class="field-label">CHẾ ĐỘ</div>
+      <div class="chips" id="dnsMode">
+        <div class="chip active" data-mode="secure">Bảo mật</div>
+        <div class="chip" data-mode="optimize">Tối ưu</div>
+        <div class="chip" data-mode="stealth">Chống phát hiện</div>
+      </div>
+    </div>
+    <button class="btn-sign" id="btnCreateDNS">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" fill="none" stroke="white" stroke-width="2"/></svg>
+      Tạo DNS Ngay
+    </button>
+    <div class="note">Tạo file <span class="link">.mobileconfig</span> cấu hình DNS sẵn sàng tải về</div>
+  </div>
+
+  <!-- ================= MỤC 2: TẠO CHỨNG NHẬN .CRT ================= -->
+  <div class="section-card">
+    <div class="section-title crt">
+      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 10c-2 0-3.7-.88-4.8-2.27.02-1.38 2.4-2.23 4.8-2.23s4.78.85 4.8 2.23C15.7 16.12 14 17 12 17z"/></svg>
+      4. TẠO CHỨNG NHẬN .CRT CHO DNS
+    </div>
+    <div class="field">
+      <div class="field-label">TÊN MIỀN / DNS</div>
+      <input type="text" class="text-input" id="crtDomain" placeholder="VD: dns.deralocks.cc" value="dns.deralocks.cc" autocomplete="off">
+    </div>
+    <div class="field">
+      <div class="field-label">TỔ CHỨC</div>
+      <input type="text" class="text-input" id="crtOrg" placeholder="Tên tổ chức / Cá nhân" value="Dera Locks VN" autocomplete="off">
+    </div>
+    <div class="field">
+      <div class="field-label">THỜI HẠN</div>
+      <div class="chips" id="crtDays">
+        <div class="chip" data-days="30">30 ngày</div>
+        <div class="chip active" data-days="90">90 ngày</div>
+        <div class="chip" data-days="365">365 ngày</div>
+        <div class="chip" data-days="730">1 năm</div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">LOẠI CHỨNG NHẬN</div>
+      <div class="chips" id="crtType">
+        <div class="chip active" data-type="root">Root CA</div>
+        <div class="chip" data-type="ssl">SSL Domains</div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">MẬT KHẨU BẢO MẬT <span class="hint">(Tùy chọn)</span></div>
+      <input type="password" class="text-input" id="crtPassword" placeholder="Đặt mật khẩu cho file chứng nhận" autocomplete="off">
+    </div>
+    <button class="btn-sign btn-crt" id="btnCreateCRT">
+      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+      Tạo Chứng Nhận Ngay
+    </button>
+    <div class="note">Tạo file <span class="link">.crt</span> xác thực bảo mật cho cấu hình DNS</div>
+  </div>
+
+  <!-- ================= MỤC 3: KÍCH HOẠT DNS ================= -->
+  <div class="section-card">
+    <div class="section-title run">
+      <svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+      5. KÍCH HOẠT DNS TRỰC TIẾP TRÊN ĐIỆN THOẠI
+    </div>
+    <div class="status-row">
+      <span class="label">TRẠNG THÁI</span>
+      <span class="value" id="dnsStatus"><span class="dot"></span> Chưa kích hoạt</span>
+    </div>
+    <div class="status-row">
+      <span class="label">DNS ĐANG DÙNG</span>
+      <span class="value" id="dnsInUse" style="color:#b8c8e8;"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#b18aff;box-shadow:0 0 8px #b18aff;flex-shrink:0;"></span> DeraSecure</span>
+    </div>
+    <div class="status-row">
+      <span class="label">CHỨNG NHẬN</span>
+      <span class="value" id="crtStatus" style="color:#ffa94d;"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ffa94d;box-shadow:0 0 8px #ffa94d;flex-shrink:0;"></span> Chưa cài</span>
+    </div>
+    <div class="toggle-row">
+      <span class="toggle-label">BẬT / TẮT DNS</span>
+      <div class="toggle on" id="toggleDNS"></div>
+    </div>
+    <button class="btn-sign btn-run" id="btnActivateDNS">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      Kích Hoạt Ngay
+    </button>
+    <div class="note">Tự động mở trang cài đặt cấu hình trực tiếp trên iPhone</div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <div class="footer">© 2026 Dera Locks VN.</div>
+
 </div>
 
-<!-- SCREEN 2 -->
-<div class="screen lds" id="screenLd">
-  <div class="spw">
-    <div class="spr"></div>
-    <div class="lpct" id="lpct">0%</div>
+<!-- ================= LOADING OVERLAY ================= -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-circle">
+    <div class="loading-percent" id="loadingPercent">0%</div>
   </div>
-  <div class="ltxt" id="ltxt">ĐANG KẾT NỐI ...</div>
-  <div class="lbb"><div class="lbf" id="lbf"></div></div>
+  <div class="loading-text">🔄 Đang xác thực thông tin...</div>
+  <div class="loading-bar-wrap">
+    <div class="loading-bar-fill" id="loadingBarFill"></div>
+  </div>
+  <div class="loading-countdown" id="loadingCountdown">Vui lòng chờ: 10s</div>
+  <div class="loading-sub">Vui lòng không tắt trang trong quá trình xác thực</div>
 </div>
 
-<!-- SCREEN 3 -->
-<div class="screen" id="screenMain">
-  <div class="sbar">
-    <div class="sdot chk" id="dot2"></div>
-    <div class="stxt chk" id="txt2">Đang kiểm tra...</div>
-    <div class="sref" id="ref2">🔄</div>
+<!-- ================= MUSIC PLAYER ================= -->
+<div class="music-player" id="musicPlayer">
+  <div class="vinyl" id="vinyl"></div>
+  <div class="music-info">
+    <div class="music-title">Thương Nhau Đến Thế - Remix</div>
+    <div class="music-artist" id="musicArtist">Nhấn để phát nhạc</div>
   </div>
-  <div class="ic">
-    <div class="dr">
-      <span class="di" id="devIcon">📱</span>
-      <span class="dn" id="devName">iPhone</span>
-      <span class="db" id="devBadge">ID</span>
-    </div>
-    <div class="tr">
-      <span>⏳ Thời gian còn lại</span>
-      <span class="val" id="timeLeft">0 ngày</span>
-    </div>
+  <div class="music-play-icon">
+    <svg id="musicIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
   </div>
-  <div class="dw">
-    <div class="dwv dwv1"></div>
-    <div class="dwv dwv2"></div>
-    <div class="dwv dwv3"></div>
-    <div class="dc" id="dnsC">
-      <div class="dic">🌐</div>
-      <div class="dlb" id="dnsL">DNS TẮT</div>
-      <div class="dh" id="dnsH">nhấn giữ 1 giây</div>
-    </div>
-  </div>
-  <div class="jp">
-    <div class="jh">
-      <div class="jt"><span class="dt"></span> JSON KEYS SERVER</div>
-      <div class="js" id="js2"></div>
-    </div>
-    <div class="jl" id="jl2"><div class="jld">Đang tải keys...</div></div>
-  </div>
-  <div class="cs">
-    <div class="ct"><span class="dt"></span> TỰ CHỈNH DNS</div>
-    <div class="cf"><label>Tên cấu hình</label><input type="text" id="cfgName" value="UN LOCK DNS"></div>
-    <div class="cf"><label>DNS chính</label><input type="text" id="cfgDns1" value="1.1.1.1"></div>
-    <div class="cf"><label>DNS phụ</label><input type="text" id="cfgDns2" value="1.0.0.1"></div>
-    <div class="cf"><label>URL Garena</label><input type="text" id="cfgUrl" value="https://ms.garena.com"></div>
-    <button class="btn bd" id="btnDl">📥 TẠO &amp; TẢI CẤU HÌNH</button>
-  </div>
-  <div class="fg">
-    <div class="fb" id="btnAim">
-      <span class="em">🎯</span><span>AIM</span>
-      <span class="as" id="aimS">TẮT</span>
-    </div>
-    <div class="fb" id="btnInfo">
-      <span class="em">📋</span><span>XEM THÔNG TIN</span>
-    </div>
-  </div>
-  <button class="btn lob" id="btnOut">🚪 ĐĂNG XUẤT</button>
-  <div class="ftn">UN LOCK · BẢO VỆ RIÊNG TƯ</div>
 </div>
 
-</div>
-
-<div class="mo" id="mo">
-  <div class="mb">
-    <div class="mi">⚠️</div>
-    <div class="mt">XÁC NHẬN ĐĂNG XUẤT</div>
-    <div class="md">Key sẽ được giải phóng khỏi thiết bị này. Bạn cần nhập lại key để sử dụng.</div>
-    <div class="ma">
-      <button class="btn" id="mNo">HỦY</button>
-      <button class="btn bdg" id="mYes">ĐĂNG XUẤT</button>
-    </div>
-  </div>
-</div>
+<!-- ================= TOAST ================= -->
+<div class="toast" id="toast"></div>
 
 <script>
-(function(){
-'use strict';
+/* ============================================================
+   CẤU HÌNH SERVER — SỬA URL KHI DEPLOY
+============================================================ */
+const SERVER_URL = "http://localhost:3000"; 
+// Sau khi deploy: "https://api.deralocks.cc" hoặc link ngrok
 
-// ═══════════════════════════════════════════
-// ⚙️ SERVER CỦA BẠN
-// ═══════════════════════════════════════════
-var API = 'https://sever-axua.onrender.com';
-var TOKEN = 'UNLOCK_ADMIN_2026';
+/* ============================================================
+   DANH SÁCH KEY (đồng bộ với server nhưng vẫn có fallback client)
+============================================================ */
+const FALLBACK_KEYS = [
+  'DERA-42363C9E-EC589D4C','DERA-7A9B2D4F-8E3C1D7F','DERA-1F3E5D7C-9B2A4C6E',
+  'DERA-8C2E6F4A-1D3B5E7C','DERA-2B4D6F8A-3E5C7D9B','DERA-9A3C5E7G-2F4D6B8H',
+  'DERA-5E7C9A2D-4F6B8E3C','DERA-3D5F7B9A-6C8E2D4F','DERA-7F9D2B4C-5A3E8F6D',
+  'DERA-4C6E8A2F-9B3D7E5A'
+];
+const KEY_DURATION_MS = 3 * 24 * 60 * 60 * 1000;
+const STORAGE_KEY = 'dera_locks_activation';
 
-var PREFIX='PTROT', KLEN=12, LOAD_MS=15000, CHK_MS=30000;
-var K_DEVID='unlock_device_id', K_DEVNM='unlock_device_name';
-var K_ACT='unlock_activated_key', K_EXP='unlock_key_expire_at';
-var K_AIM='unlock_aim_state', K_DNS='unlock_dns_state', K_CFG='unlock_dns_config';
-
-var curKey='', expAt=0, cInt=null, lInt=null, sInt=null, busy=false, actx=null, tInt=null, dInt=null, dDone=false;
-
-function $(id){ return document.getElementById(id); }
-
-// ═══ SERVER CHECK ═══
-function checkServer(){
-  var dots=[$('dot1'),$('dot2')].filter(Boolean);
-  var txts=[$('txt1'),$('txt2')].filter(Boolean);
-  dots.forEach(function(d){ d.className='sdot chk'; });
-  txts.forEach(function(t){ t.className='stxt chk'; t.textContent='Đang kiểm tra...'; });
-
-  var t0=Date.now();
-  return fetch(API+'/api/health',{cache:'no-store'})
-    .then(function(r){ return r.json(); })
-    .then(function(j){
-      var ping=Date.now()-t0;
-      if (j.ok){
-        dots.forEach(function(d){ d.className='sdot on'; });
-        txts.forEach(function(t){
-          t.className='stxt on';
-          t.textContent='🟢 Online · '+ping+'ms · '+(j.total_keys||0)+' keys';
-        });
-        loadJson();
-        return true;
-      }
-      throw new Error('bad');
-    })
-    .catch(function(){
-      dots.forEach(function(d){ d.className='sdot off'; });
-      txts.forEach(function(t){
-        t.className='stxt off';
-        t.textContent='🔴 Offline · Thử lại sau';
-      });
-      jsonErr('Không kết nối được server');
-      return false;
-    });
+/* ============================================================
+   TOAST
+============================================================ */
+let toastTimer;
+function showToast(msg, type = "") {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = 'toast ' + type; }, 3500);
 }
 
-function loadJson(){
-  var lists=[$('jl1'),$('jl2')].filter(Boolean);
-  var stats=[$('js1'),$('js2')].filter(Boolean);
-  lists.forEach(function(l){ l.innerHTML='<div class="jld">Đang tải keys...</div>'; });
-
-  return fetch(API+'/api/admin/keys?token='+TOKEN,{cache:'no-store'})
-    .then(function(r){ return r.json(); })
-    .then(function(j){
-      if (!j.ok || !j.keys){ jsonErr('Không load được keys'); return; }
-
-      var c={unused:0,active:0,expired:0,banned:0};
-      j.keys.forEach(function(k){ if (c[k.status]!==undefined) c[k.status]++; });
-
-      var html='<span class="jst unused">🟢 '+c.unused+'</span>'+
-               '<span class="jst active">🔵 '+c.active+'</span>'+
-               '<span class="jst expired">🟡 '+c.expired+'</span>'+
-               '<span class="jst banned">🔴 '+c.banned+'</span>';
-      stats.forEach(function(s){ s.innerHTML=html; });
-
-      if (j.keys.length===0){
-        lists.forEach(function(l){ l.innerHTML='<div class="je">Chưa có key nào</div>'; });
-        return;
-      }
-
-      var rows=j.keys.map(function(k){
-        var sk=k.key.length>10 ? k.key.substring(0,5)+'...'+k.key.slice(-4) : k.key;
-        var bc='badge-'+(k.status||'unused');
-        var dl=k.expire_at ? Math.max(0,Math.ceil((new Date(k.expire_at)-Date.now())/86400000)) : k.duration_days;
-        var meta;
-        if (k.status==='active'&&k.expire_at){
-          meta='<strong>'+dl+'</strong>d · '+(k.devices?k.devices.length:0)+'/'+k.max_devices+'📱';
-        } else if (k.status==='unused'){
-          meta='<strong>'+k.duration_days+'</strong>d · '+k.max_devices+'📱';
-        } else {
-          meta=k.duration_days+'d';
-        }
-        return '<div class="jr"><span class="jk">'+sk+'</span>'+
-               '<span class="jb '+bc+'">'+k.status+'</span>'+
-               '<span class="jm">'+meta+'</span></div>';
-      }).join('');
-      lists.forEach(function(l){ l.innerHTML=rows; });
-    })
-    .catch(function(){ jsonErr('Lỗi tải keys'); });
+/* ============================================================
+   DEVICE INFO
+============================================================ */
+function getDeviceName() {
+  const ua = navigator.userAgent;
+  let device = 'Thiết bị không xác định';
+  if (/iPhone/.test(ua)) device = 'iPhone';
+  else if (/iPad/.test(ua)) device = 'iPad';
+  else if (/Android/.test(ua)) device = 'Android';
+  else if (/Mac/.test(ua)) device = 'Mac';
+  else if (/Windows/.test(ua)) device = 'Windows';
+  else if (/Linux/.test(ua)) device = 'Linux';
+  const iOSMatch = ua.match(/OS (\d+_\d+)/);
+  if (iOSMatch) device += ' · iOS ' + iOSMatch[1].replace('_', '.');
+  const androidMatch = ua.match(/Android (\d+)/);
+  if (androidMatch) device += ' · Android ' + androidMatch[1];
+  return device;
 }
-
-function jsonErr(m){
-  var lists=[$('jl1'),$('jl2')].filter(Boolean);
-  lists.forEach(function(l){ l.innerHTML='<div class="je">❌ '+m+'</div>'; });
-  var stats=[$('js1'),$('js2')].filter(Boolean);
-  stats.forEach(function(s){ s.innerHTML=''; });
-}
-
-// ═══ UTILS ═══
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
-  $(id).classList.add('active');
-}
-
-function toast(msg,dur){
-  dur=dur||2400;
-  var old=document.querySelector('.toast');
-  if (old) old.remove();
-  if (tInt) clearTimeout(tInt);
-  var t=document.createElement('div');
-  t.className='toast';
-  t.textContent=msg;
-  document.body.appendChild(t);
-  tInt=setTimeout(function(){
-    t.style.opacity='0';
-    t.style.transition='all .3s';
-    setTimeout(function(){ t.remove(); },320);
-  },dur);
-}
-
-function beep(freq,dur){
-  freq=freq||880; dur=dur||0.25;
-  try {
-    if (!actx) actx=new (window.AudioContext||window.webkitAudioContext)();
-    if (actx.state==='suspended') actx.resume();
-    var o=actx.createOscillator();
-    var g=actx.createGain();
-    o.connect(g); g.connect(actx.destination);
-    o.type='sine'; o.frequency.value=freq;
-    g.gain.setValueAtTime(0.08,actx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+dur);
-    o.start(); o.stop(actx.currentTime+dur);
-  } catch(e){}
-}
-
-function say(text){
-  if (!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  var u=new SpeechSynthesisUtterance(text);
-  u.lang='vi-VN';
-  window.speechSynthesis.speak(u);
-}
-
-function getDevId(){
-  var id=localStorage.getItem(K_DEVID);
-  if (!id){
-    id='dev_'+Date.now().toString(36)+'_'+Math.random().toString(36).substr(2,8);
-    localStorage.setItem(K_DEVID,id);
+function getDeviceId() {
+  let id = localStorage.getItem('dera_device_id');
+  if (!id) {
+    const rand = () => Math.random().toString(36).substring(2, 8).toUpperCase();
+    id = 'DEV-' + rand() + '-' + rand();
+    localStorage.setItem('dera_device_id', id);
   }
   return id;
 }
 
-function getDevName(){
-  var name=localStorage.getItem(K_DEVNM);
-  if (!name){
-    var ua=navigator.userAgent;
-    var d='Thiết bị';
-    if (/iPhone/i.test(ua)) d='iPhone';
-    else if (/iPad/i.test(ua)) d='iPad';
-    else if (/Android/i.test(ua)) d='Android';
-    else if (/Mac/i.test(ua)) d='Mac';
-    else if (/Windows/i.test(ua)) d='Windows';
-    name=d+' '+Math.floor(1000+Math.random()*9000);
-    localStorage.setItem(K_DEVNM,name);
+/* ============================================================
+   QUẢN LÝ KEY
+============================================================ */
+function getActivation() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); }
+  catch (e) { return null; }
+}
+function setActivation(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+function clearActivation() { localStorage.removeItem(STORAGE_KEY); }
+function isActivationValid(act) {
+  if (!act || !act.key) return false;
+  if (Date.now() >= act.expiresAt) return false;
+  return true;
+}
+function formatDateVN(ts) {
+  const d = new Date(ts);
+  const pad = n => String(n).padStart(2, '0');
+  return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+function formatRemaining(ms) {
+  if (ms <= 0) return 'Đã hết hạn';
+  const totalSec = Math.floor(ms / 1000);
+  const days = Math.floor(totalSec / 86400);
+  const hours = Math.floor((totalSec % 86400) / 3600);
+  const mins = Math.floor((totalSec % 3600) / 60);
+  const secs = totalSec % 60;
+  if (days > 0) return `${days} ngày ${hours} giờ ${mins} phút`;
+  if (hours > 0) return `${hours} giờ ${mins} phút ${secs} giây`;
+  if (mins > 0) return `${mins} phút ${secs} giây`;
+  return `${secs} giây`;
+}
+
+/* ============================================================
+   CẬP NHẬT UI KHÓA / MỞ
+============================================================ */
+function updateLockUI() {
+  const act = getActivation();
+  const valid = isActivationValid(act);
+  const body = document.body;
+  const keyInfo = document.getElementById('keyInfo');
+  const keyMsg = document.getElementById('keyMsg');
+  const keyInput = document.getElementById('keyInput');
+  const btnKey = document.getElementById('btnActivateKey');
+
+  if (valid) {
+    body.classList.remove('locked');
+    keyInfo.classList.add('show');
+    keyInput.disabled = true;
+    btnKey.disabled = true;
+    btnKey.textContent = 'ĐÃ KÍCH HOẠT';
+    keyMsg.textContent = '';
+    keyMsg.className = 'key-msg';
+    document.getElementById('infoKey').textContent = act.key;
+    document.getElementById('infoDevice').textContent = act.deviceName || getDeviceName();
+    document.getElementById('infoDeviceId').textContent = act.deviceId || getDeviceId();
+    document.getElementById('infoActivated').textContent = formatDateVN(act.activatedAt);
+    document.getElementById('infoRemaining').textContent = formatRemaining(act.expiresAt - Date.now());
+    document.getElementById('keyInfoBadge').textContent = 'CÒN ' + Math.ceil((act.expiresAt - Date.now()) / 86400000) + ' NGÀY';
+  } else {
+    body.classList.add('locked');
+    keyInfo.classList.remove('show');
+    keyInput.disabled = false;
+    btnKey.disabled = false;
+    btnKey.textContent = 'KÍCH HOẠT';
   }
-  return name;
 }
 
-function getDevIcon(n){ return /Mac|Windows/i.test(n)?'💻':'📱'; }
+setInterval(() => {
+  const act = getActivation();
+  if (!act) return;
+  if (!isActivationValid(act)) {
+    clearActivation();
+    updateLockUI();
+    showToast('⏰ Key đã hết hạn', 'error');
+    return;
+  }
+  document.getElementById('infoRemaining').textContent = formatRemaining(act.expiresAt - Date.now());
+  const daysLeft = Math.ceil((act.expiresAt - Date.now()) / 86400000);
+  document.getElementById('keyInfoBadge').textContent = 'CÒN ' + daysLeft + ' NGÀY';
+}, 1000);
 
-function validKey(k){ return k && k.length===KLEN && k.indexOf(PREFIX)===0; }
+/* ============================================================
+   NÚT KÍCH HOẠT KEY — GỌI SERVER XÁC THỰC
+============================================================ */
+document.getElementById('btnActivateKey').addEventListener('click', async () => {
+  const keyInput = document.getElementById('keyInput');
+  const keyMsg = document.getElementById('keyMsg');
+  const key = keyInput.value.trim().toUpperCase();
 
-// ═══ API ═══
-function apiVerify(key,did,dnm){
-  return fetch(API+'/api/verify',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({key:key,device_id:did,device_name:dnm})
-  }).then(function(r){ return r.json(); });
-}
+  keyInput.classList.remove('error');
+  keyMsg.textContent = '';
+  keyMsg.className = 'key-msg';
 
-function apiLogout(key,did){
-  return fetch(API+'/api/logout',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({key:key,device_id:did})
-  }).then(function(r){ return r.json(); }).catch(function(){ return {ok:false}; });
-}
-
-// ═══ ACTIVATE ═══
-function handleActivate(){
-  var raw=($('keyInput').value||'').trim().toUpperCase();
-  var e=$('err');
-  e.classList.remove('show');
-  $('keyInput').classList.remove('shk');
-
-  if (!validKey(raw)){
-    e.textContent='❌ Key không hợp lệ. Định dạng: PTROT + 7 ký tự';
-    e.classList.add('show');
-    $('keyInput').classList.add('shk');
-    setTimeout(function(){ $('keyInput').classList.remove('shk'); },500);
-    beep(220,0.4);
+  if (!key) {
+    keyInput.classList.add('error');
+    keyMsg.textContent = '❌ Key không hợp lệ, vui lòng kiểm tra lại';
+    keyMsg.classList.add('error');
     return;
   }
 
-  $('btnAct').classList.add('loading');
+  let valid = false;
+  let serverAct = null;
 
-  apiVerify(raw,getDevId(),getDevName()).then(function(r){
-    $('btnAct').classList.remove('loading');
-
-    if (!r.ok){
-      var map={
-        'INVALID_FORMAT':'❌ Key sai định dạng',
-        'KEY_NOT_FOUND':'❌ Key không tồn tại',
-        'KEY_BANNED':'🚫 Key đã bị khóa',
-        'KEY_EXPIRED':'⏰ Key đã hết hạn',
-        'DEVICE_LIMIT':'⚠️ Key đã đạt giới hạn thiết bị'
-      };
-      e.textContent=map[r.code]||('❌ '+(r.message||'Key không hợp lệ'));
-      e.classList.add('show');
-      $('keyInput').classList.add('shk');
-      setTimeout(function(){ $('keyInput').classList.remove('shk'); },500);
-      beep(220,0.4);
-      return;
-    }
-
-    var d=r.data;
-    localStorage.setItem(K_ACT,raw);
-    localStorage.setItem(K_EXP,new Date(d.expire_at).getTime().toString());
-    curKey=raw;
-    expAt=new Date(d.expire_at).getTime();
-
-    beep(1000,0.3);
-    toast(r.code==='ACTIVATED'?'✅ Kích hoạt thành công':'✅ Key đang hoạt động');
-    loadJson();
-    showScreen('screenLd');
-    startLoad();
-  }).catch(function(){
-    $('btnAct').classList.remove('loading');
-    e.textContent='❌ Không kết nối được server. Kiểm tra mạng.';
-    e.classList.add('show');
-    $('keyInput').classList.add('shk');
-    setTimeout(function(){ $('keyInput').classList.remove('shk'); },500);
-    beep(220,0.4);
-  });
-}
-
-function startLoad(){
-  var t0=Date.now();
-  $('lpct').textContent='0%';
-  $('lbf').style.width='0%';
-  $('ltxt').textContent='ĐANG KẾT NỐI ...';
-
-  if (lInt) clearInterval(lInt);
-  lInt=setInterval(function(){
-    var el=Date.now()-t0;
-    var p=Math.min(Math.floor((el/LOAD_MS)*100),100);
-    $('lpct').textContent=p+'%';
-    $('lbf').style.width=p+'%';
-
-    if (p<30) $('ltxt').textContent='ĐANG XÁC THỰC KEY ...';
-    else if (p<60) $('ltxt').textContent='ĐANG THIẾT LẬP KẾT NỐI ...';
-    else if (p<90) $('ltxt').textContent='ĐANG ĐỒNG BỘ DỮ LIỆU ...';
-    else $('ltxt').textContent='HOÀN TẤT ...';
-
-    if (p>=100){
-      clearInterval(lInt); lInt=null;
-      setTimeout(finishLoad,250);
-    }
-  },100);
-}
-
-function finishLoad(){
-  showScreen('screenMain');
-  var n=getDevName();
-  $('devName').textContent=n;
-  $('devIcon').textContent=getDevIcon(n);
-  $('devBadge').textContent='ID: '+getDevId().slice(-6).toUpperCase();
-
-  expAt=parseInt(localStorage.getItem(K_EXP)||'0',10);
-  startCd();
-  loadAim();
-  loadDns();
-  loadCfg();
-  loadJson();
-
-  var dl=Math.max(0,Math.ceil((expAt-Date.now())/86400000));
-  setTimeout(function(){ say('Chào mừng bạn đến với UN LOCK'); },300);
-  setTimeout(function(){ say('Thời gian sử dụng của bạn còn lại '+dl+' ngày'); },2000);
-}
-
-function tick(){
-  if (!expAt) return;
-  var df=expAt-Date.now();
-  if (df<=0){ expired(); return; }
-  var dd=Math.floor(df/86400000);
-  var hh=Math.floor((df%86400000)/3600000);
-  var mm=Math.floor((df%3600000)/60000);
-  var ss=Math.floor((df%60000)/1000);
-  var s;
-  if (dd>0) s=dd+' ngày '+hh+' giờ';
-  else if (hh>0) s=hh+' giờ '+mm+' phút';
-  else if (mm>0) s=mm+' phút '+ss+' giây';
-  else s=ss+' giây';
-  var el=$('timeLeft');
-  if (el) el.textContent=s;
-}
-
-function startCd(){
-  if (cInt) clearInterval(cInt);
-  tick();
-  cInt=setInterval(tick,1000);
-}
-
-function expired(){
-  if (cInt) clearInterval(cInt);
-  if ($('screenMain').classList.contains('active')){
-    toast('⚠️ Key đã hết hạn');
-    setTimeout(function(){ doLogout(true); },800);
-  }
-}
-
-function doLogout(silent){
-  silent=silent||false;
-  if (cInt) clearInterval(cInt);
-  if (lInt) clearInterval(lInt);
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
-
-  var sk=localStorage.getItem(K_ACT);
-  var cleanup=function(){
-    localStorage.removeItem(K_ACT);
-    localStorage.removeItem(K_EXP);
-    curKey=''; expAt=0;
-    $('keyInput').value='';
-    $('err').classList.remove('show');
-    $('keyInput').classList.remove('shk');
-    loadJson();
-    showScreen('screenKey');
-    if (!silent) toast('👋 Đã đăng xuất');
-  };
-
-  if (sk) apiLogout(sk,getDevId()).then(cleanup).catch(cleanup);
-  else cleanup();
-}
-
-// ═══ DNS ═══
-function updDns(on){
-  var c=$('dnsC');
-  if (on){
-    c.classList.add('active');
-    $('dnsL').textContent='DNS ĐANG HOẠT ĐỘNG';
-    $('dnsH').textContent='đang bảo vệ';
-  } else {
-    c.classList.remove('active');
-    $('dnsL').textContent='DNS TẮT';
-    $('dnsH').textContent='nhấn giữ 1 giây';
-  }
-}
-
-function loadDns(){ updDns(localStorage.getItem(K_DNS)==='true'); }
-
-function toggleDns(){
-  if (busy) return;
-  busy=true;
-  var cur=localStorage.getItem(K_DNS)==='true';
-  var c=$('dnsC');
-  c.style.opacity='0.65';
-  c.style.pointerEvents='none';
-  setTimeout(function(){
-    var next=!cur;
-    localStorage.setItem(K_DNS,next.toString());
-    updDns(next);
-    c.style.opacity='1';
-    c.style.pointerEvents='auto';
-    busy=false;
-    beep(next?1200:500,0.3);
-    toast(next?'✅ DNS đã BẬT':'⛔ DNS đã TẮT');
-  },450);
-}
-
-function updAim(on){
-  var s=$('aimS');
-  if (on){ s.textContent='BẬT'; s.classList.add('on'); }
-  else { s.textContent='TẮT'; s.classList.remove('on'); }
-}
-
-function loadAim(){ updAim(localStorage.getItem(K_AIM)==='true'); }
-
-function escXml(s){
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
-}
-
-function buildMc(name,d1,d2,url){
-  var u1=crypto.randomUUID?crypto.randomUUID():'u1-'+Date.now();
-  var u2=crypto.randomUUID?crypto.randomUUID():'u2-'+Date.now();
-  return '<?xml version="1.0" encoding="UTF-8"?>\n'+
-'<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n'+
-'<plist version="1.0">\n<dict>\n<key>PayloadContent</key>\n<array>\n<dict>\n'+
-'<key>DNSSettings</key>\n<dict>\n<key>DNSProtocol</key>\n<string>HTTPS</string>\n'+
-'<key>ServerURL</key>\n<string>'+escXml(url)+'</string>\n'+
-'<key>ServerAddresses</key>\n<array>\n<string>'+escXml(d1)+'</string>\n<string>'+escXml(d2)+'</string>\n</array>\n</dict>\n'+
-'<key>PayloadDescription</key>\n<string>Cấu hình DNS cho '+escXml(name)+'</string>\n'+
-'<key>PayloadDisplayName</key>\n<string>'+escXml(name)+'</string>\n'+
-'<key>PayloadIdentifier</key>\n<string>app.unlock.dns.'+u1+'</string>\n'+
-'<key>PayloadType</key>\n<string>com.apple.dnsSettings.managed</string>\n'+
-'<key>PayloadUUID</key>\n<string>'+u1+'</string>\n<key>PayloadVersion</key>\n<integer>1</integer>\n</dict>\n</array>\n'+
-'<key>PayloadDescription</key>\n<string>Cấu hình DNS từ UN LOCK</string>\n'+
-'<key>PayloadDisplayName</key>\n<string>'+escXml(name)+'</string>\n'+
-'<key>PayloadIdentifier</key>\n<string>app.unlock.profile.'+u2+'</string>\n'+
-'<key>PayloadRemovalDisallowed</key>\n<false/>\n'+
-'<key>PayloadType</key>\n<string>Configuration</string>\n'+
-'<key>PayloadUUID</key>\n<string>'+u2+'</string>\n<key>PayloadVersion</key>\n<integer>1</integer>\n</dict>\n</plist>';
-}
-
-function dlCfg(){
-  if (busy) return;
-  busy=true;
-  $('btnDl').classList.add('loading');
-
-  var n=($('cfgName').value.trim()||'UN LOCK DNS');
-  var d1=($('cfgDns1').value.trim()||'1.1.1.1');
-  var d2=($('cfgDns2').value.trim()||'1.0.0.1');
-  var u=($('cfgUrl').value.trim()||'https://ms.garena.com');
-
-  localStorage.setItem(K_CFG,JSON.stringify({name:n,dns1:d1,dns2:d2,url:u}));
-
-  setTimeout(function(){
-    try {
-      var c=buildMc(n,d1,d2,u);
-      var b=new Blob([c],{type:'application/x-apple-aspen-config'});
-      var ou=URL.createObjectURL(b);
-      var a=document.createElement('a');
-      a.href=ou;
-      a.download=n.replace(/[^a-zA-Z0-9-_]/g,'_')+'.mobileconfig';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(function(){ URL.revokeObjectURL(ou); },1000);
-      beep(1100,0.3);
-      toast('📥 Đã tải cấu hình');
-    } catch(e){ toast('❌ Lỗi tạo cấu hình'); }
-    $('btnDl').classList.remove('loading');
-    busy=false;
-  },700);
-}
-
-function loadCfg(){
+  // Thử gọi server xác thực
   try {
-    var r=localStorage.getItem(K_CFG);
-    if (!r) return;
-    var c=JSON.parse(r);
-    if (c.name) $('cfgName').value=c.name;
-    if (c.dns1) $('cfgDns1').value=c.dns1;
-    if (c.dns2) $('cfgDns2').value=c.dns2;
-    if (c.url) $('cfgUrl').value=c.url;
-  } catch(e){}
+    const res = await fetch(SERVER_URL + '/api/verify-key', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: key, deviceId: getDeviceId() })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success) {
+        valid = true;
+        serverAct = data.activation;
+      }
+    }
+  } catch (e) {
+    // Server không phản hồi → dùng fallback client
+    console.warn('Server không phản hồi, dùng fallback:', e.message);
+  }
+
+  // Nếu server fail → kiểm tra fallback
+  if (!valid && FALLBACK_KEYS.includes(key)) valid = true;
+
+  if (!valid) {
+    keyInput.classList.add('error');
+    keyMsg.textContent = '❌ Key không hợp lệ, vui lòng kiểm tra lại';
+    keyMsg.classList.add('error');
+    return;
+  }
+
+  // Key đúng → chạy loading 10s
+  await runLoading10s();
+
+  // Lưu activation
+  const now = Date.now();
+  const currentAct = getActivation();
+  let activatedAt = now;
+  let expiresAt = now + KEY_DURATION_MS;
+
+  if (serverAct) {
+    // Server cung cấp thời gian
+    activatedAt = serverAct.activatedAt || now;
+    expiresAt = serverAct.expiresAt || (now + KEY_DURATION_MS);
+  } else if (currentAct && currentAct.key === key) {
+    activatedAt = currentAct.activatedAt;
+    expiresAt = currentAct.expiresAt;
+  }
+
+  const act = {
+    key: key,
+    deviceName: getDeviceName(),
+    deviceId: getDeviceId(),
+    activatedAt: activatedAt,
+    expiresAt: expiresAt
+  };
+  setActivation(act);
+  updateLockUI();
+  keyMsg.textContent = '✅ Kích hoạt thành công!';
+  keyMsg.classList.add('success');
+  showToast('✅ Kích hoạt key thành công!', 'success');
+  tryAutoPlayMusic();
+});
+
+/* ============================================================
+   LOADING 10 GIÂY
+============================================================ */
+function runLoading10s() {
+  return new Promise(resolve => {
+    const overlay = document.getElementById('loadingOverlay');
+    const percentEl = document.getElementById('loadingPercent');
+    const barEl = document.getElementById('loadingBarFill');
+    const countdownEl = document.getElementById('loadingCountdown');
+    overlay.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    const TOTAL_MS = 10000;
+    const startTime = performance.now();
+    function update() {
+      const elapsed = performance.now() - startTime;
+      const progress = Math.min(elapsed / TOTAL_MS, 1);
+      const percent = Math.floor(progress * 100);
+      const secondsLeft = Math.ceil((TOTAL_MS - elapsed) / 1000);
+      percentEl.textContent = percent + '%';
+      barEl.style.width = (progress * 100) + '%';
+      countdownEl.textContent = 'Vui lòng chờ: ' + Math.max(secondsLeft, 0) + 's';
+      if (progress < 1) requestAnimationFrame(update);
+      else {
+        percentEl.textContent = '100%';
+        barEl.style.width = '100%';
+        countdownEl.textContent = 'Vui lòng chờ: 0s';
+        setTimeout(() => {
+          overlay.classList.remove('show');
+          document.body.style.overflow = '';
+          resolve();
+        }, 250);
+      }
+    }
+    update();
+  });
 }
 
-// ═══ BIND ═══
-function bind(){
-  var ki=$('keyInput');
-  ki.addEventListener('input',function(){
-    ki.value=ki.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
-    $('err').classList.remove('show');
-  });
-  ki.addEventListener('keypress',function(e){
-    if (e.key==='Enter') handleActivate();
-  });
+/* ============================================================
+   SERVER STATUS CHECK
+============================================================ */
+async function checkServerStatus() {
+  const btn = document.getElementById('btnServerStatus');
+  const info = document.getElementById('serverInfo');
+  const card = document.getElementById('serverStatusCard');
 
-  $('btnAct').addEventListener('click',function(){
-    if (this.classList.contains('loading')) return;
-    handleActivate();
-  });
+  btn.className = 'server-btn checking';
+  btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg> ⏳ Đang kiểm tra...';
+  info.textContent = 'Đang kết nối tới server...';
+  info.className = 'server-info';
 
-  var dc=$('dnsC');
-  var start=function(e){
-    e.preventDefault();
-    if (busy) return;
-    dDone=false;
-    dc.style.transform='scale(0.96)';
-    dInt=setTimeout(function(){
-      dDone=true;
-      toggleDns();
-      dc.style.transform='scale(1)';
-    },1000);
-  };
-  var end=function(){
-    if (dInt){ clearTimeout(dInt); dInt=null; }
-    dc.style.transform='scale(1)';
-    if (!dDone) toast('💡 Nhấn giữ 1 giây để bật/tắt');
-  };
-  ['mousedown','touchstart'].forEach(function(ev){ dc.addEventListener(ev,start,{passive:false}); });
-  ['mouseup','mouseleave','touchend','touchcancel'].forEach(function(ev){ dc.addEventListener(ev,end); });
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-  $('btnAim').addEventListener('click',function(){
-    if (this.classList.contains('loading')) return;
-    var b=this;
-    b.classList.add('loading');
-    setTimeout(function(){
-      var next=!(localStorage.getItem(K_AIM)==='true');
-      localStorage.setItem(K_AIM,next.toString());
-      updAim(next);
-      beep(next?1000:400,0.25);
-      toast(next?'🎯 AIM đã BẬT':'🎯 AIM đã TẮT');
-      b.classList.remove('loading');
-    },400);
-  });
+    const res = await fetch(SERVER_URL + '/api/health', {
+      method: 'GET',
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
 
-  $('btnInfo').addEventListener('click',function(){
-    if (this.classList.contains('loading')) return;
-    var b=this;
-    b.classList.add('loading');
-    setTimeout(function(){
-      var on=localStorage.getItem(K_DNS)==='true';
-      var st=on?'🟢 BẬT':'⚪ TẮT';
-      var d1=$('cfgDns1').value.trim()||'1.1.1.1';
-      var d2=$('cfgDns2').value.trim()||'1.0.0.1';
-      var u=$('cfgUrl').value.trim()||'https://ms.garena.com';
-      toast('DNS: '+st+' · '+d1+' / '+d2+' · '+u,4500);
-      b.classList.remove('loading');
-    },400);
-  });
+    if (res.ok) {
+      const data = await res.json();
+      btn.className = 'server-btn online';
+      btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> ✅ Đã kết nối Server';
+      card.className = 'server-status-card online';
+      info.innerHTML = '<span class="online-text">Server online · ' + (data.serverTime || 'OK') + '</span>';
+    } else {
+      throw new Error('HTTP ' + res.status);
+    }
+  } catch (err) {
+    btn.className = 'server-btn offline';
+    btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg> ⭕ Mất kết nối Server';
+    card.className = 'server-status-card offline';
+    info.innerHTML = '<span class="offline-text">Không thể kết nối. Nhấn để thử lại.</span>';
+  }
+}
+document.getElementById('btnServerStatus').addEventListener('click', checkServerStatus);
+// Check lần đầu sau 1s
+setTimeout(checkServerStatus, 1000);
+// Tự check mỗi 30s
+setInterval(checkServerStatus, 30000);
 
-  $('btnDl').addEventListener('click',dlCfg);
-
-  $('btnOut').addEventListener('click',function(){
-    if (this.classList.contains('loading')) return;
-    var b=this;
-    b.classList.add('loading');
-    setTimeout(function(){
-      b.classList.remove('loading');
-      $('mo').classList.add('show');
-    },300);
-  });
-
-  $('mNo').addEventListener('click',function(){ $('mo').classList.remove('show'); });
-  $('mYes').addEventListener('click',function(){
-    $('mo').classList.remove('show');
-    doLogout(false);
-  });
-  $('mo').addEventListener('click',function(e){
-    if (e.target===$('mo')) $('mo').classList.remove('show');
-  });
-
-  ['ref1','ref2'].forEach(function(id){
-    $(id).addEventListener('click',function(){
-      var b=this;
-      b.textContent='⏳';
-      checkServer().finally(function(){
-        setTimeout(function(){ b.textContent='🔄'; },500);
-      });
+/* ============================================================
+   CHIP SELECTORS
+============================================================ */
+function bindChips(containerId, attr, onChange) {
+  const box = document.getElementById(containerId);
+  box.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      box.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      onChange(chip.dataset[attr]);
     });
   });
 }
+const state = { mode:'secure', crtDays:90, crtType:'root', crtPem:null };
+bindChips('dnsMode', 'mode', v => state.mode = v);
+bindChips('crtDays', 'days', v => state.crtDays = parseInt(v, 10));
+bindChips('crtType', 'type', v => state.crtType = v);
 
-// ═══ INIT ═══
-function init(){
-  getDevId();
-  getDevName();
-  bind();
-
-  document.body.addEventListener('click',function once(){
-    beep(880,0.2);
-    document.body.removeEventListener('click',once);
-  },{once:true});
-
-  checkServer();
-  if (sInt) clearInterval(sInt);
-  sInt=setInterval(checkServer,CHK_MS);
-
-  var sk=localStorage.getItem(K_ACT);
-  var se=parseInt(localStorage.getItem(K_EXP)||'0',10);
-
-  if (sk && se>Date.now()){
-    curKey=sk;
-    expAt=se;
-    $('keyInput').value=sk;
-
-    var n=getDevName();
-    $('devName').textContent=n;
-    $('devIcon').textContent=getDevIcon(n);
-    $('devBadge').textContent='ID: '+getDevId().slice(-6).toUpperCase();
-    startCd();
-    loadAim();
-    loadDns();
-    loadCfg();
-    showScreen('screenMain');
-
-    var dl=Math.max(0,Math.ceil((expAt-Date.now())/86400000));
-    setTimeout(function(){ say('Chào mừng bạn đến với UN LOCK'); },500);
-    setTimeout(function(){ say('Thời gian sử dụng của bạn còn lại '+dl+' ngày'); },2200);
+const toggleDNS = document.getElementById('toggleDNS');
+toggleDNS.addEventListener('click', () => {
+  toggleDNS.classList.toggle('on');
+  updateInUseDisplay();
+});
+function updateInUseDisplay() {
+  const el = document.getElementById('dnsInUse');
+  const name = document.getElementById('dnsName').value.trim() || 'DeraSecure';
+  const on = toggleDNS.classList.contains('on');
+  if (on) {
+    el.innerHTML = '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#b18aff;box-shadow:0 0 8px #b18aff;flex-shrink:0;"></span> ' + escapeHtml(name);
+    el.style.color = '#b8c8e8';
   } else {
-    if (sk && se<=Date.now()){
-      localStorage.removeItem(K_ACT);
-      localStorage.removeItem(K_EXP);
+    el.innerHTML = '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#6a5f90;flex-shrink:0;"></span> Đã tắt';
+    el.style.color = '#8a80b0';
+  }
+}
+document.getElementById('dnsName').addEventListener('input', updateInUseDisplay);
+
+/* ============================================================
+   HELPERS
+============================================================ */
+function uuid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16).toUpperCase();
+  });
+}
+function escapeXml(s) {
+  return String(s).replace(/[<>&'"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;',"'":'&apos;','"':'&quot;'}[c]));
+}
+function escapeHtml(s) {
+  return String(s).replace(/[<>&'"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;',"'":'&#39;','"':'&quot;'}[c]));
+}
+function sanitizeFileName(s) {
+  return String(s).replace(/[\\/:*?"<>|]/g, '_').replace(/\s+/g, '_').substring(0, 60);
+}
+function arrayBufferToBase64(buffer) {
+  let binary = '';
+  const bytes = new Uint8Array(buffer);
+  const chunk = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+  }
+  return btoa(binary);
+}
+function stringToBase64(str) {
+  const bytes = new TextEncoder().encode(str);
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary);
+}
+function base64Pem(b64, lineLength = 64) {
+  return b64.match(new RegExp('.{1,' + lineLength + '}', 'g')).join('\n');
+}
+function downloadFile(filename, content, mimeType) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 8000);
+}
+
+/* ============================================================
+   BUILD MOBILECONFIG
+============================================================ */
+function buildMobileconfig(name, primary, secondary, mode, crtPem) {
+  const payloadUUID = uuid();
+  const profileUUID = uuid();
+  let protocol, serverURL, dnsServers;
+  const isDoH = /^https?:\/\//i.test(primary);
+  const primaryIsIP = /^\d+\.\d+\.\d+\.\d+$/.test(primary);
+  if (mode === 'stealth') {
+    protocol = 'TLS';
+    serverURL = primaryIsIP ? `tls://${primary}` : primary;
+    dnsServers = [primary, secondary].filter(Boolean);
+  } else if (isDoH) {
+    protocol = 'HTTPS';
+    serverURL = primary;
+    dnsServers = [secondary].filter(Boolean);
+  } else if (primaryIsIP) {
+    protocol = 'HTTPS';
+    serverURL = `https://${primary}/dns-query`;
+    dnsServers = [primary, secondary].filter(Boolean);
+  } else {
+    protocol = 'HTTPS';
+    serverURL = primary;
+    dnsServers = [secondary].filter(Boolean);
+  }
+  const dnsArray = dnsServers.length
+    ? `<key>ServerAddresses</key><array>${dnsServers.map(ip => `<string>${escapeXml(ip)}</string>`).join('')}</array>`
+    : '';
+  let caPayload = '';
+  if (crtPem) {
+    const caUUID = uuid();
+    caPayload = `<dict>
+      <key>PayloadCertificateFileName</key><string>${escapeXml(name)}-ca.crt</string>
+      <key>PayloadContent</key><data>${stringToBase64(crtPem)}</data>
+      <key>PayloadDescription</key><string>Chứng nhận CA cho ${escapeXml(name)}</string>
+      <key>PayloadDisplayName</key><string>${escapeXml(name)} CA</string>
+      <key>PayloadIdentifier</key><string>com.deralocks.ca.${caUUID}</string>
+      <key>PayloadType</key><string>com.apple.security.root</string>
+      <key>PayloadUUID</key><string>${caUUID}</string>
+      <key>PayloadVersion</key><integer>1</integer>
+    </dict>`;
+  }
+  const payloadContent = `${caPayload}
+    <dict>
+      <key>DNSSettings</key>
+      <dict>
+        <key>DNSProtocol</key><string>${protocol}</string>
+        <key>ServerURL</key><string>${escapeXml(serverURL)}</string>
+        ${dnsArray}
+      </dict>
+      <key>PayloadDescription</key><string>Cấu hình DNS ${escapeXml(name)} — Chế độ ${mode}</string>
+      <key>PayloadDisplayName</key><string>${escapeXml(name)}</string>
+      <key>PayloadIdentifier</key><string>com.deralocks.dns.${payloadUUID}</string>
+      <key>PayloadType</key><string>com.apple.dnsSettings.managed</string>
+      <key>PayloadUUID</key><string>${payloadUUID}</string>
+      <key>PayloadVersion</key><integer>1</integer>
+    </dict>`;
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>PayloadContent</key><array>${payloadContent}</array>
+  <key>PayloadDescription</key><string>Cấu hình DNS Dera Locks Secure Proxy</string>
+  <key>PayloadDisplayName</key><string>${escapeXml(name)}</string>
+  <key>PayloadIdentifier</key><string>com.deralocks.profile.${profileUUID}</string>
+  <key>PayloadOrganization</key><string>Dera Locks VN</string>
+  <key>PayloadRemovalDisallowed</key><false/>
+  <key>PayloadType</key><string>Configuration</string>
+  <key>PayloadUUID</key><string>${profileUUID}</string>
+  <key>PayloadVersion</key><integer>1</integer>
+</dict>
+</plist>`;
+}
+
+/* ============================================================
+   MỤC 1: TẠO DNS
+============================================================ */
+document.getElementById('btnCreateDNS').addEventListener('click', () => {
+  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key trước', 'error'); return; }
+  const name = document.getElementById('dnsName').value.trim() || 'DeraSecure';
+  const primary = document.getElementById('dnsPrimary').value.trim();
+  const secondary = document.getElementById('dnsSecondary').value.trim();
+  if (!primary) { showToast('⚠️ Vui lòng nhập DNS chính', 'error'); return; }
+  const xml = buildMobileconfig(name, primary, secondary, state.mode, state.crtPem);
+  downloadFile(sanitizeFileName(name) + '.mobileconfig', xml, 'application/x-apple-aspen-config');
+  showToast('✅ Đã tạo file DNS', 'success');
+});
+
+/* ============================================================
+   MỤC 2: TẠO .CRT
+============================================================ */
+document.getElementById('btnCreateCRT').addEventListener('click', async function() {
+  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key trước', 'error'); return; }
+  const btn = this;
+  const domain = document.getElementById('crtDomain').value.trim();
+  const org = document.getElementById('crtOrg').value.trim() || 'Dera Locks VN';
+  const days = state.crtDays;
+  const type = state.crtType;
+  if (!domain) { showToast('⚠️ Vui lòng nhập tên miền', 'error'); return; }
+  if (!window.crypto || !window.crypto.subtle) { showToast('❌ Web Crypto không hỗ trợ', 'error'); return; }
+  btn.disabled = true;
+  const oldHTML = btn.innerHTML;
+  btn.innerHTML = '⏳ Đang tạo chứng nhận...';
+  showToast('🔐 Đang sinh khóa RSA 2048-bit...', '');
+  try {
+    const keyPair = await crypto.subtle.generateKey(
+      { name:'RSASSA-PKCS1-v1_5', modulusLength:2048, publicExponent:new Uint8Array([1,0,1]), hash:'SHA-256' },
+      true, ['sign','verify']
+    );
+    const subject = `CN=${domain},O=${org},C=VN`;
+    const serialBytes = new Uint8Array(16);
+    crypto.getRandomValues(serialBytes);
+    serialBytes[0] &= 0x7F;
+    const now = new Date();
+    const notBefore = now.toISOString().replace(/\.\d{3}Z$/,'Z').replace(/[-:]/g,'').replace('T','').substring(0,14)+'Z';
+    const notAfterDate = new Date(now.getTime() + days*24*60*60*1000);
+    const notAfter = notAfterDate.toISOString().replace(/\.\d{3}Z$/,'Z').replace(/[-:]/g,'').replace('T','').substring(0,14)+'Z';
+    const spki = await crypto.subtle.exportKey('spki', keyPair.publicKey);
+    const spkiB64 = arrayBufferToBase64(spki);
+    const tbsData = new TextEncoder().encode(
+      `DERA LOCKS SELF-SIGNED CERT\nSubject: ${subject}\nType: ${type === 'root' ? 'Root CA' : 'SSL Domains'}\n`
+    );
+    const signature = await crypto.subtle.sign({ name:'RSASSA-PKCS1-v1_5' }, keyPair.privateKey, tbsData);
+    const signatureB64 = arrayBufferToBase64(signature);
+    const pkcs8 = await crypto.subtle.exportKey('pkcs8', keyPair.privateKey);
+    const pkcs8B64 = arrayBufferToBase64(pkcs8);
+    const certBody =
+      `DERA-LOCKS-CERT-V1\nSubject:${subject}\nIssuer:${subject}\n` +
+      `Serial:${Array.from(serialBytes).map(b=>b.toString(16).padStart(2,'0')).join('')}\n` +
+      `NotBefore:${notBefore}\nNotAfter:${notAfter}\nType:${type === 'root' ? 'Root CA' : 'SSL Domains'}\n` +
+      `SPKI:${spkiB64}\nSIG:${signatureB64}\nKEY:${pkcs8B64}`;
+    const certB64 = stringToBase64(certBody);
+    const certPem = '-----BEGIN CERTIFICATE-----\n' + base64Pem(certB64) + '\n-----END CERTIFICATE-----\n';
+    const keyPem = '-----BEGIN PRIVATE KEY-----\n' + base64Pem(pkcs8B64) + '\n-----END PRIVATE KEY-----\n';
+    const safeDomain = sanitizeFileName(domain);
+    downloadFile(`${safeDomain}.crt`, certPem, 'application/x-x509-ca-cert');
+    setTimeout(() => downloadFile(`${safeDomain}.key`, keyPem, 'application/octet-stream'), 500);
+    state.crtPem = certPem;
+    const crtStatusEl = document.getElementById('crtStatus');
+    crtStatusEl.classList.add('active');
+    crtStatusEl.style.color = '#4ade80';
+    crtStatusEl.innerHTML = '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#4ade80;box-shadow:0 0 10px #4ade80;flex-shrink:0;"></span> Đã xác thực';
+    showToast('✅ Đã tạo chứng nhận ' + domain, 'success');
+  } catch (err) {
+    console.error(err);
+    showToast('❌ Lỗi: ' + err.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = oldHTML;
+  }
+});
+
+/* ============================================================
+   MỤC 3: KÍCH HOẠT DNS
+============================================================ */
+document.getElementById('btnActivateDNS').addEventListener('click', () => {
+  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key trước', 'error'); return; }
+  const name = document.getElementById('dnsName').value.trim() || 'DeraSecure';
+  const primary = document.getElementById('dnsPrimary').value.trim();
+  const secondary = document.getElementById('dnsSecondary').value.trim();
+  const on = toggleDNS.classList.contains('on');
+  if (!primary) { showToast('⚠️ Vui lòng nhập DNS chính', 'error'); return; }
+  if (!on) { showToast('⚠️ DNS đang tắt', 'error'); return; }
+  const xml = buildMobileconfig(name, primary, secondary, state.mode, state.crtPem);
+  downloadFile(sanitizeFileName(name) + '.mobileconfig', xml, 'application/x-apple-aspen-config');
+  const statusEl = document.getElementById('dnsStatus');
+  statusEl.classList.add('active');
+  statusEl.innerHTML = '<span class="dot"></span> Đã kích hoạt';
+  showToast('⚡ Đang mở cài đặt cấu hình...', 'success');
+});
+
+/* ============================================================
+   MUSIC PLAYER — ZING MP3 IFRAME
+============================================================ */
+const vinyl = document.getElementById('vinyl');
+const musicArtist = document.getElementById('musicArtist');
+const musicIcon = document.getElementById('musicIcon');
+let musicPlaying = false;
+let zingIframe = null;
+let synthCtx = null;
+let synthController = null;
+
+// Link Zing MP3 nhúng (bạn có thể thay bằng link khác)
+const ZING_EMBED = "https://zingmp3.vn/embed/song/Z6UWIC7U?start=false";
+
+function createZingIframe() {
+  if (zingIframe) return zingIframe;
+  zingIframe = document.createElement('iframe');
+  zingIframe.className = 'zing-frame';
+  zingIframe.src = ZING_EMBED;
+  zingIframe.allow = "autoplay";
+  zingIframe.frameBorder = "0";
+  document.body.appendChild(zingIframe);
+  return zingIframe;
+}
+
+// Fallback synth khi iframe không phát được (Zing chặn autoplay)
+function startSynthMusic() {
+  if (!synthCtx) {
+    synthCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (synthCtx.state === 'suspended') synthCtx.resume();
+  const melody = [523.25,587.33,659.25,587.33,523.25,493.88,440.00,493.88,523.25,587.33,659.25,698.46,783.99,698.46,659.25,587.33,523.25,493.88,440.00,392.00,440.00,493.88,523.25,587.33,659.25,587.33,523.25,493.88,440.00,392.00,349.23,392.00];
+  const bass = [130.81,130.81,146.83,146.83,174.61,174.61,196.00,196.00];
+  const masterGain = synthCtx.createGain();
+  masterGain.gain.value = 0.1;
+  masterGain.connect(synthCtx.destination);
+  let noteIndex = 0, bassIndex = 0;
+  const noteDuration = 0.28;
+  const interval = setInterval(() => {
+    if (!musicPlaying) return;
+    const osc = synthCtx.createOscillator();
+    const gain = synthCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = melody[noteIndex % melody.length];
+    gain.gain.setValueAtTime(0.3, synthCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, synthCtx.currentTime + noteDuration * 0.9);
+    osc.connect(gain); gain.connect(masterGain);
+    osc.start(); osc.stop(synthCtx.currentTime + noteDuration);
+    if (noteIndex % 2 === 0) {
+      const bOsc = synthCtx.createOscillator();
+      const bGain = synthCtx.createGain();
+      bOsc.type = 'sine';
+      bOsc.frequency.value = bass[bassIndex % bass.length];
+      bGain.gain.setValueAtTime(0.5, synthCtx.currentTime);
+      bGain.gain.exponentialRampToValueAtTime(0.001, synthCtx.currentTime + noteDuration * 1.8);
+      bOsc.connect(bGain); bGain.connect(masterGain);
+      bOsc.start(); bOsc.stop(synthCtx.currentTime + noteDuration * 2);
+      bassIndex++;
     }
-    showScreen('screenKey');
+    noteIndex++;
+  }, noteDuration * 1000);
+  return { interval };
+}
+
+function startMusic() {
+  if (musicPlaying) return;
+  musicPlaying = true;
+  vinyl.classList.add('playing');
+  musicArtist.textContent = '🎵 Đang phát: Thương Nhau Đến Thế';
+  musicIcon.innerHTML = '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
+
+  // Thử tạo iframe Zing
+  try {
+    const iframe = createZingIframe();
+    // Gửi postMessage để play (nếu iframe hỗ trợ)
+    iframe.contentWindow.postMessage('play', '*');
+  } catch (e) {
+    console.warn('Zing iframe failed:', e);
+  }
+
+  // Fallback synth nhạc để chắc chắn có âm thanh
+  if (!synthController) {
+    try { synthController = startSynthMusic(); }
+    catch (e) { console.warn('Synth failed:', e); }
   }
 }
 
-window.addEventListener('beforeunload',function(){
-  if (cInt) clearInterval(cInt);
-  if (lInt) clearInterval(lInt);
-  if (sInt) clearInterval(sInt);
-  if (tInt) clearTimeout(tInt);
-  if (dInt) clearTimeout(dInt);
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
+function stopMusic() {
+  musicPlaying = false;
+  vinyl.classList.remove('playing');
+  musicArtist.textContent = 'Nhấn để phát nhạc';
+  musicIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+  if (synthController) {
+    clearInterval(synthController.interval);
+    synthController = null;
+  }
+  if (zingIframe) {
+    try { zingIframe.contentWindow.postMessage('pause', '*'); } catch (e) {}
+  }
+}
+
+document.getElementById('musicPlayer').addEventListener('click', () => {
+  if (musicPlaying) stopMusic();
+  else startMusic();
 });
 
-if (document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded',init);
-} else {
-  init();
+function tryAutoPlayMusic() {
+  setTimeout(() => { if (!musicPlaying) startMusic(); }, 500);
 }
-})();
+
+/* ============================================================
+   INIT
+============================================================ */
+updateLockUI();
+setInterval(() => {
+  const act = getActivation();
+  if (act && !isActivationValid(act)) {
+    clearActivation();
+    updateLockUI();
+  }
+}, 60000);
 </script>
+
 </body>
 </html>
