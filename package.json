@@ -1,7 +1,7 @@
 {
   "name": "dera-locks-server",
-  "version": "1.0.0",
-  "description": "Server quản lý key DERA LOCKS",
+  "version": "1.1.0",
+  "description": "DERA LOCKS Server — Key, DNS, Certificate & Device Settings",
   "main": "sever.js",
   "scripts": {
     "start": "node sever.js"
