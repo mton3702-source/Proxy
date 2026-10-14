@@ -1,0 +1,9 @@
+{
+  "name": "DERA LOCKS",
+  "short_name": "DERA",
+  "start_url": "/Proxy/",
+  "display": "standalone",
+  "description": "DERA LOCKS — Secure Proxy",
+  "theme_color": "#7c3aed",
+  "background_color": "#0f0f1a"
+}
