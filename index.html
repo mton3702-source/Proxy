@@ -3,409 +3,565 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0a0520">
-<title>DERA LOCKS · Secure Proxy</title>
+<meta name="theme-color" content="#4c1d95">
+<title>DERA LOCKS — Secure Proxy</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; -webkit-tap-highlight-color:transparent; -webkit-font-smoothing:antialiased; }
-  html,body { background:#060312; color:#e8e0f5; min-height:100vh; overflow-x:hidden; }
+  html,body { background:#000000; color:#f0e8ff; min-height:100vh; overflow-x:hidden; }
   body {
-    padding:14px 12px 180px;
+    padding:14px 12px 200px;
     background:
-      radial-gradient(ellipse 90% 60% at 50% 0%, rgba(105,60,230,0.5) 0%, transparent 60%),
-      radial-gradient(ellipse 70% 50% at 100% 100%, rgba(20,140,230,0.32) 0%, transparent 55%),
-      radial-gradient(ellipse 70% 50% at 0% 100%, rgba(150,50,240,0.28) 0%, transparent 55%),
-      linear-gradient(180deg, #0d0425 0%, #060312 100%);
-    display:flex; flex-direction:column; align-items:center; gap:14px;
+      radial-gradient(ellipse 100% 40% at 50% 0%, rgba(76,29,149,0.55) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 40% at 100% 60%, rgba(124,58,237,0.35) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 40% at 0% 100%, rgba(8,145,185,0.3) 0%, transparent 55%),
+      #000000;
+    background-attachment: fixed;
+    display:flex; flex-direction:column; align-items:center;
   }
   .wrap { width:100%; max-width:440px; display:flex; flex-direction:column; gap:14px; }
 
+  /* ============ SCREENS ============ */
+  .screen { display:none; flex-direction:column; gap:14px; width:100%; max-width:440px; }
+  .screen.active { display:flex; animation: fadeInUp 0.4s ease; }
+  @keyframes fadeInUp { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ============ WELCOME ============ */
+  .welcome-card {
+    background: linear-gradient(165deg, rgba(30,12,60,0.95), rgba(8,3,20,0.98));
+    border-radius:28px; padding:30px 22px;
+    border:1px solid rgba(150,100,255,0.45);
+    box-shadow: 0 0 60px rgba(120,60,240,0.5), inset 0 0 40px rgba(80,40,180,0.3);
+    text-align:center;
+  }
+  .welcome-logo {
+    width:130px; height:130px; margin:0 auto 20px;
+    border-radius:32px; padding:6px;
+    background: linear-gradient(145deg, #e0d0ff, #a888ff, #0891b9);
+    box-shadow: 0 0 40px rgba(180,100,255,0.9), 0 12px 30px rgba(0,0,0,0.8);
+  }
+  .welcome-logo-inner {
+    width:100%; height:100%; border-radius:26px;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(200,140,255,0.65) 0%, transparent 55%),
+      linear-gradient(160deg, #2a0d4a 0%, #12032a 55%, #1040a0 100%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    border:1px solid rgba(200,160,255,0.5);
+    position:relative;
+  }
+  .welcome-logo-inner::before {
+    content:""; position:absolute; inset:0;
+    background: repeating-linear-gradient(115deg, transparent 0 10px, rgba(180,120,255,0.12) 10px 11px);
+  }
+  .welcome-logo-text {
+    font-family:'Impact','Arial Black',sans-serif; font-weight:900;
+    font-size:22px; line-height:0.9; text-align:center; letter-spacing:0.5px;
+    z-index:2; position:relative;
+    background: linear-gradient(180deg, #ffffff 0%, #d0b0ff 50%, #7fd0ff 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    filter: drop-shadow(0 2px 10px rgba(180,100,255,0.7));
+  }
+  .welcome-logo-text small { display:block; font-size:13px; letter-spacing:1.5px; margin-top:2px; }
+  .welcome-title {
+    font-size:32px; font-weight:900; letter-spacing:2.5px;
+    background: linear-gradient(180deg, #ffffff 0%, #e0c8ff 50%, #7fd0ff 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    filter: drop-shadow(0 0 16px rgba(180,100,255,0.9));
+    margin-bottom:8px;
+  }
+  .welcome-sub { font-size:13px; color:#a8c0e8; font-weight:500; letter-spacing:0.6px; margin-bottom:16px; }
+  .welcome-sub .dot { color:#6a7fa0; margin:0 6px; }
+  .welcome-badge {
+    display:inline-block;
+    background: rgba(60,40,120,0.75); border:1px solid rgba(140,100,255,0.65);
+    color:#d0c0f0; padding:6px 18px; border-radius:30px; font-size:12.5px;
+    font-weight:700; letter-spacing:0.3px; margin-bottom:20px;
+  }
+  .ios-support {
+    background: rgba(20,12,45,0.8);
+    border:1px solid rgba(100,80,180,0.5);
+    border-radius:18px; padding:16px 14px; margin-bottom:20px;
+  }
+  .ios-support-title {
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    font-size:13px; font-weight:700; color:#c4b5fd; margin-bottom:10px;
+    letter-spacing:0.4px;
+  }
+  .ios-support-title .apple { font-size:16px; color:#e0d0ff; text-shadow: 0 0 10px rgba(180,120,255,0.9); }
+  .ios-versions { font-size:12.5px; color:#6ec8ff; font-weight:700; line-height:1.6; }
+  .ios-versions .sep { color:#8a7ac0; margin:0 6px; }
+  .btn-start {
+    width:100%; padding:18px; border-radius:16px;
+    background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%);
+    color:#fff; border:none; font-size:16px; font-weight:800;
+    letter-spacing:0.6px; cursor:pointer;
+    box-shadow: 0 8px 28px rgba(124,58,237,0.8), inset 0 1px 0 rgba(255,255,255,0.3);
+    transition: transform .12s, filter .12s; font-family:inherit; text-transform:uppercase;
+  }
+  .btn-start:active { transform:scale(0.97); filter:brightness(0.93); }
+
   /* ============ KEY BOX ============ */
   .key-activation {
-    background: linear-gradient(145deg, rgba(50,22,105,0.9) 0%, rgba(20,10,50,0.95) 100%);
+    background: linear-gradient(145deg, rgba(30,12,70,0.95) 0%, rgba(15,5,45,0.98) 100%);
     border-radius:24px; padding:18px;
-    border:1px solid rgba(150,100,255,0.4);
-    box-shadow: 0 0 45px rgba(120,60,240,0.35), inset 0 0 35px rgba(80,40,180,0.25);
+    border:1px solid rgba(160,110,255,0.55);
+    box-shadow: 0 0 45px rgba(120,60,240,0.55), inset 0 0 35px rgba(80,40,180,0.3);
     position:relative; overflow:hidden;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   }
   .key-activation::before {
     content:""; position:absolute; top:-70px; right:-70px; width:220px; height:220px;
-    background: radial-gradient(circle, rgba(140,90,255,0.45), transparent 70%);
+    background: radial-gradient(circle, rgba(140,90,255,0.5), transparent 70%);
     pointer-events:none;
   }
   .key-title {
     display:flex; align-items:center; gap:10px;
-    font-size:15px; font-weight:800; letter-spacing:0.6px; color:#f0e0ff;
-    margin-bottom:6px; text-shadow:0 0 16px rgba(180,120,255,0.8);
-    position:relative;
+    font-size:14px; font-weight:800; letter-spacing:0.6px; color:#f0e0ff;
+    margin-bottom:14px; text-shadow:0 0 16px rgba(180,120,255,0.9);
   }
-  .key-title svg { width:22px; height:22px; fill:#b18aff; filter:drop-shadow(0 0 10px rgba(177,138,255,1)); }
-  .key-brand-sub {
-    font-size:11.5px; color:#8a80c0; font-weight:600; letter-spacing:0.4px;
-    margin-bottom:14px; padding-left:32px;
-  }
-  .key-input-row { display:flex; gap:8px; position:relative; }
+  .key-title svg { width:20px; height:20px; fill:#b18aff; filter:drop-shadow(0 0 10px rgba(177,138,255,1)); }
+  .key-input-row { display:flex; gap:8px; }
   .key-input {
-    flex:1; background:rgba(10,5,25,0.95);
-    border:1.5px solid rgba(140,100,220,0.55); border-radius:14px;
-    padding:14px 16px; font-size:13.5px; color:#f0e8ff; outline:none; font-weight:700;
-    letter-spacing:0.8px; transition:all .2s; font-family:ui-monospace,'SF Mono',Menlo,monospace;
+    flex:1; background:rgba(8,3,25,0.95);
+    border:1.5px solid rgba(150,110,230,0.6); border-radius:14px;
+    padding:14px 14px; font-size:13px; color:#f0e8ff; outline:none; font-weight:700;
+    letter-spacing:0.6px; transition:all .2s; font-family:ui-monospace,'SF Mono',Menlo,monospace;
   }
-  .key-input::placeholder { color:#6a5f90; font-weight:500; letter-spacing:0.3px; font-family:-apple-system,sans-serif; font-size:12.5px; }
-  .key-input:focus { border-color:#b18aff; box-shadow:0 0 22px rgba(140,90,240,0.65); background:rgba(20,10,45,0.98); }
-  .key-input.error { border-color:#ff5c7a; box-shadow:0 0 22px rgba(255,90,120,0.65); animation:shake 0.4s; }
+  .key-input::placeholder { color:#6a5f90; font-weight:500; letter-spacing:0.3px; font-family:-apple-system,sans-serif; font-size:12px; }
+  .key-input:focus { border-color:#b18aff; box-shadow:0 0 22px rgba(140,90,240,0.75); background:rgba(20,10,45,0.98); }
+  .key-input.error { border-color:#ff5c7a; box-shadow:0 0 22px rgba(255,90,120,0.75); animation:shake 0.4s; }
   @keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-6px);} 75%{transform:translateX(6px);} }
   .btn-activate-key {
-    background: linear-gradient(135deg, #8b3fff 0%, #5a1fd0 100%);
-    color:#fff; border:none; border-radius:14px; padding:0 18px;
-    font-size:13px; font-weight:800; cursor:pointer; letter-spacing:0.4px; white-space:nowrap;
-    box-shadow: 0 6px 22px rgba(130,60,255,0.7), inset 0 1px 0 rgba(255,255,255,0.25);
+    background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%);
+    color:#fff; border:none; border-radius:14px; padding:0 16px;
+    font-size:12.5px; font-weight:800; cursor:pointer; letter-spacing:0.4px; white-space:nowrap;
+    box-shadow: 0 6px 22px rgba(124,58,237,0.8), inset 0 1px 0 rgba(255,255,255,0.25);
     transition:transform .12s, filter .12s; font-family:inherit;
   }
   .btn-activate-key:active { transform:scale(0.95); filter:brightness(0.9); }
   .btn-activate-key:disabled { opacity:0.6; cursor:not-allowed; }
-  .key-msg { margin-top:10px; font-size:13px; font-weight:700; text-align:center; min-height:18px; letter-spacing:0.2px; }
+  .key-msg { margin-top:10px; font-size:12.5px; font-weight:700; text-align:center; min-height:18px; }
   .key-msg.error { color:#ff8ca0; }
   .key-msg.success { color:#4ade80; }
 
-  /* ============ KEY INFO ============ */
   .key-info {
     display:none;
-    background: linear-gradient(145deg, rgba(20,90,65,0.6) 0%, rgba(10,45,35,0.8) 100%);
-    border:1px solid rgba(74,222,128,0.45); border-radius:20px; padding:16px;
-    box-shadow: 0 0 35px rgba(74,222,128,0.3), inset 0 0 30px rgba(40,120,80,0.2);
+    background: linear-gradient(145deg, rgba(20,90,65,0.75) 0%, rgba(10,45,35,0.9) 100%);
+    border:1px solid rgba(74,222,128,0.6); border-radius:20px; padding:16px;
+    box-shadow: 0 0 35px rgba(74,222,128,0.4), inset 0 0 30px rgba(40,120,80,0.3);
   }
   .key-info.show { display:block; animation:slideDown 0.5s cubic-bezier(0.34,1.56,0.64,1); }
   @keyframes slideDown { from { opacity:0; transform:translateY(-15px) scale(0.96); } to { opacity:1; transform:translateY(0) scale(1); } }
   .key-info-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; gap:8px; }
-  .key-info-title { display:flex; align-items:center; gap:8px; font-size:13.5px; font-weight:800; color:#7dffb0; letter-spacing:0.5px; }
-  .key-info-title svg { width:18px; height:18px; fill:#4ade80; filter:drop-shadow(0 0 8px rgba(74,222,128,0.9)); }
+  .key-info-title { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:800; color:#7dffb0; letter-spacing:0.5px; }
+  .key-info-title svg { width:18px; height:18px; fill:#4ade80; }
   .key-info-badge {
-    background: rgba(74,222,128,0.22); border:1px solid rgba(74,222,128,0.6);
+    background: rgba(74,222,128,0.25); border:1px solid rgba(74,222,128,0.75);
     color:#7dffb0; padding:5px 12px; border-radius:20px; font-size:10.5px; font-weight:800;
     letter-spacing:0.5px; white-space:nowrap;
   }
   .key-info-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
   .key-info-item {
-    background: rgba(5,22,15,0.7); border:1px solid rgba(74,222,128,0.28);
+    background: rgba(5,22,15,0.8); border:1px solid rgba(74,222,128,0.4);
     border-radius:12px; padding:10px 12px;
   }
   .key-info-label { font-size:9.5px; font-weight:800; letter-spacing:1.2px; color:#5fa678; text-transform:uppercase; margin-bottom:5px; }
   .key-info-value {
-    font-size:12px; font-weight:700; color:#d0f5dd; word-break:break-all;
+    font-size:11.5px; font-weight:700; color:#d0f5dd; word-break:break-all;
     font-family:ui-monospace,'SF Mono',Menlo,monospace; line-height:1.4;
   }
   .key-info-value.green { color:#4ade80; }
   .key-info-full { grid-column:1 / -1; }
 
   /* ============ LOCKED ============ */
-  .hero-card, .server-card, .section-card { transition:filter 0.5s, opacity 0.5s; }
-  .locked .hero-card, .locked .server-card, .locked .section-card {
-    filter: blur(4px) grayscale(75%); opacity:0.35; pointer-events:none; user-select:none;
-  }
+  .locked-sections { transition:filter 0.5s, opacity 0.5s; }
+  .locked .locked-sections { filter: blur(4px) grayscale(80%); opacity:0.35; pointer-events:none; user-select:none; }
   .locked-note {
     display:none; text-align:center; padding:14px;
-    background: linear-gradient(135deg, rgba(255,90,120,0.18), rgba(150,40,60,0.18));
-    border:1px solid rgba(255,90,120,0.45); border-radius:16px;
+    background: linear-gradient(135deg, rgba(255,90,120,0.2), rgba(150,40,60,0.2));
+    border:1px solid rgba(255,90,120,0.55); border-radius:16px;
     font-size:12.5px; font-weight:700; color:#ff8ca0; letter-spacing:0.3px;
-    margin-bottom:8px; box-shadow: 0 0 28px rgba(255,90,120,0.25);
+    margin-bottom:8px; box-shadow: 0 0 28px rgba(255,90,120,0.35);
   }
   .locked .locked-note { display:block; }
 
-  /* ============ HERO ============ */
-  .hero-card {
-    background: linear-gradient(165deg, #1e0d3e 0%, #12062a 100%);
-    border-radius:24px; padding:0 0 22px;
-    border:1px solid rgba(150,90,240,0.35);
-    box-shadow: 0 0 45px rgba(120,50,220,0.35), inset 0 0 55px rgba(90,40,180,0.18);
-    overflow:hidden;
+  /* ============ DASHBOARD ============ */
+  .dashboard-title {
+    font-size:28px; font-weight:900; letter-spacing:0.5px;
+    color:#ffffff; margin:6px 0 4px 4px;
+    text-shadow: 0 2px 14px rgba(0,0,0,0.8), 0 0 20px rgba(180,120,255,0.6);
   }
-  .hero-banner {
-    width:100%; height:190px;
-    background:
-      radial-gradient(ellipse at 50% 50%, rgba(200,90,255,0.6) 0%, transparent 60%),
-      linear-gradient(135deg, #2a0d4a 0%, #1a0530 30%, #1a2a60 70%, #0d0442 100%);
-    position:relative; overflow:hidden;
+  .profile-card {
+    background: linear-gradient(145deg, rgba(25,15,55,0.92), rgba(12,6,30,0.97));
+    border:1px solid rgba(150,110,240,0.55);
+    border-radius:22px; padding:16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.7), inset 0 0 25px rgba(120,60,220,0.25);
+    backdrop-filter: blur(10px);
+  }
+  .profile-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .profile-top-left {
+    display:flex; align-items:center; gap:10px;
+    font-size:14px; font-weight:800; letter-spacing:0.6px; color:#f0e8ff;
+  }
+  .profile-top-left .icon {
+    width:34px; height:34px; border-radius:10px;
+    background: linear-gradient(135deg, #7c3aed, #0891b9);
     display:flex; align-items:center; justify-content:center;
+    font-size:17px; box-shadow: 0 4px 14px rgba(124,58,237,0.7);
   }
-  .hero-banner::before {
-    content:""; position:absolute; inset:0;
-    background:
-      repeating-linear-gradient(45deg, transparent 0 18px, rgba(180,100,255,0.08) 18px 19px),
-      repeating-linear-gradient(-45deg, transparent 0 22px, rgba(100,200,255,0.07) 22px 23px);
-    pointer-events:none;
+  .profile-plus {
+    width:36px; height:36px; border-radius:12px;
+    background: linear-gradient(135deg, #7c3aed, #4c1d95);
+    display:flex; align-items:center; justify-content:center;
+    font-size:22px; font-weight:900; color:#fff; cursor:pointer;
+    box-shadow: 0 4px 16px rgba(124,58,237,0.8);
+    transition:transform .12s;
+    border:1px solid rgba(180,140,255,0.5);
   }
-  .hero-banner::after {
-    content:""; position:absolute; inset:0;
-    background:
-      radial-gradient(circle at 20% 30%, rgba(220,130,255,0.45), transparent 40%),
-      radial-gradient(circle at 80% 70%, rgba(60,140,255,0.4), transparent 45%);
-    pointer-events:none;
+  .profile-plus:active { transform:scale(0.9); }
+  .profile-name-box {
+    background: rgba(10,5,25,0.9);
+    border:1px solid rgba(140,100,220,0.55);
+    border-radius:14px; padding:14px 16px;
+    display:flex; align-items:center; justify-content:space-between;
+    cursor:pointer; margin-bottom:6px;
   }
-  .hero-title {
-    font-family:'Impact','Arial Black',sans-serif;
-    font-size:60px; font-weight:900; letter-spacing:3px; line-height:0.85;
-    text-align:center; z-index:2; position:relative;
-    transform: perspective(400px) rotateX(8deg);
-    background: linear-gradient(180deg, #ffffff 0%, #e0c8ff 45%, #7fd0ff 100%);
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-    filter: drop-shadow(0 0 12px rgba(180,100,255,1)) drop-shadow(0 4px 14px rgba(0,0,0,0.95));
+  .profile-name-box:active { background: rgba(20,10,40,0.98); }
+  .profile-name-box .name { font-size:15px; font-weight:800; color:#f0e8ff; letter-spacing:0.6px; }
+  .profile-name-box .arrow { font-size:14px; color:#b18aff; font-weight:900; }
+  .profile-local {
+    font-size:11.5px; color:#a78bff; font-weight:700;
+    letter-spacing:0.3px; margin-bottom:14px; padding-left:4px;
   }
-  .app-icon-wrap {
-    width:104px; height:104px; margin:-52px auto 14px;
-    position:relative; z-index:5; border-radius:26px; padding:4px;
-    background: linear-gradient(145deg, #e0d0ff, #a888ff, #4ac8ff);
-    box-shadow: 0 0 35px rgba(180,100,255,0.9), 0 10px 30px rgba(0,0,0,0.8), inset 0 0 18px rgba(255,255,255,0.4);
+  .profile-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .profile-action-btn {
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    padding:12px; border-radius:12px;
+    background: linear-gradient(135deg, rgba(124,58,237,0.65), rgba(76,29,149,0.65));
+    border:1px solid rgba(160,120,240,0.55);
+    color:#fff; font-size:13px; font-weight:800; cursor:pointer;
+    transition:transform .12s; letter-spacing:0.3px; font-family:inherit;
   }
-  .app-icon {
-    width:100%; height:100%; border-radius:22px;
-    background:
-      radial-gradient(circle at 30% 20%, rgba(200,140,255,0.65) 0%, transparent 55%),
-      linear-gradient(160deg, #2a0d4a 0%, #12032a 55%, #1040a0 100%);
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    position:relative; overflow:hidden;
-    border:1px solid rgba(200,160,255,0.5);
-  }
-  .app-icon-text {
-    font-family:'Impact','Arial Black',sans-serif; font-weight:900;
-    font-size:24px; line-height:0.85; text-align:center; letter-spacing:0.5px;
-    z-index:2; position:relative;
-    background: linear-gradient(180deg, #ffffff 0%, #d0b0ff 50%, #7fd0ff 100%);
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-  }
-  .app-icon-text small { display:block; font-size:14px; letter-spacing:1.2px; margin-top:2px; }
-  .app-name {
-    text-align:center; font-size:25px; font-weight:900; letter-spacing:2px;
-    color:#f2e8ff; text-shadow:0 0 16px rgba(160,100,255,0.8), 0 2px 4px rgba(0,0,0,0.9);
-    margin-bottom:6px;
-  }
-  .app-sub { text-align:center; font-size:13.5px; font-weight:500; color:#a8c0e8; margin-bottom:16px; letter-spacing:0.4px; }
-  .app-sub .dot { color:#6a7fa0; margin:0 6px; }
-  .badges { display:flex; justify-content:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
-  .badge-version {
-    background: rgba(60,40,120,0.75); border:1px solid rgba(140,100,255,0.6);
-    color:#d0c0f0; padding:6px 16px; border-radius:30px; font-size:12.5px; font-weight:700; letter-spacing:0.3px;
-  }
-  .ios-box {
-    margin:0 18px; background: rgba(25,18,55,0.75);
-    border:1px solid rgba(100,80,200,0.5); border-radius:16px; padding:12px; text-align:center;
-  }
-  .ios-title {
-    display:flex; align-items:center; justify-content:center; gap:7px;
-    font-size:12.5px; font-weight:700; color:#b8aee0; margin-bottom:6px; letter-spacing:0.4px;
-  }
-  .ios-title svg { width:14px; height:14px; fill:#b8aee0; }
-  .ios-versions { font-size:13px; color:#6ec8ff; font-weight:700; line-height:1.6; }
-  .ios-versions .sep { color:#8a7ac0; margin:0 6px; }
+  .profile-action-btn:active { transform:scale(0.96); }
+  .profile-action-btn .emoji { font-size:16px; }
 
-  /* ============ SERVER CARD ============ */
+  .profile-dropdown {
+    display:none;
+    background: rgba(10,5,25,0.98);
+    border:1px solid rgba(140,100,220,0.6);
+    border-radius:14px; padding:8px; margin-bottom:10px;
+    animation: slideDown 0.25s;
+    max-height:240px; overflow-y:auto;
+  }
+  .profile-dropdown.show { display:block; }
+  .profile-dropdown-item {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:11px 14px; border-radius:10px;
+    cursor:pointer; font-size:13px; font-weight:700; color:#e0d0ff;
+    gap:8px;
+  }
+  .profile-dropdown-item:active { background: rgba(80,50,160,0.5); }
+  .profile-dropdown-item.active { background: rgba(124,58,237,0.35); border:1px solid rgba(177,138,255,0.6); }
+  .profile-dropdown-item .p-name { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .profile-dropdown-item .p-del {
+    width:28px; height:28px; border-radius:8px;
+    background: rgba(255,90,120,0.2); border:1px solid rgba(255,90,120,0.5);
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; color:#ff8ca0; cursor:pointer; flex-shrink:0;
+  }
+  .profile-dropdown-empty { padding:14px; text-align:center; font-size:12px; color:#8a80c0; font-weight:600; }
+
+  .play-float {
+    position:fixed; bottom:170px; right:14px;
+    width:56px; height:56px; border-radius:50%;
+    background: linear-gradient(135deg, #000, #1a0d2e);
+    border:2px solid rgba(180,140,255,0.65);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.9), 0 0 25px rgba(120,60,220,0.7);
+    cursor:pointer; z-index:988;
+  }
+  .play-float:active { transform:scale(0.9); }
+  .play-float svg { width:24px; height:24px; fill:#b18aff; margin-left:3px; }
+
+  /* ============ NEW PROFILE SCREEN ============ */
+  .new-profile-header {
+    display:flex; align-items:center; gap:12px;
+    margin-bottom:6px; padding:0 4px;
+  }
+  .new-profile-back {
+    width:40px; height:40px; border-radius:12px;
+    background: rgba(30,15,60,0.85);
+    border:1px solid rgba(140,100,220,0.55);
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px; color:#f0e8ff; cursor:pointer;
+    flex-shrink:0;
+  }
+  .new-profile-back:active { transform:scale(0.92); }
+  .new-profile-title {
+    font-size:22px; font-weight:900; letter-spacing:0.5px;
+    color:#ffffff;
+    text-shadow: 0 2px 14px rgba(0,0,0,0.8), 0 0 20px rgba(180,120,255,0.6);
+  }
+
+  .new-profile-card {
+    background: linear-gradient(165deg, rgba(25,15,55,0.95) 0%, rgba(12,6,30,0.98) 100%);
+    border:1px solid rgba(150,110,240,0.55);
+    border-radius:24px; padding:20px 16px;
+    box-shadow: 0 0 40px rgba(120,60,240,0.4), inset 0 0 35px rgba(80,40,180,0.2);
+  }
+
+  .option-block {
+    background: rgba(15,8,35,0.85);
+    border:1px solid rgba(140,100,220,0.5);
+    border-radius:18px; padding:16px;
+    margin-bottom:12px;
+    display:flex; align-items:center; gap:14px;
+    cursor:pointer; transition: all .2s;
+  }
+  .option-block:active { transform:scale(0.98); background: rgba(30,18,60,0.95); }
+  .option-block:hover { border-color: rgba(177,138,255,0.75); }
+  .option-icon {
+    width:52px; height:52px; border-radius:14px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:24px; flex-shrink:0;
+    background: linear-gradient(135deg, rgba(124,58,237,0.4), rgba(76,29,149,0.4));
+    border:1px solid rgba(160,120,240,0.55);
+  }
+  .option-info { flex:1; min-width:0; }
+  .option-name {
+    font-size:15px; font-weight:800; color:#f0e8ff;
+    letter-spacing:0.4px; margin-bottom:3px;
+  }
+  .option-desc {
+    font-size:11.5px; color:#a78bff; font-weight:500; letter-spacing:0.2px;
+  }
+  .option-arrow {
+    font-size:18px; color:#b18aff; font-weight:900; flex-shrink:0;
+  }
+
+  .selected-file-info {
+    display:none;
+    background: rgba(74,222,128,0.12);
+    border:1px solid rgba(74,222,128,0.5);
+    border-radius:14px; padding:12px 16px;
+    margin-top:12px; margin-bottom:12px;
+    font-size:12.5px; color:#7dffb0; font-weight:700;
+    word-break:break-all;
+  }
+  .selected-file-info.show { display:block; animation: slideDown 0.3s; }
+  .selected-file-info .label {
+    font-size:10.5px; color:#5fa678; letter-spacing:1px;
+    text-transform:uppercase; font-weight:800; display:block; margin-bottom:4px;
+  }
+
+  .manual-form {
+    display:none;
+    background: rgba(15,8,35,0.85);
+    border:1px solid rgba(140,100,220,0.5);
+    border-radius:18px; padding:16px;
+    margin-bottom:12px;
+  }
+  .manual-form.show { display:block; animation: slideDown 0.3s; }
+
+  .btn-activate-profile {
+    width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
+    padding:16px; border-radius:16px;
+    background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%);
+    color:#fff; font-size:15px; font-weight:800;
+    letter-spacing:0.5px; border:none; cursor:pointer;
+    box-shadow: 0 8px 28px rgba(124,58,237,0.8), inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: transform .12s, filter .12s;
+    font-family:inherit;
+    margin-top:10px;
+    display:none;
+  }
+  .btn-activate-profile.show { display:flex; }
+  .btn-activate-profile:active { transform:scale(0.97); filter:brightness(0.93); }
+
+  .btn-cancel-profile {
+    width:100%; padding:14px; border-radius:14px;
+    background: rgba(60,40,110,0.6);
+    border:1px solid rgba(140,100,220,0.5);
+    color:#c4b5fd; font-size:14px; font-weight:800;
+    cursor:pointer; font-family:inherit;
+    margin-top:10px;
+    letter-spacing:0.4px;
+  }
+  .btn-cancel-profile:active { transform:scale(0.97); background: rgba(80,50,150,0.7); }
+
+  /* ============ SERVER ============ */
   .server-card {
-    background: linear-gradient(145deg, rgba(50,22,105,0.75) 0%, rgba(20,10,50,0.9) 100%);
+    background: linear-gradient(145deg, rgba(25,12,60,0.92), rgba(12,6,30,0.97));
     border-radius:20px; padding:16px 18px;
-    border:1px solid rgba(150,100,255,0.4);
-    box-shadow: 0 0 35px rgba(120,60,240,0.3);
+    border:1px solid rgba(150,100,255,0.55);
+    box-shadow: 0 0 35px rgba(120,60,240,0.45);
     transition: all .4s;
   }
-  .server-card.online {
-    border-color: rgba(74,222,128,0.55);
-    box-shadow: 0 0 40px rgba(74,222,128,0.35);
-  }
-  .server-card.offline {
-    border-color: rgba(255,90,120,0.55);
-    box-shadow: 0 0 40px rgba(255,90,120,0.35);
-  }
+  .server-card.online { border-color: rgba(74,222,128,0.75); box-shadow: 0 0 40px rgba(74,222,128,0.45); }
+  .server-card.offline { border-color: rgba(255,90,120,0.75); box-shadow: 0 0 40px rgba(255,90,120,0.45); }
   .server-header {
     display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;
   }
   .server-header-left { display:flex; align-items:center; gap:10px; }
-  .server-header svg { width:20px; height:20px; fill:#b18aff; filter:drop-shadow(0 0 8px rgba(177,138,255,0.9)); }
-  .server-header .title { font-size:13.5px; font-weight:800; letter-spacing:0.6px; color:#e8d8ff; text-transform:uppercase; }
+  .server-header svg { width:20px; height:20px; fill:#b18aff; filter:drop-shadow(0 0 8px rgba(177,138,255,1)); }
+  .server-header .title { font-size:13px; font-weight:800; letter-spacing:0.6px; color:#e8d8ff; text-transform:uppercase; }
   .server-version {
     font-size:11px; font-weight:800; letter-spacing:0.5px;
-    color:#b18aff; background:rgba(120,80,220,0.25);
-    border:1px solid rgba(160,120,255,0.5);
+    color:#b18aff; background:rgba(120,80,220,0.35);
+    border:1px solid rgba(160,120,255,0.65);
     padding:4px 10px; border-radius:20px;
   }
   .server-btn {
     width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
-    padding:14px; border-radius:14px; font-size:14.5px; font-weight:800; letter-spacing:0.3px;
+    padding:14px; border-radius:14px; font-size:14px; font-weight:800; letter-spacing:0.3px;
     border:none; cursor:pointer; transition: all .3s; font-family:inherit;
   }
-  .server-btn.online { background: rgba(74,222,128,0.2); color:#7dffb0; border:1.5px solid rgba(74,222,128,0.55); box-shadow: inset 0 0 20px rgba(74,222,128,0.15); }
-  .server-btn.offline { background: rgba(255,90,120,0.18); color:#ff8ca0; border:1.5px solid rgba(255,90,120,0.55); box-shadow: inset 0 0 20px rgba(255,90,120,0.15); }
-  .server-btn.checking { background: rgba(140,100,240,0.25); color:#d0c0f0; border:1.5px solid rgba(160,120,255,0.55); cursor:wait; }
+  .server-btn.online { background: rgba(74,222,128,0.28); color:#7dffb0; border:1.5px solid rgba(74,222,128,0.7); }
+  .server-btn.offline { background: rgba(255,90,120,0.25); color:#ff8ca0; border:1.5px solid rgba(255,90,120,0.7); }
+  .server-btn.checking { background: rgba(140,100,240,0.35); color:#d0c0f0; border:1.5px solid rgba(160,120,255,0.7); cursor:wait; }
   .server-btn:active { transform:scale(0.97); filter:brightness(0.95); }
   .server-btn svg { width:20px; height:20px; fill:currentColor; flex-shrink:0; }
-  .server-info { margin-top:10px; font-size:11.5px; color:#8a80c0; text-align:center; font-weight:600; letter-spacing:0.3px; min-height:14px; }
+  .server-info { margin-top:10px; font-size:11.5px; color:#c4b5fd; text-align:center; font-weight:600; letter-spacing:0.3px; min-height:14px; }
 
   /* ============ SECTION CARD ============ */
   .section-card {
-    background: linear-gradient(165deg, #150a28 0%, #0c0518 100%);
+    background: linear-gradient(165deg, rgba(25,12,60,0.94) 0%, rgba(12,6,30,0.97) 100%);
     border-radius:22px; padding:20px 18px;
-    border:1px solid rgba(130,90,220,0.35);
-    box-shadow: 0 0 32px rgba(110,50,200,0.22), inset 0 0 38px rgba(80,40,150,0.14);
-    position:relative;
+    border:1px solid rgba(140,100,230,0.55);
+    box-shadow: 0 0 32px rgba(110,50,200,0.4), inset 0 0 38px rgba(80,40,150,0.2);
   }
   .section-title {
     display:flex; align-items:center; gap:10px;
-    font-size:16px; font-weight:800; letter-spacing:0.6px; color:#f0e8ff;
+    font-size:15.5px; font-weight:800; letter-spacing:0.6px; color:#f0e8ff;
     margin-bottom:8px;
+    text-shadow: 0 0 12px rgba(180,120,255,0.6);
   }
-  .section-title svg { width:22px; height:22px; flex-shrink:0; }
-  .section-title.dns svg { fill:#b18aff; filter:drop-shadow(0 0 8px rgba(177,138,255,0.8)); }
-  .section-title.crt svg { fill:#ffa94d; filter:drop-shadow(0 0 8px rgba(255,169,77,0.8)); }
-  .section-title.sign svg { fill:#4ac8ff; filter:drop-shadow(0 0 8px rgba(74,200,255,0.8)); }
-  .section-title.run svg { fill:#4ade80; filter:drop-shadow(0 0 8px rgba(74,222,128,0.8)); }
+  .section-title .emoji { font-size:20px; }
   .section-sub {
-    font-size:11.5px; color:#8a80c0; font-weight:500; letter-spacing:0.2px;
+    font-size:11.5px; color:#a78bff; font-weight:500; letter-spacing:0.2px;
     margin-bottom:16px; padding-left:32px;
   }
-
   .field { margin-bottom:14px; }
   .field-label {
-    font-size:11.5px; font-weight:800; letter-spacing:1.2px; color:#a99ad0;
+    font-size:11.5px; font-weight:800; letter-spacing:1.2px; color:#c4b5fd;
     text-transform:uppercase; margin-bottom:7px;
     display:flex; align-items:center; gap:5px; flex-wrap:wrap;
   }
-  .field-label .hint { text-transform:none; font-weight:500; letter-spacing:0.2px; color:#7d72a8; font-size:11px; }
+  .field-label .hint { text-transform:none; font-weight:500; letter-spacing:0.2px; color:#8a80c0; font-size:11px; }
   .text-input {
-    width:100%; background: rgba(15,8,30,0.9);
-    border:1.5px solid rgba(120,90,200,0.45); border-radius:14px;
-    padding:13px 16px; font-size:14.5px; color:#f0e8ff; outline:none; font-weight:600;
+    width:100%; background: rgba(8,3,25,0.92);
+    border:1.5px solid rgba(140,100,220,0.6); border-radius:14px;
+    padding:13px 16px; font-size:14px; color:#f0e8ff; outline:none; font-weight:600;
     transition: border-color .2s, box-shadow .2s; font-family:inherit;
   }
   .text-input::placeholder { color:#6a5f90; font-weight:500; }
-  .text-input:focus { border-color:#a888ff; box-shadow:0 0 20px rgba(140,90,240,0.55); background:rgba(25,15,50,0.95); }
-
+  .text-input:focus { border-color:#a888ff; box-shadow:0 0 20px rgba(140,90,240,0.7); background:rgba(20,10,45,0.95); }
   .chips { display:flex; gap:8px; flex-wrap:wrap; }
   .chip {
     flex:1; min-width:70px; text-align:center; padding:11px 8px; border-radius:12px;
-    background: rgba(15,8,30,0.9); border:1.5px solid rgba(120,90,200,0.45);
-    color:#a99ad0; font-size:12.5px; font-weight:700; cursor:pointer;
+    background: rgba(8,3,25,0.92); border:1.5px solid rgba(140,100,220,0.6);
+    color:#c4b5fd; font-size:12.5px; font-weight:700; cursor:pointer;
     transition: all .2s; letter-spacing:0.3px; user-select:none;
   }
   .chip.active {
-    background: linear-gradient(135deg,#7a3fff 0%,#4a1fd0 100%);
+    background: linear-gradient(135deg,#7c3aed 0%,#4c1d95 100%);
     color:#fff; border-color:#b18aff;
-    box-shadow: 0 4px 18px rgba(140,90,240,0.65);
+    box-shadow: 0 4px 18px rgba(124,58,237,0.8);
   }
-
   .btn-sign {
     width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
-    padding:16px; border-radius:14px; color:#fff; font-size:15px; font-weight:800;
-    letter-spacing:0.4px; border:1px solid rgba(180,140,255,0.4); cursor:pointer;
+    padding:16px; border-radius:14px; color:#fff; font-size:14.5px; font-weight:800;
+    letter-spacing:0.4px; border:1px solid rgba(180,140,255,0.55); cursor:pointer;
     transition: transform .12s, filter .12s; margin-top:6px; font-family:inherit;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
   }
   .btn-sign:active { transform:scale(0.97); filter:brightness(0.93); }
   .btn-sign:disabled { opacity:0.55; cursor:not-allowed; }
   .btn-sign svg { width:22px; height:22px; fill:#fff; flex-shrink:0; }
-  .btn-dns { background: linear-gradient(135deg, #7a3fff 0%, #4a7aff 100%); }
-  .btn-crt { background: linear-gradient(135deg, #ff8a3d 0%, #d9601a 100%); }
-  .btn-check-crt { background: linear-gradient(135deg, #3a8aff 0%, #1a5acc 100%); margin-top:10px; }
-  .btn-sign-mc { background: linear-gradient(135deg, #1a9a4a 0%, #0e6b32 100%); }
-  .btn-run { background: linear-gradient(135deg, #1a9a4a 0%, #0e6b32 100%); }
-
+  .btn-dns { background: linear-gradient(135deg, #7c3aed 0%, #0891b9 100%); }
+  .btn-crt { background: linear-gradient(135deg, #f97316 0%, #c2410c 100%); }
+  .btn-check-crt { background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); margin-top:10px; }
+  .btn-sign-mc { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); }
+  .btn-run { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); }
   .note {
-    font-size:11.5px; color:#6a6090; text-align:center; margin-top:12px;
+    font-size:11.5px; color:#8a80c0; text-align:center; margin-top:12px;
     line-height:1.55; font-weight:500; letter-spacing:0.2px;
   }
-  .note .link { color:#8a80c0; }
+  .note .link { color:#b18aff; }
   .note-pem {
     font-size:11.5px; color:#7fc9a0; text-align:center; margin-top:10px; font-weight:600;
-    padding:9px 12px; background: rgba(74,222,128,0.12);
-    border:1px solid rgba(74,222,128,0.35); border-radius:11px; letter-spacing:0.2px;
+    padding:9px 12px; background: rgba(74,222,128,0.18);
+    border:1px solid rgba(74,222,128,0.45); border-radius:11px;
   }
-
-  /* ============ STATUS BOX ============ */
   .status-box {
-    background: rgba(15,8,30,0.9);
-    border:1.5px solid rgba(120,90,200,0.45); border-radius:14px;
+    background: rgba(8,3,25,0.92);
+    border:1.5px solid rgba(140,100,220,0.55); border-radius:14px;
     padding:13px 16px; display:flex; align-items:center; gap:10px;
-    margin-bottom:12px; font-size:12.5px; font-weight:700; color:#a99ad0;
-    letter-spacing:0.2px; line-height:1.4;
+    margin-bottom:12px; font-size:12.5px; font-weight:700; color:#c4b5fd;
+    line-height:1.4;
   }
   .status-box .dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; background:#6a5f90; }
-  .status-box.ok {
-    border-color: rgba(74,222,128,0.55); background: rgba(20,60,40,0.45); color:#7dffb0;
-  }
+  .status-box.ok { border-color: rgba(74,222,128,0.7); background: rgba(20,60,40,0.55); color:#7dffb0; }
   .status-box.ok .dot { background:#4ade80; box-shadow:0 0 12px #4ade80; animation: pulse 1.8s infinite; }
-  .status-box.warn {
-    border-color: rgba(255,169,77,0.55); background: rgba(60,40,10,0.45); color:#ffc98a;
-  }
-  .status-box.warn .dot { background:#ffa94d; box-shadow:0 0 12px #ffa94d; }
-  .status-box.off {
-    border-color: rgba(120,90,200,0.45); background: rgba(20,15,40,0.6); color:#a99ad0;
-  }
+  .status-box.warn { border-color: rgba(251,146,60,0.7); background: rgba(60,35,10,0.55); color:#fdba74; }
+  .status-box.warn .dot { background:#fb923c; box-shadow:0 0 12px #fb923c; }
+  .status-box.off { border-color: rgba(140,100,220,0.55); background: rgba(15,8,35,0.75); color:#c4b5fd; }
   @keyframes pulse { 0%,100% { opacity:0.7; transform:scale(1); } 50% { opacity:1; transform:scale(1.3); } }
-
-  /* ============ RESULT LIST ============ */
   .result-list { display:flex; flex-direction:column; gap:8px; }
   .result-item {
     display:flex; align-items:center; gap:12px;
-    background: rgba(15,8,30,0.8); border:1px solid rgba(120,90,200,0.35);
-    border-radius:14px; padding:12px 14px; transition:all .2s;
+    background: rgba(8,3,25,0.88); border:1px solid rgba(140,100,220,0.5);
+    border-radius:14px; padding:12px 14px;
   }
   .result-item .icon {
     width:38px; height:38px; border-radius:10px; flex-shrink:0;
-    display:flex; align-items:center; justify-content:center;
-    background: rgba(90,60,180,0.35); border:1px solid rgba(140,110,230,0.5);
+    display:flex; align-items:center; justify-content:center; font-size:18px;
+    background: rgba(90,60,180,0.45); border:1px solid rgba(140,110,230,0.6);
   }
-  .result-item .icon svg { width:20px; height:20px; fill:#b8a0ff; }
-  .result-item.crt .icon { background: rgba(255,140,60,0.25); border-color: rgba(255,169,77,0.55); }
-  .result-item.crt .icon svg { fill:#ffa94d; }
-  .result-item.key .icon { background: rgba(180,60,255,0.25); border-color: rgba(200,120,255,0.55); }
-  .result-item.key .icon svg { fill:#c88aff; }
-  .result-item.mc .icon { background: rgba(74,200,255,0.25); border-color: rgba(74,200,255,0.55); }
-  .result-item.mc .icon svg { fill:#4ac8ff; }
   .result-item .info { flex:1; min-width:0; }
   .result-item .info .name {
-    font-size:12.5px; font-weight:700; color:#e8d8ff;
+    font-size:12.5px; font-weight:700; color:#f0e8ff;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     font-family:ui-monospace,'SF Mono',Menlo,monospace;
   }
-  .result-item .info .desc { font-size:10.5px; color:#8a80c0; font-weight:500; margin-top:2px; }
+  .result-item .info .desc { font-size:10.5px; color:#a78bff; font-weight:500; margin-top:2px; }
   .result-item .btns { display:flex; gap:6px; flex-shrink:0; }
   .icon-btn {
     width:34px; height:34px; border-radius:10px; border:none;
     display:flex; align-items:center; justify-content:center; cursor:pointer;
-    transition: transform .12s, filter .12s; padding:0;
+    padding:0; font-size:15px;
   }
-  .icon-btn:active { transform:scale(0.9); filter:brightness(0.9); }
-  .icon-btn svg { width:16px; height:16px; fill:#fff; }
-  .icon-btn.view { background: linear-gradient(135deg,#4a7aff,#2a4ad0); box-shadow: 0 3px 10px rgba(70,120,255,0.55); }
-  .icon-btn.dl { background: linear-gradient(135deg,#1a9a4a,#0e6b32); box-shadow: 0 3px 10px rgba(30,160,80,0.55); }
-
-  /* ============ TOGGLE ============ */
+  .icon-btn:active { transform:scale(0.9); }
+  .icon-btn.view { background: linear-gradient(135deg,#3b82f6,#1e40af); }
+  .icon-btn.dl { background: linear-gradient(135deg,#16a34a,#15803d); }
   .toggle-row {
     display:flex; align-items:center; justify-content:space-between;
-    background: rgba(15,8,30,0.9);
-    border:1.5px solid rgba(120,90,200,0.45); border-radius:14px;
+    background: rgba(8,3,25,0.92);
+    border:1.5px solid rgba(140,100,220,0.55); border-radius:14px;
     padding:13px 16px; margin-bottom:12px; gap:10px;
   }
-  .toggle-label { font-size:13.5px; font-weight:700; color:#d0c0f0; letter-spacing:0.3px; }
+  .toggle-label { font-size:13.5px; font-weight:700; color:#e0d0ff; letter-spacing:0.3px; }
   .toggle {
     position:relative; width:54px; height:32px;
-    background: rgba(60,40,110,0.9); border-radius:32px; cursor:pointer;
-    transition: background .3s; border:1px solid rgba(120,90,200,0.55);
+    background: rgba(60,40,110,0.95); border-radius:32px; cursor:pointer;
+    transition: background .3s; border:1px solid rgba(140,100,220,0.65);
     flex-shrink:0;
   }
   .toggle::after {
     content:""; position:absolute; top:3px; left:3px;
     width:24px; height:24px; background:#c8b0f0; border-radius:50%;
     transition: transform .3s, background .3s;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
   }
   .toggle.on {
-    background: linear-gradient(135deg, #7a3fff, #1a9aff);
-    border-color: rgba(140,180,255,0.65);
-    box-shadow: 0 0 20px rgba(90,150,255,0.6);
+    background: linear-gradient(135deg, #7c3aed, #0891b9);
+    border-color: rgba(140,180,255,0.8);
+    box-shadow: 0 0 20px rgba(90,150,255,0.8);
   }
   .toggle.on::after { transform:translateX(22px); background:#fff; }
 
-  /* ============ LOADING OVERLAY ============ */
+  /* ============ LOADING ============ */
   .loading-overlay {
     position:fixed; inset:0; z-index:9998;
-    background: rgba(4,2,12,0.92);
+    background: rgba(2,1,8,0.96);
     backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     display:none; align-items:center; justify-content:center; flex-direction:column; padding:24px;
   }
@@ -414,12 +570,12 @@
   .loading-circle { width:130px; height:130px; position:relative; margin-bottom:26px; }
   .loading-circle::before {
     content:""; position:absolute; inset:0; border-radius:50%;
-    border:4px solid rgba(140,90,240,0.25);
+    border:4px solid rgba(140,90,240,0.3);
   }
   .loading-circle::after {
     content:""; position:absolute; inset:0; border-radius:50%;
     border:4px solid transparent;
-    border-top-color:#b18aff; border-right-color:#4ac8ff;
+    border-top-color:#b18aff; border-right-color:#0891b9;
     animation: spin 1s linear infinite;
     filter: drop-shadow(0 0 16px rgba(177,138,255,1));
   }
@@ -433,159 +589,160 @@
   .loading-text {
     font-size:16px; font-weight:700; color:#d8c8ff; letter-spacing:0.5px;
     margin-bottom:18px; text-align:center;
-    text-shadow: 0 0 16px rgba(180,120,255,0.9);
   }
   .loading-bar-wrap {
     width:100%; max-width:320px; height:8px;
-    background: rgba(60,40,110,0.7); border-radius:8px; overflow:hidden;
-    border:1px solid rgba(120,90,200,0.4);
+    background: rgba(60,40,110,0.8); border-radius:8px; overflow:hidden;
+    border:1px solid rgba(140,100,220,0.55);
   }
   .loading-bar-fill {
     height:100%; width:0%;
-    background: linear-gradient(90deg, #8b5eff, #4ac8ff);
+    background: linear-gradient(90deg, #7c3aed, #0891b9);
     border-radius:8px; transition: width 0.1s linear;
-    box-shadow: 0 0 16px rgba(140,120,255,0.9);
+    box-shadow: 0 0 16px rgba(140,120,255,1);
   }
   .loading-countdown {
     font-size:15px; font-weight:800; color:#b8a0ff;
     margin-top:14px; letter-spacing:0.6px;
-    text-shadow: 0 0 12px rgba(180,120,255,0.7);
   }
-  .loading-sub { font-size:11.5px; color:#8a80c0; font-weight:500; margin-top:12px; letter-spacing:0.3px; text-align:center; }
+  .loading-sub { font-size:11.5px; color:#a78bff; font-weight:500; margin-top:12px; text-align:center; }
 
   /* ============ MODAL ============ */
   .modal {
     position:fixed; inset:0; z-index:9997;
-    background: rgba(4,2,12,0.94);
+    background: rgba(2,1,8,0.96);
     backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
     display:none; align-items:center; justify-content:center; padding:16px;
   }
   .modal.show { display:flex; animation: fadeIn 0.25s; }
   .modal-content {
-    background: linear-gradient(165deg, #1a0d2e, #0f0820);
-    border:1px solid rgba(150,90,240,0.55);
+    background: linear-gradient(165deg, #1e0d3e, #0f0620);
+    border:1px solid rgba(150,90,240,0.7);
     border-radius:22px; padding:20px; width:100%; max-width:420px; max-height:85vh;
-    overflow-y:auto; box-shadow: 0 0 60px rgba(120,60,240,0.5);
+    overflow-y:auto; box-shadow: 0 0 60px rgba(120,60,240,0.7);
   }
   .modal-title {
     font-size:15px; font-weight:800; color:#f0e8ff;
     margin-bottom:14px; display:flex; align-items:center; gap:10px;
   }
-  .modal-title svg { width:20px; height:20px; fill:#b18aff; flex-shrink:0; }
+  .modal-title .emoji { font-size:20px; }
   .modal-body {
     font-family: ui-monospace,'SF Mono',Menlo,monospace;
-    font-size:10px; color:#c8b8e8; word-break:break-all;
+    font-size:10.5px; color:#d0c0f0; word-break:break-all;
     line-height:1.5; white-space:pre-wrap;
-    background: rgba(10,5,20,0.8);
+    background: rgba(8,3,25,0.88);
     padding:14px; border-radius:12px;
-    border:1px solid rgba(120,90,200,0.35);
+    border:1px solid rgba(140,100,220,0.45);
     max-height:55vh; overflow-y:auto;
   }
+  .modal-input {
+    width:100%; background: rgba(8,3,25,0.92);
+    border:1.5px solid rgba(140,100,220,0.6); border-radius:12px;
+    padding:13px 16px; font-size:14px; color:#f0e8ff; outline:none; font-weight:600;
+    margin-bottom:12px; font-family:inherit;
+  }
+  .modal-input:focus { border-color:#a888ff; box-shadow:0 0 20px rgba(140,90,240,0.7); }
   .modal-close {
     width:100%; margin-top:14px; padding:13px; border-radius:12px;
-    background: linear-gradient(135deg,#7a3fff,#4a1fd0);
+    background: linear-gradient(135deg,#7c3aed,#4c1d95);
     color:#fff; border:none; font-size:14px; font-weight:800;
     cursor:pointer; font-family:inherit; letter-spacing:0.4px;
-    box-shadow: 0 6px 22px rgba(100,50,200,0.6);
+    box-shadow: 0 6px 22px rgba(124,58,237,0.8);
   }
-  .modal-close:active { transform:scale(0.97); filter:brightness(0.93); }
+  .modal-close:active { transform:scale(0.97); }
 
-  /* ============ MUSIC PLAYER ============ */
+  /* ============ MUSIC ============ */
   .music-player {
-    position:fixed; bottom:100px; left:14px; z-index:999;
+    position:fixed; bottom:110px; left:12px; z-index:989;
     display:flex; align-items:center; gap:10px;
-    background: linear-gradient(135deg, rgba(35,15,70,0.96), rgba(15,8,40,0.96));
-    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-    border:1px solid rgba(150,100,240,0.55);
-    border-radius:50px; padding:7px 16px 7px 7px;
-    box-shadow: 0 12px 35px rgba(0,0,0,0.75), 0 0 30px rgba(120,60,220,0.55);
-    max-width: calc(100% - 28px); cursor:pointer;
-    transition: transform .15s;
+    background: linear-gradient(135deg, rgba(35,15,70,0.98), rgba(12,6,40,0.98));
+    backdrop-filter: blur(14px);
+    border:1px solid rgba(160,110,250,0.75);
+    border-radius:50px; padding:6px 14px 6px 6px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.85), 0 0 30px rgba(120,60,220,0.7);
+    max-width: calc(100% - 24px); cursor:pointer;
   }
   .music-player:active { transform:scale(0.95); }
   .vinyl {
-    width:46px; height:46px; border-radius:50%; flex-shrink:0;
+    width:42px; height:42px; border-radius:50%; flex-shrink:0;
     background:
       radial-gradient(circle at center, #2a0d4a 22%, #0a0316 23%, #1a0d2e 24%, #0a0316 70%, #1a0d2e 72%, #0a0316 74%);
     position:relative;
-    box-shadow: inset 0 0 0 2px rgba(180,120,255,0.55), 0 0 16px rgba(140,80,240,0.7);
+    box-shadow: inset 0 0 0 2px rgba(180,120,255,0.7), 0 0 16px rgba(140,80,240,0.85);
   }
   .vinyl::after {
     content:""; position:absolute; top:50%; left:50%;
-    transform:translate(-50%,-50%); width:12px; height:12px;
+    transform:translate(-50%,-50%); width:11px; height:11px;
     border-radius:50%;
-    background: linear-gradient(135deg,#b18aff,#4ac8ff);
+    background: linear-gradient(135deg,#b18aff,#0891b9);
     box-shadow: 0 0 12px rgba(177,138,255,1);
   }
   .vinyl.playing { animation: spin 3s linear infinite; }
   .music-info { min-width:0; overflow:hidden; flex:1; }
   .music-title {
-    font-size:11px; font-weight:800; color:#e8d8ff;
+    font-size:10.5px; font-weight:800; color:#f0e8ff;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-    letter-spacing:0.2px; text-shadow: 0 0 10px rgba(180,120,255,0.7);
+    letter-spacing:0.2px;
   }
   .music-artist {
-    font-size:9.5px; font-weight:600; color:#8a80c0;
+    font-size:9px; font-weight:600; color:#a78bff;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-    letter-spacing:0.2px; margin-top:1px;
+    margin-top:1px;
   }
   .music-play-icon {
-    width:30px; height:30px; border-radius:50%;
-    background: linear-gradient(135deg,#8b5eff,#4a7aff);
+    width:28px; height:28px; border-radius:50%;
+    background: linear-gradient(135deg,#7c3aed,#0891b9);
     display:flex; align-items:center; justify-content:center;
-    flex-shrink:0; box-shadow: 0 2px 12px rgba(120,80,255,0.8);
+    flex-shrink:0; box-shadow: 0 2px 12px rgba(120,80,255,0.9);
+    font-size:14px; color:#fff;
   }
-  .music-play-icon svg { width:14px; height:14px; fill:#fff; }
 
   /* ============ BOTTOM NAV ============ */
   .bottom-nav {
     position:fixed; left:0; right:0; bottom:0; z-index:990;
-    background: linear-gradient(180deg, rgba(15,8,35,0.92), rgba(8,4,20,0.98));
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(140,100,240,0.4);
-    box-shadow: 0 -10px 40px rgba(0,0,0,0.7), 0 -2px 20px rgba(120,60,220,0.3);
+    background: linear-gradient(180deg, rgba(20,10,45,0.96), rgba(5,2,15,0.99));
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(150,110,240,0.55);
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.85), 0 -2px 20px rgba(120,60,220,0.45);
     display:grid; grid-template-columns: 1fr auto 1fr;
     align-items:center; justify-items:center;
-    padding: 10px 8px calc(10px + env(safe-area-inset-bottom, 0px));
-    max-width: 100%;
+    padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px));
   }
   .nav-item {
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:3px; cursor:pointer; padding:6px 10px; border-radius:14px;
-    transition: all .2s; user-select:none; min-width:70px;
+    gap:2px; cursor:pointer; padding:6px 6px; border-radius:12px;
+    user-select:none; min-width:60px;
   }
   .nav-item:active { transform:scale(0.94); }
-  .nav-item svg { width:22px; height:22px; fill:#8a80c0; transition: all .2s; }
+  .nav-item .emoji { font-size:18px; line-height:1; }
   .nav-item span {
-    font-size:10.5px; font-weight:700; color:#8a80c0;
-    letter-spacing:0.3px; transition: all .2s; text-transform:uppercase;
+    font-size:9.5px; font-weight:700; color:#a78bff;
+    letter-spacing:0.2px; text-transform:uppercase;
   }
-  .nav-item.active svg { fill:#b18aff; filter:drop-shadow(0 0 10px rgba(177,138,255,1)); }
   .nav-item.active span { color:#d0c0ff; }
-
+  .nav-item.active .emoji { filter: drop-shadow(0 0 10px rgba(177,138,255,1)); }
   .nav-center {
-    width:60px; height:60px; border-radius:50%;
-    background: linear-gradient(135deg, #8b3fff 0%, #1a9aff 100%);
+    width:58px; height:58px; border-radius:50%;
+    background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%);
     display:flex; align-items:center; justify-content:center;
-    box-shadow: 0 6px 25px rgba(120,60,255,0.7), 0 0 30px rgba(60,150,255,0.5), inset 0 2px 0 rgba(255,255,255,0.3);
+    box-shadow: 0 6px 25px rgba(124,58,237,0.9), 0 0 30px rgba(60,150,255,0.65), inset 0 2px 0 rgba(255,255,255,0.3);
     cursor:pointer; transition: all .3s cubic-bezier(0.34,1.56,0.64,1);
-    border: 2px solid rgba(200,180,255,0.5);
-    margin-top:-22px;
+    border: 2px solid rgba(200,180,255,0.65);
+    margin-top:-20px;
+    font-size:28px; font-weight:900; color:#fff;
   }
   .nav-center:active { transform:scale(0.9); }
   .nav-center.rotated { transform: rotate(45deg); }
   .nav-center.rotated:active { transform: rotate(45deg) scale(0.9); }
-  .nav-center svg { width:30px; height:30px; fill:#fff; transition: transform .3s; }
-  .nav-center.rotated svg { transform: rotate(0deg); }
 
   /* ============ FLOATING MENU ============ */
   .floating-menu {
     position:fixed; left:0; right:0; bottom:0; z-index:989;
-    background: linear-gradient(180deg, rgba(20,10,45,0.96), rgba(10,5,25,0.99));
-    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    background: linear-gradient(180deg, rgba(25,12,55,0.98), rgba(5,2,15,0.99));
+    backdrop-filter: blur(24px);
     border-top-left-radius: 28px; border-top-right-radius: 28px;
-    border-top: 1px solid rgba(150,100,240,0.55);
-    box-shadow: 0 -20px 60px rgba(0,0,0,0.85), 0 -5px 30px rgba(120,60,220,0.4);
+    border-top: 1px solid rgba(150,100,240,0.7);
+    box-shadow: 0 -20px 60px rgba(0,0,0,0.95), 0 -5px 30px rgba(120,60,220,0.55);
     padding: 22px 18px calc(120px + env(safe-area-inset-bottom, 0px));
     transform: translateY(100%);
     transition: transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1);
@@ -594,368 +751,463 @@
     pointer-events: none;
     opacity: 0;
   }
-  .floating-menu.show {
-    transform: translateY(0);
-    pointer-events: auto;
-    opacity: 1;
-  }
+  .floating-menu.show { transform: translateY(0); pointer-events: auto; opacity: 1; }
   .menu-title {
     display:flex; align-items:center; gap:10px;
-    font-size:14px; font-weight:800; letter-spacing:0.8px;
+    font-size:13.5px; font-weight:800; letter-spacing:0.8px;
     color:#f0e8ff; text-transform:uppercase; margin-bottom:18px;
-    padding-bottom:14px; border-bottom:1px solid rgba(150,100,240,0.3);
+    padding-bottom:14px; border-bottom:1px solid rgba(150,100,240,0.45);
   }
-  .menu-title svg { width:20px; height:20px; fill:#b18aff; filter:drop-shadow(0 0 8px rgba(177,138,255,0.9)); }
-
+  .menu-title .emoji { font-size:20px; }
   .menu-item {
     display:flex; align-items:center; gap:12px;
-    background: rgba(30,15,60,0.7);
-    border:1px solid rgba(140,100,220,0.35);
+    background: rgba(30,15,60,0.85);
+    border:1px solid rgba(140,100,220,0.5);
     border-radius:16px; padding:14px 16px;
-    margin-bottom:10px; transition: all .2s;
+    margin-bottom:10px;
   }
-  .menu-item:active { transform:scale(0.98); }
   .menu-item-icon {
     width:40px; height:40px; border-radius:12px; flex-shrink:0;
-    background: rgba(90,60,180,0.35);
-    border:1px solid rgba(140,110,230,0.5);
+    background: rgba(90,60,180,0.5);
+    border:1px solid rgba(140,110,230,0.65);
     display:flex; align-items:center; justify-content:center;
-    font-size:20px; line-height:1;
+    font-size:20px;
   }
   .menu-item-info { flex:1; min-width:0; }
   .menu-item-name {
-    font-size:13.5px; font-weight:800; color:#f0e8ff;
+    font-size:13px; font-weight:800; color:#f0e8ff;
     letter-spacing:0.6px; text-transform:uppercase;
   }
   .menu-item-desc {
-    font-size:10.5px; color:#8a80c0; font-weight:500;
-    margin-top:2px; letter-spacing:0.2px;
+    font-size:10.5px; color:#a78bff; font-weight:500; margin-top:2px;
   }
   .menu-toggle {
     position:relative; width:50px; height:28px;
-    background: rgba(60,40,110,0.9); border-radius:28px; cursor:pointer;
-    transition: background .3s; border:1px solid rgba(120,90,200,0.55);
+    background: rgba(60,40,110,0.95); border-radius:28px; cursor:pointer;
+    transition: background .3s; border:1px solid rgba(140,100,220,0.65);
     flex-shrink:0;
   }
   .menu-toggle::after {
     content:""; position:absolute; top:2px; left:2px;
     width:22px; height:22px; background:#c8b0f0; border-radius:50%;
     transition: transform .3s, background .3s;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
   }
   .menu-toggle.on {
-    background: linear-gradient(135deg, #1a9a4a, #0e6b32);
-    border-color: rgba(74,222,128,0.7);
-    box-shadow: 0 0 16px rgba(74,222,128,0.6);
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    border-color: rgba(74,222,128,0.85);
+    box-shadow: 0 0 16px rgba(74,222,128,0.75);
   }
   .menu-toggle.on::after { transform:translateX(22px); background:#fff; }
-
   .menu-item.range-item { flex-direction: column; align-items: stretch; gap:12px; }
   .menu-item.range-top { display:flex; align-items:center; gap:12px; }
-  .slider-row {
-    display:flex; align-items:center; gap:12px;
-  }
+  .slider-row { display:flex; align-items:center; gap:12px; }
   .slider-input {
     flex:1; -webkit-appearance: none; appearance: none;
     height: 8px; border-radius: 8px;
-    background: linear-gradient(90deg, #7a3fff 0%, #1a9aff var(--val,50%), rgba(60,40,110,0.9) var(--val,50%));
+    background: linear-gradient(90deg, #7c3aed 0%, #0891b9 var(--val,50%), rgba(60,40,110,0.9) var(--val,50%));
     outline: none; cursor: pointer;
-    transition: background .15s;
   }
   .slider-input::-webkit-slider-thumb {
     -webkit-appearance: none; appearance: none;
     width: 22px; height: 22px; border-radius: 50%;
     background: linear-gradient(135deg, #e0d0ff, #a888ff);
-    box-shadow: 0 0 12px rgba(180,120,255,0.9), 0 2px 6px rgba(0,0,0,0.5);
-    cursor: pointer;
-    border: 2px solid rgba(255,255,255,0.5);
-  }
-  .slider-input::-moz-range-thumb {
-    width: 22px; height: 22px; border-radius: 50%;
-    background: linear-gradient(135deg, #e0d0ff, #a888ff);
-    box-shadow: 0 0 12px rgba(180,120,255,0.9);
-    cursor: pointer;
-    border: 2px solid rgba(255,255,255,0.5);
+    box-shadow: 0 0 12px rgba(180,120,255,1), 0 2px 6px rgba(0,0,0,0.65);
+    cursor: pointer; border: 2px solid rgba(255,255,255,0.65);
   }
   .slider-value {
     min-width: 52px; text-align: center;
     font-size: 14px; font-weight: 800; color: #b18aff;
     font-family: ui-monospace, monospace;
-    text-shadow: 0 0 10px rgba(177,138,255,0.8);
   }
 
   /* ============ TOAST ============ */
   .toast {
-    position:fixed; left:50%; bottom:220px; z-index:9999;
+    position:fixed; left:50%; bottom:240px; z-index:9999;
     transform: translateX(-50%) translateY(180%);
     background: linear-gradient(135deg, #2a1550, #1a0a35);
-    border:1px solid rgba(180,140,255,0.65);
+    border:1px solid rgba(180,140,255,0.8);
     color:#f0e8ff; padding:14px 22px; border-radius:14px;
-    font-size:13.5px; font-weight:700;
-    box-shadow: 0 12px 35px rgba(0,0,0,0.75), 0 0 28px rgba(140,90,255,0.55);
+    font-size:13px; font-weight:700;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.85), 0 0 28px rgba(140,90,255,0.7);
     transition: transform .35s cubic-bezier(0.34,1.56,0.64,1);
-    max-width:340px; text-align:center; letter-spacing:0.2px;
+    max-width:340px; text-align:center;
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
-  .toast.success { border-color: rgba(74,222,128,0.7); box-shadow: 0 12px 35px rgba(0,0,0,0.75), 0 0 28px rgba(74,222,128,0.5); }
-  .toast.error { border-color: rgba(255,90,120,0.7); box-shadow: 0 12px 35px rgba(0,0,0,0.75), 0 0 28px rgba(255,90,120,0.5); }
+  .toast.success { border-color: rgba(74,222,128,0.85); }
+  .toast.error { border-color: rgba(255,90,120,0.85); }
 
-  /* ============ FOOTER ============ */
   .footer {
-    text-align:center; font-size:12px; color:#7a7098;
-    padding:14px 0 6px; font-weight:600; letter-spacing:0.3px; line-height:1.6;
+    text-align:center; font-size:11.5px; color:#c4b5fd;
+    padding:14px 0 6px; font-weight:600; line-height:1.6;
   }
   .footer .sep {
     display:block; width:60px; height:2px;
-    background: linear-gradient(90deg, transparent, #7a3fff, #4ac8ff, transparent);
+    background: linear-gradient(90deg, transparent, #7c3aed, #0891b9, transparent);
     margin: 0 auto 10px; border-radius:2px;
   }
 
   @media (max-width:380px) {
-    .hero-banner { height:165px; }
-    .hero-title { font-size:50px; letter-spacing:2px; }
-    .app-icon-wrap { width:90px; height:90px; margin-top:-45px; }
-    .app-icon-text { font-size:20px; }
-    .app-icon-text small { font-size:12px; }
-    .app-name { font-size:21px; }
-    .app-sub { font-size:12.5px; }
+    .welcome-title { font-size:26px; letter-spacing:2px; }
+    .welcome-logo { width:110px; height:110px; }
+    .welcome-logo-text { font-size:18px; }
+    .welcome-logo-text small { font-size:11px; }
+    .dashboard-title { font-size:24px; }
+    .new-profile-title { font-size:18px; }
     .chip { font-size:11.5px; padding:10px 5px; min-width:60px; }
     .key-info-grid { grid-template-columns:1fr; }
-    .result-item .info .name { font-size:11.5px; }
+    .nav-center { width:52px; height:52px; font-size:24px; }
+    .nav-item span { font-size:9px; }
+    .nav-item .emoji { font-size:16px; }
   }
 </style>
 </head>
 <body>
 
-<div class="wrap">
-
-  <!-- ============ PHẦN 1: NHẬP KEY ============ -->
-  <div class="key-activation">
-    <div class="key-title">
-      <svg viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
-      DERA LOCKS — Secure Proxy
-    </div>
-    <div class="key-brand-sub">Nhập key để mở khóa toàn bộ chức năng</div>
-    <div class="key-input-row">
-      <input type="text" class="key-input" id="keyInput" placeholder="VD: DERA-XXXXXXXX-XXXXXXXX" autocomplete="off" spellcheck="false" maxlength="22">
-      <button class="btn-activate-key" id="btnActivateKey">Kích Hoạt Key Ngay</button>
-    </div>
-    <div class="key-msg" id="keyMsg"></div>
-  </div>
-
-  <!-- KEY INFO -->
-  <div class="key-info" id="keyInfo">
-    <div class="key-info-header">
-      <div class="key-info-title">
-        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-        KEY ĐÃ KÍCH HOẠT
-      </div>
-      <div class="key-info-badge" id="keyInfoBadge">CÒN 3 NGÀY</div>
-    </div>
-    <div class="key-info-grid">
-      <div class="key-info-item key-info-full">
-        <div class="key-info-label">KEY</div>
-        <div class="key-info-value green" id="infoKey">—</div>
-      </div>
-      <div class="key-info-item">
-        <div class="key-info-label">THIẾT BỊ</div>
-        <div class="key-info-value" id="infoDevice">—</div>
-      </div>
-      <div class="key-info-item">
-        <div class="key-info-label">MÃ THIẾT BỊ</div>
-        <div class="key-info-value" id="infoDeviceId">—</div>
-      </div>
-      <div class="key-info-item">
-        <div class="key-info-label">KÍCH HOẠT LÚC</div>
-        <div class="key-info-value" id="infoActivated">—</div>
-      </div>
-      <div class="key-info-item">
-        <div class="key-info-label">CÒN LẠI</div>
-        <div class="key-info-value green" id="infoRemaining">—</div>
+<!-- ============================================================
+     SCREEN 1: WELCOME
+============================================================ -->
+<div class="screen active" id="screen-welcome">
+  <div class="welcome-card">
+    <div class="welcome-logo">
+      <div class="welcome-logo-inner">
+        <div class="welcome-logo-text">DERA<small>LOCKS</small></div>
       </div>
     </div>
-  </div>
-
-  <div class="locked-note" id="lockedNote">🔒 Vui lòng nhập key để mở khóa chức năng này</div>
-
-  <!-- ============ HERO ============ -->
-  <div class="hero-card">
-    <div class="hero-banner">
-      <div class="hero-title">DERA<br>LOCKS</div>
-    </div>
-    <div class="app-icon-wrap">
-      <div class="app-icon">
-        <div class="app-icon-text">DERA<small>LOCKS</small></div>
-      </div>
-    </div>
-    <div class="app-name">DERA LOCKS</div>
-    <div class="app-sub">Dera Locks <span class="dot">·</span> Secure Proxy</div>
-    <div class="badges">
-      <div class="badge-version">v1.0.0</div>
-    </div>
-    <div class="ios-box">
-      <div class="ios-title">
-        <svg viewBox="0 0 24 24"><path d="M17.05 12.04c-.02-2.27 1.85-3.36 1.93-3.41-1.05-1.54-2.69-1.75-3.27-1.77-1.39-.14-2.71.82-3.42.82-.71 0-1.79-.8-2.94-.78-1.51.02-2.9.88-3.68 2.23-1.57 2.72-.4 6.75 1.12 8.96.74 1.08 1.62 2.29 2.78 2.25 1.12-.05 1.54-.72 2.9-.72 1.35 0 1.74.72 2.92.7 1.21-.02 1.98-1.1 2.72-2.19.86-1.26 1.21-2.48 1.23-2.54-.03-.01-2.36-.91-2.38-3.6zM14.96 5.2c.62-.75 1.04-1.79.92-2.83-.89.04-1.97.6-2.61 1.34-.57.66-1.07 1.72-.94 2.74 1 .08 2.02-.51 2.63-1.25z"/></svg>
+    <div class="welcome-title">DERA LOCKS</div>
+    <div class="welcome-sub">Dera Locks <span class="dot">·</span> Secure Proxy</div>
+    <div class="welcome-badge">v1.0.0</div>
+    <div class="ios-support">
+      <div class="ios-support-title">
+        <span class="apple"></span>
         iOS HỖ TRỢ:
       </div>
       <div class="ios-versions">
-        iOS 16.0 → 18.7.1 <span class="sep">•</span> iOS 26+ <span class="sep">•</span> iOS 27
+        iOS 16.0 → 18.7.1 <span class="sep">·</span> iOS 26+ <span class="sep">·</span> iOS 27
       </div>
     </div>
+    <button class="btn-start" id="btnStart">
+      Bắt Đầu Sử Dụng →
+    </button>
   </div>
-
-  <!-- ============ PHẦN 2: TRẠNG THÁI SERVER ============ -->
-  <div class="server-card" id="serverCard">
-    <div class="server-header">
-      <div class="server-header-left">
-        <svg viewBox="0 0 24 24"><path d="M4 1h16c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V3c0-1.1.9-2 2-2zm0 12h16c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2v-6c0-1.1.9-2 2-2zm3-9v2h2V4H7zm0 12v2h2v-2H7zm4-12v2h7V4h-7zm0 12v2h7v-2h-7z"/></svg>
-        <div class="title">Trạng Thái Server</div>
-      </div>
-      <div class="server-version">v1.0.0</div>
-    </div>
-    <button class="server-btn checking" id="btnServerStatus">
-      <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
-      Đang kiểm tra kết nối...
-    </button>
-    <div class="server-info" id="serverInfo">Nhấn để kiểm tra lại kết nối</div>
-  </div>
-
-  <!-- ============ PHẦN 3: TẠO DNS ANTIBAN ============ -->
-  <div class="section-card">
-    <div class="section-title dns">
-      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 15l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>
-      Tạo DNS Antibal
-    </div>
-    <div class="section-sub">Cấu hình DNS bảo mật, tối ưu cho iOS</div>
-
-    <div class="field">
-      <div class="field-label">TÊN CẤU HÌNH</div>
-      <input type="text" class="text-input" id="dnsName" placeholder="VD: DeraSecure" value="DeraSecure" autocomplete="off">
-    </div>
-    <div class="field">
-      <div class="field-label">DNS CHÍNH</div>
-      <input type="text" class="text-input" id="dnsPrimary" placeholder="VD: 1.1.1.1" value="1.1.1.1" autocomplete="off">
-    </div>
-    <div class="field">
-      <div class="field-label">DNS PHỤ <span class="hint">(Tùy chọn)</span></div>
-      <input type="text" class="text-input" id="dnsSecondary" placeholder="VD: 1.0.0.1" value="1.0.0.1" autocomplete="off">
-    </div>
-    <div class="field">
-      <div class="field-label">CHẾ ĐỘ</div>
-      <div class="chips" id="dnsMode">
-        <div class="chip active" data-mode="secure">Bảo mật</div>
-        <div class="chip" data-mode="optimize">Tối ưu</div>
-        <div class="chip" data-mode="stealth">Chống phát hiện</div>
-      </div>
-    </div>
-    <button class="btn-sign btn-dns" id="btnCreateDNS">
-      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" fill="none" stroke="white" stroke-width="2"/></svg>
-      Tạo DNS Ngay
-    </button>
-    <div class="note">Tạo file <span class="link">DeraSecure.mobileconfig</span> chứa toàn bộ cấu hình DNS</div>
-  </div>
-
-  <!-- ============ PHẦN 4: TẠO CHỨNG NHẬN + KÝ SỐ ============ -->
-  <div class="section-card">
-    <div class="section-title crt">
-      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"/></svg>
-      Tạo Chứng Nhận &amp; Ký Số
-    </div>
-    <div class="section-sub">Sinh khóa RSA 2048-bit, chứng nhận X.509 self-signed</div>
-
-    <div class="field">
-      <div class="field-label">TÊN MIỀN / DNS</div>
-      <input type="text" class="text-input" id="certDomain" placeholder="VD: dns.deralocks.cc" value="dns.deralocks.cc" autocomplete="off">
-    </div>
-    <div class="field">
-      <div class="field-label">TỔ CHỨC</div>
-      <input type="text" class="text-input" id="certOrg" placeholder="VD: Dera Locks VN" value="Dera Locks VN" autocomplete="off">
-    </div>
-    <div class="field">
-      <div class="field-label">THỜI HẠN</div>
-      <div class="chips" id="certDays">
-        <div class="chip" data-days="30">30 ngày</div>
-        <div class="chip" data-days="90">90 ngày</div>
-        <div class="chip" data-days="365">365 ngày</div>
-        <div class="chip active" data-days="max">14/10/2034</div>
-      </div>
-    </div>
-    <div class="field">
-      <div class="field-label">LOẠI CHỨNG NHẬN</div>
-      <div class="chips" id="certType">
-        <div class="chip active" data-type="root">Root CA</div>
-        <div class="chip" data-type="ssl">SSL Domains</div>
-      </div>
-    </div>
-    <div class="field">
-      <div class="field-label">MẬT KHẨU BẢO MẬT <span class="hint">(Tùy chọn)</span></div>
-      <input type="password" class="text-input" id="certPassword" placeholder="Để trống = không đặt" autocomplete="off">
-    </div>
-
-    <button class="btn-sign btn-crt" id="btnCreateCert">
-      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
-      Tạo Chứng Nhận Ngay
-    </button>
-
-    <button class="btn-sign btn-check-crt" id="btnCheckCert">
-      <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-      Kiểm tra Chứng Nhận
-    </button>
-
-    <div class="status-box warn" id="certStatusBox" style="margin-top:14px;">
-      <span class="dot"></span>
-      <span id="certStatusText">⚠️ Chưa có chứng nhận</span>
-    </div>
-
-    <button class="btn-sign btn-sign-mc" id="btnSignDNS">
-      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
-      Tạo &amp; Ký .mobileconfig Ngay
-    </button>
-
-    <div class="note-pem">📄 File .crt định dạng PEM — Tương thích với iOS </div>
-
-    <div id="resultList" class="result-list" style="margin-top:14px;"></div>
-  </div>
-
-  <!-- ============ PHẦN 5: KÍCH HOẠT DNS ============ -->
-  <div class="section-card">
-    <div class="section-title run">
-      <svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
-      Kích Hoạt DNS Trực Tiếp
-    </div>
-    <div class="section-sub">Cài đặt cấu hình DNS trực tiếp trên iPhone</div>
-
-    <div class="status-box off" id="dnsStatusBox">
-      <span class="dot"></span>
-      <span id="dnsStatusText">⭕ Chưa kích hoạt</span>
-    </div>
-    <div class="status-box" id="dnsInUseBox" style="border-color:rgba(177,138,255,0.45); background:rgba(45,20,80,0.45); color:#b8c8e8;">
-      <span class="dot" style="background:#b18aff; box-shadow:0 0 10px #b18aff;"></span>
-      <span id="dnsInUseText">DNS đang dùng: <b>DeraSecure</b></span>
-    </div>
-    <div class="status-box warn" id="crtInUseBox">
-      <span class="dot"></span>
-      <span id="crtInUseText">📄 Chứng nhận: ⚠️ Chưa cài</span>
-    </div>
-
-    <div class="toggle-row">
-      <span class="toggle-label">Bật / Tắt DNS</span>
-      <div class="toggle on" id="toggleDNS"></div>
-    </div>
-
-    <button class="btn-sign btn-run" id="btnActivateDNS">
-      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-      Kích Hoạt Ngay
-    </button>
-    <div class="note">Chỉ kích hoạt khi đã có file .mobileconfig đã ký hợp lệ</div>
-  </div>
-
-  <!-- FOOTER -->
   <div class="footer">
     <span class="sep"></span>
     © 2026 Dera Locks VN. Tất cả quyền được bảo lưu
   </div>
+</div>
 
+<!-- ============================================================
+     SCREEN 2: APP CHÍNH
+============================================================ -->
+<div class="screen" id="screen-app">
+  <div class="wrap">
+
+    <!-- PHẦN 2: NHẬP KEY -->
+    <div class="key-activation">
+      <div class="key-title">
+        <svg viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+        KÍCH HOẠT KEY
+      </div>
+      <div class="key-input-row">
+        <input type="text" class="key-input" id="keyInput" placeholder="VD: DERA-XXXXXXXX-XXXXXXXX" autocomplete="off" spellcheck="false" maxlength="22">
+        <button class="btn-activate-key" id="btnActivateKey">Kích Hoạt Key Ngay</button>
+      </div>
+      <div class="key-msg" id="keyMsg"></div>
+    </div>
+
+    <!-- KEY INFO -->
+    <div class="key-info" id="keyInfo">
+      <div class="key-info-header">
+        <div class="key-info-title">
+          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+          KEY ĐÃ KÍCH HOẠT
+        </div>
+        <div class="key-info-badge" id="keyInfoBadge">CÒN 3 NGÀY</div>
+      </div>
+      <div class="key-info-grid">
+        <div class="key-info-item key-info-full">
+          <div class="key-info-label">TRẠNG THÁI</div>
+          <div class="key-info-value green">✅ Đã kích hoạt</div>
+        </div>
+        <div class="key-info-item">
+          <div class="key-info-label">THIẾT BỊ</div>
+          <div class="key-info-value" id="infoDevice">—</div>
+        </div>
+        <div class="key-info-item">
+          <div class="key-info-label">MÃ THIẾT BỊ</div>
+          <div class="key-info-value" id="infoDeviceId">—</div>
+        </div>
+        <div class="key-info-item key-info-full">
+          <div class="key-info-label">KEY</div>
+          <div class="key-info-value green" id="infoKey">—</div>
+        </div>
+        <div class="key-info-item key-info-full">
+          <div class="key-info-label">THỜI GIAN CÒN LẠI</div>
+          <div class="key-info-value green" id="infoRemaining">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHẦN 3: DASHBOARD -->
+    <div class="dashboard-title">Dashboard</div>
+    <div class="profile-card">
+      <div class="profile-top">
+        <div class="profile-top-left">
+          <div class="icon">📄</div>
+          Profile
+        </div>
+        <div class="profile-plus" id="profilePlus">+</div>
+      </div>
+      <div class="profile-name-box" id="profileNameBox">
+        <span class="name" id="profileName">DERA LOCKED</span>
+        <span class="arrow">▼</span>
+      </div>
+      <div class="profile-dropdown" id="profileDropdown"></div>
+      <div class="profile-local">📁 Local</div>
+      <div class="profile-actions">
+        <button class="profile-action-btn" id="btnRenameProfile">
+          <span class="emoji">✏️</span> Sửa tên
+        </button>
+        <button class="profile-action-btn" id="btnUploadProfile">
+          <span class="emoji">⬆️</span> Xuất
+        </button>
+      </div>
+    </div>
+
+    <!-- LOCKED NOTE -->
+    <div class="locked-note">🔒 Nhập Key để mở khóa toàn bộ chức năng bên dưới</div>
+
+    <!-- LOCKED SECTIONS -->
+    <div class="locked-sections">
+
+      <!-- PHẦN 5: TRẠNG THÁI SERVER -->
+      <div class="server-card" id="serverCard" style="margin-bottom:14px;">
+        <div class="server-header">
+          <div class="server-header-left">
+            <svg viewBox="0 0 24 24"><path d="M4 1h16c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V3c0-1.1.9-2 2-2zm0 12h16c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2v-6c0-1.1.9-2 2-2zm3-9v2h2V4H7zm0 12v2h2v-2H7zm4-12v2h7V4h-7zm0 12v2h7v-2h-7z"/></svg>
+            <div class="title">Trạng Thái Server</div>
+          </div>
+          <div class="server-version">v1.0.0</div>
+        </div>
+        <button class="server-btn checking" id="btnServerStatus">
+          <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+          Đang kiểm tra kết nối...
+        </button>
+        <div class="server-info" id="serverInfo">Nhấn để kiểm tra lại kết nối</div>
+      </div>
+
+      <!-- PHẦN 6: TẠO DNS -->
+      <div class="section-card" style="margin-bottom:14px;">
+        <div class="section-title">
+          <span class="emoji">🌐</span>
+          TẠO DNS ANTIBAN
+        </div>
+        <div class="section-sub">Cấu hình DNS bảo mật, tối ưu cho iOS</div>
+        <div class="field">
+          <div class="field-label">TÊN CẤU HÌNH</div>
+          <input type="text" class="text-input" id="dnsName" placeholder="VD: DeraSecure" value="DeraSecure" autocomplete="off">
+        </div>
+        <div class="field">
+          <div class="field-label">DNS CHÍNH</div>
+          <input type="text" class="text-input" id="dnsPrimary" placeholder="VD: 1.1.1.1" value="1.1.1.1" autocomplete="off">
+        </div>
+        <div class="field">
+          <div class="field-label">DNS PHỤ <span class="hint">(Tùy chọn)</span></div>
+          <input type="text" class="text-input" id="dnsSecondary" placeholder="VD: 1.0.0.1" value="1.0.0.1" autocomplete="off">
+        </div>
+        <div class="field">
+          <div class="field-label">CHẾ ĐỘ</div>
+          <div class="chips" id="dnsMode">
+            <div class="chip active" data-mode="secure">Bảo mật</div>
+            <div class="chip" data-mode="optimize">Tối ưu</div>
+            <div class="chip" data-mode="stealth">Chống phát hiện</div>
+          </div>
+        </div>
+        <button class="btn-sign btn-dns" id="btnCreateDNS">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" fill="none" stroke="white" stroke-width="2"/></svg>
+          Tạo DNS Ngay
+        </button>
+        <div class="note">Tạo file <span class="link">DeraSecure.mobileconfig</span> và tự động tải về máy</div>
+      </div>
+
+      <!-- PHẦN 7: TẠO CHỨNG NHẬN & KÝ SỐ -->
+      <div class="section-card" style="margin-bottom:14px;">
+        <div class="section-title">
+          <span class="emoji">🔐</span>
+          TẠO CHỨNG NHẬN &amp; KÝ SỐ
+        </div>
+        <div class="section-sub">Sinh khóa RSA 2048-bit, chứng nhận X.509 self-signed</div>
+        <div class="field">
+          <div class="field-label">TÊN MIỀN / DNS</div>
+          <input type="text" class="text-input" id="certDomain" placeholder="VD: dns.deralocks.cc" value="dns.deralocks.cc" autocomplete="off">
+        </div>
+        <div class="field">
+          <div class="field-label">TỔ CHỨC</div>
+          <input type="text" class="text-input" id="certOrg" placeholder="VD: Dera Locks VN" value="Dera Locks VN" autocomplete="off">
+        </div>
+        <div class="field">
+          <div class="field-label">THỜI HẠN</div>
+          <div class="chips" id="certDays">
+            <div class="chip" data-days="30">30 ngày</div>
+            <div class="chip" data-days="90">90 ngày</div>
+            <div class="chip" data-days="365">365 ngày</div>
+            <div class="chip active" data-days="max">14/10/2034</div>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-label">LOẠI CHỨNG NHẬN</div>
+          <div class="chips" id="certType">
+            <div class="chip active" data-type="root">Root CA</div>
+            <div class="chip" data-type="ssl">SSL Domains</div>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-label">MẬT KHẨU BẢO MẬT <span class="hint">(Tùy chọn)</span></div>
+          <input type="password" class="text-input" id="certPassword" placeholder="Để trống = không đặt" autocomplete="off">
+        </div>
+        <button class="btn-sign btn-crt" id="btnCreateCert">
+          <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+          Tạo Chứng Nhận Ngay
+        </button>
+        <button class="btn-sign btn-check-crt" id="btnCheckCert">
+          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+          Kiểm tra Chứng Nhận
+        </button>
+        <div class="status-box warn" id="certStatusBox" style="margin-top:14px;">
+          <span class="dot"></span>
+          <span id="certStatusText">⚠️ Chưa có chứng nhận</span>
+        </div>
+        <button class="btn-sign btn-sign-mc" id="btnSignDNS">
+          <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+          Tạo &amp; Ký .mobileconfig Ngay
+        </button>
+        <div class="note-pem">📄 File .crt định dạng PEM — Tương thích với iOS 16+</div>
+        <div id="resultList" class="result-list" style="margin-top:14px;"></div>
+      </div>
+
+      <!-- PHẦN 8: KÍCH HOẠT DNS -->
+      <div class="section-card" style="margin-bottom:14px;">
+        <div class="section-title">
+          <span class="emoji">⚡</span>
+          KÍCH HOẠT DNS
+        </div>
+        <div class="section-sub">Cài đặt cấu hình DNS trực tiếp trên iPhone</div>
+        <div class="status-box off" id="dnsStatusBox">
+          <span class="dot"></span>
+          <span id="dnsStatusText">⭕ Chưa kích hoạt</span>
+        </div>
+        <div class="status-box" id="dnsInUseBox" style="border-color:rgba(177,138,255,0.55); background:rgba(45,20,80,0.55); color:#c4b5fd;">
+          <span class="dot" style="background:#b18aff; box-shadow:0 0 10px #b18aff;"></span>
+          <span id="dnsInUseText">DNS đang dùng: <b>DeraSecure</b></span>
+        </div>
+        <div class="status-box warn" id="crtInUseBox">
+          <span class="dot"></span>
+          <span id="crtInUseText">📄 Chứng nhận: ⚠️ Chưa cài</span>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">Bật / Tắt DNS</span>
+          <div class="toggle on" id="toggleDNS"></div>
+        </div>
+        <button class="btn-sign btn-run" id="btnActivateDNS">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          Kích Hoạt Ngay
+        </button>
+        <div class="note">Chỉ kích hoạt khi đã có file .mobileconfig đã ký hợp lệ</div>
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <span class="sep"></span>
+      © 2026 Dera Locks VN. Tất cả quyền được bảo lưu
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     SCREEN 3: NEW PROFILE
+============================================================ -->
+<div class="screen" id="screen-newprofile">
+  <div class="new-profile-header">
+    <div class="new-profile-back" id="newProfileBack">←</div>
+    <div class="new-profile-title">New Profile</div>
+  </div>
+
+  <div class="new-profile-card">
+
+    <!-- Option 1: Import from File -->
+    <div class="option-block" id="optionImport">
+      <div class="option-icon">📁</div>
+      <div class="option-info">
+        <div class="option-name">Import from File</div>
+        <div class="option-desc">Chọn file .json / .mobileconfig từ thiết bị</div>
+      </div>
+      <div class="option-arrow">›</div>
+    </div>
+
+    <!-- Option 2: Scan QR Code -->
+    <div class="option-block" id="optionScan">
+      <div class="option-icon">📱</div>
+      <div class="option-info">
+        <div class="option-name">Scan QR Code</div>
+        <div class="option-desc">Quét mã QR để nhập cấu hình nhanh</div>
+      </div>
+      <div class="option-arrow">›</div>
+    </div>
+
+    <!-- Option 3: Create Manually -->
+    <div class="option-block" id="optionManual">
+      <div class="option-icon">✏️</div>
+      <div class="option-info">
+        <div class="option-name">Create Manually</div>
+        <div class="option-desc">Nhập tên hồ sơ và cài đặt thủ công</div>
+      </div>
+      <div class="option-arrow">›</div>
+    </div>
+
+    <!-- Manual form (hidden by default) -->
+    <div class="manual-form" id="manualForm">
+      <div class="field">
+        <div class="field-label">TÊN HỒ SƠ</div>
+        <input type="text" class="text-input" id="manualProfileName" placeholder="VD: Hồ sơ của tôi" value="Hồ sơ mới">
+      </div>
+      <div class="field">
+        <div class="field-label">GHI CHÚ <span class="hint">(Tùy chọn)</span></div>
+        <input type="text" class="text-input" id="manualProfileNote" placeholder="Ghi chú cho hồ sơ này" autocomplete="off">
+      </div>
+    </div>
+
+    <!-- Selected file info -->
+    <div class="selected-file-info" id="selectedFileInfo">
+      <span class="label">FILE ĐÃ CHỌN</span>
+      <span id="selectedFileName">—</span>
+    </div>
+
+    <!-- Hidden file input -->
+    <input type="file" id="profileFileInput" accept=".json,.mobileconfig,.xml,.plist" style="display:none;">
+
+    <!-- Activate button -->
+    <button class="btn-activate-profile" id="btnActivateProfile">
+      ▶ Kích Hoạt Profile
+    </button>
+
+    <!-- Cancel button -->
+    <button class="btn-cancel-profile" id="btnCancelProfile">
+      Hủy
+    </button>
+
+  </div>
+
+  <div class="footer">
+    <span class="sep"></span>
+    © 2026 Dera Locks VN. Tất cả quyền được bảo lưu
+  </div>
+</div>
+
+<!-- Nút tròn đen phát -->
+<div class="play-float" id="playFloat">
+  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
 </div>
 
 <!-- LOADING OVERLAY -->
@@ -973,10 +1225,11 @@
 <div class="modal" id="modal">
   <div class="modal-content">
     <div class="modal-title">
-      <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z"/></svg>
-      <span id="modalTitleText">Nội dung file</span>
+      <span class="emoji" id="modalTitleEmoji">📄</span>
+      <span id="modalTitleText">Thông báo</span>
     </div>
-    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-body" id="modalBody" style="display:none;"></div>
+    <input type="text" class="modal-input" id="modalInput" style="display:none;">
     <button class="modal-close" id="modalClose">Đóng</button>
   </div>
 </div>
@@ -988,19 +1241,16 @@
     <div class="music-title">Thương Nhau Đến Thế - Remix</div>
     <div class="music-artist" id="musicArtist">Nhấn để phát nhạc</div>
   </div>
-  <div class="music-play-icon">
-    <svg id="musicIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-  </div>
+  <div class="music-play-icon" id="musicPlayIcon">▶</div>
 </div>
 
-<!-- ============ PHẦN 7: FLOATING MENU ============ -->
+<!-- PHẦN 10: FLOATING MENU -->
 <div class="floating-menu" id="floatingMenu">
   <div class="menu-title">
-    <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+    <span class="emoji">⚙️</span>
     MENU CHỨC NĂNG
   </div>
-
-  <div class="menu-item" data-key="touch">
+  <div class="menu-item">
     <div class="menu-item-icon">✋</div>
     <div class="menu-item-info">
       <div class="menu-item-name">TOUCH</div>
@@ -1008,8 +1258,7 @@
     </div>
     <div class="menu-toggle" id="tg-touch"></div>
   </div>
-
-  <div class="menu-item" data-key="aim">
+  <div class="menu-item">
     <div class="menu-item-icon">🎯</div>
     <div class="menu-item-info">
       <div class="menu-item-name">AIM</div>
@@ -1017,8 +1266,7 @@
     </div>
     <div class="menu-toggle" id="tg-aim"></div>
   </div>
-
-  <div class="menu-item" data-key="lock">
+  <div class="menu-item">
     <div class="menu-item-icon">🔒</div>
     <div class="menu-item-info">
       <div class="menu-item-name">KHÓA DÍNH</div>
@@ -1026,13 +1274,12 @@
     </div>
     <div class="menu-toggle" id="tg-lock"></div>
   </div>
-
-  <div class="menu-item range-item" data-key="grip">
+  <div class="menu-item range-item">
     <div class="menu-item range-top">
       <div class="menu-item-icon">🎚️</div>
       <div class="menu-item-info">
         <div class="menu-item-name">ĐỘ BÁM</div>
-        <div class="menu-item-desc">Điều chỉnh mức độ bám dính</div>
+        <div class="menu-item-desc">Điều chỉnh mức độ bám</div>
       </div>
       <div class="menu-toggle" id="tg-grip"></div>
     </div>
@@ -1041,8 +1288,7 @@
       <div class="slider-value" id="slider-grip-value">50%</div>
     </div>
   </div>
-
-  <div class="menu-item" data-key="fps">
+  <div class="menu-item">
     <div class="menu-item-icon">⚡</div>
     <div class="menu-item-info">
       <div class="menu-item-name">FPS</div>
@@ -1050,8 +1296,7 @@
     </div>
     <div class="menu-toggle" id="tg-fps"></div>
   </div>
-
-  <div class="menu-item" data-key="runmc">
+  <div class="menu-item">
     <div class="menu-item-icon">⚙️</div>
     <div class="menu-item-info">
       <div class="menu-item-name">CHẠY MOBILECONFIG</div>
@@ -1061,18 +1306,16 @@
   </div>
 </div>
 
-<!-- ============ PHẦN 7: BOTTOM NAV ============ -->
-<div class="bottom-nav">
+<!-- BOTTOM NAV -->
+<div class="bottom-nav" id="bottomNav">
   <div class="nav-item active" id="nav-home">
-    <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-    <span>Trang chủ</span>
+    <span class="emoji">🏠</span>
+    <span>Trang Chủ</span>
   </div>
-  <div class="nav-center" id="nav-plus">
-    <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-  </div>
+  <div class="nav-center" id="nav-plus">+</div>
   <div class="nav-item" id="nav-info">
-    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-    <span>Thông tin</span>
+    <span class="emoji">👤</span>
+    <span>Thông Tin</span>
   </div>
 </div>
 
@@ -1080,15 +1323,12 @@
 
 <script>
 /* ============================================================
-   CẤU HÌNH SERVER
+   CẤU HÌNH
 ============================================================ */
 const SERVER_URL = "https://sever-axua.onrender.com";
 const API_STATUS = SERVER_URL + "/status";
 const API_VERIFY = SERVER_URL + "/verify-key";
 
-/* ============================================================
-   DANH SÁCH KEY MẪU (fallback)
-============================================================ */
 const FALLBACK_KEYS = [
   'DERA-42363C9E-EC589D4C','DERA-7A9B2D4F-8E3C1D7F','DERA-1F3E5D7C-9B2A4C6E',
   'DERA-8C2E6F4A-1D3B5E7C','DERA-2B4D6F8A-3E5C7D9B','DERA-9A3C5E7G-2F4D6B8H',
@@ -1097,30 +1337,22 @@ const FALLBACK_KEYS = [
 ];
 const KEY_DURATION_MS = 3 * 24 * 60 * 60 * 1000;
 
-/* ============================================================
-   STORAGE KEYS
-============================================================ */
 const STORAGE_KEY_ACT = 'dera_locks_activation';
 const STORAGE_KEY_CERT = 'dera_locks_cert';
 const STORAGE_KEY_MC = 'dera_locks_signed_mc';
 const STORAGE_KEY_MENU = 'dera_locks_menu_state';
-const STORAGE_KEY_MUSIC_URL = 'https://files.catbox.moe/lnwzrw.mp3';
-
-/* ============================================================
-   NGÀY HẾT HẠN CỐ ĐỊNH: 14/10/2034
-============================================================ */
+const STORAGE_KEY_PROFILES = 'dera_locks_profiles';
+const MUSIC_URL = 'https://files.catbox.moe/lnwzrw.mp3';
 const FIXED_EXPIRY = new Date(2034, 9, 14, 23, 59, 59);
 
-/* ============================================================
-   STATE
-============================================================ */
 const state = {
   cert: null,
   signedMc: null,
   signedMcName: null,
   dnsMode: 'secure',
   certDays: 'max',
-  certType: 'root'
+  certType: 'root',
+  newProfileData: null
 };
 
 /* ============================================================
@@ -1199,20 +1431,61 @@ function downloadFile(filename, content, mimeType) {
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 8000);
 }
-function openModal(title, content) {
-  document.getElementById('modalTitleText').textContent = title;
-  document.getElementById('modalBody').textContent = content;
-  document.getElementById('modal').classList.add('show');
-}
 
 /* ============================================================
-   SPEECH — Chào mừng
+   MODAL — 2 chế độ: text / prompt
+============================================================ */
+let modalCallback = null;
+function openModal(title, content, emoji = '📄') {
+  document.getElementById('modalTitleText').textContent = title;
+  document.getElementById('modalTitleEmoji').textContent = emoji;
+  const body = document.getElementById('modalBody');
+  const input = document.getElementById('modalInput');
+  body.style.display = 'block';
+  input.style.display = 'none';
+  body.textContent = content;
+  modalCallback = null;
+  document.getElementById('modal').classList.add('show');
+}
+function openPrompt(title, defaultValue, callback, emoji = '✏️') {
+  document.getElementById('modalTitleText').textContent = title;
+  document.getElementById('modalTitleEmoji').textContent = emoji;
+  const body = document.getElementById('modalBody');
+  const input = document.getElementById('modalInput');
+  body.style.display = 'none';
+  input.style.display = 'block';
+  input.value = defaultValue || '';
+  modalCallback = callback;
+  document.getElementById('modal').classList.add('show');
+  setTimeout(() => input.focus(), 100);
+}
+document.getElementById('modalClose').addEventListener('click', () => {
+  const input = document.getElementById('modalInput');
+  if (input.style.display === 'block' && modalCallback) {
+    const cb = modalCallback;
+    modalCallback = null;
+    document.getElementById('modal').classList.remove('show');
+    cb(input.value);
+  } else {
+    modalCallback = null;
+    document.getElementById('modal').classList.remove('show');
+  }
+});
+document.getElementById('modal').addEventListener('click', (e) => {
+  if (e.target.id === 'modal') {
+    modalCallback = null;
+    document.getElementById('modal').classList.remove('show');
+  }
+});
+
+/* ============================================================
+   SPEECH
 ============================================================ */
 function speakWelcome() {
   try {
     if (!window.speechSynthesis) return;
     const voices = window.speechSynthesis.getVoices();
-    let viVoice = voices.find(v => v.lang && v.lang.startsWith('vi'));
+    const viVoice = voices.find(v => v.lang && v.lang.startsWith('vi'));
     const utt = new SpeechSynthesisUtterance('Chào mừng bạn đến với Dera Locks');
     utt.lang = 'vi-VN';
     utt.rate = 0.95;
@@ -1229,7 +1502,7 @@ if (window.speechSynthesis) {
 }
 
 /* ============================================================
-   DER ENCODER
+   DER ENCODER — X.509
 ============================================================ */
 function derWrap(tag, content) {
   const len = content.length;
@@ -1253,8 +1526,7 @@ function derConcat(...arrs) {
 }
 function encodeRDN(oid, value) {
   const oidMap = { 'CN': [0x55,0x04,0x03], 'O': [0x55,0x04,0x0A], 'C': [0x55,0x04,0x06] };
-  const oidBytes = oidMap[oid];
-  const oidSeq = derWrap(0x06, new Uint8Array(oidBytes));
+  const oidSeq = derWrap(0x06, new Uint8Array(oidMap[oid]));
   const valSeq = derWrap(0x0C, new TextEncoder().encode(value));
   return derWrap(0x31, derWrap(0x30, derConcat(oidSeq, valSeq)));
 }
@@ -1271,7 +1543,6 @@ function encodeTime(date) {
             pad(date.getUTCHours()) + pad(date.getUTCMinutes()) + pad(date.getUTCSeconds()) + 'Z';
   return derWrap(0x18, new TextEncoder().encode(s));
 }
-
 async function generateCertificate(domain, org, daysOrMax, type) {
   const keyPair = await crypto.subtle.generateKey(
     { name: 'RSASSA-PKCS1-v1_5', modulusLength: 2048, publicExponent: new Uint8Array([1,0,1]), hash: 'SHA-256' },
@@ -1281,16 +1552,10 @@ async function generateCertificate(domain, org, daysOrMax, type) {
   const subject = encodeDN({ CN: domain, O: org, C: 'VN' });
   const now = new Date();
   const notBefore = new Date(now.getTime() - 60 * 1000);
-  let notAfter;
-  if (daysOrMax === 'max') {
-    notAfter = FIXED_EXPIRY;
-  } else {
-    notAfter = new Date(now.getTime() + parseInt(daysOrMax, 10) * 24 * 60 * 60 * 1000);
-  }
+  const notAfter = daysOrMax === 'max' ? FIXED_EXPIRY : new Date(now.getTime() + parseInt(daysOrMax, 10) * 24 * 60 * 60 * 1000);
   const serial = new Uint8Array(16);
   crypto.getRandomValues(serial);
   serial[0] &= 0x7F;
-
   const version = new Uint8Array([0xA0, 0x03, 0x02, 0x01, 0x02]);
   const serialDer = derWrap(0x02, serial);
   const sigAlg = derWrap(0x30, derConcat(
@@ -1308,9 +1573,7 @@ async function generateCertificate(domain, org, daysOrMax, type) {
   const tbsContent = derConcat(version, serialDer, sigAlg, subject, validity, subject, pubKeyInfo);
   const tbs = derWrap(0x30, tbsContent);
   const signature = new Uint8Array(await crypto.subtle.sign(
-    { name: 'RSASSA-PKCS1-v1_5' },
-    keyPair.privateKey,
-    tbs
+    { name: 'RSASSA-PKCS1-v1_5' }, keyPair.privateKey, tbs
   ));
   const sigBits = derWrap(0x03, derConcat(new Uint8Array([0x00]), signature));
   const certDer = derWrap(0x30, derConcat(tbs, sigAlg, sigBits));
@@ -1318,22 +1581,14 @@ async function generateCertificate(domain, org, daysOrMax, type) {
   const certPem = '-----BEGIN CERTIFICATE-----\n' + base64Pem(certB64, 64) + '\n-----END CERTIFICATE-----\n';
   const pkcs8 = new Uint8Array(await crypto.subtle.exportKey('pkcs8', keyPair.privateKey));
   const keyPem = '-----BEGIN PRIVATE KEY-----\n' + base64Pem(arrayBufferToBase64(pkcs8.buffer), 64) + '\n-----END PRIVATE KEY-----\n';
-
   return {
-    certPem, keyPem,
-    domain, org, type,
+    certPem, keyPem, domain, org, type,
     daysLabel: daysOrMax === 'max' ? 'Đến 14/10/2034' : (daysOrMax + ' ngày'),
-    notBefore: notBefore.toISOString(),
-    notAfter: notAfter.toISOString(),
     notAfterDate: notAfter,
     serial: Array.from(serial).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase(),
     createdAt: Date.now()
   };
 }
-
-/* ============================================================
-   PEM VALIDATE
-============================================================ */
 function validatePem(pem) {
   if (!pem || typeof pem !== 'string') return { valid: false, error: 'Rỗng' };
   const t = pem.trim();
@@ -1347,7 +1602,7 @@ function validatePem(pem) {
   try {
     const decoded = atob(body);
     if (decoded.length < 50) return { valid: false, error: 'Quá ngắn' };
-    if (decoded.charCodeAt(0) !== 0x30) return { valid: false, error: 'Không phải DER SEQUENCE' };
+    if (decoded.charCodeAt(0) !== 0x30) return { valid: false, error: 'Không phải DER' };
   } catch (e) { return { valid: false, error: 'Base64 lỗi' }; }
   return { valid: true, length: body.length };
 }
@@ -1355,33 +1610,15 @@ function validatePem(pem) {
 /* ============================================================
    STORAGE
 ============================================================ */
-function saveCert(cert) {
-  try { localStorage.setItem(STORAGE_KEY_CERT, JSON.stringify(cert)); } catch(e){}
-}
-function loadCert() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY_CERT);
-    return raw ? JSON.parse(raw) : null;
-  } catch (e) { return null; }
-}
-function saveSignedMc(mc, name) {
-  try {
-    localStorage.setItem(STORAGE_KEY_MC, JSON.stringify({ xml: mc, name: name, savedAt: Date.now() }));
-  } catch(e){}
-}
-function loadSignedMc() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY_MC);
-    return raw ? JSON.parse(raw) : null;
-  } catch (e) { return null; }
-}
+function saveCert(cert) { try { localStorage.setItem(STORAGE_KEY_CERT, JSON.stringify(cert)); } catch(e){} }
+function loadCert() { try { const r = localStorage.getItem(STORAGE_KEY_CERT); return r ? JSON.parse(r) : null; } catch (e) { return null; } }
+function saveSignedMc(mc, name) { try { localStorage.setItem(STORAGE_KEY_MC, JSON.stringify({ xml: mc, name: name, savedAt: Date.now() })); } catch(e){} }
+function loadSignedMc() { try { const r = localStorage.getItem(STORAGE_KEY_MC); return r ? JSON.parse(r) : null; } catch (e) { return null; } }
 
 /* ============================================================
    KEY ACTIVATION
 ============================================================ */
-function getActivation() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY_ACT) || 'null'); } catch(e){ return null; }
-}
+function getActivation() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY_ACT) || 'null'); } catch(e){ return null; } }
 function setActivation(d) { localStorage.setItem(STORAGE_KEY_ACT, JSON.stringify(d)); }
 function clearActivation() { localStorage.removeItem(STORAGE_KEY_ACT); }
 function isActivationValid(a) {
@@ -1405,7 +1642,6 @@ function formatRemaining(ms) {
   if (h > 0) return `${h} giờ ${m} phút ${sec} giây`;
   return `${m} phút ${sec} giây`;
 }
-
 function updateLockUI() {
   const act = getActivation();
   const valid = isActivationValid(act);
@@ -1414,7 +1650,6 @@ function updateLockUI() {
   const keyMsg = document.getElementById('keyMsg');
   const keyInput = document.getElementById('keyInput');
   const btnKey = document.getElementById('btnActivateKey');
-
   if (valid) {
     body.classList.remove('locked');
     keyInfo.classList.add('show');
@@ -1426,7 +1661,6 @@ function updateLockUI() {
     document.getElementById('infoKey').textContent = act.key;
     document.getElementById('infoDevice').textContent = act.deviceName || getDeviceName();
     document.getElementById('infoDeviceId').textContent = act.deviceId || getDeviceId();
-    document.getElementById('infoActivated').textContent = formatDateVN(act.activatedAt);
     document.getElementById('infoRemaining').textContent = formatRemaining(act.expiresAt - Date.now());
     document.getElementById('keyInfoBadge').textContent = 'CÒN ' + Math.ceil((act.expiresAt - Date.now()) / 86400000) + ' NGÀY';
   } else {
@@ -1437,21 +1671,34 @@ function updateLockUI() {
     btnKey.textContent = 'Kích Hoạt Key Ngay';
   }
 }
-
 setInterval(() => {
   const act = getActivation();
   if (!act) return;
   if (!isActivationValid(act)) {
     clearActivation();
     updateLockUI();
-    showToast('⏰ Key đã hết hạn', 'error');
+    showToast('🔒 Key đã hết hạn, vui lòng nhập key mới', 'error');
     return;
   }
   document.getElementById('infoRemaining').textContent = formatRemaining(act.expiresAt - Date.now());
   document.getElementById('keyInfoBadge').textContent = 'CÒN ' + Math.ceil((act.expiresAt - Date.now()) / 86400000) + ' NGÀY';
 }, 1000);
 
-/* Nút kích hoạt key */
+/* ============================================================
+   SCREEN SWITCHING
+============================================================ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+document.getElementById('btnStart').addEventListener('click', () => {
+  showScreen('screen-app');
+  setTimeout(checkServerStatus, 300);
+});
+
+/* ============================================================
+   KEY ACTIVATION BUTTON
+============================================================ */
 document.getElementById('btnActivateKey').addEventListener('click', async () => {
   const keyInput = document.getElementById('keyInput');
   const keyMsg = document.getElementById('keyMsg');
@@ -1460,18 +1707,15 @@ document.getElementById('btnActivateKey').addEventListener('click', async () => 
   keyInput.classList.remove('error');
   keyMsg.textContent = '';
   keyMsg.className = 'key-msg';
-
   if (!key || !/^DERA-[A-Z0-9]{8}-[A-Z0-9]{8}$/.test(key)) {
     keyInput.classList.add('error');
     keyMsg.textContent = '❌ Key không hợp lệ, vui lòng kiểm tra lại';
     keyMsg.classList.add('error');
     return;
   }
-
   btnKey.disabled = true;
   btnKey.textContent = '...';
   let valid = false, serverAct = null;
-
   try {
     const ctrl = new AbortController();
     const tid = setTimeout(() => ctrl.abort(), 8000);
@@ -1489,45 +1733,27 @@ document.getElementById('btnActivateKey').addEventListener('click', async () => 
         serverAct = data.activation || data.data || null;
       }
     }
-  } catch (e) {
-    console.warn('Server fallback:', e.message);
-  }
-
+  } catch (e) { console.warn('Server fallback:', e.message); }
   if (!valid && FALLBACK_KEYS.includes(key)) valid = true;
-
   btnKey.disabled = false;
   btnKey.textContent = 'Kích Hoạt Key Ngay';
-
   if (!valid) {
     keyInput.classList.add('error');
     keyMsg.textContent = '❌ Key không hợp lệ, vui lòng kiểm tra lại';
     keyMsg.classList.add('error');
     return;
   }
-
   await runLoading10s();
-
   const now = Date.now();
-  let activatedAt = now;
-  let expiresAt = now + KEY_DURATION_MS;
+  let activatedAt = now, expiresAt = now + KEY_DURATION_MS;
   if (serverAct) {
     activatedAt = serverAct.activatedAt || now;
     expiresAt = serverAct.expiresAt || (now + KEY_DURATION_MS);
   } else {
-    const current = getActivation();
-    if (current && current.key === key) {
-      activatedAt = current.activatedAt;
-      expiresAt = current.expiresAt;
-    }
+    const cur = getActivation();
+    if (cur && cur.key === key) { activatedAt = cur.activatedAt; expiresAt = cur.expiresAt; }
   }
-
-  setActivation({
-    key,
-    deviceName: getDeviceName(),
-    deviceId: getDeviceId(),
-    activatedAt,
-    expiresAt
-  });
+  setActivation({ key, deviceName: getDeviceName(), deviceId: getDeviceId(), activatedAt, expiresAt });
   updateLockUI();
   keyMsg.textContent = '✅ Trạng thái Key: Đã kích hoạt';
   keyMsg.className = 'key-msg success';
@@ -1535,7 +1761,6 @@ document.getElementById('btnActivateKey').addEventListener('click', async () => 
   tryAutoPlayMusic();
 });
 
-/* Loading 10s */
 function runLoading10s() {
   return new Promise(resolve => {
     const ov = document.getElementById('loadingOverlay');
@@ -1571,6 +1796,7 @@ async function checkServerStatus() {
   const btn = document.getElementById('btnServerStatus');
   const info = document.getElementById('serverInfo');
   const card = document.getElementById('serverCard');
+  if (!btn) return;
   btn.className = 'server-btn checking';
   btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg> Đang kiểm tra kết nối...';
   info.textContent = 'Đang kết nối tới server...';
@@ -1587,9 +1813,7 @@ async function checkServerStatus() {
       card.classList.remove('offline');
       const st = data.serverTime || data.time || new Date().toLocaleTimeString('vi-VN');
       info.textContent = 'Online · ' + st;
-    } else {
-      throw new Error('HTTP ' + res.status);
-    }
+    } else { throw new Error('HTTP ' + res.status); }
   } catch (err) {
     btn.className = 'server-btn offline';
     btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg> ⭕ Mất kết nối Server — Nhấn thử lại';
@@ -1599,8 +1823,9 @@ async function checkServerStatus() {
   }
 }
 document.getElementById('btnServerStatus').addEventListener('click', checkServerStatus);
-setTimeout(checkServerStatus, 800);
-setInterval(checkServerStatus, 30000);
+setInterval(() => {
+  if (document.getElementById('screen-app').classList.contains('active')) checkServerStatus();
+}, 30000);
 
 /* ============================================================
    CHIP SELECTORS
@@ -1625,7 +1850,6 @@ toggleDNS.addEventListener('click', () => {
   toggleDNS.classList.toggle('on');
   updateDnsInUseDisplay();
 });
-
 function updateDnsInUseDisplay() {
   const name = document.getElementById('dnsName').value.trim() || 'DeraSecure';
   const el = document.getElementById('dnsInUseText');
@@ -1633,11 +1857,11 @@ function updateDnsInUseDisplay() {
   const on = toggleDNS.classList.contains('on');
   if (on) {
     el.innerHTML = 'DNS đang dùng: <b>' + escapeHtml(name) + '</b>';
-    box.style.borderColor = 'rgba(177,138,255,0.45)';
-    box.style.color = '#b8c8e8';
+    box.style.borderColor = 'rgba(177,138,255,0.55)';
+    box.style.color = '#c4b5fd';
   } else {
     el.innerHTML = 'DNS đang dùng: <b>Đã tắt</b>';
-    box.style.borderColor = 'rgba(120,90,200,0.45)';
+    box.style.borderColor = 'rgba(140,100,220,0.55)';
     box.style.color = '#8a80b0';
   }
 }
@@ -1649,33 +1873,24 @@ document.getElementById('dnsName').addEventListener('input', updateDnsInUseDispl
 function buildMobileconfig(name, primary, secondary, mode, cert) {
   const payloadUUID = uuid();
   const profileUUID = uuid();
-
   let protocol, serverURL, dnsServers;
   const isDoH = /^https?:\/\//i.test(primary);
   const isIP = /^\d+\.\d+\.\d+\.\d+$/.test(primary);
-
   if (mode === 'stealth') {
     protocol = 'TLS';
     serverURL = isIP ? `tls://${primary}` : primary;
     dnsServers = [primary, secondary].filter(Boolean);
   } else if (isDoH) {
-    protocol = 'HTTPS';
-    serverURL = primary;
-    dnsServers = [secondary].filter(Boolean);
+    protocol = 'HTTPS'; serverURL = primary; dnsServers = [secondary].filter(Boolean);
   } else if (isIP) {
-    protocol = 'HTTPS';
-    serverURL = `https://${primary}/dns-query`;
+    protocol = 'HTTPS'; serverURL = `https://${primary}/dns-query`;
     dnsServers = [primary, secondary].filter(Boolean);
   } else {
-    protocol = 'HTTPS';
-    serverURL = primary;
-    dnsServers = [secondary].filter(Boolean);
+    protocol = 'HTTPS'; serverURL = primary; dnsServers = [secondary].filter(Boolean);
   }
-
   const dnsArray = dnsServers.length
     ? `<key>ServerAddresses</key><array>${dnsServers.map(ip => `<string>${escapeXml(ip)}</string>`).join('')}</array>`
     : '';
-
   let caPayload = '';
   if (cert && cert.certPem) {
     const caUUID = uuid();
@@ -1701,7 +1916,6 @@ function buildMobileconfig(name, primary, secondary, mode, cert) {
       <integer>1</integer>
     </dict>`;
   }
-
   const dnsPayload = `
     <dict>
       <key>DNSSettings</key>
@@ -1725,10 +1939,8 @@ function buildMobileconfig(name, primary, secondary, mode, cert) {
       <key>PayloadVersion</key>
       <integer>1</integer>
     </dict>`;
-
   const payloadContent = caPayload + dnsPayload;
   const orgName = cert ? (cert.org || 'Dera Locks VN') : 'Dera Locks VN';
-
   return `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -1756,10 +1968,10 @@ function buildMobileconfig(name, primary, secondary, mode, cert) {
 }
 
 /* ============================================================
-   PHẦN 3: TẠO DNS
+   PHẦN 6: TẠO DNS
 ============================================================ */
 document.getElementById('btnCreateDNS').addEventListener('click', () => {
-  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key để mở khóa chức năng này', 'error'); return; }
+  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key để mở khóa', 'error'); return; }
   const name = document.getElementById('dnsName').value.trim() || 'DeraSecure';
   const primary = document.getElementById('dnsPrimary').value.trim();
   const secondary = document.getElementById('dnsSecondary').value.trim();
@@ -1772,10 +1984,10 @@ document.getElementById('btnCreateDNS').addEventListener('click', () => {
 });
 
 /* ============================================================
-   PHẦN 4: TẠO CHỨNG NHẬN
+   PHẦN 7: TẠO CHỨNG NHẬN
 ============================================================ */
 document.getElementById('btnCreateCert').addEventListener('click', async function() {
-  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key để mở khóa chức năng này', 'error'); return; }
+  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key để mở khóa', 'error'); return; }
   const btn = this;
   const domain = document.getElementById('certDomain').value.trim();
   const org = document.getElementById('certOrg').value.trim() || 'Dera Locks VN';
@@ -1783,32 +1995,25 @@ document.getElementById('btnCreateCert').addEventListener('click', async functio
   const type = state.certType;
   if (!domain) { showToast('⚠️ Vui lòng nhập tên miền', 'error'); return; }
   if (!window.crypto || !window.crypto.subtle) { showToast('❌ Web Crypto không hỗ trợ', 'error'); return; }
-
   btn.disabled = true;
   const oldHTML = btn.innerHTML;
   btn.innerHTML = '⏳ Đang sinh khóa & ký...';
   showToast('🔐 Đang sinh khóa RSA 2048-bit...', '');
-
   try {
     const cert = await generateCertificate(domain, org, days, type);
     const check = validatePem(cert.certPem);
     if (!check.valid) throw new Error('File .crt lỗi PEM: ' + check.error);
-
     state.cert = cert;
     saveCert(cert);
-
     const statusBox = document.getElementById('certStatusBox');
     statusBox.className = 'status-box ok';
-    document.getElementById('certStatusText').innerHTML = '✅ Chứng nhận đã tạo thành công! · Hết hạn: <b>' + formatDateVN(cert.notAfterDate.getTime()) + '</b>';
-
+    document.getElementById('certStatusText').innerHTML = '✅ Đã tạo thành công! · Hết hạn: <b>' + formatDateVN(cert.notAfterDate.getTime()) + '</b>';
     const crtBox = document.getElementById('crtInUseBox');
     crtBox.className = 'status-box ok';
     document.getElementById('crtInUseText').innerHTML = '✅ ' + escapeHtml(domain) + ' (Hết hạn ' + cert.notAfterDate.toLocaleDateString('vi-VN') + ')';
-
     addResultItem('crt', sanitizeFileName(domain) + '.crt', 'Chứng nhận PEM · ' + cert.daysLabel, cert.certPem);
     addResultItem('key', sanitizeFileName(domain) + '.key', 'Khóa riêng · PKCS#8', cert.keyPem);
-
-    showToast('✅ Chứng nhận đã tạo thành công!', 'success');
+    showToast('✅ Đã tạo thành công!', 'success');
   } catch (err) {
     console.error(err);
     showToast('❌ Lỗi: ' + err.message, 'error');
@@ -1819,11 +2024,8 @@ document.getElementById('btnCreateCert').addEventListener('click', async functio
 });
 
 document.getElementById('btnCheckCert').addEventListener('click', () => {
-  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key để mở khóa chức năng này', 'error'); return; }
-  if (!state.cert) {
-    showToast('⚠️ Chưa có chứng nhận. Vui lòng tạo trước!', 'error');
-    return;
-  }
+  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key để mở khóa', 'error'); return; }
+  if (!state.cert) { showToast('⚠️ Chưa có chứng nhận. Vui lòng tạo trước!', 'error'); return; }
   const c = state.cert;
   const info =
     '✅ TRẠNG THÁI: Hợp lệ\n\n' +
@@ -1835,29 +2037,21 @@ document.getElementById('btnCheckCert').addEventListener('click', () => {
     '🆔 Serial: ' + c.serial + '\n' +
     '📄 Thời hạn: ' + c.daysLabel + '\n\n' +
     '--- NỘI DUNG PEM ---\n' + c.certPem;
-  openModal('Kiểm tra Chứng nhận — ' + c.domain, info);
+  openModal('Kiểm tra Chứng nhận — ' + c.domain, info, '🔐');
   showToast('✅ Chứng nhận Hợp lệ', 'success');
 });
 
-/* ============================================================
-   PHẦN 4b: KÝ SỐ VÀO DNS
-============================================================ */
 document.getElementById('btnSignDNS').addEventListener('click', async function() {
-  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key để mở khóa chức năng này', 'error'); return; }
-  if (!state.cert) {
-    showToast('⚠️ Chưa có chứng nhận. Vui lòng tạo trước!', 'error');
-    return;
-  }
+  if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key để mở khóa', 'error'); return; }
+  if (!state.cert) { showToast('⚠️ Chưa có chứng nhận. Vui lòng tạo trước!', 'error'); return; }
   const name = document.getElementById('dnsName').value.trim() || 'DeraSecure';
   const primary = document.getElementById('dnsPrimary').value.trim();
   const secondary = document.getElementById('dnsSecondary').value.trim();
-  if (!primary) { showToast('⚠️ Vui lòng nhập DNS chính ở phần Tạo DNS', 'error'); return; }
-
+  if (!primary) { showToast('⚠️ Vui lòng nhập DNS chính', 'error'); return; }
   const btn = this;
   btn.disabled = true;
   const oldHTML = btn.innerHTML;
   btn.innerHTML = '⏳ Đang ký số...';
-
   try {
     await new Promise(r => setTimeout(r, 400));
     const xml = buildMobileconfig(name, primary, secondary, state.dnsMode, state.cert);
@@ -1865,10 +2059,8 @@ document.getElementById('btnSignDNS').addEventListener('click', async function()
     state.signedMc = xml;
     state.signedMcName = fname;
     saveSignedMc(xml, fname);
-
     downloadFile(fname, xml, 'application/x-apple-aspen-config');
     addResultItem('mc', fname, 'Đã ký bởi ' + (state.cert.org || 'Dera Locks'), xml);
-
     showToast('✅ Đã ký & tải file .mobileconfig', 'success');
   } catch (err) {
     console.error(err);
@@ -1879,34 +2071,23 @@ document.getElementById('btnSignDNS').addEventListener('click', async function()
   }
 });
 
-/* ============================================================
-   RESULT LIST
-============================================================ */
 function addResultItem(type, name, desc, content) {
   const list = document.getElementById('resultList');
-  const icons = {
-    crt: '<svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>',
-    key: '<svg viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>',
-    mc: '<svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg>'
-  };
+  const emoji = { crt: '📄', key: '🔑', mc: '📱' }[type] || '📄';
   const div = document.createElement('div');
   div.className = 'result-item ' + type;
   div.innerHTML = `
-    <div class="icon">${icons[type] || icons.mc}</div>
+    <div class="icon">${emoji}</div>
     <div class="info">
       <div class="name">${escapeHtml(name)}</div>
       <div class="desc">${escapeHtml(desc)}</div>
     </div>
     <div class="btns">
-      <button class="icon-btn view" title="Xem">
-        <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-      </button>
-      <button class="icon-btn dl" title="Tải">
-        <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1z"/></svg>
-      </button>
+      <button class="icon-btn view" title="Xem">👁</button>
+      <button class="icon-btn dl" title="Tải">⬇</button>
     </div>
   `;
-  div.querySelector('.view').addEventListener('click', () => openModal(name, content));
+  div.querySelector('.view').addEventListener('click', () => openModal(name, content, emoji));
   div.querySelector('.dl').addEventListener('click', () => {
     const mime = type === 'mc' ? 'application/x-apple-aspen-config' : (type === 'crt' ? 'application/x-x509-ca-cert' : 'application/octet-stream');
     downloadFile(name, content, mime);
@@ -1916,22 +2097,13 @@ function addResultItem(type, name, desc, content) {
 }
 
 /* ============================================================
-   PHẦN 5: KÍCH HOẠT DNS
+   PHẦN 8: KÍCH HOẠT DNS
 ============================================================ */
 document.getElementById('btnActivateDNS').addEventListener('click', () => {
   if (!isActivationValid(getActivation())) { showToast('🔒 Vui lòng nhập key để mở khóa chức năng này', 'error'); return; }
-  if (!state.cert) {
-    showToast('⚠️ Chưa có chứng nhận. Vui lòng tạo trước!', 'error');
-    return;
-  }
-  if (!state.signedMc) {
-    showToast('⚠️ Vui lòng tạo & ký file .mobileconfig trước', 'error');
-    return;
-  }
-  if (!toggleDNS.classList.contains('on')) {
-    showToast('⚠️ DNS đang tắt, vui lòng bật trước', 'error');
-    return;
-  }
+  if (!state.cert) { showToast('⚠️ Chưa có chứng nhận. Vui lòng tạo trước!', 'error'); return; }
+  if (!state.signedMc) { showToast('⚠️ Vui lòng tạo & ký file .mobileconfig trước', 'error'); return; }
+  if (!toggleDNS.classList.contains('on')) { showToast('⚠️ DNS đang tắt, vui lòng bật trước', 'error'); return; }
   const name = state.signedMcName || 'DeraSecure_Signed.mobileconfig';
   downloadFile(name, state.signedMc, 'application/x-apple-aspen-config');
   const statusBox = document.getElementById('dnsStatusBox');
@@ -1941,115 +2113,316 @@ document.getElementById('btnActivateDNS').addEventListener('click', () => {
 });
 
 /* ============================================================
-   MODAL
+   PHẦN 3: PROFILE MANAGEMENT
 ============================================================ */
-document.getElementById('modalClose').addEventListener('click', () => {
-  document.getElementById('modal').classList.remove('show');
+function getProfiles() {
+  try {
+    const r = localStorage.getItem(STORAGE_KEY_PROFILES);
+    return r ? JSON.parse(r) : { list: [{ name: 'DERA LOCKED', id: 'default' }], current: 'default' };
+  } catch (e) {
+    return { list: [{ name: 'DERA LOCKED', id: 'default' }], current: 'default' };
+  }
+}
+function saveProfiles(p) {
+  try { localStorage.setItem(STORAGE_KEY_PROFILES, JSON.stringify(p)); } catch (e) {}
+}
+function getCurrentProfile() {
+  const p = getProfiles();
+  return p.list.find(x => x.id === p.current) || p.list[0];
+}
+function updateProfileUI() {
+  const cur = getCurrentProfile();
+  document.getElementById('profileName').textContent = cur ? cur.name : 'DERA LOCKED';
+  renderProfileDropdown();
+}
+function renderProfileDropdown() {
+  const p = getProfiles();
+  const dd = document.getElementById('profileDropdown');
+  dd.innerHTML = '';
+  if (p.list.length === 0) {
+    dd.innerHTML = '<div class="profile-dropdown-empty">Chưa có hồ sơ nào</div>';
+    return;
+  }
+  p.list.forEach(prof => {
+    const item = document.createElement('div');
+    item.className = 'profile-dropdown-item' + (prof.id === p.current ? ' active' : '');
+    item.innerHTML = `
+      <span class="p-name">📄 ${escapeHtml(prof.name)}</span>
+      ${p.list.length > 1 ? `<div class="p-del" data-id="${prof.id}">🗑</div>` : ''}
+    `;
+    item.addEventListener('click', (e) => {
+      if (e.target.classList.contains('p-del')) return;
+      p.current = prof.id;
+      saveProfiles(p);
+      updateProfileUI();
+      document.getElementById('profileDropdown').classList.remove('show');
+      showToast('📁 Đã chuyển sang: ' + prof.name, 'success');
+    });
+    const del = item.querySelector('.p-del');
+    if (del) {
+      del.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (p.list.length <= 1) return;
+        p.list = p.list.filter(x => x.id !== prof.id);
+        if (p.current === prof.id) p.current = p.list[0].id;
+        saveProfiles(p);
+        updateProfileUI();
+        showToast('🗑 Đã xóa hồ sơ: ' + prof.name, '');
+      });
+    }
+    dd.appendChild(item);
+  });
+}
+
+/* Nút + Profile: mở màn hình New Profile */
+document.getElementById('profilePlus').addEventListener('click', () => {
+  showScreen('screen-newprofile');
 });
-document.getElementById('modal').addEventListener('click', (e) => {
-  if (e.target.id === 'modal') document.getElementById('modal').classList.remove('show');
+
+/* Name box: mở dropdown */
+document.getElementById('profileNameBox').addEventListener('click', () => {
+  const dd = document.getElementById('profileDropdown');
+  if (dd.classList.contains('show')) dd.classList.remove('show');
+  else { renderProfileDropdown(); dd.classList.add('show'); }
+});
+
+/* Nút ✏️ Sửa tên */
+document.getElementById('btnRenameProfile').addEventListener('click', () => {
+  const cur = getCurrentProfile();
+  if (!cur) return;
+  openPrompt('Đổi tên hồ sơ', cur.name, (newName) => {
+    if (!newName || !newName.trim()) { showToast('⚠️ Tên không được để trống', 'error'); return; }
+    const p = getProfiles();
+    const idx = p.list.findIndex(x => x.id === p.current);
+    if (idx >= 0) p.list[idx].name = newName.trim();
+    saveProfiles(p);
+    updateProfileUI();
+    showToast('✏️ Đã đổi tên hồ sơ', 'success');
+  }, '✏️');
+});
+
+/* Nút ⬆️ Xuất */
+document.getElementById('btnUploadProfile').addEventListener('click', () => {
+  const cur = getCurrentProfile();
+  const act = getActivation();
+  const data = {
+    profile: cur ? cur.name : 'DERA LOCKED',
+    profileId: cur ? cur.id : null,
+    device: getDeviceName(),
+    deviceId: getDeviceId(),
+    key: act ? act.key : null,
+    activatedAt: act ? act.activatedAt : null,
+    expiresAt: act ? act.expiresAt : null,
+    cert: state.cert ? {
+      domain: state.cert.domain,
+      org: state.cert.org,
+      type: state.cert.type,
+      daysLabel: state.cert.daysLabel,
+      notAfterDate: state.cert.notAfterDate,
+      serial: state.cert.serial,
+      createdAt: state.cert.createdAt
+    } : null,
+    signedMc: state.signedMcName || null,
+    menuState: JSON.parse(localStorage.getItem(STORAGE_KEY_MENU) || '{}'),
+    exportedAt: new Date().toISOString(),
+    appVersion: 'v1.0.0'
+  };
+  downloadFile('dera-locks-profile.json', JSON.stringify(data, null, 2), 'application/json');
+  showToast('⬆️ Đã xuất hồ sơ', 'success');
 });
 
 /* ============================================================
-   PHẦN 6: MUSIC PLAYER — DÙNG FILE MP3 TỪ CATBOX
+   PHẦN 4: NEW PROFILE SCREEN
+============================================================ */
+document.getElementById('newProfileBack').addEventListener('click', () => {
+  resetNewProfileScreen();
+  showScreen('screen-app');
+});
+document.getElementById('btnCancelProfile').addEventListener('click', () => {
+  resetNewProfileScreen();
+  showScreen('screen-app');
+});
+
+let newProfileMode = null; // 'import' | 'manual' | 'scan'
+
+document.getElementById('optionImport').addEventListener('click', () => {
+  newProfileMode = 'import';
+  document.getElementById('manualForm').classList.remove('show');
+  document.getElementById('profileFileInput').click();
+});
+
+document.getElementById('optionScan').addEventListener('click', () => {
+  newProfileMode = 'scan';
+  showToast('📱 Sẽ có trong bản cập nhật sau', '');
+  openModal('Scan QR Code', '📱 Tính năng quét mã QR sẽ có trong bản cập nhật sau.\n\nHiện tại bạn có thể dùng:\n• Import from File\n• Create Manually', '📱');
+});
+
+document.getElementById('optionManual').addEventListener('click', () => {
+  newProfileMode = 'manual';
+  document.getElementById('manualForm').classList.add('show');
+  document.getElementById('selectedFileInfo').classList.remove('show');
+  updateActivateButtonVisibility();
+});
+
+document.getElementById('profileFileInput').addEventListener('change', (e) => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = (evt) => {
+    try {
+      const content = evt.target.result;
+      let parsed = null;
+      if (f.name.endsWith('.json')) {
+        parsed = JSON.parse(content);
+      }
+      state.newProfileData = { type: f.name.endsWith('.json') ? 'json' : 'file', name: f.name, content, parsed };
+      const info = document.getElementById('selectedFileInfo');
+      document.getElementById('selectedFileName').textContent = f.name + ' (' + Math.round(f.size / 1024) + ' KB)';
+      info.classList.add('show');
+      document.getElementById('manualForm').classList.remove('show');
+      updateActivateButtonVisibility();
+      showToast('📁 Đã chọn: ' + f.name, 'success');
+    } catch (err) {
+      showToast('❌ File không hợp lệ: ' + err.message, 'error');
+    }
+  };
+  reader.readAsText(f);
+});
+
+function updateActivateButtonVisibility() {
+  const btn = document.getElementById('btnActivateProfile');
+  const hasImport = state.newProfileData && (state.newProfileData.type === 'json' || state.newProfileData.type === 'file');
+  const hasManual = newProfileMode === 'manual' && document.getElementById('manualProfileName').value.trim().length > 0;
+  if (hasImport || hasManual) btn.classList.add('show');
+  else btn.classList.remove('show');
+}
+document.getElementById('manualProfileName').addEventListener('input', updateActivateButtonVisibility);
+
+document.getElementById('btnActivateProfile').addEventListener('click', () => {
+  const p = getProfiles();
+  const newId = 'p_' + Date.now();
+  let profileName = '';
+
+  if (newProfileMode === 'import' && state.newProfileData) {
+    // Nếu là JSON → áp dụng dữ liệu vào các trường
+    if (state.newProfileData.type === 'json' && state.newProfileData.parsed) {
+      const data = state.newProfileData.parsed;
+      profileName = data.profile || 'Imported Profile';
+      // Áp dụng cert nếu có
+      if (data.cert) {
+        state.cert = {
+          domain: data.cert.domain,
+          org: data.cert.org,
+          type: data.cert.type,
+          daysLabel: data.cert.daysLabel,
+          notAfterDate: new Date(data.cert.notAfterDate),
+          serial: data.cert.serial,
+          createdAt: data.cert.createdAt,
+          certPem: data.cert.certPem || '',
+          keyPem: data.cert.keyPem || ''
+        };
+        if (state.cert.certPem) saveCert(state.cert);
+      }
+      // Áp dụng menu state nếu có
+      if (data.menuState) {
+        try { localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(data.menuState)); } catch (e) {}
+      }
+      showToast('📁 Đã nhập hồ sơ từ JSON', 'success');
+    } else {
+      // File .mobileconfig
+      profileName = state.newProfileData.name.replace(/\.[^.]+$/, '');
+      state.signedMc = state.newProfileData.content;
+      state.signedMcName = state.newProfileData.name;
+      saveSignedMc(state.signedMc, state.signedMcName);
+      showToast('📱 Đã nhập file .mobileconfig', 'success');
+    }
+  } else if (newProfileMode === 'manual') {
+    profileName = document.getElementById('manualProfileName').value.trim() || 'Hồ sơ mới';
+    const note = document.getElementById('manualProfileNote').value.trim();
+    if (note) profileName += ' · ' + note;
+  }
+
+  if (!profileName) profileName = 'Hồ sơ mới';
+  p.list.push({ name: profileName, id: newId });
+  p.current = newId;
+  saveProfiles(p);
+  updateProfileUI();
+  showToast('✅ Đã kích hoạt hồ sơ: ' + profileName, 'success');
+  resetNewProfileScreen();
+  setTimeout(() => showScreen('screen-app'), 300);
+});
+
+function resetNewProfileScreen() {
+  newProfileMode = null;
+  state.newProfileData = null;
+  document.getElementById('manualForm').classList.remove('show');
+  document.getElementById('selectedFileInfo').classList.remove('show');
+  document.getElementById('profileFileInput').value = '';
+  document.getElementById('manualProfileName').value = 'Hồ sơ mới';
+  document.getElementById('manualProfileNote').value = '';
+  document.getElementById('btnActivateProfile').classList.remove('show');
+}
+
+/* ============================================================
+   PHẦN 9: MUSIC PLAYER
 ============================================================ */
 const vinyl = document.getElementById('vinyl');
 const musicArtist = document.getElementById('musicArtist');
-const musicIcon = document.getElementById('musicIcon');
+const musicPlayIcon = document.getElementById('musicPlayIcon');
 let musicPlaying = false;
 let audioPlayer = null;
-
 function initAudio() {
   if (!audioPlayer) {
-    audioPlayer = new Audio(STORAGE_KEY_MUSIC_URL);
+    audioPlayer = new Audio(MUSIC_URL);
     audioPlayer.loop = true;
     audioPlayer.volume = 0.6;
     audioPlayer.preload = 'auto';
-    audioPlayer.addEventListener('error', () => {
-      // Fallback: dùng synth nếu mp3 lỗi
-      console.warn('MP3 lỗi, chuyển sang synth');
-    });
   }
   return audioPlayer;
 }
-
 function startMusic() {
   if (musicPlaying) return;
   try {
     const a = initAudio();
     const p = a.play();
-    if (p && p.catch) {
-      p.catch(err => {
-        console.warn('Autoplay bị chặn:', err.message);
-        // Thử lại khi user tương tác
-      });
-    }
+    if (p && p.catch) p.catch(err => console.warn('Autoplay bị chặn:', err.message));
     musicPlaying = true;
     vinyl.classList.add('playing');
     musicArtist.textContent = '🎵 Đang phát...';
-    musicIcon.innerHTML = '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
-  } catch (e) {
-    console.warn('Không phát được nhạc:', e);
-  }
+    musicPlayIcon.textContent = '⏸';
+  } catch (e) { console.warn(e); }
 }
 function stopMusic() {
   musicPlaying = false;
-  if (audioPlayer) {
-    try { audioPlayer.pause(); audioPlayer.currentTime = 0; } catch (e) {}
-  }
+  if (audioPlayer) { try { audioPlayer.pause(); audioPlayer.currentTime = 0; } catch (e) {} }
   vinyl.classList.remove('playing');
   musicArtist.textContent = 'Nhấn để phát nhạc';
-  musicIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+  musicPlayIcon.textContent = '▶';
 }
 document.getElementById('musicPlayer').addEventListener('click', () => {
   if (musicPlaying) stopMusic(); else startMusic();
 });
-function tryAutoPlayMusic() {
-  setTimeout(() => {
-    if (!musicPlaying) startMusic();
-  }, 500);
-}
-
-// Tự động tắt nhạc khi rời trang
-window.addEventListener('beforeunload', () => {
-  if (musicPlaying) stopMusic();
-});
+function tryAutoPlayMusic() { setTimeout(() => { if (!musicPlaying) startMusic(); }, 500); }
+window.addEventListener('beforeunload', () => { if (musicPlaying) stopMusic(); });
 
 /* ============================================================
-   PHẦN 7: BOTTOM NAV + FLOATING MENU
+   PHẦN 10: BOTTOM NAV + FLOATING MENU
 ============================================================ */
 const navHome = document.getElementById('nav-home');
 const navInfo = document.getElementById('nav-info');
 const navPlus = document.getElementById('nav-plus');
 const floatingMenu = document.getElementById('floatingMenu');
+const bottomNav = document.getElementById('bottomNav');
 
-// Trạng thái menu
-const menuState = {
-  touch: false,
-  aim: false,
-  lock: false,
-  grip: true,
-  gripValue: 50,
-  fps: false,
-  runmc: true
-};
-
-// Load trạng thái từ localStorage
+const menuState = { touch:false, aim:false, lock:false, grip:true, gripValue:50, fps:false, runmc:true };
 function loadMenuState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY_MENU);
-    if (raw) {
-      const saved = JSON.parse(raw);
-      Object.assign(menuState, saved);
-    }
+    if (raw) Object.assign(menuState, JSON.parse(raw));
   } catch (e) {}
 }
-function saveMenuState() {
-  try { localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(menuState)); } catch (e) {}
-}
+function saveMenuState() { try { localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(menuState)); } catch (e) {} }
 loadMenuState();
-
-// Áp dụng trạng thái vào UI
 function applyMenuState() {
   ['touch','aim','lock','grip','fps','runmc'].forEach(k => {
     const el = document.getElementById('tg-' + k);
@@ -2064,8 +2437,6 @@ function applyMenuState() {
   if (sliderVal) sliderVal.textContent = menuState.gripValue + '%';
 }
 applyMenuState();
-
-// Bind toggle cho từng menu item
 ['touch','aim','lock','grip','fps','runmc'].forEach(k => {
   const el = document.getElementById('tg-' + k);
   if (!el) return;
@@ -2077,98 +2448,89 @@ applyMenuState();
     showToast((menuState[k] ? '✅ BẬT ' : '⭕ TẮT ') + k.toUpperCase(), menuState[k] ? 'success' : '');
   });
 });
-
-// Slider Độ bám
 const sliderGrip = document.getElementById('slider-grip');
 const sliderGripValue = document.getElementById('slider-grip-value');
 if (sliderGrip) {
-  const updateSlider = () => {
+  const upd = () => {
     const v = parseInt(sliderGrip.value, 10);
     menuState.gripValue = v;
     sliderGrip.style.setProperty('--val', v + '%');
     sliderGripValue.textContent = v + '%';
     saveMenuState();
   };
-  sliderGrip.addEventListener('input', updateSlider);
-  sliderGrip.addEventListener('change', updateSlider);
-  // Khởi tạo background
+  sliderGrip.addEventListener('input', upd);
+  sliderGrip.addEventListener('change', upd);
   sliderGrip.style.setProperty('--val', menuState.gripValue + '%');
 }
-
-// Mở/đóng menu khi nhấn nút +
 function toggleMenu() {
   const isOpen = floatingMenu.classList.contains('show');
-  if (isOpen) {
-    floatingMenu.classList.remove('show');
-    navPlus.classList.remove('rotated');
-  } else {
-    floatingMenu.classList.add('show');
-    navPlus.classList.add('rotated');
-  }
+  if (isOpen) { floatingMenu.classList.remove('show'); navPlus.classList.remove('rotated'); }
+  else { floatingMenu.classList.add('show'); navPlus.classList.add('rotated'); }
 }
 navPlus.addEventListener('click', toggleMenu);
+floatingMenu.addEventListener('click', (e) => e.stopPropagation());
+document.addEventListener('click', (e) => {
+  if (floatingMenu.classList.contains('show') && !floatingMenu.contains(e.target) && e.target !== navPlus) {
+    floatingMenu.classList.remove('show');
+    navPlus.classList.remove('rotated');
+  }
+});
 
-// Nav Home
 navHome.addEventListener('click', () => {
   navHome.classList.add('active');
   navInfo.classList.remove('active');
-  // Đóng menu nếu đang mở
   if (floatingMenu.classList.contains('show')) toggleMenu();
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  showToast('🏠 Trang chủ', '');
+  showToast('🏠 Trang Chủ', '');
 });
-
-// Nav Info
 navInfo.addEventListener('click', () => {
   navInfo.classList.add('active');
   navHome.classList.remove('active');
   if (floatingMenu.classList.contains('show')) toggleMenu();
   const act = getActivation();
-  if (act && isActivationValid(act)) {
-    const info =
-      '👤 THÔNG TIN THIẾT BỊ\n\n' +
-      '📱 Thiết bị: ' + (act.deviceName || getDeviceName()) + '\n' +
-      '🆔 Mã thiết bị: ' + (act.deviceId || getDeviceId()) + '\n' +
-      '🔑 Key: ' + act.key + '\n' +
-      '📅 Kích hoạt: ' + formatDateVN(act.activatedAt) + '\n' +
-      '⏰ Hết hạn: ' + formatDateVN(act.expiresAt) + '\n' +
-      '⏳ Còn lại: ' + formatRemaining(act.expiresAt - Date.now()) + '\n\n' +
-      '📌 Phiên bản: v1.0.0\n' +
-      '🏢 Dera Locks VN';
-    openModal('Thông tin Thiết bị & Key', info);
-  } else {
-    openModal('Thông tin', '🔒 Chưa kích hoạt key.\n\nVui lòng nhập key để sử dụng đầy đủ chức năng.\n\n📌 Phiên bản: v1.0.0\n🏢 Dera Locks VN');
-  }
+  const cur = getCurrentProfile();
+  const info =
+    '👤 THÔNG TIN\n\n' +
+    '• Phiên bản: v1.0.0\n' +
+    '• Hồ sơ: ' + (cur ? cur.name : 'DERA LOCKED') + '\n' +
+    '• Thiết bị: ' + getDeviceName() + '\n' +
+    '• Mã thiết bị: ' + getDeviceId() + '\n' +
+    '• Key: ' + (act ? act.key : 'Chưa kích hoạt') + '\n' +
+    '• Trạng thái: ' + (act && isActivationValid(act) ? 'Đã kích hoạt' : 'Chưa kích hoạt') + '\n' +
+    '• Chứng nhận: ' + (state.cert ? state.cert.domain : 'Chưa có') + '\n' +
+    '• File MC: ' + (state.signedMcName || 'Chưa có') + '\n' +
+    '• Server: ' + SERVER_URL + '\n\n' +
+    '© 2026 Dera Locks VN';
+  openModal('Thông Tin', info, '👤');
 });
 
-// Click ngoài menu để đóng (trừ các item bên trong)
-floatingMenu.addEventListener('click', (e) => {
-  e.stopPropagation();
+/* ============================================================
+   PLAY FLOAT
+============================================================ */
+document.getElementById('playFloat').addEventListener('click', () => {
+  if (musicPlaying) stopMusic(); else startMusic();
 });
 
 /* ============================================================
    INIT
 ============================================================ */
 (function init() {
+  updateProfileUI();
   updateLockUI();
   updateDnsInUseDisplay();
 
   const savedCert = loadCert();
   if (savedCert && savedCert.certPem) {
     state.cert = savedCert;
-    if (typeof savedCert.notAfterDate === 'string') {
-      savedCert.notAfterDate = new Date(savedCert.notAfterDate);
-    }
+    if (typeof savedCert.notAfterDate === 'string') savedCert.notAfterDate = new Date(savedCert.notAfterDate);
     const statusBox = document.getElementById('certStatusBox');
     statusBox.className = 'status-box ok';
     document.getElementById('certStatusText').innerHTML = '✅ Đã tải chứng nhận: <b>' + escapeHtml(savedCert.domain) + '</b> · Hết hạn: ' + formatDateVN(savedCert.notAfterDate.getTime());
     document.getElementById('certDomain').value = savedCert.domain || 'dns.deralocks.cc';
     document.getElementById('certOrg').value = savedCert.org || 'Dera Locks VN';
-
     const crtBox = document.getElementById('crtInUseBox');
     crtBox.className = 'status-box ok';
     document.getElementById('crtInUseText').innerHTML = '✅ ' + escapeHtml(savedCert.domain) + ' (Hết hạn ' + savedCert.notAfterDate.toLocaleDateString('vi-VN') + ')';
-
     addResultItem('crt', sanitizeFileName(savedCert.domain) + '.crt', 'Chứng nhận đã lưu', savedCert.certPem);
     addResultItem('key', sanitizeFileName(savedCert.domain) + '.key', 'Khóa riêng đã lưu', savedCert.keyPem);
   }
