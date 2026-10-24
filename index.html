@@ -153,7 +153,7 @@
   .btn-option{padding:1rem;background:rgba(0,0,0,0.4);border:1.5px solid var(--border-red);border-radius:30px;color:#fff;font-size:.95rem;font-weight:600;text-align:center;cursor:pointer;transition:.2s}
   .btn-option.active{border-color:var(--red-primary);background:var(--red-primary);color:#fff;font-weight:700; box-shadow: 0 4px 15px var(--red-glow);}
 
-  /* --- TAB 2: CẤU HÌNH (TỌA ĐỘ X, Y) --- */
+  /* --- TAB 2: CẤU HÌNH --- */
   .xy-settings {
     background: rgba(255,255,255,0.03);
     border: 1px solid var(--border-red);
@@ -163,17 +163,17 @@
     margin-top: 0.5rem;
   }
   .xy-title { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 0.8rem; font-weight: bold;}
-  .xy-inputs { display: flex; gap: 10px; }
+  .xy-inputs { display: flex; gap: 8px; }
   .xy-box { flex: 1; display: flex; flex-direction: column;}
-  .xy-box label { font-size: 0.75rem; color: #aaa; margin-bottom: 4px;}
+  .xy-box label { font-size: 0.7rem; color: #aaa; margin-bottom: 4px; text-align: center;}
   .xy-box input {
     width: 100%;
     background: #000;
     border: 1px solid #444;
     border-radius: 8px;
     color: #fff;
-    padding: 8px 10px;
-    font-size: 0.95rem;
+    padding: 8px 4px;
+    font-size: 0.9rem;
     font-weight: bold;
     text-align: center;
     outline: none;
@@ -394,7 +394,17 @@
   <!-- GIAO DIỆN CHÍNH -->
   <div id="screen-main" class="screen main-app">
     
+    <!-- HUD OVERLAY -->
+    <div class="hud-overlay" id="hud-overlay">
+      <div class="hud-row"><span>FPS:</span> <span class="hud-val" id="hud-fps">--</span></div>
+      <div class="hud-row"><span>RAM:</span> <span class="hud-val" id="hud-ram">--</span></div>
+      <div class="hud-row"><span>Ping:</span> <span class="hud-val" id="hud-ping">--</span></div>
+    </div>
+
     <div class="app-header">
+      <div class="audio-visualizer" id="visualizer">
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      </div>
       <div class="music-btn" id="music-btn">🎵</div>
       <h1>FIRED SUPPORT</h1>
       <span>PREMIUM SYSTEM</span>
@@ -456,12 +466,35 @@
           <div class="xy-title">Tọa độ tâm (Tùy chỉnh)</div>
           <div class="xy-inputs">
             <div class="xy-box">
-              <label>Trục X (Ngang)</label>
+              <label>Trục X</label>
               <input type="number" id="input-x" value="0" placeholder="0">
             </div>
             <div class="xy-box">
-              <label>Trục Y (Dọc)</label>
+              <label>Trục Y</label>
               <input type="number" id="input-y" value="0" placeholder="0">
+            </div>
+          </div>
+        </div>
+
+        <!-- TỐC ĐỘ LÊN XUỐNG TRÁI PHẢI -->
+        <div class="xy-settings">
+          <div class="xy-title">Tốc độ (Aim Speed)</div>
+          <div class="xy-inputs">
+            <div class="xy-box">
+              <label>Lên</label>
+              <input type="number" id="input-top" value="1" placeholder="1">
+            </div>
+            <div class="xy-box">
+              <label>Xuống</label>
+              <input type="number" id="input-bottom" value="1" placeholder="1">
+            </div>
+            <div class="xy-box">
+              <label>Trái</label>
+              <input type="number" id="input-left" value="1" placeholder="1">
+            </div>
+            <div class="xy-box">
+              <label>Phải</label>
+              <input type="number" id="input-right" value="1" placeholder="1">
             </div>
           </div>
         </div>
@@ -684,7 +717,7 @@
   Store.set('keys', validKeys);
 
   let keyUsage = Store.get('keyUsage', {});
-  let settings = Store.get('settings', { activatedKey: null, configs: {}, fps: 120, tools: {}, aimPart: null, x: 0, y: 0, stealth: false });
+  let settings = Store.get('settings', { activatedKey: null, configs: {}, fps: 120, tools: {}, aimPart: null, x: 0, y: 0, top: 1, bottom: 1, left: 1, right: 1, stealth: false });
 
   // ============ DOM ============
   const $ = id => document.getElementById(id);
@@ -809,8 +842,17 @@
     return JSON.stringify(payload);
   }
   
-  function generateAimCode(part, x, y) {
-    const payload = { module: "aim_lock", target: part, priority: "high", fov: 30, offset_x: x, offset_y: y };
+  function generateAimCode(part, x, y, top, bottom, left, right) {
+    const payload = { 
+      module: "aim_lock", 
+      target: part, 
+      offset_x: x, 
+      offset_y: y,
+      speed_top: top,
+      speed_bottom: bottom,
+      speed_left: left,
+      speed_right: right
+    };
     return JSON.stringify(payload);
   }
 
@@ -1056,7 +1098,7 @@
 
   // ============ KHỞI TẠO GIAO DIỆN CHÍNH ============
   function initMain(){
-    loadTrack(0); // Tự động phát bài đầu tiên
+    loadTrack(0);
 
     renderConfigs();
     renderFPS();
@@ -1066,9 +1108,13 @@
     resetIA();
     updateInfoTab();
     
-    // Load X, Y
+    // Load X, Y, Speed
     $('input-x').value = settings.x || 0;
     $('input-y').value = settings.y || 0;
+    $('input-top').value = settings.top || 1;
+    $('input-bottom').value = settings.bottom || 1;
+    $('input-left').value = settings.left || 1;
+    $('input-right').value = settings.right || 1;
     
     if (expiryTimer) clearInterval(expiryTimer);
     expiryTimer = setInterval(checkExpiry, 1000);
@@ -1082,7 +1128,6 @@
         musicBtn.classList.add('playing');
       }).catch(e => console.log(e));
     } else {
-      // Chuyển sang bài tiếp theo
       currentTrackIndex = (currentTrackIndex + 1) % PLAYLIST.length;
       bgMusic.src = PLAYLIST[currentTrackIndex];
       bgMusic.play().then(() => {
@@ -1141,7 +1186,7 @@
       playBeep();
       const part = btn.dataset.part;
       settings.aimPart = part;
-      settings.aimCode = generateAimCode(part, settings.x, settings.y);
+      settings.aimCode = generateAimCode(part, settings.x, settings.y, settings.top, settings.bottom, settings.left, settings.right);
       Store.set('settings', settings);
       highlightPart(part);
       
@@ -1151,22 +1196,35 @@
     });
   });
 
-  // ============ TAB 2: CẤU HÌNH & X/Y ============
+  // ============ TAB 2: CẤU HÌNH & TỌA ĐỘ & TỐC ĐỘ ============
   const inputX = $('input-x');
   const inputY = $('input-y');
+  const inputTop = $('input-top');
+  const inputBottom = $('input-bottom');
+  const inputLeft = $('input-left');
+  const inputRight = $('input-right');
   
-  function saveXY() {
+  function saveSettings() {
     settings.x = parseInt(inputX.value) || 0;
     settings.y = parseInt(inputY.value) || 0;
+    settings.top = parseFloat(inputTop.value) || 1;
+    settings.bottom = parseFloat(inputBottom.value) || 1;
+    settings.left = parseFloat(inputLeft.value) || 1;
+    settings.right = parseFloat(inputRight.value) || 1;
+    
     if(settings.aimPart) {
-      settings.aimCode = generateAimCode(settings.aimPart, settings.x, settings.y);
+      settings.aimCode = generateAimCode(settings.aimPart, settings.x, settings.y, settings.top, settings.bottom, settings.left, settings.right);
     }
     Store.set('settings', settings);
-    addLog(`Cập nhật tọa độ: X=${settings.x}, Y=${settings.y}`, 'yellow');
+    addLog(`Cập nhật cấu hình: X=${settings.x}, Y=${settings.y}, Speed L=${settings.left}, R=${settings.right}, U=${settings.top}, D=${settings.bottom}`, 'yellow');
   }
 
-  inputX.addEventListener('change', saveXY);
-  inputY.addEventListener('change', saveXY);
+  inputX.addEventListener('change', saveSettings);
+  inputY.addEventListener('change', saveSettings);
+  inputTop.addEventListener('change', saveSettings);
+  inputBottom.addEventListener('change', saveSettings);
+  inputLeft.addEventListener('change', saveSettings);
+  inputRight.addEventListener('change', saveSettings);
 
   const CONFIG_ITEMS = [
     { id: 'forcar-sens', name: 'Ép Độ Nhạy' },
@@ -1355,6 +1413,7 @@
       await typeLog(`- Tệp: ${currentFile.name}`, 'white', 300);
       await typeLog(`- Mods: ${activeConfigs.length} (JSON)`, 'white', 300);
       await typeLog(`- Aim: ${settings.aimPart || 'Mặc định'} (X:${settings.x}, Y:${settings.y})`, 'white', 300);
+      await typeLog(`- Tốc độ: Trái ${settings.left}x, Phải ${settings.right}x, Lên ${settings.top}x, Xuống ${settings.bottom}x`, 'white', 300);
       
       await typeLog(`🚀 Đã nạp thành công vào ${gameName}!`, 'green', 1000);
       
