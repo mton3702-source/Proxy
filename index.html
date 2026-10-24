@@ -9,14 +9,14 @@
   
   /* BẢNG MÀU ĐỎ ĐÔ (DARK RED) */
   :root {
-    --bg-dark: #1a0000;
-    --bg-red: #2b0404;
-    --bg-card: rgba(50, 0, 0, 0.6);
-    --border-red: rgba(255, 0, 0, 0.3);
+    --bg-dark: #0a0000;
+    --bg-red: #2a0000;
+    --bg-card: rgba(60, 0, 0, 0.5);
+    --border-red: rgba(255, 0, 0, 0.2);
     
     --red-primary: #e11d48;
-    --red-light: #f43f5e;
-    --red-dark: #be123c;
+    --red-light: #ff4d4d;
+    --red-dark: #9f1239;
     --red-glow: rgba(225, 29, 72, 0.6);
     
     --text-main: #ffffff;
@@ -27,7 +27,7 @@
 
   #app{
     width:100%;max-width:430px;height:100dvh;max-height:900px;
-    background: linear-gradient(160deg, var(--bg-red), var(--bg-dark));
+    background: radial-gradient(circle at 50% 20%, var(--bg-red), var(--bg-dark));
     position:relative;overflow:hidden;display:flex;flex-direction:column;
     box-shadow: 0 0 50px rgba(0,0,0,0.9);
   }
@@ -36,20 +36,51 @@
   .screen{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:scale(.98);transition:opacity .4s ease,transform .4s ease;z-index:1;background:transparent}
   .screen.active{opacity:1;pointer-events:auto;transform:scale(1);z-index:10}
 
-  /* ============ MÀN HÌNH CHỜ ============ */
-  .loading-content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;gap:2rem}
-  .fire-logo{font-size:5rem;filter:drop-shadow(0 0 30px var(--red-primary));animation:pulse 1.5s infinite}
-  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
-  .fire-title{font-size:1.8rem;font-weight:900;letter-spacing:3px;text-align:center}
-  .fire-title span{display:block;font-size:.8rem;color:var(--red-primary);letter-spacing:5px;margin-top:.5rem}
-  .progress-wrap{width:80%;max-width:300px;display:flex;flex-direction:column;gap:.5rem;text-align:center}
-  .progress-track{width:100%;height:8px;background:rgba(255,255,255,0.1);border-radius:10px;overflow:hidden}
-  .progress-fill{width:0%;height:100%;background:linear-gradient(90deg, var(--red-dark), var(--red-primary));border-radius:10px;transition:width .15s linear; box-shadow: 0 0 10px var(--red-glow);}
-  .progress-text{font-size:.85rem;color:var(--text-sub)}
-  .progress-text span{color:var(--red-primary);font-weight:bold}
+  /* ============ MÀN HÌNH CHỜ (GLASSMORPHISM) ============ */
+  .loading-content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;gap:2rem; position: relative; z-index: 2;}
+  
+  .top-left-icons { position: absolute; top: 20px; left: 20px; display: flex; gap: 10px; z-index: 5;}
+  .top-icon { width: 40px; height: 40px; background: rgba(30,0,0,0.8); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 1px solid rgba(255,0,0,0.2); }
+  
+  /* Logo trung tâm với vòng tròn nét đứt */
+  .loading-logo-wrapper { position: relative; width: 180px; height: 180px; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;}
+  
+  .dashed-ring { position: absolute; width: 100%; height: 100%; border: 2px dashed rgba(255,255,255,0.15); border-radius: 50%; animation: spin 20s linear infinite;}
+  .glow-ring { position: absolute; width: 85%; height: 85%; border-radius: 50%; box-shadow: 0 0 40px var(--red-glow); border: 1px solid var(--red-light); opacity: 0.5;}
+  
+  .circle-progress { position: absolute; width: 100%; height: 100%; transform: rotate(-90deg); }
+  .circle-progress circle { fill: none; stroke-width: 3; }
+  .circle-progress .bg { stroke: transparent; }
+  .circle-progress .progress { stroke: var(--red-light); stroke-linecap: round; stroke-dasharray: 502; stroke-dashoffset: 502; transition: stroke-dashoffset 0.1s linear; filter: drop-shadow(0 0 8px var(--red-primary)); }
+
+  .logo-box { 
+    width: 110px; height: 110px; 
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(225,29,72,0.8)); 
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.4);
+    border-radius: 30px; display: flex; align-items: center; justify-content: center; z-index: 2; 
+    box-shadow: inset 0 0 20px rgba(255,255,255,0.3), 0 10px 30px var(--red-glow); 
+  }
+  .logo-box span { font-size: 4.5rem; font-weight: 900; color: #fff; text-shadow: 0 4px 15px rgba(0,0,0,0.8); font-family: 'Arial Black', sans-serif;}
+
+  .loading-title { font-size: 2.2rem; font-weight: 900; letter-spacing: 5px; color: #fff; text-shadow: 0 0 20px var(--red-glow); text-align: center; }
+  .loading-subtitle { font-size: 0.8rem; color: var(--red-sub); letter-spacing: 6px; font-weight: 700; margin-top: -10px; opacity: 0.8;}
+
+  .progress-wrap { width: 85%; max-width: 320px; display: flex; flex-direction: column; gap: 0.8rem; margin-top: 1rem; }
+  .progress-track { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; }
+  .progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, var(--red-dark), var(--red-light)); border-radius: 10px; transition: width 0.15s linear; box-shadow: 0 0 10px var(--red-primary); }
+  .progress-info { display: flex; justify-content: space-between; font-size: 0.85rem; color: #ccc; font-weight: 500; }
+  
+  .loading-dots { position: absolute; bottom: 60px; display: flex; gap: 8px; }
+  .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 50%; }
+  .dot.active { background: var(--red-primary); box-shadow: 0 0 8px var(--red-primary); }
+  
+  .loading-copyright { position: absolute; bottom: 25px; font-size: 0.7rem; color: rgba(255,255,255,0.3); letter-spacing: 2px; text-transform: uppercase; }
+  
+  @keyframes spin{to{transform:rotate(360deg)}}
 
   /* ============ MÀN HÌNH KEY ============ */
-  .key-screen{padding:2rem 1.5rem;display:flex;flex-direction:column;justify-content:center}
+  .key-screen{padding:2rem 1.5rem;display:flex;flex-direction:column;justify-content:center; height: 100%;}
   .key-box{background:var(--bg-card);backdrop-filter: blur(10px);border:1px solid var(--border-red);border-radius:20px;padding:1.5rem;text-align:center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
   .key-box h2{font-size:1.2rem;margin-bottom:.5rem;color:var(--text-main)}
   .key-box p{font-size:.85rem;color:var(--text-sub);margin-bottom:1.5rem;line-height:1.4}
@@ -58,7 +89,6 @@
   .activate-btn{width:100%;padding:1rem;background:var(--red-primary);border:none;border-radius:12px;color:#fff;font-size:1rem;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:.2s; box-shadow: 0 4px 15px var(--red-glow);}
   .activate-btn:active{background:var(--red-dark);transform:scale(.98)}
   .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
   .key-msg{margin-top:1rem;font-size:.85rem;min-height:1.5rem;font-weight:600}
   .key-msg.error{color:#ff4444}
   .key-msg.success{color:#4ade80}
@@ -67,18 +97,30 @@
   /* ============ GIAO DIỆN CHÍNH ============ */
   .main-app{display:flex;flex-direction:column;height:100%}
   
-  .app-header{text-align:center;padding:1rem 0 0.5rem;border-bottom:1px solid var(--border-red);margin-bottom:0.5rem; flex-shrink: 0;}
-  .app-header h1{font-size:1.3rem;font-weight:900;letter-spacing:2px;color:#fff;text-shadow:0 0 10px var(--red-glow)}
-  .app-header span{font-size:0.7rem;color:var(--red-primary);font-weight:bold;letter-spacing:3px}
+  .app-header{text-align:center;padding:1.2rem 0 0.8rem;border-bottom:1.5px solid var(--border-red);margin-bottom:0.5rem; flex-shrink: 0; position: relative; background: linear-gradient(180deg, rgba(225,29,72,0.1) 0%, transparent 100%);}
+  .app-header h1{
+    font-size:1.5rem; font-weight:900; letter-spacing:3px; 
+    background: linear-gradient(90deg, #fff, var(--red-light), #fff); 
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+    text-shadow: 0 0 15px rgba(225,29,72,0.5); margin-bottom: 2px;
+  }
+  .app-header span{font-size:0.75rem;color:var(--red-primary);font-weight:800;letter-spacing:4px; text-transform: uppercase;}
 
-  /* Cho phép vuốt cuộn */
+  .music-btn {
+    position: absolute; top: 15px; right: 15px; width: 38px; height: 38px;
+    background: rgba(0,0,0,0.5); border: 1.5px solid var(--red-primary); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; color: var(--red-primary); font-size: 1.2rem; cursor: pointer; z-index: 100;
+    transition: 0.3s;
+  }
+  .music-btn.playing { animation: spinMusic 3s linear infinite; box-shadow: 0 0 15px var(--red-glow); color: #fff; border-color: #fff;}
+  @keyframes spinMusic { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
   .app-content{flex:1;overflow-y:auto;padding:1rem 1rem 110px 1rem;scrollbar-width:none; -webkit-overflow-scrolling: touch;}
   .app-content::-webkit-scrollbar{display:none}
   .tab-pane{display:none;animation:fadeIn .3s ease;min-height: 100%;}
   .tab-pane.active{display:flex;flex-direction:column}
   @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 
-  /* Thanh Điều Hướng Dưới (5 Tabs) */
   .bottom-nav{position:absolute;bottom:0;left:0;right:0;height:85px;background:rgba(20, 0, 0, 0.95);backdrop-filter: blur(15px);border-top:1px solid var(--border-red);display:flex;align-items:center;justify-content:space-between;padding:0 2px;z-index:20;padding-bottom:15px}
   .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:transparent;border:none;color:var(--text-sub);font-size:0.7rem;font-weight:700;cursor:pointer;transition:all 0.3s;padding:8px 0;margin:0 2px;border-radius:14px}
   .tab-btn .icon{font-size:1.4rem}
@@ -95,11 +137,11 @@
   .power-btn .icon{font-size:3rem;color:#666;transition:.3s}
   .power-btn.active .icon{color:var(--red-primary);filter:drop-shadow(0 0 10px var(--red-primary))}
   
-  .character-stage{display:flex;justify-content:center;align-items:center;height:200px;margin-bottom:1.5rem;perspective:800px; flex-shrink: 0;}
-  .char-3d{width:80px;height:140px;transform-style:preserve-3d;animation:spin3d 5s linear infinite;position:relative}
+  .character-stage{display:flex;justify-content:center;align-items:center;height:240px;margin-bottom:1.5rem;perspective:1000px; flex-shrink: 0;}
+  .char-3d{width:120px;height:220px;transform-style:preserve-3d;animation:spin3d 6s linear infinite;position:relative}
   @keyframes spin3d{from{transform:rotateY(0deg)}to{transform:rotateY(360deg)}}
   
-  .char-svg{width:100%;height:100%;overflow:visible}
+  .char-svg{width:100%;height:100%;overflow:visible;}
   .char-svg .part{fill:#fff;transition:fill .3s, filter .3s; filter:drop-shadow(15px 5px 0px #4a0000);}
   .char-svg .part.highlight{fill:var(--red-primary);filter:drop-shadow(15px 5px 0px var(--red-dark)) drop-shadow(0 0 8px var(--red-primary));}
 
@@ -120,8 +162,7 @@
   .config-name{font-size:.95rem;font-weight:600;color:#ddd;transition:.2s}
   .config-item.on .config-name{color:#fff}
   
-  /* Mã Code hiển thị khi Bật */
-  .config-code {font-size: 0.75rem; color: var(--red-primary); font-family: monospace; margin-top: 2px; display: none;}
+  .config-code {font-size: 0.65rem; color: var(--red-primary); font-family: monospace; margin-top: 4px; display: none; background: rgba(0,0,0,0.4); padding: 4px 6px; border-radius: 4px; word-break: break-all;}
   .config-item.on .config-code {display: block; animation: fadeIn 0.3s;}
   
   .status-badge{font-size:.7rem;padding:.3rem .8rem;border-radius:20px;font-weight:bold;background:rgba(255,255,255,0.1);color:#888; border:1px solid transparent; flex-shrink: 0;}
@@ -133,7 +174,7 @@
   @keyframes starPulse{0%,100%{opacity:0.8;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
   
   .ia-select-file-btn{width:100%;padding:1.2rem 1.5rem;background:var(--bg-card);border-radius:20px;display:flex;justify-content:space-between;align-items:center;color:#ccc;font-size:1.1rem;font-weight:600;cursor:pointer;transition:.2s;border:1px solid var(--border-red)}
-  .ia-select-file-btn:active{background:rgba(50, 0, 0, 0.9);transform:scale(.98)}
+  .ia-select-file-btn:active{background:rgba(60, 0, 0, 0.9);transform:scale(.98)}
   .ia-select-file-btn .send-icon{font-size:1.2rem;color:var(--red-primary)}
 
   .ia-file-info{width:100%;margin-top:1rem;padding:1rem 1.2rem;background:rgba(0,0,0,0.3);border:1.5px solid var(--border-red);border-radius:16px;display:none;text-align:left}
@@ -150,7 +191,7 @@
   .btn-game{background:linear-gradient(135deg,var(--red-primary),var(--red-dark));color:#fff;box-shadow:0 4px 15px var(--red-glow)}
   .btn-stop{background:rgba(255,255,255,0.1);color:#ff4444;border:1px solid #ff4444; box-shadow:none;}
 
-  .ia-status{margin-top:1rem;font-size:.95rem;text-align:center;font-weight:600;display:none;color:#4ade80}
+  .ia-status{margin-top:1rem;font-size:.95rem;text-align:center;font-weight:600;display:none;color:#4ade80; line-height: 1.5;}
   .ia-status.show{display:block}
   .ia-status.error{color:#ff4444}
   .ia-status.info{color:#eab308}
@@ -209,18 +250,55 @@
 </style>
 </head>
 <body>
+<!-- ÂM THANH NỀN -->
+<audio id="bg-music" src="https://files.catbox.moe/if69gi.mp3" loop></audio>
+
 <div id="app">
 
   <!-- MÀN HÌNH CHỜ -->
   <div id="screen-loading" class="screen active">
+    <div class="top-left-icons">
+      <div class="top-icon">⚔️</div>
+      <div class="top-icon">☀️</div>
+    </div>
+    
     <div class="loading-content">
-      <div class="fire-logo">🔥</div>
-      <div class="fire-title">FIRED SUPPORT<span>PREMIUM</span></div>
+      <div class="loading-logo-wrapper">
+        <div class="dashed-ring"></div>
+        <div class="glow-ring"></div>
+        
+        <!-- Vòng tiến trình SVG -->
+        <svg class="circle-progress" viewBox="0 0 160 160">
+          <circle class="bg" cx="80" cy="80" r="78"></circle>
+          <circle class="progress" id="circle-progress-bar" cx="80" cy="80" r="78"></circle>
+        </svg>
+
+        <div class="logo-box">
+          <span>F</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="loading-title">FIRED</div>
+        <div class="loading-subtitle">SUPPORT · PREMIUM</div>
+      </div>
+      
       <div class="progress-wrap">
         <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
-        <div class="progress-text"><span id="progress-percent">0%</span> — <span id="progress-text">Đang khởi động...</span></div>
+        <div class="progress-info">
+          <span id="progress-text">Đang tối ưu hiệu năng...</span>
+          <span id="progress-percent">0%</span>
+        </div>
       </div>
     </div>
+
+    <div class="loading-dots">
+      <div class="dot active"></div>
+      <div class="dot active"></div>
+      <div class="dot"></div>
+    </div>
+    
+    <div class="loading-copyright">© FIRED SUPPORT · V2.0</div>
   </div>
 
   <!-- MÀN HÌNH NHẬP KEY -->
@@ -228,7 +306,7 @@
     <div class="key-screen">
       <div class="key-box">
         <h2>Yêu Cầu Kích Hoạt</h2>
-        <p>Vui lòng nhập mã kích hoạt để mở khóa hệ thống.</p>
+        <p>Vui lòng nhập mã kích hoạt để mở khóa hệ thống (Hạn 3 ngày).</p>
         <input type="text" id="key-input" class="key-input" placeholder="FIRED-XXXXXX-XXXXX-XXX" maxlength="24" autocomplete="off">
         <button id="activate-btn" class="activate-btn">
           <span id="activate-text">KÍCH HOẠT</span>
@@ -244,6 +322,7 @@
   <div id="screen-main" class="screen main-app">
     
     <div class="app-header">
+      <div class="music-btn" id="music-btn">🎵</div>
       <h1>FIRED SUPPORT</h1>
       <span>PREMIUM SYSTEM</span>
     </div>
@@ -264,15 +343,28 @@
 
         <div style="text-align:center;margin-bottom:1rem;font-weight:bold;font-size:1.1rem;letter-spacing:1px">ĐIỂM NGẮM (HH)</div>
         
-        <!-- Nhân vật 3D -->
+        <!-- Nhân vật Silhouette -->
         <div class="character-stage">
           <div class="char-3d">
-            <svg class="char-svg" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
-              <circle class="part" data-part="cabeca" cx="50" cy="20" r="16" />
-              <rect class="part" data-part="pescoco" x="43" y="38" width="14" height="10" rx="2" />
-              <path class="part" data-part="corpo" d="M 25 55 L 75 55 L 80 100 L 20 100 Z" />
-              <path class="part" data-part="corpo" d="M 30 100 L 25 140 L 45 140 L 48 100 Z" />
-              <path class="part" data-part="corpo" d="M 70 100 L 75 140 L 55 140 L 52 100 Z" />
+            <svg class="char-svg" viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <filter id="shadow">
+                  <feDropShadow dx="12" dy="5" stdDeviation="2" flood-color="#3a0000" flood-opacity="1"/>
+                </filter>
+              </defs>
+              <g filter="url(#shadow)">
+                <path class="part" data-part="cabeca" d="M 50 10 C 44 10 40 14 40 20 C 40 24 42 28 46 30 L 46 34 L 54 34 L 54 30 C 58 28 60 24 60 20 C 60 14 56 10 50 10 Z" />
+                <rect class="part" data-part="pescoco" x="46" y="34" width="8" height="6" rx="2" />
+                <path class="part" data-part="corpo" d="M 30 45 C 40 40 60 40 70 45 L 75 85 L 25 85 Z" />
+                <path class="part" data-part="corpo" d="M 25 85 L 30 120 L 70 120 L 75 85 Z" />
+                <path class="part" data-part="corpo" d="M 30 120 L 35 175 L 48 175 L 50 130 L 52 175 L 65 175 L 70 120 Z" />
+                <path class="part" data-part="corpo" d="M 33 175 L 30 185 L 48 185 L 48 175 Z" />
+                <path class="part" data-part="corpo" d="M 52 175 L 52 185 L 70 185 L 67 175 Z" />
+                <path class="part" data-part="corpo" d="M 30 48 L 10 100 L 15 102 L 35 55 Z" />
+                <circle class="part" data-part="corpo" cx="11" cy="103" r="4" />
+                <path class="part" data-part="corpo" d="M 70 48 L 90 100 L 85 102 L 65 55 Z" />
+                <circle class="part" data-part="corpo" cx="89" cy="103" r="4" />
+              </g>
             </svg>
           </div>
         </div>
@@ -287,7 +379,7 @@
       <!-- TAB 2: CẤU HÌNH -->
       <div id="tab-configs" class="tab-pane">
         <div style="font-size:.8rem;color:var(--text-sub);margin-bottom:1rem;display:flex;align-items:center;gap:5px">
-          <span style="background:#fff;color:#000;padding:2px 6px;border-radius:4px;font-weight:bold">Tất cả</span> Các chức năng đã được mở khóa.
+          <span style="background:#fff;color:#000;padding:2px 6px;border-radius:4px;font-weight:bold">Tự động</span> Bật là mã JSON sẽ được nạp ngầm vào Game.
         </div>
         
         <div class="config-list" id="config-list">
@@ -298,26 +390,20 @@
       <!-- TAB 3: I.A -->
       <div id="tab-ia" class="tab-pane">
         <div class="ia-container">
-          
           <div class="ia-star-icon">✦</div>
           
-          <!-- Nút chọn file -->
           <div class="ia-select-file-btn" id="ia-select-btn">
             <span>Chọn tệp từ thiết bị</span>
             <span class="send-icon">➢</span>
           </div>
           <input type="file" id="ia-file" style="display:none">
           
-          <!-- Khung hiển thị thông tin file -->
           <div class="ia-file-info" id="ia-file-info">
             <strong>Tệp đã chọn:</strong>
             <div class="file-details" id="ia-file-details"></div>
           </div>
           
-          <!-- Nút chạy / dừng file -->
           <button class="ia-action-btn btn-run" id="ia-run-btn">▶ Chạy File</button>
-          
-          <!-- Nút vào game -->
           <button class="ia-action-btn btn-game" id="ia-game-btn">🎮 Vào Game</button>
           
           <div class="ia-status" id="ia-status"></div>
@@ -343,11 +429,8 @@
           <div class="fps-row" data-fps="240"><div class="fps-box"></div><span>240 FPS</span></div>
         </div>
 
-        <div class="tool-list" id="tool-list">
-          <!-- JS Generate -->
-        </div>
+        <div class="tool-list" id="tool-list"></div>
 
-        <!-- Phần thông tin thật -->
         <div class="device-info-row">
           <div class="os-text">
              <span id="os-name">HỆ ĐIỀU HÀNH</span>
@@ -379,6 +462,10 @@
           <div class="info-row">
             <span class="info-label">Mã Key kích hoạt</span>
             <span class="info-val" id="info-key" style="color:var(--red-primary)">...</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Hạn sử dụng Key</span>
+            <span class="info-val" id="info-timeleft" style="color:#eab308; font-weight:bold;">...</span>
           </div>
           <div class="info-row">
             <span class="info-label">Tên tệp đang chạy</span>
@@ -456,11 +543,7 @@
     get(k, def){ try{ const v = localStorage.getItem('fired_'+k); return v===null ? def : JSON.parse(v); }catch(e){ return def; } },
     set(k, v){ try{ localStorage.setItem('fired_'+k, JSON.stringify(v)); }catch(e){} },
     clearAll(){ 
-      try {
-        Object.keys(localStorage).forEach(key => {
-          if(key.startsWith('fired_')) localStorage.removeItem(key);
-        });
-      } catch(e){}
+      try { Object.keys(localStorage).forEach(key => { if(key.startsWith('fired_')) localStorage.removeItem(key); }); } catch(e){}
     }
   };
 
@@ -470,7 +553,7 @@
   Store.set('keys', validKeys);
 
   let keyUsage = Store.get('keyUsage', {});
-  let settings = Store.get('settings', { activatedKey: null, configs: {}, codes: {}, fps: 120, tools: {} });
+  let settings = Store.get('settings', { activatedKey: null, configs: {}, fps: 120, tools: {} });
 
   // ============ DOM ============
   const $ = id => document.getElementById(id);
@@ -480,11 +563,15 @@
   const progressFill = $('progress-fill');
   const progressPercent = $('progress-percent');
   const progressText = $('progress-text');
+  const circleProgress = $('circle-progress-bar');
   const keyInput = $('key-input');
   const activateBtn = $('activate-btn');
   const activateText = $('activate-text');
   const activateSpinner = $('activate-spinner');
   const keyMsg = $('key-msg');
+  
+  const bgMusic = $('bg-music');
+  const musicBtn = $('music-btn');
 
   // I.A DOM
   const iaSelectBtn = $('ia-select-btn');
@@ -497,7 +584,42 @@
   const gameModal = $('game-modal');
   const logoutModal = $('logout-modal');
 
-  // ============ TOAST & RUNG THẬT ============
+  // ============ ÂM THANH (BEEP & GIỌNG NÓI) ============
+  let audioCtx;
+  function playBeep() {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if(audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.1);
+    } catch(e) {}
+  }
+
+  function speak(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'vi-VN';
+      utterance.rate = 1.1;
+      utterance.pitch = 1.2;
+      
+      const voices = window.speechSynthesis.getVoices();
+      const femaleVoice = voices.find(v => v.lang.includes('vi') && v.name.includes('Female')) || voices.find(v => v.lang.includes('vi'));
+      if (femaleVoice) utterance.voice = femaleVoice;
+      
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
   let toastTimer;
   function toast(msg){
     const el = $('toast');
@@ -508,12 +630,14 @@
   }
   function vibrate(p){ if(navigator.vibrate) try{ navigator.vibrate(p||20); }catch(e){} }
 
-  // ============ HÀM TẠO MÃ CODE NGẪU NHIÊN ============
-  function generateHexCode() {
-    return '#' + Math.floor(Math.random()*16777215).toString(16).toUpperCase().padStart(6, '0');
+  // ============ HÀM TẠO MÃ JSON ============
+  function generateFeatureCode(featureId) {
+    const code = Math.floor(Math.random()*16777215).toString(16).toUpperCase().padStart(6, '0');
+    const payload = { module: featureId, hash: "#" + code, status: "active", inject_type: "memory" };
+    return JSON.stringify(payload);
   }
 
-  // ============ ID THIẾT BỊ THẬT (HASH) ============
+  // ============ ID THIẾT BỊ THẬT ============
   function getDeviceId(){
     let id = Store.get('deviceId', null);
     if(id) return id;
@@ -534,6 +658,65 @@
     }catch(e){ return 'Không rõ'; }
   }
 
+  // ============ HÀM CHECK THỜI HẠN KEY (3 NGÀY) ============
+  function getKeyTimeLeft(key) {
+    if (!keyUsage[key] || !keyUsage[key].usedAt) return "Không xác định";
+    
+    const THREE_DAYS = 3 * 24 * 60 * 60 * 1000;
+    const now = Date.now();
+    const startTime = keyUsage[key].usedAt;
+    const expireTime = startTime + THREE_DAYS;
+    
+    if (now >= expireTime) {
+      return "Đã hết hạn (0s)";
+    }
+    
+    const diff = expireTime - now;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const mins = Math.floor((diff / 1000 / 60) % 60);
+    const secs = Math.floor((diff / 1000) % 60);
+    
+    return `${days} ngày ${hours}h ${mins}m ${secs}s`;
+  }
+
+  // ============ HÀM CHECK VÀ XỬ LÝ HẾT HẠN ============
+  let expiryTimer;
+  function checkExpiry() {
+    if (!settings.activatedKey) return;
+    
+    const usage = keyUsage[settings.activatedKey];
+    if (!usage) return;
+
+    const THREE_DAYS = 3 * 24 * 60 * 60 * 1000;
+    const now = Date.now();
+    const expireTime = usage.usedAt + THREE_DAYS;
+    
+    if (now >= expireTime) {
+      Store.set('expiredKeys', (Store.get('expiredKeys', [])).concat([settings.activatedKey]));
+      settings.activatedKey = null;
+      Store.set('settings', settings);
+      
+      bgMusic.pause();
+      musicBtn.classList.remove('playing');
+      
+      mainScreen.classList.remove('active');
+      keyScreen.classList.add('active');
+      
+      keyMsg.textContent = '⚠️ Key của bạn đã hết hạn (3 ngày). Vui lòng nhập key mới!';
+      keyMsg.className = 'key-msg error';
+      
+      speak("Key của bạn đã hết hạn sử dụng. Vui lòng nhập key mới.");
+      vibrate([100, 50, 100, 50, 100]);
+      clearInterval(expiryTimer);
+    } else {
+      const timeLeftEl = $('info-timeleft');
+      if (timeLeftEl) {
+        timeLeftEl.textContent = getKeyTimeLeft(settings.activatedKey);
+      }
+    }
+  }
+
   // ============ CẬP NHẬT TAB THÔNG TIN ============
   async function updateInfoTab() {
     $('info-dev-id').textContent = getDeviceId();
@@ -542,8 +725,10 @@
     
     if(settings.activatedKey) {
       $('info-key').textContent = settings.activatedKey;
+      $('info-timeleft').textContent = getKeyTimeLeft(settings.activatedKey);
     } else {
       $('info-key').textContent = 'Chưa kích hoạt';
+      $('info-timeleft').textContent = '—';
     }
 
     if(currentFile) {
@@ -561,12 +746,16 @@
   function startLoading(){
     let progress = 0;
     const interval = setInterval(() => {
-      progress += Math.floor(Math.random()*8) + 2;
+      progress += Math.floor(Math.random()*5) + 2;
       if(progress > 100) progress = 100;
+      
       progressFill.style.width = progress + '%';
       progressPercent.textContent = progress + '%';
       
-      if(progress < 30) progressText.textContent = 'Đang khởi tạo...';
+      const circleLength = 2 * Math.PI * 78;
+      circleProgress.style.strokeDashoffset = circleLength - (progress / 100) * circleLength;
+      
+      if(progress < 30) progressText.textContent = 'Đang tối ưu hiệu năng...';
       else if(progress < 70) progressText.textContent = 'Đang kết nối máy chủ...';
       else if(progress < 100) progressText.textContent = 'Đang xác minh...';
       else progressText.textContent = 'Hoàn tất!';
@@ -577,6 +766,16 @@
           if(settings.activatedKey && validKeys.includes(settings.activatedKey)){
             const usage = keyUsage[settings.activatedKey];
             if(!usage || usage.deviceId === getDeviceId()){
+              const THREE_DAYS = 3 * 24 * 60 * 60 * 1000;
+              if (usage && (Date.now() - usage.usedAt >= THREE_DAYS)) {
+                 loadingScreen.classList.remove('active');
+                 keyScreen.classList.add('active');
+                 keyMsg.textContent = '⚠️ Key của bạn đã hết hạn. Vui lòng nhập key mới!';
+                 keyMsg.className = 'key-msg error';
+                 settings.activatedKey = null;
+                 Store.set('settings', settings);
+                 return;
+              }
               loadingScreen.classList.remove('active');
               mainScreen.classList.add('active');
               initMain();
@@ -588,7 +787,7 @@
           $('device-info').innerHTML = `Mã thiết bị: ${getDeviceId()}`;
         }, 400);
       }
-    }, 100);
+    }, 80);
   }
 
   // ============ ĐỊNH DẠNG KEY ============
@@ -605,11 +804,13 @@
 
   // ============ KÍCH HOẠT THẬT ============
   activateBtn.addEventListener('click', async () => {
+    playBeep();
     const key = keyInput.value.trim().toUpperCase();
     if(!key || key.length < 14){
       keyMsg.textContent = 'Vui lòng nhập mã hợp lệ';
       keyMsg.className = 'key-msg error';
       vibrate(30);
+      speak("Vui lòng nhập mã hợp lệ");
       return;
     }
 
@@ -619,10 +820,24 @@
     keyMsg.textContent = '';
     
     setTimeout(async () => {
+      const expiredKeys = Store.get('expiredKeys', []);
+      
       if(!validKeys.includes(key)){
-        keyMsg.textContent = '🔒 Mã không hợp lệ hoặc đã dùng trên thiết bị khác!';
+        keyMsg.textContent = '🔒 Mã không hợp lệ!';
         keyMsg.className = 'key-msg error';
         vibrate([40,40]);
+        speak("Mã không hợp lệ");
+        activateBtn.disabled = false;
+        activateText.style.display = 'inline';
+        activateSpinner.style.display = 'none';
+        return;
+      }
+      
+      if(expiredKeys.includes(key)){
+        keyMsg.textContent = '🔒 Mã này đã hết hạn sử dụng!';
+        keyMsg.className = 'key-msg error';
+        vibrate([40,40]);
+        speak("Mã này đã hết hạn sử dụng");
         activateBtn.disabled = false;
         activateText.style.display = 'inline';
         activateSpinner.style.display = 'none';
@@ -631,9 +846,10 @@
 
       const usage = keyUsage[key];
       if(usage && usage.deviceId !== getDeviceId()){
-        keyMsg.textContent = '🔒 Mã không hợp lệ hoặc đã dùng trên thiết bị khác!';
+        keyMsg.textContent = '🔒 Mã đã dùng trên thiết bị khác!';
         keyMsg.className = 'key-msg error';
         vibrate([40,40]);
+        speak("Mã đã dùng trên thiết bị khác");
         activateBtn.disabled = false;
         activateText.style.display = 'inline';
         activateSpinner.style.display = 'none';
@@ -641,15 +857,19 @@
       }
 
       const ip = await getIP();
-      keyUsage[key] = { deviceId: getDeviceId(), ip: ip, usedAt: Date.now() };
-      Store.set('keyUsage', keyUsage);
+      
+      if(!usage) {
+          keyUsage[key] = { deviceId: getDeviceId(), ip: ip, usedAt: Date.now() };
+          Store.set('keyUsage', keyUsage);
+      }
 
       settings.activatedKey = key;
       Store.set('settings', settings);
 
-      keyMsg.textContent = '✅ Kích hoạt thành công!';
+      keyMsg.textContent = '✅ Kích hoạt thành công! (Hạn 3 ngày)';
       keyMsg.className = 'key-msg success';
       vibrate(80);
+      speak("Kích hoạt thành công. Key của bạn có hạn 3 ngày");
 
       setTimeout(() => {
         keyScreen.classList.remove('active');
@@ -673,7 +893,25 @@
     highlightPart(null);
     resetIA();
     updateInfoTab();
+    
+    if (expiryTimer) clearInterval(expiryTimer);
+    expiryTimer = setInterval(checkExpiry, 1000);
   }
+
+  // ============ NÚT NHẠC ============
+  musicBtn.addEventListener('click', () => {
+    playBeep();
+    if (bgMusic.paused) {
+      bgMusic.play().then(() => {
+        musicBtn.classList.add('playing');
+        toast('🎵 Đang phát nhạc nền');
+      }).catch(e => toast('Lỗi phát nhạc: ' + e.message));
+    } else {
+      bgMusic.pause();
+      musicBtn.classList.remove('playing');
+      toast('⏸ Đã tạm dừng nhạc');
+    }
+  });
 
   // ============ ĐIỀU HƯỚNG TABS ============
   const tabBtns = document.querySelectorAll('.tab-btn');
@@ -681,6 +919,7 @@
 
   tabBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
+      playBeep();
       tabBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       
@@ -692,12 +931,15 @@
     });
   });
 
-  // ============ TAB 1: NHÂN VẬT & NGUỒN ============
+  // ============ TAB 1: NHÂN VẬT ============
   const powerBtn = $('power-btn');
   powerBtn.addEventListener('click', () => {
+    playBeep();
     powerBtn.classList.toggle('active');
     vibrate(30);
-    toast(powerBtn.classList.contains('active') ? '🔥 Đã bật hệ thống' : '⛔ Đã tắt hệ thống');
+    const isOn = powerBtn.classList.contains('active');
+    toast(isOn ? '🔥 Đã bật hệ thống' : '⛔ Đã tắt hệ thống');
+    speak(isOn ? "Đã bật hệ thống" : "Đã tắt hệ thống");
   });
 
   const partBtns = document.querySelectorAll('.btn-option');
@@ -715,11 +957,14 @@
 
   partBtns.forEach(btn => {
     btn.addEventListener('click', () => {
+      playBeep();
       highlightPart(btn.dataset.part);
+      const partName = btn.innerText;
+      speak("Đã ghim mục tiêu vào " + partName);
     });
   });
 
-  // ============ TAB 2: CẤU HÌNH (LƯU MÃ CODE THẬT) ============
+  // ============ TAB 2: CẤU HÌNH ============
   const CONFIG_ITEMS = [
     { id: 'forcar-sens', name: 'Ép Độ Nhạy' },
     { id: 'toque-suave', name: 'Chạm Mượt' },
@@ -735,10 +980,9 @@
     CONFIG_ITEMS.forEach(item => {
       const isOn = settings.configs[item.id] === true;
       
-      // Tạo và lưu mã code cố định cho từng mục
       if(!settings.codes) settings.codes = {};
       if(!settings.codes[item.id]) {
-          settings.codes[item.id] = generateHexCode();
+          settings.codes[item.id] = generateFeatureCode(item.id);
           Store.set('settings', settings);
       }
 
@@ -749,13 +993,14 @@
           <div class="checkbox"></div>
           <div class="config-info">
             <div class="config-name">${item.name}</div>
-            <div class="config-code">Mã: ${settings.codes[item.id]}</div>
+            <div class="config-code">JSON: ${settings.codes[item.id]}</div>
           </div>
         </div>
         <div class="status-badge">${isOn ? 'BẬT' : 'TẮT'}</div>
       `;
       
       el.addEventListener('click', () => {
+        playBeep();
         const now = !settings.configs[item.id];
         settings.configs[item.id] = now;
         Store.set('settings', settings);
@@ -763,13 +1008,20 @@
         el.classList.toggle('on', now);
         el.querySelector('.status-badge').textContent = now ? 'BẬT' : 'TẮT';
         vibrate(25);
-        toast((now?'✅ Đã lưu vào Game: ':'⛔ Đã xóa khỏi Game: ') + item.name);
+        
+        if(now) {
+           toast(`✅ Đã nạp mã JSON vào Game: ${item.name}`);
+           speak("Đã bật " + item.name);
+        } else {
+           toast(`⛔ Đã gỡ bỏ mã JSON: ${item.name}`);
+           speak("Đã tắt " + item.name);
+        }
       });
       list.appendChild(el);
     });
   }
 
-  // ============ TAB 3: I.A (ĐỌC FILE VÀ NẠP VÀO GAME) ============
+  // ============ TAB 3: I.A ============
   let currentFile = null;
   let isFileRunning = false;
   let fileContent = null;
@@ -789,7 +1041,10 @@
     updateInfoTab();
   }
 
-  iaSelectBtn.addEventListener('click', () => iaFile.click());
+  iaSelectBtn.addEventListener('click', () => {
+    playBeep();
+    iaFile.click();
+  });
 
   iaFile.addEventListener('change', e => {
     if(e.target.files.length > 0){
@@ -802,6 +1057,7 @@
       iaStatus.className = 'ia-status';
       iaStatus.textContent = '';
       vibrate(30);
+      speak("Đã chọn tệp " + currentFile.name);
       updateInfoTab();
 
       const reader = new FileReader();
@@ -817,6 +1073,7 @@
   });
 
   iaRunBtn.addEventListener('click', () => {
+    playBeep();
     if(!currentFile) return;
 
     if(!isFileRunning) {
@@ -830,12 +1087,14 @@
       iaStatus.textContent = '⏳ Đang nạp dữ liệu tệp vào bộ nhớ...';
       
       vibrate(50);
+      speak("Đang nạp tệp");
 
       setTimeout(() => {
         try {
           iaStatus.textContent = `✅ Tệp đã sẵn sàng để nạp vào Game!`;
           iaGameBtn.classList.add('show');
           vibrate(80);
+          speak("Tệp đã sẵn sàng");
         } catch(err) {
           iaStatus.className = 'ia-status error show';
           iaStatus.textContent = '❌ Lỗi mã: ' + err.message;
@@ -854,64 +1113,76 @@
       iaStatus.textContent = '⛔ Đã dừng chạy tệp.';
       iaGameBtn.classList.remove('show');
       vibrate(30);
+      speak("Đã dừng tệp");
       updateInfoTab();
     }
   });
 
   iaGameBtn.addEventListener('click', () => {
+    playBeep();
     if(!isFileRunning) return;
     gameModal.classList.add('show');
     vibrate(20);
   });
 
   $('modal-cancel-btn').addEventListener('click', () => {
+    playBeep();
     gameModal.classList.remove('show');
   });
 
-  // XỬ LÝ KHI CHỌN GAME (THỰC SỰ NẠP FILE + CONFIG)
   document.querySelectorAll('.game-opt-btn').forEach(btn => {
     btn.addEventListener('click', () => {
+      playBeep();
       const gameName = btn.dataset.game;
       gameModal.classList.remove('show');
       
-      // Đóng gói dữ liệu thật để chuẩn bị nạp
       const activeConfigs = Object.keys(settings.configs).filter(k => settings.configs[k] === true);
-      const codes = activeConfigs.map(k => settings.codes[k]);
+      const codesArray = activeConfigs.map(k => settings.codes[k]);
+      const fpsSelected = settings.fps;
+      const activeTools = Object.keys(settings.tools).filter(k => settings.tools[k] === true);
       
       iaStatus.className = 'ia-status show';
       iaStatus.style.color = '#eab308';
-      iaStatus.innerHTML = `⏳ Đang nạp Tệp & ${activeConfigs.length} Cấu hình vào <b>${gameName}</b>...`;
+      iaStatus.innerHTML = `⏳ Đang nạp Tệp, ${activeConfigs.length} mã JSON và cấu hình <b>${fpsSelected} FPS</b> vào ${gameName}...`;
       vibrate([30, 50, 30]);
+      speak("Đang nạp tệp và cấu hình vào " + gameName);
+
+      console.log(`[Game Injector] Chuẩn bị mở ${gameName}`);
+      console.log(`[Game Injector] Mã JSON Configs:`, codesArray);
+      console.log(`[Game Injector] Cấu hình FPS:`, fpsSelected);
+      console.log(`[Game Injector] Tools:`, activeTools);
 
       setTimeout(() => {
         iaStatus.style.color = '#4ade80';
-        iaStatus.innerHTML = `🚀 <b>${gameName}</b> đã khởi chạy!<br><span style="font-size:0.8rem;color:#aaa">Đã nạp tệp: ${currentFile.name} và ${activeConfigs.length} mã config.</span>`;
-        toast(`🎮 Đã vào ${gameName} và nạp cấu hình thành công!`);
+        iaStatus.innerHTML = `🚀 <b>${gameName}</b> đã khởi chạy!<br><span style="font-size:0.8rem;color:#aaa">Đã nạp tệp ${currentFile.name}, ${activeConfigs.length} mã JSON và ép xung ${fpsSelected} FPS.</span>`;
+        toast(`🎮 Đã vào ${gameName} thành công!`);
+        speak("Đã vào game thành công. Chúc bạn chơi vui vẻ");
         
-        // Cố gắng mở app game thật (Deep link)
         try {
           const protocol = gameName.includes('MAX') ? 'freefiremax://' : 'freefire://';
           window.location.href = protocol;
         } catch(e) {}
         
         vibrate(100);
-      }, 2000);
+      }, 2500);
     });
   });
 
-  // ============ TAB 4: TỐI ƯU HÓA (CHẠY THẬT) ============
+  // ============ TAB 4: TỐI ƯU HÓA ============
   function renderFPS(){
     const rows = document.querySelectorAll('.fps-row');
     rows.forEach(row => {
       const fps = parseInt(row.dataset.fps);
       row.classList.toggle('active', fps === settings.fps);
       row.addEventListener('click', () => {
+        playBeep();
         settings.fps = fps;
         Store.set('settings', settings);
         rows.forEach(r => r.classList.remove('active'));
         row.classList.add('active');
         vibrate(20);
         toast('⚡ Đã set FPS: ' + fps);
+        speak("Đã chọn " + fps + " FPS");
       });
     });
   }
@@ -938,18 +1209,21 @@
       `;
       const tg = el.querySelector('.toggle-btn');
       tg.addEventListener('click', () => {
+        playBeep();
         const now = !settings.tools[t.id];
         settings.tools[t.id] = now;
         Store.set('settings', settings);
         tg.classList.toggle('on', now);
         vibrate(25);
         toast((now?'✅ Bật: ':'⛔ Tắt: ') + t.name);
+        speak((now ? "Đã bật " : "Đã tắt ") + t.name);
 
-        if (now && t.id === 'clean-mem') {
-           if (window.gc) window.gc();
+        if (now) {
+           if (t.id === 'clean-mem' && window.gc) window.gc();
+           if (t.id === 'optimize-ram') { let arr = new Array(10000).fill(1); arr = null; }
            if (window.performance && window.performance.memory) {
              const mem = (window.performance.memory.usedJSHeapSize / 1048576).toFixed(1);
-             toast(`Đã dọn dẹp! RAM hiện tại: ${mem} MB`);
+             toast(`Đã tối ưu! RAM hiện tại: ${mem} MB`);
            }
         }
       });
@@ -980,12 +1254,10 @@
     document.querySelector('.os-text span:first-child').textContent = os;
     $('info-version').textContent = ver;
 
-    // Lấy % Pin thật
     if(navigator.getBattery){
       navigator.getBattery().then(b => {
         const level = Math.round(b.level * 100);
         $('info-battery').textContent = level + '%';
-        
         b.onlevelchange = () => {
           $('info-battery').textContent = Math.round(b.level * 100) + '%';
         };
@@ -999,28 +1271,36 @@
 
   // ============ TAB 5: ĐĂNG XUẤT THẬT ============
   $('logout-btn').addEventListener('click', () => {
+    playBeep();
     logoutModal.classList.add('show');
     vibrate(20);
   });
 
   $('logout-cancel-btn').addEventListener('click', () => {
+    playBeep();
     logoutModal.classList.remove('show');
   });
 
   $('logout-confirm-btn').addEventListener('click', () => {
+    playBeep();
     logoutModal.classList.remove('show');
     
     Store.clearAll();
     vibrate([50, 50, 100]);
+    speak("Đã đăng xuất và xóa toàn bộ dữ liệu");
     toast('Đã đăng xuất và xóa toàn bộ dữ liệu');
     
     setTimeout(() => {
       location.reload();
-    }, 1000);
+    }, 1500);
   });
 
   // Khởi chạy
   startLoading();
+
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.getVoices();
+  }
 
 })();
 </script>
