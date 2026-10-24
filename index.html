@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>FIRED SUPPORT - Premium</title>
+<title>FIRED SUPPORT</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
   
@@ -21,6 +21,11 @@
     
     --text-main: #ffffff;
     --text-sub: #fca5a5;
+    
+    --term-green: #4ade80;
+    --term-blue: #60a5fa;
+    --term-yellow: #fbbf24;
+    --term-bg: #050505;
   }
 
   body{background:#000;display:flex;align-items:center;justify-content:center;min-height:100vh;overflow:hidden;color:var(--text-main)}
@@ -32,19 +37,37 @@
     box-shadow: 0 0 50px rgba(0,0,0,0.9);
   }
 
+  /* ============ HUD OVERLAY (BẢNG LƠ LỬNG) ============ */
+  .hud-overlay {
+    position: absolute; top: 60px; left: 10px; z-index: 999;
+    background: rgba(0,0,0,0.85); border: 1px solid var(--red-primary);
+    border-radius: 8px; padding: 8px 12px; font-family: monospace; font-size: 0.7rem;
+    display: none; flex-direction: column; gap: 4px; backdrop-filter: blur(4px); box-shadow: 0 0 10px var(--red-glow);
+  }
+  .hud-overlay.active { display: flex; animation: fadeIn 0.3s;}
+  .hud-row { display: flex; justify-content: space-between; width: 110px; }
+  .hud-val { color: var(--term-green); font-weight: bold; }
+
+  /* ============ HIỆU ỨNG SÓNG NHẠC ============ */
+  .audio-visualizer { position: absolute; top: 20px; right: 65px; display: flex; gap: 3px; align-items: flex-end; height: 20px; z-index: 5; opacity: 0; transition: 0.3s; }
+  .audio-visualizer.active { opacity: 1; }
+  .bar { width: 3px; background: var(--red-primary); border-radius: 2px; animation: bounce 1s infinite alternate; }
+  .bar:nth-child(1) { height: 10px; animation-delay: 0.1s; }
+  .bar:nth-child(2) { height: 20px; animation-delay: 0.3s; }
+  .bar:nth-child(3) { height: 15px; animation-delay: 0.2s; }
+  .bar:nth-child(4) { height: 18px; animation-delay: 0.4s; }
+  @keyframes bounce { 0% { transform: scaleY(0.3); } 100% { transform: scaleY(1); } }
+
   /* ============ MÀN HÌNH CHUNG ============ */
   .screen{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:scale(.98);transition:opacity .4s ease,transform .4s ease;z-index:1;background:transparent}
   .screen.active{opacity:1;pointer-events:auto;transform:scale(1);z-index:10}
 
-  /* ============ MÀN HÌNH CHỜ (GLASSMORPHISM) ============ */
+  /* ============ MÀN HÌNH CHỜ ============ */
   .loading-content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;gap:2rem; position: relative; z-index: 2;}
-  
   .top-left-icons { position: absolute; top: 20px; left: 20px; display: flex; gap: 10px; z-index: 5;}
   .top-icon { width: 40px; height: 40px; background: rgba(30,0,0,0.8); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 1px solid rgba(255,0,0,0.2); }
   
-  /* Logo trung tâm với vòng tròn nét đứt */
   .loading-logo-wrapper { position: relative; width: 180px; height: 180px; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;}
-  
   .dashed-ring { position: absolute; width: 100%; height: 100%; border: 2px dashed rgba(255,255,255,0.15); border-radius: 50%; animation: spin 20s linear infinite;}
   .glow-ring { position: absolute; width: 85%; height: 85%; border-radius: 50%; box-shadow: 0 0 40px var(--red-glow); border: 1px solid var(--red-light); opacity: 0.5;}
   
@@ -53,14 +76,7 @@
   .circle-progress .bg { stroke: transparent; }
   .circle-progress .progress { stroke: var(--red-light); stroke-linecap: round; stroke-dasharray: 502; stroke-dashoffset: 502; transition: stroke-dashoffset 0.1s linear; filter: drop-shadow(0 0 8px var(--red-primary)); }
 
-  .logo-box { 
-    width: 110px; height: 110px; 
-    background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(225,29,72,0.8)); 
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255,255,255,0.4);
-    border-radius: 30px; display: flex; align-items: center; justify-content: center; z-index: 2; 
-    box-shadow: inset 0 0 20px rgba(255,255,255,0.3), 0 10px 30px var(--red-glow); 
-  }
+  .logo-box { width: 110px; height: 110px; background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(225,29,72,0.8)); backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.4); border-radius: 30px; display: flex; align-items: center; justify-content: center; z-index: 2; box-shadow: inset 0 0 20px rgba(255,255,255,0.3), 0 10px 30px var(--red-glow); }
   .logo-box span { font-size: 4.5rem; font-weight: 900; color: #fff; text-shadow: 0 4px 15px rgba(0,0,0,0.8); font-family: 'Arial Black', sans-serif;}
 
   .loading-title { font-size: 2.2rem; font-weight: 900; letter-spacing: 5px; color: #fff; text-shadow: 0 0 20px var(--red-glow); text-align: center; }
@@ -74,7 +90,6 @@
   .loading-dots { position: absolute; bottom: 60px; display: flex; gap: 8px; }
   .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 50%; }
   .dot.active { background: var(--red-primary); box-shadow: 0 0 8px var(--red-primary); }
-  
   .loading-copyright { position: absolute; bottom: 25px; font-size: 0.7rem; color: rgba(255,255,255,0.3); letter-spacing: 2px; text-transform: uppercase; }
   
   @keyframes spin{to{transform:rotate(360deg)}}
@@ -96,22 +111,11 @@
 
   /* ============ GIAO DIỆN CHÍNH ============ */
   .main-app{display:flex;flex-direction:column;height:100%}
-  
   .app-header{text-align:center;padding:1.2rem 0 0.8rem;border-bottom:1.5px solid var(--border-red);margin-bottom:0.5rem; flex-shrink: 0; position: relative; background: linear-gradient(180deg, rgba(225,29,72,0.1) 0%, transparent 100%);}
-  .app-header h1{
-    font-size:1.5rem; font-weight:900; letter-spacing:3px; 
-    background: linear-gradient(90deg, #fff, var(--red-light), #fff); 
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-    text-shadow: 0 0 15px rgba(225,29,72,0.5); margin-bottom: 2px;
-  }
+  .app-header h1{ font-size:1.5rem; font-weight:900; letter-spacing:3px; background: linear-gradient(90deg, #fff, var(--red-light), #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 15px rgba(225,29,72,0.5); margin-bottom: 2px;}
   .app-header span{font-size:0.75rem;color:var(--red-primary);font-weight:800;letter-spacing:4px; text-transform: uppercase;}
 
-  .music-btn {
-    position: absolute; top: 15px; right: 15px; width: 38px; height: 38px;
-    background: rgba(0,0,0,0.5); border: 1.5px solid var(--red-primary); border-radius: 50%;
-    display: flex; align-items: center; justify-content: center; color: var(--red-primary); font-size: 1.2rem; cursor: pointer; z-index: 100;
-    transition: 0.3s;
-  }
+  .music-btn { position: absolute; top: 15px; right: 15px; width: 38px; height: 38px; background: rgba(0,0,0,0.5); border: 1.5px solid var(--red-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--red-primary); font-size: 1.2rem; cursor: pointer; z-index: 100; transition: 0.3s;}
   .music-btn.playing { animation: spinMusic 3s linear infinite; box-shadow: 0 0 15px var(--red-glow); color: #fff; border-color: #fff;}
   @keyframes spinMusic { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
@@ -168,20 +172,52 @@
   .status-badge{font-size:.7rem;padding:.3rem .8rem;border-radius:20px;font-weight:bold;background:rgba(255,255,255,0.1);color:#888; border:1px solid transparent; flex-shrink: 0;}
   .config-item.on .status-badge{background:var(--red-primary);color:#fff;border-color:var(--red-primary); box-shadow: 0 0 10px var(--red-glow);}
 
-  /* --- TAB 3: I.A --- */
-  .ia-container{display:flex;flex-direction:column;align-items:center;margin-top:1rem;width:100%}
-  .ia-star-icon{font-size:2.5rem;margin-bottom:2rem;filter:drop-shadow(0 0 15px var(--red-primary));color:#fff;animation:starPulse 2s infinite}
+  /* --- TAB 3: I.A (TERMINAL) --- */
+  .ia-container{display:flex;flex-direction:column;align-items:center;margin-top:0.5rem;width:100%}
+  .ia-star-icon{font-size:2rem;margin-bottom:1rem;filter:drop-shadow(0 0 15px var(--red-primary));color:#fff;animation:starPulse 2s infinite}
   @keyframes starPulse{0%,100%{opacity:0.8;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
   
-  .ia-select-file-btn{width:100%;padding:1.2rem 1.5rem;background:var(--bg-card);border-radius:20px;display:flex;justify-content:space-between;align-items:center;color:#ccc;font-size:1.1rem;font-weight:600;cursor:pointer;transition:.2s;border:1px solid var(--border-red)}
+  .ia-controls { display: flex; gap: 10px; width: 100%; margin-bottom: 1rem; }
+  .ia-select-file-btn{flex: 3; padding:1rem; background:var(--bg-card); border-radius:12px; display:flex; justify-content:space-between; align-items:center; color:#ccc; font-size:0.95rem; font-weight:600; cursor:pointer; transition:.2s; border:1px solid var(--border-red);}
   .ia-select-file-btn:active{background:rgba(60, 0, 0, 0.9);transform:scale(.98)}
   .ia-select-file-btn .send-icon{font-size:1.2rem;color:var(--red-primary)}
+  
+  .btn-clear-log { flex: 1; display: flex; align-items: center; justify-content: center; background: rgba(255,0,0,0.1); border: 1px solid #444; border-radius: 12px; color: #ff4444; font-weight: bold; cursor: pointer; transition: 0.2s;}
+  .btn-clear-log:active { background: rgba(255,0,0,0.3); }
 
-  .ia-file-info{width:100%;margin-top:1rem;padding:1rem 1.2rem;background:rgba(0,0,0,0.3);border:1.5px solid var(--border-red);border-radius:16px;display:none;text-align:left}
+  .ia-file-info{width:100%;margin-bottom:1rem;padding:0.8rem;background:rgba(0,0,0,0.3);border:1.5px solid var(--border-red);border-radius:12px;display:none;text-align:left}
   .ia-file-info.show{display:block;animation:fadeIn .3s}
-  .ia-file-info strong{font-size:.9rem;color:var(--text-sub);display:block;margin-bottom:.3rem}
-  .ia-file-info .file-details{font-size:1rem;color:#ddd;font-weight:500;word-break:break-all}
-  .ia-file-info .file-details span{color:#888;font-size:.85rem;font-weight:normal}
+  .ia-file-info strong{font-size:.85rem;color:var(--text-sub);display:block;margin-bottom:.3rem}
+  .ia-file-info .file-details{font-size:.95rem;color:#ddd;font-weight:500;word-break:break-all}
+  .ia-file-info .file-details span{color:#888;font-size:.8rem;font-weight:normal}
+
+  /* TERMINAL BOX (THU GỌN) */
+  .terminal-box {
+    width: 100%;
+    height: 180px;
+    background: var(--term-bg);
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 0.8rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+  .terminal-box::-webkit-scrollbar { display: none; }
+  .term-header { color: #666; font-weight: bold; margin-bottom: 4px; letter-spacing: 1px; flex-shrink: 0;}
+  .term-line { display: flex; gap: 6px; line-height: 1.3; }
+  .term-time { color: #555; flex-shrink: 0; }
+  .term-text { word-break: break-all; }
+  .term-text.green { color: var(--term-green); }
+  .term-text.blue { color: var(--term-blue); }
+  .term-text.white { color: #eee; }
+  .term-text.yellow { color: var(--term-yellow); }
+  .term-text.red { color: var(--red-primary); }
 
   .ia-action-btn{width:100%;padding:1rem;margin-top:1rem;border-radius:16px;border:none;font-size:1rem;font-weight:bold;cursor:pointer;display:none;align-items:center;justify-content:center;gap:.5rem;transition:.2s}
   .ia-action-btn.show{display:flex;animation:fadeIn .3s}
@@ -191,24 +227,19 @@
   .btn-game{background:linear-gradient(135deg,var(--red-primary),var(--red-dark));color:#fff;box-shadow:0 4px 15px var(--red-glow)}
   .btn-stop{background:rgba(255,255,255,0.1);color:#ff4444;border:1px solid #ff4444; box-shadow:none;}
 
-  .ia-status{margin-top:1rem;font-size:.95rem;text-align:center;font-weight:600;display:none;color:#4ade80; line-height: 1.5;}
-  .ia-status.show{display:block}
-  .ia-status.error{color:#ff4444}
-  .ia-status.info{color:#eab308}
-
   /* --- TAB 4: TỐI ƯU HÓA --- */
   .fps-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;margin-top:0.5rem}
   .fps-icon{width:44px;height:44px;background:#fff;color:#000;border-radius:12px;display:flex;justify-content:center;align-items:center;font-weight:800;font-size:.9rem;text-align:center;line-height:1.1}
   .fps-title{font-size:1.1rem;font-weight:700}
   
-  .fps-options{display:flex;flex-direction:column;gap:1.2rem;margin-bottom:2.5rem;padding-left:1rem}
+  .fps-options{display:flex;flex-direction:column;gap:1.2rem;margin-bottom:2rem;padding-left:1rem}
   .fps-row{display:flex;align-items:center;gap:1rem;cursor:pointer}
   .fps-box{width:24px;height:24px;border:2px solid #555;border-radius:6px;transition:.2s}
   .fps-row.active .fps-box{background:#fff;border-color:#fff; box-shadow: 0 0 10px rgba(255,255,255,0.5);}
   .fps-row span{font-size:1.05rem;font-weight:800;color:#888;transition:.2s}
   .fps-row.active span{color:#fff}
 
-  .tool-list{display:flex;flex-direction:column;gap:1.5rem;margin-top:1rem;margin-bottom:2rem}
+  .tool-list{display:flex;flex-direction:column;gap:1.2rem;margin-top:1rem;margin-bottom:2rem}
   .tool-item{display:flex;justify-content:space-between;align-items:center}
   .tool-left{display:flex;align-items:center;gap:1rem}
   .tool-icon{width:36px;height:40px;background:#fff;color:#000;clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);display:flex;justify-content:center;align-items:center;font-size:1.4rem}
@@ -218,7 +249,10 @@
   .toggle-btn.on{background:var(--red-primary); box-shadow: 0 0 10px var(--red-glow);}
   .toggle-btn.on::after{left:23px}
 
-  .device-info-row{display:flex;justify-content:center;align-items:center;gap:0.8rem;margin-top:2rem;font-size:.9rem;color:#fff;font-weight:600}
+  .benchmark-btn { width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1.5px solid var(--border-red); border-radius: 12px; color: #fff; font-size: 0.95rem; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;}
+  .benchmark-btn:active { background: rgba(255,0,0,0.2); }
+
+  .device-info-row{display:flex;justify-content:center;align-items:center;gap:0.8rem;margin-top:1.5rem;font-size:.9rem;color:#fff;font-weight:600}
   .device-info-row .hex{width:32px;height:36px;background:#fff;color:#000;clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);display:flex;justify-content:center;align-items:center;font-size:1.2rem}
   .device-info-row .os-text{display:flex;flex-direction:column;align-items:center;line-height:1.1}
   .device-info-row .os-text span:first-child{font-size:.75rem;color:var(--text-sub);margin-bottom:2px;font-weight:bold}
@@ -230,6 +264,16 @@
   .info-row:last-child{border-bottom:none}
   .info-label{color:var(--text-sub);font-weight:500}
   .info-val{color:#fff;font-weight:600;text-align:right;word-break:break-all;max-width:60%}
+  
+  .storage-box { background: rgba(0,0,0,0.4); border-radius: 12px; padding: 1rem; margin-bottom: 1rem; border: 1px solid #333; }
+  .storage-text { font-size: 0.8rem; color: var(--text-sub); margin-bottom: 0.5rem; display: flex; justify-content: space-between;}
+  .storage-bar { width: 100%; height: 6px; background: #222; border-radius: 10px; overflow: hidden; margin-bottom: 0.8rem; }
+  .storage-fill { height: 100%; background: var(--red-primary); border-radius: 10px; transition: width 0.3s;}
+  
+  .action-row { display: flex; gap: 10px; margin-bottom: 1.5rem;}
+  .action-btn { flex: 1; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid #444; border-radius: 12px; color: #fff; font-size: 0.9rem; cursor: pointer; transition: 0.2s;}
+  .action-btn:active { background: rgba(255,255,255,0.1); }
+
   .logout-btn{width:100%;padding:1rem;background:transparent;border:1.5px solid var(--red-primary);border-radius:16px;color:var(--red-primary);font-size:1rem;font-weight:bold;cursor:pointer;transition:.2s;display:flex;justify-content:center;align-items:center;gap:.5rem}
   .logout-btn:active{background:rgba(225,29,72,0.2)}
 
@@ -237,10 +281,15 @@
   .modal-overlay{position:absolute;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:999;padding:1.5rem;backdrop-filter:blur(8px)}
   .modal-overlay.show{display:flex}
   .modal-box{background:linear-gradient(160deg, var(--bg-red), var(--bg-dark));border:1px solid var(--border-red);border-radius:20px;padding:1.5rem;width:100%;max-width:320px;text-align:center; box-shadow: 0 20px 50px rgba(0,0,0,0.8);}
-  .modal-box h3{font-size:1.2rem;margin-bottom:1.2rem;color:#fff}
-  .game-options{display:flex;flex-direction:column;gap:.8rem;margin-bottom:1.5rem}
-  .game-opt-btn{padding:1rem;background:rgba(0,0,0,0.4);border:1.5px solid #444;border-radius:12px;color:#ddd;font-size:1rem;font-weight:bold;cursor:pointer;transition:.2s}
+  .modal-box h3{font-size:1.2rem;margin-bottom:1rem;color:#fff}
+  .game-input { width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.5); border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 0.95rem; margin-bottom: 1rem; outline: none;}
+  .game-input:focus { border-color: var(--red-primary); }
+  
+  .game-options{display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.5rem}
+  .game-opt-btn{padding:0.9rem;background:rgba(0,0,0,0.4);border:1.5px solid #444;border-radius:12px;color:#ddd;font-size:0.95rem;font-weight:bold;cursor:pointer;transition:.2s; display: flex; justify-content: space-between; align-items: center;}
   .game-opt-btn:active{background:var(--red-primary);transform:scale(.97);border-color:var(--red-primary)}
+  .game-opt-btn span.tag { font-size: 0.7rem; background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;}
+  
   .modal-cancel{width:100%;padding:.8rem;background:transparent;border:none;color:var(--text-sub);font-size:.9rem;cursor:pointer}
   .modal-danger{width:100%;padding:.8rem;background:var(--red-primary);border:none;border-radius:12px;color:#fff;font-size:.9rem;font-weight:bold;cursor:pointer}
 
@@ -267,7 +316,6 @@
         <div class="dashed-ring"></div>
         <div class="glow-ring"></div>
         
-        <!-- Vòng tiến trình SVG -->
         <svg class="circle-progress" viewBox="0 0 160 160">
           <circle class="bg" cx="80" cy="80" r="78"></circle>
           <circle class="progress" id="circle-progress-bar" cx="80" cy="80" r="78"></circle>
@@ -321,7 +369,17 @@
   <!-- GIAO DIỆN CHÍNH -->
   <div id="screen-main" class="screen main-app">
     
+    <!-- HUD OVERLAY -->
+    <div class="hud-overlay" id="hud-overlay">
+      <div class="hud-row"><span>FPS:</span> <span class="hud-val" id="hud-fps">--</span></div>
+      <div class="hud-row"><span>RAM:</span> <span class="hud-val" id="hud-ram">--</span></div>
+      <div class="hud-row"><span>Ping:</span> <span class="hud-val" id="hud-ping">--</span></div>
+    </div>
+
     <div class="app-header">
+      <div class="audio-visualizer" id="visualizer">
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      </div>
       <div class="music-btn" id="music-btn">🎵</div>
       <h1>FIRED SUPPORT</h1>
       <span>PREMIUM SYSTEM</span>
@@ -343,13 +401,12 @@
 
         <div style="text-align:center;margin-bottom:1rem;font-weight:bold;font-size:1.1rem;letter-spacing:1px">ĐIỂM NGẮM (HH)</div>
         
-        <!-- Nhân vật Silhouette -->
         <div class="character-stage">
           <div class="char-3d">
             <svg class="char-svg" viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <filter id="shadow">
-                  <feDropShadow dx="12" dy="5" stdDeviation="2" flood-color="#3a0000" flood-opacity="1"/>
+                  <feDropShadow dx="12" dy="5" stdDeviation="2" flood-color="#4a0000" flood-opacity="1"/>
                 </filter>
               </defs>
               <g filter="url(#shadow)">
@@ -392,9 +449,12 @@
         <div class="ia-container">
           <div class="ia-star-icon">✦</div>
           
-          <div class="ia-select-file-btn" id="ia-select-btn">
-            <span>Chọn tệp từ thiết bị</span>
-            <span class="send-icon">➢</span>
+          <div class="ia-controls">
+            <div class="ia-select-file-btn" id="ia-select-btn">
+              <span>Chọn tệp từ thiết bị</span>
+              <span class="send-icon">➢</span>
+            </div>
+            <div class="btn-clear-log" id="ia-clear-btn">🗑️</div>
           </div>
           <input type="file" id="ia-file" style="display:none">
           
@@ -403,10 +463,12 @@
             <div class="file-details" id="ia-file-details"></div>
           </div>
           
+          <div class="terminal-box" id="terminal-box">
+            <div class="term-header">SECURE ENGINE V3.0</div>
+          </div>
+          
           <button class="ia-action-btn btn-run" id="ia-run-btn">▶ Chạy File</button>
           <button class="ia-action-btn btn-game" id="ia-game-btn">🎮 Vào Game</button>
-          
-          <div class="ia-status" id="ia-status"></div>
         </div>
       </div>
 
@@ -430,6 +492,9 @@
         </div>
 
         <div class="tool-list" id="tool-list"></div>
+        
+        <button class="benchmark-btn" id="benchmark-btn">⚡ Đo Hiệu Năng Máy (Benchmark)</button>
+        <button class="benchmark-btn" id="toggle-hud-btn" style="margin-bottom: 2rem;">📊 Bật/Tắt HUD Overlay</button>
 
         <div class="device-info-row">
           <div class="os-text">
@@ -447,7 +512,7 @@
       <div id="tab-info" class="tab-pane">
         <div class="panel-title">
           <h1>Thông Tin Thiết Bị</h1>
-          <p>Quản lý phiên đăng nhập và tệp tin.</p>
+          <p>Quản lý phiên đăng nhập và bảo mật.</p>
         </div>
 
         <div class="info-card">
@@ -477,7 +542,22 @@
           </div>
           <div class="info-row">
             <span class="info-label">Phiên bản ứng dụng</span>
-            <span class="info-val">v2.3.0 (Premium)</span>
+            <span class="info-val">v2.5.0 (Ultimate)</span>
+          </div>
+        </div>
+
+        <div class="storage-box">
+          <div class="storage-text">
+            <span>Dung lượng App (Local Storage)</span>
+            <span id="storage-size-text">0 KB</span>
+          </div>
+          <div class="storage-bar">
+            <div class="storage-fill" id="storage-fill-bar" style="width: 0%;"></div>
+          </div>
+          <div class="action-row">
+            <button class="action-btn" id="clear-cache-btn">🗑️ Xóa Cache</button>
+            <button class="action-btn" id="encrypt-key-btn">🔒 Mã hóa Key</button>
+            <button class="action-btn" id="stealth-mode-btn">🕵️ Ẩn Danh</button>
           </div>
         </div>
 
@@ -500,10 +580,18 @@
   <!-- MODAL CHỌN GAME -->
   <div class="modal-overlay" id="game-modal">
     <div class="modal-box">
-      <h3>Chọn Game Để Vào</h3>
+      <h3>Khởi Chạy Game</h3>
+      <input type="text" class="game-input" id="game-ign" placeholder="Nhập tên nhân vật (IGN)...">
       <div class="game-options">
-        <button class="game-opt-btn" data-game="FF Thường">Game FF Thường</button>
-        <button class="game-opt-btn" data-game="FF MAX">Game FF MAX</button>
+        <button class="game-opt-btn" data-game="freefire://" data-name="FF Thường">
+          <span>Free Fire Thường</span> <span class="tag">Nhẹ</span>
+        </button>
+        <button class="game-opt-btn" data-game="freefiremax://" data-name="FF MAX">
+          <span>Free Fire MAX</span> <span class="tag">Cao Cấp</span>
+        </button>
+        <button class="game-opt-btn" data-game="freefiremaxpro://" data-name="FF MAX Pro">
+          <span>Free Fire MAX Pro</span> <span class="tag">Siêu Mượt</span>
+        </button>
       </div>
       <button class="modal-cancel" id="modal-cancel-btn">Hủy bỏ</button>
     </div>
@@ -553,7 +641,7 @@
   Store.set('keys', validKeys);
 
   let keyUsage = Store.get('keyUsage', {});
-  let settings = Store.get('settings', { activatedKey: null, configs: {}, fps: 120, tools: {} });
+  let settings = Store.get('settings', { activatedKey: null, configs: {}, fps: 120, tools: {}, aimPart: null, stealth: false });
 
   // ============ DOM ============
   const $ = id => document.getElementById(id);
@@ -572,19 +660,27 @@
   
   const bgMusic = $('bg-music');
   const musicBtn = $('music-btn');
+  const visualizer = $('visualizer');
 
   // I.A DOM
   const iaSelectBtn = $('ia-select-btn');
+  const iaClearBtn = $('ia-clear-btn');
   const iaFile = $('ia-file');
   const iaFileInfo = $('ia-file-info');
   const iaFileDetails = $('ia-file-details');
   const iaRunBtn = $('ia-run-btn');
   const iaGameBtn = $('ia-game-btn');
-  const iaStatus = $('ia-status');
   const gameModal = $('game-modal');
   const logoutModal = $('logout-modal');
+  const terminalBox = $('terminal-box');
+  
+  const benchmarkBtn = $('benchmark-btn');
+  const toggleHudBtn = $('toggle-hud-btn');
+  const hudOverlay = $('hud-overlay');
+  const storageSizeText = $('storage-size-text');
+  const storageFillBar = $('storage-fill-bar');
 
-  // ============ ÂM THANH (BEEP & GIỌNG NÓI) ============
+  // ============ ÂM THANH & GIỌNG NÓI ============
   let audioCtx;
   function playBeep() {
     try {
@@ -630,10 +726,40 @@
   }
   function vibrate(p){ if(navigator.vibrate) try{ navigator.vibrate(p||20); }catch(e){} }
 
+  // ============ TERMINAL LOGGER ============
+  function typeLog(message, type = 'white', delay = 0) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        const time = new Date().toLocaleTimeString('vi-VN', { hour12: false });
+        const line = document.createElement('div');
+        line.className = 'term-line';
+        line.innerHTML = `<span class="term-time">[${time}]</span> <span class="term-text ${type}">${message}</span>`;
+        terminalBox.appendChild(line);
+        terminalBox.scrollTop = terminalBox.scrollHeight;
+        resolve();
+      }, delay);
+    });
+  }
+
+  async function runIALogLoading() {
+    terminalBox.innerHTML = '<div class="term-header">SECURE ENGINE V3.0</div>';
+    await typeLog('Đang khởi tạo kết nối...', 'white', 200);
+    await typeLog('Đăng nhập: [USER]', 'green', 400);
+    await typeLog('Thiết bị: ' + getDeviceId(), 'blue', 500);
+    const ip = await getIP();
+    await typeLog('IP: ' + ip, 'blue', 500);
+    await typeLog('Hệ thống sẵn sàng!', 'white', 300);
+  }
+
   // ============ HÀM TẠO MÃ JSON ============
   function generateFeatureCode(featureId) {
     const code = Math.floor(Math.random()*16777215).toString(16).toUpperCase().padStart(6, '0');
     const payload = { module: featureId, hash: "#" + code, status: "active", inject_type: "memory" };
+    return JSON.stringify(payload);
+  }
+  
+  function generateAimCode(part) {
+    const payload = { module: "aim_lock", target: part, priority: "high", fov: 30 };
     return JSON.stringify(payload);
   }
 
@@ -651,6 +777,7 @@
 
   // ============ LẤY IP THẬT ============
   async function getIP(){
+    if (settings.stealth) return '***.***.***.***';
     try{
       const r = await fetch('https://api.ipify.org?format=json');
       const d = await r.json();
@@ -661,22 +788,16 @@
   // ============ HÀM CHECK THỜI HẠN KEY (3 NGÀY) ============
   function getKeyTimeLeft(key) {
     if (!keyUsage[key] || !keyUsage[key].usedAt) return "Không xác định";
-    
     const THREE_DAYS = 3 * 24 * 60 * 60 * 1000;
     const now = Date.now();
-    const startTime = keyUsage[key].usedAt;
-    const expireTime = startTime + THREE_DAYS;
-    
-    if (now >= expireTime) {
-      return "Đã hết hạn (0s)";
-    }
+    const expireTime = keyUsage[key].usedAt + THREE_DAYS;
+    if (now >= expireTime) return "Đã hết hạn (0s)";
     
     const diff = expireTime - now;
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
     const mins = Math.floor((diff / 1000 / 60) % 60);
     const secs = Math.floor((diff / 1000) % 60);
-    
     return `${days} ngày ${hours}h ${mins}m ${secs}s`;
   }
 
@@ -684,42 +805,35 @@
   let expiryTimer;
   function checkExpiry() {
     if (!settings.activatedKey) return;
-    
     const usage = keyUsage[settings.activatedKey];
     if (!usage) return;
 
     const THREE_DAYS = 3 * 24 * 60 * 60 * 1000;
-    const now = Date.now();
-    const expireTime = usage.usedAt + THREE_DAYS;
-    
-    if (now >= expireTime) {
+    if (Date.now() >= usage.usedAt + THREE_DAYS) {
       Store.set('expiredKeys', (Store.get('expiredKeys', [])).concat([settings.activatedKey]));
       settings.activatedKey = null;
       Store.set('settings', settings);
       
       bgMusic.pause();
       musicBtn.classList.remove('playing');
-      
+      visualizer.classList.remove('active');
       mainScreen.classList.remove('active');
       keyScreen.classList.add('active');
       
       keyMsg.textContent = '⚠️ Key của bạn đã hết hạn (3 ngày). Vui lòng nhập key mới!';
       keyMsg.className = 'key-msg error';
-      
       speak("Key của bạn đã hết hạn sử dụng. Vui lòng nhập key mới.");
       vibrate([100, 50, 100, 50, 100]);
       clearInterval(expiryTimer);
     } else {
       const timeLeftEl = $('info-timeleft');
-      if (timeLeftEl) {
-        timeLeftEl.textContent = getKeyTimeLeft(settings.activatedKey);
-      }
+      if (timeLeftEl) timeLeftEl.textContent = getKeyTimeLeft(settings.activatedKey);
     }
   }
 
   // ============ CẬP NHẬT TAB THÔNG TIN ============
   async function updateInfoTab() {
-    $('info-dev-id').textContent = getDeviceId();
+    $('info-dev-id').textContent = settings.stealth ? '***-****-****' : getDeviceId();
     const ip = await getIP();
     $('info-ip').textContent = ip;
     
@@ -740,6 +854,12 @@
       $('info-file-status').textContent = 'Chưa chạy';
       $('info-file-status').style.color = 'var(--text-sub)';
     }
+    
+    let total = 0;
+    try { Object.keys(localStorage).forEach(k => { if(k.startsWith('fired_')) total += (localStorage.getItem(k)||'').length + k.length; }); } catch(e){}
+    const totalKB = (total / 1024).toFixed(2);
+    storageSizeText.textContent = totalKB + ' KB';
+    storageFillBar.style.width = Math.min((total / 1024) / 5 * 100, 100) + '%';
   }
 
   // ============ MÀN HÌNH CHỜ ============
@@ -886,11 +1006,17 @@
 
   // ============ KHỞI TẠO GIAO DIỆN CHÍNH ============
   function initMain(){
+    bgMusic.volume = 0.5;
+    bgMusic.play().then(() => {
+      musicBtn.classList.add('playing');
+      visualizer.classList.add('active');
+    }).catch(e => console.log('Lỗi tự động phát nhạc: ' + e.message));
+
     renderConfigs();
     renderFPS();
     renderTools();
     updateDeviceInfo();
-    highlightPart(null);
+    highlightPart(settings.aimPart);
     resetIA();
     updateInfoTab();
     
@@ -904,11 +1030,13 @@
     if (bgMusic.paused) {
       bgMusic.play().then(() => {
         musicBtn.classList.add('playing');
+        visualizer.classList.add('active');
         toast('🎵 Đang phát nhạc nền');
       }).catch(e => toast('Lỗi phát nhạc: ' + e.message));
     } else {
       bgMusic.pause();
       musicBtn.classList.remove('playing');
+      visualizer.classList.remove('active');
       toast('⏸ Đã tạm dừng nhạc');
     }
   });
@@ -927,7 +1055,9 @@
       tabPanes.forEach(p => p.classList.remove('active'));
       $('tab-' + target).classList.add('active');
       vibrate(15);
+      
       if(target === 'info') updateInfoTab();
+      if(target === 'ia') runIALogLoading();
     });
   });
 
@@ -958,9 +1088,15 @@
   partBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       playBeep();
-      highlightPart(btn.dataset.part);
+      const part = btn.dataset.part;
+      settings.aimPart = part;
+      settings.aimCode = generateAimCode(part);
+      Store.set('settings', settings);
+      highlightPart(part);
+      
       const partName = btn.innerText;
       speak("Đã ghim mục tiêu vào " + partName);
+      addLog(`Aim Target: ${partName} (Code: ${settings.aimCode})`, 'red');
     });
   });
 
@@ -1012,9 +1148,11 @@
         if(now) {
            toast(`✅ Đã nạp mã JSON vào Game: ${item.name}`);
            speak("Đã bật " + item.name);
+           addLog(`Module Loaded: ${item.name}`, 'green');
         } else {
            toast(`⛔ Đã gỡ bỏ mã JSON: ${item.name}`);
            speak("Đã tắt " + item.name);
+           addLog(`Module Unloaded: ${item.name}`, 'red');
         }
       });
       list.appendChild(el);
@@ -1033,13 +1171,18 @@
     iaRunBtn.classList.add('btn-run');
     iaRunBtn.textContent = '▶ Chạy File';
     iaGameBtn.classList.remove('show');
-    iaStatus.className = 'ia-status';
-    iaStatus.textContent = '';
     currentFile = null;
     isFileRunning = false;
     fileContent = null;
     updateInfoTab();
   }
+
+  iaClearBtn.addEventListener('click', () => {
+    playBeep();
+    terminalBox.innerHTML = '<div class="term-header">SECURE ENGINE V3.0</div>';
+    addLog('Đã xóa nhật ký.', 'white');
+    vibrate(15);
+  });
 
   iaSelectBtn.addEventListener('click', () => {
     playBeep();
@@ -1054,10 +1197,9 @@
       
       iaRunBtn.classList.add('show');
       iaGameBtn.classList.remove('show');
-      iaStatus.className = 'ia-status';
-      iaStatus.textContent = '';
       vibrate(30);
       speak("Đã chọn tệp " + currentFile.name);
+      addLog(`Đã chọn tệp: ${currentFile.name}`, 'white');
       updateInfoTab();
 
       const reader = new FileReader();
@@ -1072,7 +1214,7 @@
     }
   });
 
-  iaRunBtn.addEventListener('click', () => {
+  iaRunBtn.addEventListener('click', async () => {
     playBeep();
     if(!currentFile) return;
 
@@ -1082,25 +1224,18 @@
       iaRunBtn.classList.remove('btn-run');
       iaRunBtn.classList.add('btn-stop');
       
-      iaStatus.className = 'ia-status show';
-      iaStatus.style.color = 'var(--red-light)';
-      iaStatus.textContent = '⏳ Đang nạp dữ liệu tệp vào bộ nhớ...';
-      
       vibrate(50);
       speak("Đang nạp tệp");
-
-      setTimeout(() => {
-        try {
-          iaStatus.textContent = `✅ Tệp đã sẵn sàng để nạp vào Game!`;
-          iaGameBtn.classList.add('show');
-          vibrate(80);
-          speak("Tệp đã sẵn sàng");
-        } catch(err) {
-          iaStatus.className = 'ia-status error show';
-          iaStatus.textContent = '❌ Lỗi mã: ' + err.message;
-        }
-        updateInfoTab();
-      }, 1000);
+      
+      terminalBox.innerHTML = '<div class="term-header">SECURE ENGINE V3.0</div>';
+      await typeLog('Đang nạp tệp vào bộ nhớ...', 'white', 100);
+      await typeLog(`Kích thước: ${(currentFile.size/1024).toFixed(1)} KB`, 'white', 300);
+      await typeLog(`Nạp tệp thành công!`, 'green', 500);
+      
+      iaGameBtn.classList.add('show');
+      vibrate(80);
+      speak("Tệp đã sẵn sàng");
+      updateInfoTab();
 
     } else {
       isFileRunning = false;
@@ -1108,12 +1243,13 @@
       iaRunBtn.classList.remove('btn-stop');
       iaRunBtn.classList.add('btn-run');
       
-      iaStatus.className = 'ia-status show';
-      iaStatus.style.color = '#ff4444';
-      iaStatus.textContent = '⛔ Đã dừng chạy tệp.';
       iaGameBtn.classList.remove('show');
       vibrate(30);
       speak("Đã dừng tệp");
+      
+      terminalBox.innerHTML = '<div class="term-header">SECURE ENGINE V3.0</div>';
+      await typeLog('Đã dừng nạp tệp.', 'red', 100);
+      
       updateInfoTab();
     }
   });
@@ -1131,9 +1267,12 @@
   });
 
   document.querySelectorAll('.game-opt-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       playBeep();
-      const gameName = btn.dataset.game;
+      const protocol = btn.dataset.game;
+      const gameName = btn.dataset.name;
+      const ign = $('game-ign').value.trim() || 'Người chơi ẩn danh';
+      
       gameModal.classList.remove('show');
       
       const activeConfigs = Object.keys(settings.configs).filter(k => settings.configs[k] === true);
@@ -1141,30 +1280,27 @@
       const fpsSelected = settings.fps;
       const activeTools = Object.keys(settings.tools).filter(k => settings.tools[k] === true);
       
-      iaStatus.className = 'ia-status show';
-      iaStatus.style.color = '#eab308';
-      iaStatus.innerHTML = `⏳ Đang nạp Tệp, ${activeConfigs.length} mã JSON và cấu hình <b>${fpsSelected} FPS</b> vào ${gameName}...`;
       vibrate([30, 50, 30]);
-      speak("Đang nạp tệp và cấu hình vào " + gameName);
-
-      console.log(`[Game Injector] Chuẩn bị mở ${gameName}`);
-      console.log(`[Game Injector] Mã JSON Configs:`, codesArray);
-      console.log(`[Game Injector] Cấu hình FPS:`, fpsSelected);
-      console.log(`[Game Injector] Tools:`, activeTools);
-
-      setTimeout(() => {
-        iaStatus.style.color = '#4ade80';
-        iaStatus.innerHTML = `🚀 <b>${gameName}</b> đã khởi chạy!<br><span style="font-size:0.8rem;color:#aaa">Đã nạp tệp ${currentFile.name}, ${activeConfigs.length} mã JSON và ép xung ${fpsSelected} FPS.</span>`;
-        toast(`🎮 Đã vào ${gameName} thành công!`);
-        speak("Đã vào game thành công. Chúc bạn chơi vui vẻ");
-        
-        try {
-          const protocol = gameName.includes('MAX') ? 'freefiremax://' : 'freefire://';
-          window.location.href = protocol;
-        } catch(e) {}
-        
-        vibrate(100);
-      }, 2500);
+      speak(`Đang nạp tệp và cấu hình vào ${gameName}`);
+      
+      terminalBox.innerHTML = '<div class="term-header">SECURE ENGINE V3.0</div>';
+      await typeLog(`Đang chuẩn bị vào ${gameName}...`, 'white', 100);
+      await typeLog(`- Tên Game: ${ign}`, 'white', 300);
+      await typeLog(`- Tệp: ${currentFile.name}`, 'white', 300);
+      await typeLog(`- Mods: ${activeConfigs.length} (JSON)`, 'white', 300);
+      await typeLog(`- FPS: ${fpsSelected}`, 'white', 300);
+      await typeLog(`- Aim: ${settings.aimPart || 'Mặc định'}`, 'white', 300);
+      
+      await typeLog(`🚀 Đã nạp thành công vào ${gameName}!`, 'green', 1000);
+      
+      toast(`🎮 Đã vào ${gameName} thành công!`);
+      speak("Đã vào game thành công. Chúc bạn chơi vui vẻ");
+      
+      try {
+        window.location.href = protocol;
+      } catch(e) {}
+      
+      vibrate(100);
     });
   });
 
@@ -1223,12 +1359,88 @@
            if (t.id === 'optimize-ram') { let arr = new Array(10000).fill(1); arr = null; }
            if (window.performance && window.performance.memory) {
              const mem = (window.performance.memory.usedJSHeapSize / 1048576).toFixed(1);
-             toast(`Đã tối ưu! RAM hiện tại: ${mem} MB`);
+             addLog(`RAM hiện tại: ${mem} MB`, 'blue');
            }
         }
       });
       list.appendChild(el);
     });
+  }
+
+  // BENCHMARK THẬT
+  benchmarkBtn.addEventListener('click', () => {
+    playBeep();
+    toast('⏳ Đang đo hiệu năng...');
+    
+    setTimeout(() => {
+      const t0 = performance.now();
+      let ops = 0;
+      for (let i = 0; i < 100000; i++) { ops += Math.sqrt(i); }
+      const t1 = performance.now();
+      const time = (t1 - t0).toFixed(2);
+      const score = Math.round(100000 / time * 10);
+      
+      let rating = score > 80000 ? 'Xuất sắc' : score > 40000 ? 'Tốt' : score > 20000 ? 'Trung bình' : 'Cần tối ưu';
+      
+      addLog(`--- KẾT QUẢ BENCHMARK ---`, 'yellow');
+      addLog(`Thời gian xử lý: ${time} ms`, 'white');
+      addLog(`Điểm hiệu năng: ${score.toLocaleString()}`, 'blue');
+      addLog(`Xếp hạng thiết bị: ${rating}`, score > 40000 ? 'green' : 'red');
+      
+      toast(`⚡ Điểm hiệu năng: ${score.toLocaleString()}`);
+      speak(`Điểm hiệu năng của bạn là ${score}`);
+      vibrate(50);
+    }, 100);
+  });
+
+  // HUD TOGGLE
+  let isHudOn = false;
+  let hudInterval;
+  toggleHudBtn.addEventListener('click', () => {
+    playBeep();
+    isHudOn = !isHudOn;
+    if(isHudOn) {
+      hudOverlay.classList.add('active');
+      startHUD();
+    } else {
+      hudOverlay.classList.remove('active');
+      clearInterval(hudInterval);
+    }
+  });
+
+  function startHUD() {
+    let lastTime = performance.now();
+    let frames = 0;
+    
+    function updateHud() {
+      const now = performance.now();
+      frames++;
+      if (now - lastTime >= 1000) {
+        const fps = Math.round((frames * 1000) / (now - lastTime));
+        $('hud-fps').textContent = fps;
+        
+        if (window.performance && window.performance.memory) {
+          const mem = (window.performance.memory.usedJSHeapSize / 1048576).toFixed(0);
+          $('hud-ram').textContent = mem + 'MB';
+        } else {
+          $('hud-ram').textContent = 'N/A';
+        }
+        
+        frames = 0;
+        lastTime = now;
+      }
+      if(isHudOn) requestAnimationFrame(updateHud);
+    }
+    requestAnimationFrame(updateHud);
+    
+    // Ping
+    hudInterval = setInterval(async () => {
+      const t = performance.now();
+      try {
+        await fetch('https://1.1.1.1', { mode: 'no-cors' });
+        $('hud-ping').textContent = Math.round(performance.now() - t) + 'ms';
+      } catch(e) { $('hud-ping').textContent = 'Lỗi'; }
+    }, 3000);
   }
 
   // ============ LẤY THÔNG TIN THẬT 100% ============
@@ -1237,16 +1449,8 @@
     let ver = '...';
     const ua = navigator.userAgent;
     
-    if(/android/i.test(ua)){ 
-      os = 'Android'; 
-      const m = ua.match(/Android\s([\d.]+)/); 
-      ver = m?m[1]:'--'; 
-    }
-    else if(/iPhone|iPad|iPod/i.test(ua)){ 
-      os = 'iOS'; 
-      const m = ua.match(/OS\s([\d_]+)/); 
-      ver = m?m[1].replace(/_/g,'.'):'--'; 
-    }
+    if(/android/i.test(ua)){ os = 'Android'; const m = ua.match(/Android\s([\d.]+)/); ver = m?m[1]:'--'; }
+    else if(/iPhone|iPad|iPod/i.test(ua)){ os = 'iOS'; const m = ua.match(/OS\s([\d_]+)/); ver = m?m[1].replace(/_/g,'.'):'--'; }
     else if(/Windows/i.test(ua)){ os = 'Windows'; ver = '10/11'; }
     else if(/Mac/i.test(ua)){ os = 'macOS'; ver = '--'; }
     else if(/Linux/i.test(ua)){ os = 'Linux'; ver = '--'; }
@@ -1261,15 +1465,55 @@
         b.onlevelchange = () => {
           $('info-battery').textContent = Math.round(b.level * 100) + '%';
         };
-      }).catch(() => {
-        $('info-battery').textContent = 'Bị chặn';
-      });
+      }).catch(() => { $('info-battery').textContent = 'Bị chặn'; });
     } else {
       $('info-battery').textContent = 'Không hỗ trợ';
     }
   }
 
-  // ============ TAB 5: ĐĂNG XUẤT THẬT ============
+  // ============ TAB 5: ĐĂNG XUẤT & XÓA CACHE ============
+  $('clear-cache-btn').addEventListener('click', () => {
+    playBeep();
+    try {
+      Object.keys(localStorage).forEach(key => {
+        if(key.includes('_logs') || key.includes('_cache')) {
+           localStorage.removeItem(key);
+        }
+      });
+      toast('🗑️ Đã dọn dẹp bộ nhớ tạm!');
+      speak("Đã dọn dẹp bộ nhớ tạm");
+      updateInfoTab();
+      vibrate(30);
+    } catch(e) {}
+  });
+
+  $('encrypt-key-btn').addEventListener('click', () => {
+    playBeep();
+    if(settings.activatedKey) {
+      let hash = 0;
+      for(let i=0; i<settings.activatedKey.length; i++) {
+        hash = ((hash<<5)-hash) + settings.activatedKey.charCodeAt(i);
+        hash |= 0;
+      }
+      const encrypted = 'ENC-' + Math.abs(hash).toString(16).toUpperCase();
+      $('info-key').textContent = encrypted;
+      $('info-key').style.color = '#4ade80';
+      toast('🔒 Đã mã hóa Key thành công!');
+      speak("Đã mã hóa Key");
+      vibrate(40);
+    }
+  });
+
+  $('stealth-mode-btn').addEventListener('click', () => {
+    playBeep();
+    settings.stealth = !settings.stealth;
+    Store.set('settings', settings);
+    updateInfoTab();
+    toast(settings.stealth ? '🕵️ Đã bật Ẩn Danh' : '👁️ Đã tắt Ẩn Danh');
+    speak(settings.stealth ? "Đã bật chế độ ẩn danh" : "Đã tắt chế độ ẩn danh");
+    vibrate(30);
+  });
+
   $('logout-btn').addEventListener('click', () => {
     playBeep();
     logoutModal.classList.add('show');
@@ -1290,9 +1534,7 @@
     speak("Đã đăng xuất và xóa toàn bộ dữ liệu");
     toast('Đã đăng xuất và xóa toàn bộ dữ liệu');
     
-    setTimeout(() => {
-      location.reload();
-    }, 1500);
+    setTimeout(() => { location.reload(); }, 1500);
   });
 
   // Khởi chạy
