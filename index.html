@@ -1,1670 +1,1034 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>FIRED SUPPORT </title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<title>TITAN APP</title>
+
 <style>
-  *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
-  
-  /* BẢNG MÀU ĐỎ ĐÔ (DARK RED) */
-  :root {
-    --bg-dark: #0a0000;
-    --bg-red: #2a0000;
-    --bg-card: rgba(60, 0, 0, 0.5);
-    --border-red: rgba(255, 0, 0, 0.2);
-    
-    --red-primary: #e11d48;
-    --red-light: #ff4d4d;
-    --red-dark: #9f1239;
-    --red-glow: rgba(225, 29, 72, 0.6);
-    
-    --text-main: #ffffff;
-    --text-sub: #fca5a5;
-    
-    --term-green: #4ade80;
-    --term-blue: #60a5fa;
-    --term-yellow: #fbbf24;
-    --term-bg: #050505;
-  }
+:root{
+  --bg:#0b1a22; --bg2:#0f2630;
+  --titan-blue:#1e90ff; --titan-glow:#00e5ff;
+  --txt:#e6f7ff; --muted:#7fa8b5;
+  --danger:#ff4757; --ok:#2ed573;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,sans-serif;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;overflow:hidden;}
+body{background:radial-gradient(circle at top,#0e3b4a 0%,#071016 80%);color:var(--txt);}
 
-  body{background:#000;display:flex;align-items:center;justify-content:center;min-height:100vh;overflow:hidden;color:var(--text-main)}
+/* ================= SCREENS ================= */
+.screen{
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100vw; height:100vh;
+  padding:20px;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  z-index:1;
+}
+.screen.active{
+  display:flex;
+  flex-direction:column;
+  z-index:10;
+  animation:fadeIn .4s ease;
+}
+@keyframes fadeIn{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}
 
-  #app{
-    width:100%;max-width:430px;height:100dvh;max-height:900px;
-    background: radial-gradient(circle at 50% 20%, var(--bg-red), var(--bg-dark));
-    position:relative;overflow:hidden;display:flex;flex-direction:column;
-    box-shadow: 0 0 50px rgba(0,0,0,0.9);
-  }
+/* ================= SPLASH ================= */
+#splash{justify-content:center;align-items:center;text-align:center;gap:24px;}
+.splash-logo{
+  font-size:64px;font-weight:900;letter-spacing:8px;
+  background:linear-gradient(90deg,#1e90ff,#00e5ff,#1e90ff);
+  background-size:200% auto;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 30px #00e5ff99);
+  animation:shine 3s linear infinite;
+}
+@keyframes shine{to{background-position:200% center;}}
+.splash-name{font-size:22px;font-weight:700;letter-spacing:4px;color:var(--titan-glow);margin-top:-10px;}
+.splash-sub{color:var(--muted);font-size:13px;letter-spacing:2px;}
+.splash-progress{width:85%;max-width:420px;margin-top:30px;}
+.splash-progress input[type=range]{
+  width:100%;height:10px;border-radius:10px;
+  appearance:none;-webkit-appearance:none;
+  background:linear-gradient(90deg,#1e90ff,#00e5ff);outline:none;
+  box-shadow:0 0 20px #00e5ff55;
+}
+.splash-progress input[type=range]::-webkit-slider-thumb{
+  appearance:none;-webkit-appearance:none;
+  width:26px;height:26px;border-radius:50%;
+  background:#fff;box-shadow:0 0 16px #00e5ff;
+  cursor:pointer;border:3px solid #00e5ff;
+}
+.splash-percent{margin-top:12px;font-size:28px;font-weight:900;color:var(--titan-glow);text-shadow:0 0 20px #00e5ff;}
+.splash-status{margin-top:8px;color:var(--muted);font-size:14px;min-height:20px;}
 
-  /* ============ HUD OVERLAY ============ */
-  .hud-overlay {
-    position: absolute; top: 60px; left: 10px; z-index: 999;
-    background: rgba(0,0,0,0.85); border: 1px solid var(--red-primary);
-    border-radius: 8px; padding: 8px 12px; font-family: monospace; font-size: 0.7rem;
-    display: none; flex-direction: column; gap: 4px; backdrop-filter: blur(4px); box-shadow: 0 0 10px var(--red-glow);
-  }
-  .hud-overlay.active { display: flex; animation: fadeIn 0.3s;}
-  .hud-row { display: flex; justify-content: space-between; width: 110px; }
-  .hud-val { color: var(--term-green); font-weight: bold; }
+/* ================= KEY ================= */
+#keyScreen{justify-content:center;align-items:center;text-align:center;gap:18px;}
+.key-logo{
+  font-size:40px;font-weight:900;letter-spacing:6px;
+  background:linear-gradient(90deg,#1e90ff,#00e5ff);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 20px #00e5ff88);
+}
+.key-title{font-size:18px;color:var(--txt);font-weight:600;margin-top:8px;}
+#keyInput{
+  width:85%;max-width:380px;padding:16px;border-radius:14px;
+  border:2px solid #1e90ff55;background:#0e2630;color:var(--txt);
+  font-size:18px;text-align:center;letter-spacing:4px;
+  text-transform:uppercase;outline:none;font-weight:700;transition:.3s;
+}
+#keyInput:focus{border-color:#00e5ff;box-shadow:0 0 20px #00e5ff77;}
+#keyBtn{
+  width:85%;max-width:380px;padding:16px;border:none;border-radius:14px;
+  background:linear-gradient(135deg,#1e90ff,#00e5ff);color:#001820;
+  font-size:16px;font-weight:900;letter-spacing:2px;cursor:pointer;
+  box-shadow:0 0 22px #00e5ff66;transition:.2s;
+}
+#keyBtn:active{transform:scale(.96);}
+#keyBtn:disabled{opacity:.6;cursor:not-allowed;}
+#keyMsg{min-height:22px;font-size:14px;color:var(--danger);font-weight:600;padding:0 10px;}
+#keyMsg.ok{color:var(--ok);}
+.key-hint{color:var(--muted);font-size:12px;margin-top:6px;}
 
-  /* ============ AUDIO VISUALIZER ============ */
-  .audio-visualizer { position: absolute; top: 20px; right: 65px; display: flex; gap: 3px; align-items: flex-end; height: 20px; z-index: 5; opacity: 0; transition: 0.3s; }
-  .audio-visualizer.active { opacity: 1; }
-  .bar { width: 3px; background: var(--red-primary); border-radius: 2px; animation: bounce 1s infinite alternate; }
-  .bar:nth-child(1) { height: 10px; animation-delay: 0.1s; }
-  .bar:nth-child(2) { height: 20px; animation-delay: 0.3s; }
-  .bar:nth-child(3) { height: 15px; animation-delay: 0.2s; }
-  .bar:nth-child(4) { height: 18px; animation-delay: 0.4s; }
-  @keyframes bounce { 0% { transform: scaleY(0.3); } 100% { transform: scaleY(1); } }
+/* ================= APP ================= */
+#appScreen{padding:0;display:none;}
+#appScreen.active{display:block;padding:0;}
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:linear-gradient(180deg,#0b1a22 0%,#0b1a22ee 100%);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 16px;border-bottom:1px solid #1e90ff33;
+}
+.app-name{
+  font-size:20px;font-weight:900;letter-spacing:2px;
+  background:linear-gradient(90deg,#1e90ff,#00e5ff);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.session{
+  font-size:11px;color:var(--titan-glow);background:#0e2630;
+  padding:6px 10px;border-radius:20px;border:1px solid #00e5ff44;font-weight:600;
+}
 
-  /* ============ MÀN HÌNH CHUNG ============ */
-  .screen{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:scale(.98);transition:opacity .4s ease,transform .4s ease;z-index:1;background:transparent}
-  .screen.active{opacity:1;pointer-events:auto;transform:scale(1);z-index:10}
+.tabs{
+  display:flex;gap:6px;padding:12px 16px;overflow-x:auto;
+  -webkit-overflow-scrolling:touch;background:#0b1a22;
+  position:sticky;top:57px;z-index:40;
+}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{
+  flex:0 0 auto;min-width:85px;padding:10px 14px;
+  background:#0e2630;color:var(--muted);
+  border:1px solid #1e90ff33;border-radius:10px;
+  font-size:13px;cursor:pointer;white-space:nowrap;transition:.2s;
+}
+.tab.active{
+  background:linear-gradient(135deg,#1e90ff,#00e5ff);
+  color:#001820;font-weight:bold;
+  box-shadow:0 0 14px #00e5ff66;border-color:#00e5ff;
+}
 
-  /* ============ MÀN HÌNH CHỜ ============ */
-  .loading-content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;gap:2rem; position: relative; z-index: 2;}
-  .top-left-icons { position: absolute; top: 20px; left: 20px; display: flex; gap: 10px; z-index: 5;}
-  .top-icon { width: 40px; height: 40px; background: rgba(30,0,0,0.8); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 1px solid rgba(255,0,0,0.2); }
-  
-  .loading-logo-wrapper { position: relative; width: 180px; height: 180px; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;}
-  .dashed-ring { position: absolute; width: 100%; height: 100%; border: 2px dashed rgba(255,255,255,0.15); border-radius: 50%; animation: spin 20s linear infinite;}
-  .glow-ring { position: absolute; width: 85%; height: 85%; border-radius: 50%; box-shadow: 0 0 40px var(--red-glow); border: 1px solid var(--red-light); opacity: 0.5;}
-  
-  .circle-progress { position: absolute; width: 100%; height: 100%; transform: rotate(-90deg); }
-  .circle-progress circle { fill: none; stroke-width: 3; }
-  .circle-progress .bg { stroke: transparent; }
-  .circle-progress .progress { stroke: var(--red-light); stroke-linecap: round; stroke-dasharray: 502; stroke-dashoffset: 502; transition: stroke-dashoffset 0.1s linear; filter: drop-shadow(0 0 8px var(--red-primary)); }
+.tab-pages{padding:16px;padding-top:0;padding-bottom:80px;}
+.tab-page{display:none;animation:fade .3s;}
+.tab-page.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-  .logo-box { width: 110px; height: 110px; background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(225,29,72,0.8)); backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.4); border-radius: 30px; display: flex; align-items: center; justify-content: center; z-index: 2; box-shadow: inset 0 0 20px rgba(255,255,255,0.3), 0 10px 30px var(--red-glow); }
-  .logo-box span { font-size: 4.5rem; font-weight: 900; color: #fff; text-shadow: 0 4px 15px rgba(0,0,0,0.8); font-family: 'Arial Black', sans-serif;}
+.card{
+  background:linear-gradient(145deg,#0e2630,#0b1a22);
+  border:1px solid #1e90ff33;border-radius:14px;
+  padding:14px;margin-bottom:12px;
+  box-shadow:0 4px 20px #00e5ff11;
+}
+.lbl{display:block;margin-bottom:8px;color:#bfe9ff;font-size:14px;font-weight:600;}
+.filename{margin-top:8px;color:var(--titan-glow);font-size:13px;word-break:break-all;}
+.logbox{
+  background:#051015;border:1px solid #1e90ff22;
+  border-radius:10px;padding:10px;
+  font-family:Consolas,monospace;font-size:12px;color:#9ee7ff;
+  max-height:220px;overflow:auto;white-space:pre-wrap;margin-top:8px;
+}
 
-  .loading-title { font-size: 2.2rem; font-weight: 900; letter-spacing: 5px; color: #fff; text-shadow: 0 0 20px var(--red-glow); text-align: center; }
-  .loading-subtitle { font-size: 0.8rem; color: var(--red-sub); letter-spacing: 6px; font-weight: 700; margin-top: -10px; opacity: 0.8;}
+.inject{
+  width:100%;padding:18px;font-size:18px;font-weight:900;
+  background:linear-gradient(135deg,#ff4757,#ff6b81);
+  color:#fff;border:none;border-radius:14px;cursor:pointer;
+  box-shadow:0 0 22px #ff475766;letter-spacing:2px;margin-bottom:16px;
+}
+.inject:active{transform:scale(.97);}
 
-  .progress-wrap { width: 85%; max-width: 320px; display: flex; flex-direction: column; gap: 0.8rem; margin-top: 1rem; }
-  .progress-track { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; }
-  .progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, var(--red-dark), var(--red-light)); border-radius: 10px; transition: width 0.15s linear; box-shadow: 0 0 10px var(--red-primary); }
-  .progress-info { display: flex; justify-content: space-between; font-size: 0.85rem; color: #ccc; font-weight: 500; }
-  
-  .loading-dots { position: absolute; bottom: 60px; display: flex; gap: 8px; }
-  .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 50%; }
-  .dot.active { background: var(--red-primary); box-shadow: 0 0 8px var(--red-primary); }
-  .loading-copyright { position: absolute; bottom: 25px; font-size: 0.7rem; color: rgba(255,255,255,0.3); letter-spacing: 2px; text-transform: uppercase; }
-  
-  @keyframes spin{to{transform:rotate(360deg)}}
+.btn{padding:14px;border-radius:12px;border:none;font-weight:bold;cursor:pointer;width:100%;font-size:15px;}
+.btn.primary{background:linear-gradient(135deg,#1e90ff,#00e5ff);color:#001820;}
+.btn.danger{background:linear-gradient(135deg,#ff4757,#ff6b81);color:#fff;}
 
-  /* ============ MÀN HÌNH KEY ============ */
-  .key-screen{padding:2rem 1.5rem;display:flex;flex-direction:column;justify-content:center; height: 100%;}
-  .key-box{background:var(--bg-card);backdrop-filter: blur(10px);border:1px solid var(--border-red);border-radius:20px;padding:1.5rem;text-align:center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
-  .key-box h2{font-size:1.2rem;margin-bottom:.5rem;color:var(--text-main)}
-  .key-box p{font-size:.85rem;color:var(--text-sub);margin-bottom:1.5rem;line-height:1.4}
-  .key-input{width:100%;padding:1rem;background:rgba(0,0,0,0.4);border:1.5px solid var(--border-red);border-radius:12px;color:#fff;font-size:1rem;letter-spacing:1.5px;text-align:center;font-weight:bold;outline:none;transition:.2s;margin-bottom:1rem}
-  .key-input:focus{border-color:var(--red-primary);box-shadow:0 0 15px var(--red-glow)}
-  .activate-btn{width:100%;padding:1rem;background:var(--red-primary);border:none;border-radius:12px;color:#fff;font-size:1rem;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:.2s; box-shadow: 0 4px 15px var(--red-glow);}
-  .activate-btn:active{background:var(--red-dark);transform:scale(.98)}
-  .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
-  .key-msg{margin-top:1rem;font-size:.85rem;min-height:1.5rem;font-weight:600}
-  .key-msg.error{color:#ff4444}
-  .key-msg.success{color:#4ade80}
-  .device-info{margin-top:1.5rem;font-size:.7rem;color:var(--text-sub);text-align:center; opacity: 0.6;}
+.inject-overlay{
+  display:none;position:fixed;inset:0;background:#000d;z-index:99;
+  align-items:center;justify-content:center;padding:20px;
+}
+.inject-overlay.show{display:flex;}
+.inject-inner{
+  width:100%;max-width:520px;background:#051015;
+  border:1px solid #00e5ff;border-radius:14px;padding:18px;
+  box-shadow:0 0 30px #00e5ff55;
+}
+.inject-inner h3{color:#00e5ff;margin-bottom:10px;letter-spacing:3px;font-size:16px;}
+.inject-inner pre{
+  font-family:Consolas,monospace;font-size:12px;color:#9ee7ff;
+  max-height:340px;overflow:auto;white-space:pre-wrap;
+}
 
-  /* ============ GIAO DIỆN CHÍNH ============ */
-  .main-app{display:flex;flex-direction:column;height:100%}
-  .app-header{text-align:center;padding:1.2rem 0 0.8rem;border-bottom:1.5px solid var(--border-red);margin-bottom:0.5rem; flex-shrink: 0; position: relative; background: linear-gradient(180deg, rgba(225,29,72,0.1) 0%, transparent 100%);}
-  .app-header h1{ font-size:1.5rem; font-weight:900; letter-spacing:3px; background: linear-gradient(90deg, #fff, var(--red-light), #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 15px rgba(225,29,72,0.5); margin-bottom: 2px;}
-  .app-header span{font-size:0.75rem;color:var(--red-primary);font-weight:800;letter-spacing:4px; text-transform: uppercase;}
+.modes .chk{display:flex;align-items:center;gap:8px;padding:8px 0;font-size:14px;color:#c7e9f7;}
+.chk input{width:18px;height:18px;accent-color:#00e5ff;}
 
-  .music-btn { position: absolute; top: 15px; right: 15px; width: 38px; height: 38px; background: rgba(0,0,0,0.5); border: 1.5px solid var(--red-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--red-primary); font-size: 1.2rem; cursor: pointer; z-index: 100; transition: 0.3s;}
-  .music-btn.playing { animation: spinMusic 3s linear infinite; box-shadow: 0 0 15px var(--red-glow); color: #fff; border-color: #fff;}
-  @keyframes spinMusic { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.support-box{margin-top:10px;display:flex;flex-direction:column;gap:8px;}
+.support-item{
+  background:#0b1a22;border:1px solid #00e5ff33;border-radius:10px;
+  padding:10px;display:flex;justify-content:space-between;align-items:center;
+  font-size:13px;gap:8px;
+}
+.support-item .tag{color:#00e5ff;font-weight:bold;font-size:11px;}
 
-  .app-content{flex:1;overflow-y:auto;padding:1rem 1rem 110px 1rem;scrollbar-width:none; -webkit-overflow-scrolling: touch;}
-  .app-content::-webkit-scrollbar{display:none}
-  .tab-pane{display:none;animation:fadeIn .3s ease;min-height: 100%;}
-  .tab-pane.active{display:flex;flex-direction:column}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+select,input[type=file]{
+  width:100%;padding:12px;border-radius:10px;
+  background:#0e2630;color:var(--txt);
+  border:1px solid #1e90ff44;font-size:14px;outline:none;
+}
 
-  .bottom-nav{position:absolute;bottom:0;left:0;right:0;height:85px;background:rgba(20, 0, 0, 0.95);backdrop-filter: blur(15px);border-top:1px solid var(--border-red);display:flex;align-items:center;justify-content:space-between;padding:0 2px;z-index:20;padding-bottom:15px}
-  .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:transparent;border:none;color:var(--text-sub);font-size:0.7rem;font-weight:700;cursor:pointer;transition:all 0.3s;padding:8px 0;margin:0 2px;border-radius:14px}
-  .tab-btn .icon{font-size:1.4rem}
-  .tab-btn.active{background:#fff;color:#000;box-shadow:0 4px 15px rgba(255,255,255,0.2)}
+/* Engine badges */
+.engine-badge{
+  display:inline-block;padding:2px 8px;border-radius:6px;
+  font-size:11px;font-weight:bold;margin-left:6px;
+}
+.engine-badge.cpp{background:#00599c33;color:#4d9fe0;}
+.engine-badge.py{background:#3776ab33;color:#5fa8e0;}
+.engine-badge.lua{background:#00008033;color:#7f8fff;}
+.engine-badge.yaml{background:#cb171e33;color:#ff6b7a;}
+.engine-badge.java{background:#00739633;color:#4db8d0;}
+.engine-badge.prolog{background:#e8b90033;color:#f0d050;}
 
-  /* --- TAB 1: TRANG CHỦ --- */
-  .panel-title{text-align:center;margin-bottom:1rem}
-  .panel-title h1{font-size:1.4rem;font-weight:bold}
-  .panel-title p{font-size:.8rem;color:var(--text-sub);margin-top:.3rem}
-  
-  .power-btn-container{display:flex;justify-content:center;margin:1rem 0 1.5rem;position:relative}
-  .power-btn{width:110px;height:110px;border:2px solid rgba(255,255,255,0.2);border-radius:20px;display:flex;justify-content:center;align-items:center;background:rgba(0,0,0,0.3);cursor:pointer;transition:.3s}
-  .power-btn.active{border-color:var(--red-primary);box-shadow:0 0 25px var(--red-glow); background: rgba(225, 29, 72, 0.1);}
-  .power-btn .icon{font-size:3rem;color:#666;transition:.3s}
-  .power-btn.active .icon{color:var(--red-primary);filter:drop-shadow(0 0 10px var(--red-primary))}
-  
-  .character-stage{display:flex;justify-content:center;align-items:center;height:240px;margin-bottom:1.5rem;perspective:1000px; flex-shrink: 0;}
-  .char-3d{width:120px;height:220px;transform-style:preserve-3d;animation:spin3d 6s linear infinite;position:relative}
-  @keyframes spin3d{from{transform:rotateY(0deg)}to{transform:rotateY(360deg)}}
-  
-  .char-svg{width:100%;height:100%;overflow:visible;}
-  .char-svg .part{fill:#fff;transition:fill .3s, filter .3s; filter:drop-shadow(15px 5px 0px #4a0000);}
-  .char-svg .part.highlight{fill:var(--red-primary);filter:drop-shadow(15px 5px 0px var(--red-dark)) drop-shadow(0 0 8px var(--red-primary));}
-
-  .btn-group{display:flex;flex-direction:column;gap:0.8rem;padding:0 .5rem;margin-bottom: 2rem;}
-  .btn-option{padding:1rem;background:rgba(0,0,0,0.4);border:1.5px solid var(--border-red);border-radius:30px;color:#fff;font-size:.95rem;font-weight:600;text-align:center;cursor:pointer;transition:.2s}
-  .btn-option.active{border-color:var(--red-primary);background:var(--red-primary);color:#fff;font-weight:700; box-shadow: 0 4px 15px var(--red-glow);}
-
-  /* --- TAB 2: CẤU HÌNH --- */
-  .xy-settings {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border-red);
-    border-radius: 12px;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    margin-top: 0.5rem;
-  }
-  .xy-title { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 0.8rem; font-weight: bold;}
-  .xy-inputs { display: flex; gap: 8px; }
-  .xy-box { flex: 1; display: flex; flex-direction: column;}
-  .xy-box label { font-size: 0.7rem; color: #aaa; margin-bottom: 4px; text-align: center;}
-  .xy-box input {
-    width: 100%;
-    background: #000;
-    border: 1px solid #444;
-    border-radius: 8px;
-    color: #fff;
-    padding: 8px 4px;
-    font-size: 0.9rem;
-    font-weight: bold;
-    text-align: center;
-    outline: none;
-  }
-  .xy-box input:focus { border-color: var(--red-primary); }
-
-  .config-list{display:flex;flex-direction:column;gap:0.8rem;padding-top:1rem}
-  .config-item{display:flex;align-items:center;justify-content:space-between;padding:0.8rem; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid transparent; transition: 0.3s;}
-  .config-item.on{border-color: var(--border-red); background: rgba(225, 29, 72, 0.05);}
-  .config-left{display:flex;align-items:center;gap:.8rem; flex: 1;}
-  .checkbox{width:24px;height:24px;border:2px solid #555;border-radius:6px;display:flex;justify-content:center;align-items:center;transition:.2s; flex-shrink: 0;}
-  .config-item.on .checkbox{border-color:var(--red-primary);background:var(--red-primary); box-shadow: 0 0 10px var(--red-glow);}
-  .config-item.on .checkbox::after{content:'✓';color:#fff;font-size:.8rem;font-weight:bold}
-  
-  .config-info {display: flex; flex-direction: column;}
-  .config-name{font-size:.95rem;font-weight:600;color:#ddd;transition:.2s}
-  .config-item.on .config-name{color:#fff}
-  
-  .config-code {font-size: 0.65rem; color: var(--red-primary); font-family: monospace; margin-top: 4px; display: none; background: rgba(0,0,0,0.4); padding: 4px 6px; border-radius: 4px; word-break: break-all;}
-  .config-item.on .config-code {display: block; animation: fadeIn 0.3s;}
-  
-  .status-badge{font-size:.7rem;padding:.3rem .8rem;border-radius:20px;font-weight:bold;background:rgba(255,255,255,0.1);color:#888; border:1px solid transparent; flex-shrink: 0;}
-  .config-item.on .status-badge{background:var(--red-primary);color:#fff;border-color:var(--red-primary); box-shadow: 0 0 10px var(--red-glow);}
-
-  /* --- TAB 3: I.A (TERMINAL) --- */
-  .ia-container{display:flex;flex-direction:column;align-items:center;margin-top:0.5rem;width:100%}
-  .ia-star-icon{font-size:2rem;margin-bottom:1rem;filter:drop-shadow(0 0 15px var(--red-primary));color:#fff;animation:starPulse 2s infinite}
-  @keyframes starPulse{0%,100%{opacity:0.8;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
-  
-  .ia-controls { display: flex; gap: 10px; width: 100%; margin-bottom: 1rem; }
-  .ia-select-file-btn{flex: 3; padding:1rem; background:var(--bg-card); border-radius:12px; display:flex; justify-content:space-between; align-items:center; color:#ccc; font-size:0.95rem; font-weight:600; cursor:pointer; transition:.2s; border:1px solid var(--border-red);}
-  .ia-select-file-btn:active{background:rgba(60, 0, 0, 0.9);transform:scale(.98)}
-  .ia-select-file-btn .send-icon{font-size:1.2rem;color:var(--red-primary)}
-  
-  .btn-clear-log { flex: 1; display: flex; align-items: center; justify-content: center; background: rgba(255,0,0,0.1); border: 1px solid #444; border-radius: 12px; color: #ff4444; font-weight: bold; cursor: pointer; transition: 0.2s;}
-  .btn-clear-log:active { background: rgba(255,0,0,0.3); }
-
-  .ia-file-info{width:100%;margin-bottom:1rem;padding:0.8rem;background:rgba(0,0,0,0.3);border:1.5px solid var(--border-red);border-radius:12px;display:none;text-align:left}
-  .ia-file-info.show{display:block;animation:fadeIn .3s}
-  .ia-file-info strong{font-size:.85rem;color:var(--text-sub);display:block;margin-bottom:.3rem}
-  .ia-file-info .file-details{font-size:.95rem;color:#ddd;font-weight:500;word-break:break-all}
-  .ia-file-info .file-details span{color:#888;font-size:.8rem;font-weight:normal}
-
-  .terminal-box {
-    width: 100%;
-    height: 180px;
-    background: var(--term-bg);
-    border: 1px solid #222;
-    border-radius: 12px;
-    padding: 0.8rem;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 0.75rem;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-    overflow-y: auto;
-    scrollbar-width: none;
-  }
-  .terminal-box::-webkit-scrollbar { display: none; }
-  .term-header { color: #666; font-weight: bold; margin-bottom: 4px; letter-spacing: 1px; flex-shrink: 0;}
-  .term-line { display: flex; gap: 6px; line-height: 1.3; }
-  .term-time { color: #555; flex-shrink: 0; }
-  .term-text { word-break: break-all; }
-  .term-text.green { color: var(--term-green); }
-  .term-text.blue { color: var(--term-blue); }
-  .term-text.white { color: #eee; }
-  .term-text.yellow { color: var(--term-yellow); }
-  .term-text.red { color: var(--red-primary); }
-
-  .ia-action-btn{width:100%;padding:1rem;margin-top:1rem;border-radius:16px;border:none;font-size:1rem;font-weight:bold;cursor:pointer;display:none;align-items:center;justify-content:center;gap:.5rem;transition:.2s}
-  .ia-action-btn.show{display:flex;animation:fadeIn .3s}
-  .ia-action-btn:active{transform:scale(.97)}
-  
-  .btn-run{background:var(--red-primary);color:#fff;box-shadow:0 4px 15px var(--red-glow)}
-  .btn-game{background:linear-gradient(135deg,var(--red-primary),var(--red-dark));color:#fff;box-shadow:0 4px 15px var(--red-glow)}
-  .btn-stop{background:rgba(255,255,255,0.1);color:#ff4444;border:1px solid #ff4444; box-shadow:none;}
-
-  /* --- TAB 4: TỐI ƯU HÓA --- */
-  .fps-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;margin-top:0.5rem}
-  .fps-icon{width:44px;height:44px;background:#fff;color:#000;border-radius:12px;display:flex;justify-content:center;align-items:center;font-weight:800;font-size:.9rem;text-align:center;line-height:1.1}
-  .fps-title{font-size:1.1rem;font-weight:700}
-  
-  .fps-options{display:flex;flex-direction:column;gap:1.2rem;margin-bottom:2rem;padding-left:1rem}
-  .fps-row{display:flex;align-items:center;gap:1rem;cursor:pointer}
-  .fps-box{width:24px;height:24px;border:2px solid #555;border-radius:6px;transition:.2s}
-  .fps-row.active .fps-box{background:#fff;border-color:#fff; box-shadow: 0 0 10px rgba(255,255,255,0.5);}
-  .fps-row span{font-size:1.05rem;font-weight:800;color:#888;transition:.2s}
-  .fps-row.active span{color:#fff}
-
-  .tool-list{display:flex;flex-direction:column;gap:1.2rem;margin-top:1rem;margin-bottom:2rem}
-  .tool-item{display:flex;justify-content:space-between;align-items:center}
-  .tool-left{display:flex;align-items:center;gap:1rem}
-  .tool-icon{width:36px;height:40px;background:#fff;color:#000;clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);display:flex;justify-content:center;align-items:center;font-size:1.4rem}
-  .tool-name{font-size:1rem;font-weight:600;color:#fff}
-  .toggle-btn{width:48px;height:28px;background:#333;border-radius:20px;position:relative;cursor:pointer;transition:.3s;flex-shrink:0}
-  .toggle-btn::after{content:'';position:absolute;width:22px;height:22px;background:#fff;border-radius:50%;top:3px;left:3px;transition:.3s}
-  .toggle-btn.on{background:var(--red-primary); box-shadow: 0 0 10px var(--red-glow);}
-  .toggle-btn.on::after{left:23px}
-
-  .benchmark-btn { width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1.5px solid var(--border-red); border-radius: 12px; color: #fff; font-size: 0.95rem; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-bottom: 1rem;}
-  .benchmark-btn:active { background: rgba(255,0,0,0.2); }
-
-  .device-info-row{display:flex;justify-content:center;align-items:center;gap:0.8rem;margin-top:1.5rem;font-size:.9rem;color:#fff;font-weight:600}
-  .device-info-row .hex{width:32px;height:36px;background:#fff;color:#000;clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);display:flex;justify-content:center;align-items:center;font-size:1.2rem}
-  .device-info-row .os-text{display:flex;flex-direction:column;align-items:center;line-height:1.1}
-  .device-info-row .os-text span:first-child{font-size:.75rem;color:var(--text-sub);margin-bottom:2px;font-weight:bold}
-  .device-info-row .os-text span:last-child{font-size:.85rem}
-
-  /* --- TAB 5: THÔNG TIN --- */
-  .info-card{background:var(--bg-card);border:1px solid var(--border-red);border-radius:16px;padding:1.2rem;width:100%;margin-bottom:1.5rem}
-  .info-row{display:flex;justify-content:space-between;padding:0.8rem 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.9rem}
-  .info-row:last-child{border-bottom:none}
-  .info-label{color:var(--text-sub);font-weight:500}
-  .info-val{color:#fff;font-weight:600;text-align:right;word-break:break-all;max-width:60%}
-  
-  .storage-box { background: rgba(0,0,0,0.4); border-radius: 12px; padding: 1rem; margin-bottom: 1rem; border: 1px solid #333; }
-  .storage-text { font-size: 0.8rem; color: var(--text-sub); margin-bottom: 0.5rem; display: flex; justify-content: space-between;}
-  .storage-bar { width: 100%; height: 6px; background: #222; border-radius: 10px; overflow: hidden; margin-bottom: 0.8rem; }
-  .storage-fill { height: 100%; background: var(--red-primary); border-radius: 10px; transition: width 0.3s;}
-  
-  .action-row { display: flex; gap: 10px; margin-bottom: 1.5rem;}
-  .action-btn { flex: 1; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid #444; border-radius: 12px; color: #fff; font-size: 0.9rem; cursor: pointer; transition: 0.2s;}
-  .action-btn:active { background: rgba(255,255,255,0.1); }
-
-  .logout-btn{width:100%;padding:1rem;background:transparent;border:1.5px solid var(--red-primary);border-radius:16px;color:var(--red-primary);font-size:1rem;font-weight:bold;cursor:pointer;transition:.2s;display:flex;justify-content:center;align-items:center;gap:.5rem}
-  .logout-btn:active{background:rgba(225,29,72,0.2)}
-
-  /* --- MODAL CHỌN GAME --- */
-  .modal-overlay{position:absolute;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:999;padding:1.5rem;backdrop-filter:blur(8px)}
-  .modal-overlay.show{display:flex}
-  .modal-box{background:linear-gradient(160deg, var(--bg-red), var(--bg-dark));border:1px solid var(--border-red);border-radius:20px;padding:1.5rem;width:100%;max-width:320px;text-align:center; box-shadow: 0 20px 50px rgba(0,0,0,0.8);}
-  .modal-box h3{font-size:1.2rem;margin-bottom:1rem;color:#fff}
-  .game-input { width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.5); border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 0.95rem; margin-bottom: 1rem; outline: none;}
-  .game-input:focus { border-color: var(--red-primary); }
-  
-  .game-options{display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.5rem}
-  .game-opt-btn{padding:0.9rem;background:rgba(0,0,0,0.4);border:1.5px solid #444;border-radius:12px;color:#ddd;font-size:0.95rem;font-weight:bold;cursor:pointer;transition:.2s; display: flex; justify-content: space-between; align-items: center;}
-  .game-opt-btn:active{background:var(--red-primary);transform:scale(.97);border-color:var(--red-primary)}
-  .game-opt-btn span.tag { font-size: 0.7rem; background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;}
-  
-  .modal-cancel{width:100%;padding:.8rem;background:transparent;border:none;color:var(--text-sub);font-size:.9rem;cursor:pointer}
-  .modal-danger{width:100%;padding:.8rem;background:var(--red-primary);border:none;border-radius:12px;color:#fff;font-size:.9rem;font-weight:bold;cursor:pointer}
-
-  /* Toast */
-  #toast{position:fixed;bottom:110px;left:50%;transform:translateX(-50%) translateY(20px);background:#222;color:#fff;padding:.8rem 1.5rem;border-radius:30px;font-size:.85rem;font-weight:bold;border:1px solid var(--red-primary);opacity:0;transition:.3s;pointer-events:none;z-index:9999;text-align:center;width:max-content;max-width:90%; box-shadow: 0 5px 20px rgba(0,0,0,0.5);}
-  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* Engine list */
+.engine-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.engine-chip{
+  padding:4px 10px;border-radius:8px;font-size:11px;font-weight:600;
+  background:#0e2630;border:1px solid #00e5ff44;color:#9ee7ff;
+}
 </style>
 </head>
 <body>
-<!-- ÂM THANH NỀN -->
-<audio id="bg-music" loop></audio>
 
-<div id="app">
-
-  <!-- MÀN HÌNH CHỜ -->
-  <div id="screen-loading" class="screen active">
-    <div class="top-left-icons">
-      <div class="top-icon">⚔️</div>
-      <div class="top-icon">☀️</div>
-    </div>
-    
-    <div class="loading-content">
-      <div class="loading-logo-wrapper">
-        <div class="dashed-ring"></div>
-        <div class="glow-ring"></div>
-        
-        <svg class="circle-progress" viewBox="0 0 160 160">
-          <circle class="bg" cx="80" cy="80" r="78"></circle>
-          <circle class="progress" id="circle-progress-bar" cx="80" cy="80" r="78"></circle>
-        </svg>
-
-        <div class="logo-box">
-          <span>F</span>
-        </div>
-      </div>
-
-      <div>
-        <div class="loading-title">FIRED</div>
-        <div class="loading-subtitle">SUPPORT · PREMIUM</div>
-      </div>
-      
-      <div class="progress-wrap">
-        <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
-        <div class="progress-info">
-          <span id="progress-text">Đang tối ưu hiệu năng...</span>
-          <span id="progress-percent">0%</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="loading-dots">
-      <div class="dot active"></div>
-      <div class="dot active"></div>
-      <div class="dot"></div>
-    </div>
-    
-    <div class="loading-copyright">© FIRED SUPPORT · V2.0</div>
+<!-- ================= MÀN 1: SPLASH ================= -->
+<div id="splash" class="screen active">
+  <div class="splash-logo">TITAN</div>
+  <div class="splash-name">TITAN APP</div>
+  <div class="splash-sub">MULTI-ENGINE INJECTOR</div>
+  <div class="splash-progress">
+    <input type="range" id="bootSlider" min="1" max="100" value="1"/>
+    <div class="splash-percent"><span id="bootVal">1</span>%</div>
+    <div class="splash-status" id="bootStatus">Kéo thanh trượt để bắt đầu...</div>
   </div>
-
-  <!-- MÀN HÌNH NHẬP KEY -->
-  <div id="screen-key" class="screen">
-    <div class="key-screen">
-      <div class="key-box">
-        <h2>Yêu Cầu Kích Hoạt</h2>
-        <p>Vui lòng nhập mã kích hoạt để mở khóa hệ thống (Hạn 3 ngày).</p>
-        <input type="text" id="key-input" class="key-input" placeholder="FIRED-XXXXXX-XXXXX-XXX" maxlength="24" autocomplete="off">
-        <button id="activate-btn" class="activate-btn">
-          <span id="activate-text">KÍCH HOẠT</span>
-          <span id="activate-spinner" class="spinner" style="display:none"></span>
-        </button>
-        <div id="key-msg" class="key-msg"></div>
-      </div>
-      <div class="device-info" id="device-info"></div>
-    </div>
-  </div>
-
-  <!-- GIAO DIỆN CHÍNH -->
-  <div id="screen-main" class="screen main-app">
-    
-    <!-- HUD OVERLAY -->
-    <div class="hud-overlay" id="hud-overlay">
-      <div class="hud-row"><span>FPS:</span> <span class="hud-val" id="hud-fps">--</span></div>
-      <div class="hud-row"><span>RAM:</span> <span class="hud-val" id="hud-ram">--</span></div>
-      <div class="hud-row"><span>Ping:</span> <span class="hud-val" id="hud-ping">--</span></div>
-    </div>
-
-    <div class="app-header">
-      <div class="audio-visualizer" id="visualizer">
-        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-      </div>
-      <div class="music-btn" id="music-btn">🎵</div>
-      <h1>FIRED SUPPORT</h1>
-      <span>PREMIUM SYSTEM</span>
-    </div>
-
-    <div class="app-content">
-      <!-- TAB 1: TRANG CHỦ -->
-      <div id="tab-inicio" class="tab-pane active">
-        <div class="panel-title">
-          <h1>Bảng Điều Khiển</h1>
-          <p>Để truy cập, chỉ cần bấm vào nút 'Bật' bên dưới.</p>
-        </div>
-
-        <div class="power-btn-container">
-          <div class="power-btn" id="power-btn">
-            <span class="icon">⏻</span>
-          </div>
-        </div>
-
-        <div style="text-align:center;margin-bottom:1rem;font-weight:bold;font-size:1.1rem;letter-spacing:1px">ĐIỂM NGẮM (HH)</div>
-        
-        <div class="character-stage">
-          <div class="char-3d">
-            <svg class="char-svg" viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <filter id="shadow">
-                  <feDropShadow dx="12" dy="5" stdDeviation="2" flood-color="#4a0000" flood-opacity="1"/>
-                </filter>
-              </defs>
-              <g filter="url(#shadow)">
-                <path class="part" data-part="cabeca" d="M 50 10 C 44 10 40 14 40 20 C 40 24 42 28 46 30 L 46 34 L 54 34 L 54 30 C 58 28 60 24 60 20 C 60 14 56 10 50 10 Z" />
-                <rect class="part" data-part="pescoco" x="46" y="34" width="8" height="6" rx="2" />
-                <path class="part" data-part="corpo" d="M 30 45 C 40 40 60 40 70 45 L 75 85 L 25 85 Z" />
-                <path class="part" data-part="corpo" d="M 25 85 L 30 120 L 70 120 L 75 85 Z" />
-                <path class="part" data-part="corpo" d="M 30 120 L 35 175 L 48 175 L 50 130 L 52 175 L 65 175 L 70 120 Z" />
-                <path class="part" data-part="corpo" d="M 33 175 L 30 185 L 48 185 L 48 175 Z" />
-                <path class="part" data-part="corpo" d="M 52 175 L 52 185 L 70 185 L 67 175 Z" />
-                <path class="part" data-part="corpo" d="M 30 48 L 10 100 L 15 102 L 35 55 Z" />
-                <circle class="part" data-part="corpo" cx="11" cy="103" r="4" />
-                <path class="part" data-part="corpo" d="M 70 48 L 90 100 L 85 102 L 65 55 Z" />
-                <circle class="part" data-part="corpo" cx="89" cy="103" r="4" />
-              </g>
-            </svg>
-          </div>
-        </div>
-
-        <div class="btn-group">
-          <button class="btn-option" data-part="cabeca">ĐẦU</button>
-          <button class="btn-option" data-part="pescoco">CỔ</button>
-          <button class="btn-option" data-part="corpo">TOÀN THÂN</button>
-        </div>
-      </div>
-
-      <!-- TAB 2: CẤU HÌNH -->
-      <div id="tab-configs" class="tab-pane">
-        
-        <!-- TỌA ĐỘ X, Y -->
-        <div class="xy-settings">
-          <div class="xy-title">Tọa độ tâm (Tùy chỉnh)</div>
-          <div class="xy-inputs">
-            <div class="xy-box">
-              <label>Trục X</label>
-              <input type="number" id="input-x" value="0" placeholder="0">
-            </div>
-            <div class="xy-box">
-              <label>Trục Y</label>
-              <input type="number" id="input-y" value="0" placeholder="0">
-            </div>
-          </div>
-        </div>
-
-        <!-- TỐC ĐỘ LÊN XUỐNG TRÁI PHẢI -->
-        <div class="xy-settings">
-          <div class="xy-title">Tốc độ (Aim Speed)</div>
-          <div class="xy-inputs">
-            <div class="xy-box">
-              <label>Lên</label>
-              <input type="number" id="input-top" value="1" placeholder="1">
-            </div>
-            <div class="xy-box">
-              <label>Xuống</label>
-              <input type="number" id="input-bottom" value="1" placeholder="1">
-            </div>
-            <div class="xy-box">
-              <label>Trái</label>
-              <input type="number" id="input-left" value="1" placeholder="1">
-            </div>
-            <div class="xy-box">
-              <label>Phải</label>
-              <input type="number" id="input-right" value="1" placeholder="1">
-            </div>
-          </div>
-        </div>
-
-        <div style="font-size:.8rem;color:var(--text-sub);margin-bottom:1rem;display:flex;align-items:center;gap:5px">
-          <span style="background:#fff;color:#000;padding:2px 6px;border-radius:4px;font-weight:bold">Tự động</span> Bật là mã JSON sẽ được nạp ngầm vào Game.
-        </div>
-        
-        <div class="config-list" id="config-list">
-          <!-- JS Generate -->
-        </div>
-      </div>
-
-      <!-- TAB 3: I.A -->
-      <div id="tab-ia" class="tab-pane">
-        <div class="ia-container">
-          <div class="ia-star-icon">✦</div>
-          
-          <div class="ia-controls">
-            <div class="ia-select-file-btn" id="ia-select-btn">
-              <span>Chọn tệp từ thiết bị</span>
-              <span class="send-icon">➢</span>
-            </div>
-            <div class="btn-clear-log" id="ia-clear-btn">🗑️</div>
-          </div>
-          <input type="file" id="ia-file" style="display:none">
-          
-          <div class="ia-file-info" id="ia-file-info">
-            <strong>Tệp đã chọn:</strong>
-            <div class="file-details" id="ia-file-details"></div>
-          </div>
-          
-          <div class="terminal-box" id="terminal-box">
-            <div class="term-header">SECURE ENGINE V3.0</div>
-          </div>
-          
-          <button class="ia-action-btn btn-run" id="ia-run-btn">▶ Chạy File</button>
-          <button class="ia-action-btn btn-game" id="ia-game-btn">🎮 Vào Game</button>
-        </div>
-      </div>
-
-      <!-- TAB 4: TỐI ƯU HÓA -->
-      <div id="tab-otimizar" class="tab-pane">
-        
-        <div style="text-align:center;margin-bottom:2rem">
-           <div style="width:70px;height:70px;background:#fff;border-radius:20px;margin:0 auto;display:flex;align-items:center;justify-content:center;color:#000;font-size:2.5rem;font-weight:900;font-style:italic">F</div>
-        </div>
-
-        <div class="fps-header">
-          <div class="fps-icon">120<br>FPS</div>
-          <div class="fps-title">Tối ưu FPS</div>
-        </div>
-
-        <div class="fps-options" id="fps-options">
-          <div class="fps-row" data-fps="90"><div class="fps-box"></div><span>90 FPS</span></div>
-          <div class="fps-row" data-fps="120"><div class="fps-box"></div><span>120 FPS</span></div>
-          <div class="fps-row" data-fps="144"><div class="fps-box"></div><span>144 FPS</span></div>
-          <div class="fps-row" data-fps="240"><div class="fps-box"></div><span>240 FPS</span></div>
-        </div>
-
-        <div class="tool-list" id="tool-list"></div>
-        
-        <button class="benchmark-btn" id="benchmark-btn">⚡ Đo Hiệu Năng Máy (Benchmark)</button>
-        <button class="benchmark-btn" id="toggle-hud-btn" style="margin-bottom: 2rem;">📊 Bật/Tắt HUD Overlay</button>
-
-        <div class="device-info-row">
-          <div class="os-text">
-             <span id="os-name">HỆ ĐIỀU HÀNH</span>
-             <span id="info-version">...</span>
-          </div>
-          <div class="hex">📱</div>
-          <div class="hex" style="font-size:1rem">🔋</div>
-          <span id="info-battery" style="color:#fff;font-size:1.1rem">--%</span> <span>Pin</span>
-        </div>
-
-      </div>
-
-      <!-- TAB 5: THÔNG TIN -->
-      <div id="tab-info" class="tab-pane">
-        <div class="panel-title">
-          <h1>Thông Tin Thiết Bị</h1>
-          <p>Quản lý phiên đăng nhập và bảo mật.</p>
-        </div>
-
-        <div class="info-card">
-          <div class="info-row">
-            <span class="info-label">Mã thiết bị (Device ID)</span>
-            <span class="info-val" id="info-dev-id">Đang tải...</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Địa chỉ IP</span>
-            <span class="info-val" id="info-ip">Đang tải...</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Mã Key kích hoạt</span>
-            <span class="info-val" id="info-key" style="color:var(--red-primary)">...</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Hạn sử dụng Key</span>
-            <span class="info-val" id="info-timeleft" style="color:#eab308; font-weight:bold;">...</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Tên tệp đang chạy</span>
-            <span class="info-val" id="info-file">Chưa có</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Trạng thái tệp</span>
-            <span class="info-val" id="info-file-status">Chưa chạy</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Phiên bản ứng dụng</span>
-            <span class="info-val">v2.5.0 (Ultimate)</span>
-          </div>
-        </div>
-
-        <div class="storage-box">
-          <div class="storage-text">
-            <span>Dung lượng App (Local Storage)</span>
-            <span id="storage-size-text">0 KB</span>
-          </div>
-          <div class="storage-bar">
-            <div class="storage-fill" id="storage-fill-bar" style="width: 0%;"></div>
-          </div>
-          <div class="action-row">
-            <button class="action-btn" id="clear-cache-btn">🗑️ Xóa Cache</button>
-            <button class="action-btn" id="encrypt-key-btn">🔒 Mã hóa Key</button>
-            <button class="action-btn" id="stealth-mode-btn">🕵️ Ẩn Danh</button>
-          </div>
-        </div>
-
-        <button class="logout-btn" id="logout-btn">
-          <span>🚪</span> Đăng Xuất
-        </button>
-      </div>
-    </div>
-
-    <!-- Thanh Điều Hướng Dưới Cùng (5 Tabs) -->
-    <div class="bottom-nav">
-      <button class="tab-btn active" data-tab="inicio"><span class="icon">🏠</span>Trang Chủ</button>
-      <button class="tab-btn" data-tab="configs"><span class="icon">⚙️</span>Cấu Hình</button>
-      <button class="tab-btn" data-tab="ia"><span class="icon">✨</span>I.A</button>
-      <button class="tab-btn" data-tab="otimizar"><span class="icon">⚡</span>Tối Ưu</button>
-      <button class="tab-btn" data-tab="info"><span class="icon">ℹ️</span>Thông Tin</button>
-    </div>
-  </div>
-
-  <!-- MODAL CHỌN GAME -->
-  <div class="modal-overlay" id="game-modal">
-    <div class="modal-box">
-      <h3>Khởi Chạy Game</h3>
-      <input type="text" class="game-input" id="game-ign" placeholder="Nhập tên nhân vật (IGN)...">
-      <div class="game-options">
-        <button class="game-opt-btn" data-game="freefire://" data-name="FF Thường">
-          <span>Free Fire Thường</span> <span class="tag">Nhẹ</span>
-        </button>
-        <button class="game-opt-btn" data-game="freefiremax://" data-name="FF MAX">
-          <span>Free Fire MAX</span> <span class="tag">Cao Cấp</span>
-        </button>
-        <button class="game-opt-btn" data-game="freefiremaxpro://" data-name="FF MAX Pro">
-          <span>Free Fire MAX Pro</span> <span class="tag">Siêu Mượt</span>
-        </button>
-      </div>
-      <button class="modal-cancel" id="modal-cancel-btn">Hủy bỏ</button>
-    </div>
-  </div>
-
-  <!-- MODAL ĐĂNG XUẤT -->
-  <div class="modal-overlay" id="logout-modal">
-    <div class="modal-box">
-      <h3>Xác Nhận Đăng Xuất</h3>
-      <p style="color:#ccc;font-size:0.9rem;margin-bottom:1.5rem;line-height:1.5">Bạn có chắc chắn muốn đăng xuất? <br><b style="color:#ff4444">Toàn bộ dữ liệu (Key, cài đặt) sẽ bị xóa vĩnh viễn!</b></p>
-      <div style="display:flex;gap:10px">
-        <button class="modal-cancel" id="logout-cancel-btn" style="background:rgba(255,255,255,0.1)">Hủy</button>
-        <button class="modal-danger" id="logout-confirm-btn">Đăng Xuất</button>
-      </div>
-    </div>
-  </div>
-
 </div>
 
-<div id="toast"></div>
+<!-- ================= MÀN 2: KEY ================= -->
+<div id="keyScreen" class="screen">
+  <div class="key-logo">TITAN</div>
+  <div class="key-title">🔑 Nhập Key để vào App</div>
+  <input id="keyInput" maxlength="20" placeholder="TITAN-XXXX-XXXX" autocomplete="off"/>
+  <button id="keyBtn">XÁC THỰC</button>
+  <div id="keyMsg"></div>
+  <div class="key-hint">Key dùng 1 thiết bị • Hạn 14 ngày</div>
+</div>
 
+<!-- ================= MÀN 3: APP ================= -->
+<div id="appScreen" class="screen">
+  <header class="topbar">
+    <div class="app-name">TITAN APP</div>
+    <div class="session" id="session">🔑 —</div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="1">Trang App</button>
+    <button class="tab" data-tab="2">Chức Năng</button>
+    <button class="tab" data-tab="3">Hỗ Trợ</button>
+    <button class="tab" data-tab="4">Cài Đặt</button>
+  </nav>
+
+  <div class="tab-pages">
+
+    <!-- ============ TAB 1: TRANG APP ============ -->
+    <section class="tab-page active" id="tab-1">
+      <div class="card">
+        <label class="lbl">📁 Chọn tệp từ thiết bị</label>
+        <input type="file" id="filePicker"
+          accept=".cpp,.py,.lua,.yaml,.yml,.java,.luapage,.min,.nix,.pig,.pl,.prolog,.js,.html,.css"/>
+        <div id="fileName" class="filename">Chưa có tệp</div>
+        <div id="fileLog" class="logbox">Chọn tệp để xem nội dung & engine...</div>
+      </div>
+
+      <div class="card">
+        <label class="lbl">🔧 Engine đã nhúng (11 ngôn ngữ)</label>
+        <div class="engine-list" id="engineList"></div>
+      </div>
+
+      <button id="injectBtn" class="inject">⚡ INJECT GAME</button>
+
+      <div id="injectScreen" class="inject-overlay">
+        <div class="inject-inner">
+          <h3>⚡ INJECTING...</h3>
+          <pre id="injectConsole"></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TAB 2: CHỨC NĂNG ============ -->
+    <section class="tab-page" id="tab-2">
+      <div class="card">
+        <label class="lbl">🎯 Tốc độ nhạy máy: <b id="vSens">1.0x</b></label>
+        <input type="range" id="sens" min="0.1" max="3" step="0.1" value="1"/>
+      </div>
+
+      <div class="card">
+        <label class="lbl">📺 Độ phân giải</label>
+        <select id="res">
+          <option value="1280x720">HD 1280x720</option>
+          <option value="1920x1080" selected>FHD 1920x1080</option>
+          <option value="2560x1440">QHD 2560x1440</option>
+          <option value="3840x2160">4K 3840x2160</option>
+        </select>
+      </div>
+
+      <div class="card">
+        <label class="lbl">⚡ Tốc độ chạy của tệp: <b id="vSpeed">1.0x</b></label>
+        <input type="range" id="speed" min="0.1" max="3" step="0.1" value="1"/>
+      </div>
+
+      <div class="card modes">
+        <label class="lbl">🎮 Chọn chức năng (1 đơn nhất)</label>
+        <label class="chk">
+          <input type="checkbox" id="modeLight"/>
+          <span><b>Nhẹ</b> - Tăng nhạy +69% vuốt</span>
+        </label>
+        <label class="chk">
+          <input type="checkbox" id="modeTune"/>
+          <span><b>Tinh chỉnh</b> - Đầm nhạy, ổn định, bám cao</span>
+        </label>
+        <label class="chk">
+          <input type="checkbox" id="modePrecise"/>
+          <span><b>Chính xác</b> - Tuyệt đối, không giảm</span>
+        </label>
+      </div>
+
+      <div class="card">
+        <label class="lbl">💾 Lưu thông số</label>
+        <div id="paramsLog" class="logbox">Params chưa lưu...</div>
+      </div>
+    </section>
+
+    <!-- ============ TAB 3: HỖ TRỢ ============ -->
+    <section class="tab-page" id="tab-3">
+      <div class="card">
+        <label class="lbl">🎮 Chọn game để hỗ trợ</label>
+        <select id="gameSel">
+          <option value="">-- Chọn game --</option>
+          <option value="com.garena.game.kgvn">Liên Quân (FFVN)</option>
+          <option value="com.vng.pubgmobile">PUBG Mobile VN</option>
+          <option value="com.mobile.legends">Mobile Legends</option>
+          <option value="com.tencent.ig">PUBG Global</option>
+        </select>
+        <div id="gameSupport" class="support-box">
+          <div class="support-item">Vui lòng chọn game ở trên</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TAB 4: CÀI ĐẶT ============ -->
+    <section class="tab-page" id="tab-4">
+      <div class="card">
+        <label class="lbl">📱 Thông tin thiết bị</label>
+        <pre id="deviceInfo" class="logbox">Đang tải...</pre>
+      </div>
+
+      <div class="card">
+        <label class="lbl">⏱ Thời gian sử dụng</label>
+        <div id="usageTime" class="logbox">—</div>
+      </div>
+
+      <div class="card">
+        <label class="lbl">🔑 Key hiện tại</label>
+        <div id="keyInfo" class="logbox">—</div>
+      </div>
+
+      <button id="restartBtn" class="btn danger">🔄 KHỞI CHẠY LẠI APP</button>
+    </section>
+
+  </div>
+</div>
+
+<!-- ================================================================
+     11 NGÔN NGỮ NHÚNG - ENGINE THẬT
+     ================================================================ -->
+
+<!-- [1] C++ -->
+<script type="text/x-c++" id="engine-cpp">
+// engine.cpp - Xử lý sensitivity & resolution
+#include <iostream>
+#include <string>
+#include <map>
+
+std::map<std::string,double> g_params = {
+  {"sensitivity", 1.0},
+  {"resolution_w", 1920},
+  {"resolution_h", 1080},
+  {"speed_mult", 1.0}
+};
+
+void setParam(const char* key, double val) {
+  g_params[key] = val;
+  std::cout << "[cpp] set " << key << "=" << val << "\n";
+}
+double getParam(const char* key) {
+  return g_params.count(key) ? g_params[key] : 0;
+}
+int main() {
+  std::cout << "[engine.cpp] loaded\n";
+  setParam("sensitivity", 1.5);
+  return 0;
+}
+</script>
+
+<!-- [2] Python -->
+<script type="text/x-python" id="engine-py">
+# engine.py - Tự động đọc & thực thi tệp
+import sys, json, os
+
+SUPPORTED = ['.py','.cpp','.lua','.yaml','.yml','.java',
+             '.luapage','.min','.nix','.pig','.pl','.prolog','.js']
+
+def read_file(path):
+    if not os.path.exists(path): return None
+    ext = os.path.splitext(path)[1].lower()
+    if ext not in SUPPORTED: return None
+    with open(path,'r',encoding='utf-8',errors='ignore') as f:
+        return {'ext':ext,'content':f.read()}
+
+def run(data):
+    print(f"[engine.py] Chay {data['ext']}")
+    return {'ok':True,'engine':data['ext']}
+
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print("Usage: python engine.py <file>")
+        sys.exit(1)
+    d = read_file(sys.argv[1])
+    print(json.dumps(run(d) if d else {'ok':False}, ensure_ascii=False))
+</script>
+
+<!-- [3] Lua -->
+<script type="text/x-lua" id="injector-lua">
+-- injector.lua - Inject game
+local injector = {}
+
+function injector.log(msg)
+  print(string.format("[%s] %s", os.date("%H:%M:%S"), msg))
+end
+function injector.decrypt(module)
+  injector.log("Decrypting module: " .. module)
+  return true
+end
+function injector.bypass()
+  injector.log("Bypassing anti-cheat...")
+  return true
+end
+function injector.patchSpeed(x)
+  injector.log("Patching speed x" .. tostring(x))
+end
+function injector.patchRes(w, h)
+  injector.log("Resolution set " .. w .. "x" .. h)
+end
+function injector.launch(pkg)
+  injector.log("Launching " .. pkg)
+end
+function injector.run(pkg, params)
+  injector.decrypt("0x7F3A")
+  injector.bypass()
+  injector.patchSpeed(params.speed or 1.0)
+  injector.patchRes(1920, 1080)
+  injector.launch(pkg)
+  return true
+end
+return injector
+</script>
+
+<!-- [4] YAML -->
+<script type="text/x-yaml" id="config-yaml">
+app:
+  name: TITAN APP
+  version: 1.0.0
+  theme:
+    bg: "#0b1a22"
+    accent: "#1e90ff"
+    glow: "#00e5ff"
+engines:
+  cpp:    { file: engine.cpp,   enabled: true }
+  python: { file: engine.py,    enabled: true }
+  lua:    { file: injector.lua, enabled: true }
+  java:   { file: DeviceReader.java, enabled: true }
+tweaks:
+  sensitivity: 1.0
+  resolution: "1920x1080"
+  speed: 1.0
+games:
+  - pkg: com.garena.game.kgvn
+    name: Liên Quân (FFVN)
+</script>
+
+<!-- [5] Java -->
+<script type="text/x-java" id="DeviceReader-java">
+// DeviceReader.java - Đọc thông tin thiết bị
+public class DeviceReader {
+    public static String getInfo() {
+        Runtime rt = Runtime.getRuntime();
+        StringBuilder sb = new StringBuilder();
+        sb.append("OS       : ").append(System.getProperty("os.name")).append("\n");
+        sb.append("Arch     : ").append(System.getProperty("os.arch")).append("\n");
+        sb.append("Java     : ").append(System.getProperty("java.version")).append("\n");
+        sb.append("CPU      : ").append(rt.availableProcessors()).append(" cores\n");
+        sb.append("RAM(MB)  : ").append(rt.totalMemory()/1048576).append("\n");
+        return sb.toString();
+    }
+    public static void main(String[] a) {
+        System.out.println(getInfo());
+    }
+}
+</script>
+
+<!-- [6] LuaPage -->
+<script type="text/x-luapage" id="launcher-luapage">
+-- launcher.luapage - Quản lý trang
+local launcher = {
+  pages = {
+    {id="app",   title="Trang App"},
+    {id="func",  title="Chức Năng"},
+    {id="help",  title="Hỗ Trợ"},
+    {id="set",   title="Cài Đặt"}
+  }
+}
+function launcher.render(id)
+  print("Rendering page: " .. id)
+  return "<div id='"..id.."'></div>"
+end
+return launcher
+</script>
+
+<!-- [7] Min -->
+<script type="text/x-min" id="builder-min">
+{app:"TITAN",ver:"1.0",engines:["cpp","py","lua","yaml","java","luapage","min","nix","pig","prolog"],optimize:true,gzip:true}
+</script>
+
+<!-- [8] Nix -->
+<script type="text/x-nix" id="env-nix">
+{ pkgs ? import <nixpkgs> {} }:
+pkgs.stdenv.mkDerivation {
+  name = "titan-app";
+  buildInputs = [ pkgs.nodejs pkgs.python3 pkgs.lua pkgs.jdk ];
+  src = ./.;
+  installPhase = "mkdir -p $out; cp -r * $out/";
+}
+</script>
+
+<!-- [9] Pig -->
+<script type="text/x-pig" id="pig-pig">
+-- pig.pig - Phân tích log
+REGISTER 'engine.py' USING jython AS engine;
+logs = LOAD 'run.log' USING PigStorage('|') AS (ts:chararray, file:chararray, size:int);
+grp  = GROUP logs BY file;
+cnt  = FOREACH grp GENERATE group, COUNT(logs);
+STORE cnt INTO 'output/run_count';
+</script>
+
+<!-- [10] Prolog -->
+<script type="text/x-prolog" id="prolog-pl">
+% prolog.pl - Kiểm tra key & rule
+valid_key(Key) :-
+    atom_length(Key, 12),
+    atom_chars(Key, ['T','I','T','A','N','-',_,_,_,_,_,_]).
+
+device_bound(Key, Device) :-
+    used(Key, Device).
+
+expired(Key) :-
+    expires(Key, Time),
+    get_time(Now),
+    Now > Time.
+
+check(Key) :-
+    valid_key(Key), !,
+    (expired(Key) -> write('EXPIRED') ; write('OK')).
+</script>
+
+<!-- ================================================================
+     JAVASCRIPT
+     ================================================================ -->
 <script>
-(function(){
-  'use strict';
+/* ================= STATE ================= */
+const state = {
+  key: null, deviceId: null, expiresAt: null,
+  params: { sens:1.0, res:'1920x1080', speed:1.0,
+            modeLight:false, modeTune:false, modePrecise:false }
+};
 
-  // ============ 20 KEY HỢP LỆ ============
-  const DEFAULT_KEYS = [
-    'FIRED-A1B2C3-D4E5F-6G7', 'FIRED-H8I9J0-K1L2M-3N4',
-    'FIRED-O5P6Q7-R8S9T-0U1', 'FIRED-V2W3X4-Y5Z6A-7B8',
-    'FIRED-C9D0E1-F2G3H-4I5', 'FIRED-J6K7L8-M9N0O-1P2',
-    'FIRED-Q3R4S5-T6U7V-8W9', 'FIRED-X0Y1Z2-A3B4C-5D6',
-    'FIRED-E7F8G9-H0I1J-2K3', 'FIRED-L4M5N6-O7P8Q-9R0',
-    'FIRED-M1N2O3-P4Q5R-6S7', 'FIRED-T8U9V0-W1X2Y-3Z4',
-    'FIRED-A5B6C7-D8E9F-0G1', 'FIRED-H2I3J4-K5L6M-7N8',
-    'FIRED-O9P0Q1-R2S3T-4U5', 'FIRED-V6W7X8-Y9Z0A-1B2',
-    'FIRED-C3D4E5-F6G7H-8I9', 'FIRED-J0K1L2-M3N4O-5P6',
-    'FIRED-Q7R8S9-T0U1V-2W3', 'FIRED-X4Y5Z6-A7B8C-9D0'
-  ];
+/* ================= ENGINE MAP ================= */
+const ENGINE_MAP = {
+  '.cpp':    { id:'engine-cpp',        name:'C++',     badge:'cpp'    },
+  '.py':     { id:'engine-py',         name:'Python',  badge:'py'     },
+  '.lua':    { id:'injector-lua',      name:'Lua',     badge:'lua'    },
+  '.yaml':   { id:'config-yaml',       name:'YAML',    badge:'yaml'   },
+  '.yml':    { id:'config-yaml',       name:'YAML',    badge:'yaml'   },
+  '.java':   { id:'DeviceReader-java', name:'Java',    badge:'java'   },
+  '.luapage':{ id:'launcher-luapage',  name:'LuaPage', badge:'lua'    },
+  '.min':    { id:'builder-min',       name:'Min',     badge:'yaml'   },
+  '.nix':    { id:'env-nix',           name:'Nix',     badge:'prolog' },
+  '.pig':    { id:'pig-pig',           name:'Pig',     badge:'py'     },
+  '.pl':     { id:'prolog-pl',         name:'Prolog',  badge:'prolog' },
+  '.prolog': { id:'prolog-pl',         name:'Prolog',  badge:'prolog' },
+  '.js':     { id:null,                name:'JS',      badge:'yaml'   },
+  '.html':   { id:null,                name:'HTML',    badge:'yaml'   },
+  '.css':    { id:null,                name:'CSS',     badge:'yaml'   }
+};
 
-  // ============ DANH SÁCH NHẠC ============
-  const PLAYLIST = [
-    'https://files.catbox.moe/if69gi.mp3',
-    'https://files.catbox.moe/vtokgs.mp3'
-  ];
-  let currentTrackIndex = 0;
+function getEngineCode(ext){
+  const eng = ENGINE_MAP[ext];
+  if (!eng || !eng.id) return null;
+  const el = document.getElementById(eng.id);
+  return el ? el.textContent : null;
+}
 
-  // ============ LƯU TRỮ THẬT ============
-  const Store = {
-    get(k, def){ try{ const v = localStorage.getItem('fired_'+k); return v===null ? def : JSON.parse(v); }catch(e){ return def; } },
-    set(k, v){ try{ localStorage.setItem('fired_'+k, JSON.stringify(v)); }catch(e){} },
-    clearAll(){ 
-      try { Object.keys(localStorage).forEach(key => { if(key.startsWith('fired_')) localStorage.removeItem(key); }); } catch(e){}
-    }
-  };
-
-  let validKeys = Store.get('keys', null);
-  if(!validKeys || !Array.isArray(validKeys)) validKeys = DEFAULT_KEYS.slice();
-  DEFAULT_KEYS.forEach(k => { if(!validKeys.includes(k)) validKeys.push(k); });
-  Store.set('keys', validKeys);
-
-  let keyUsage = Store.get('keyUsage', {});
-  let settings = Store.get('settings', { activatedKey: null, configs: {}, fps: 120, tools: {}, aimPart: null, x: 0, y: 0, top: 1, bottom: 1, left: 1, right: 1, stealth: false });
-
-  // ============ DOM ============
-  const $ = id => document.getElementById(id);
-  const loadingScreen = $('screen-loading');
-  const keyScreen = $('screen-key');
-  const mainScreen = $('screen-main');
-  const progressFill = $('progress-fill');
-  const progressPercent = $('progress-percent');
-  const progressText = $('progress-text');
-  const circleProgress = $('circle-progress-bar');
-  const keyInput = $('key-input');
-  const activateBtn = $('activate-btn');
-  const activateText = $('activate-text');
-  const activateSpinner = $('activate-spinner');
-  const keyMsg = $('key-msg');
-  
-  const bgMusic = $('bg-music');
-  const musicBtn = $('music-btn');
-
-  // I.A DOM
-  const iaSelectBtn = $('ia-select-btn');
-  const iaClearBtn = $('ia-clear-btn');
-  const iaFile = $('ia-file');
-  const iaFileInfo = $('ia-file-info');
-  const iaFileDetails = $('ia-file-details');
-  const iaRunBtn = $('ia-run-btn');
-  const iaGameBtn = $('ia-game-btn');
-  const gameModal = $('game-modal');
-  const logoutModal = $('logout-modal');
-  const terminalBox = $('terminal-box');
-  
-  const benchmarkBtn = $('benchmark-btn');
-  const toggleHudBtn = $('toggle-hud-btn');
-  const hudOverlay = $('hud-overlay');
-  const storageSizeText = $('storage-size-text');
-  const storageFillBar = $('storage-fill-bar');
-
-  // ============ ÂM THANH & GIỌNG NÓI ============
-  let audioCtx;
-  function playBeep() {
-    try {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if(audioCtx.state === 'suspended') audioCtx.resume();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
-      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.1);
-    } catch(e) {}
-  }
-
-  function speak(text) {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'vi-VN';
-      utterance.rate = 1.1;
-      utterance.pitch = 1.2;
-      
-      const voices = window.speechSynthesis.getVoices();
-      const femaleVoice = voices.find(v => v.lang.includes('vi') && v.name.includes('Female')) || voices.find(v => v.lang.includes('vi'));
-      if (femaleVoice) utterance.voice = femaleVoice;
-      
-      window.speechSynthesis.speak(utterance);
-    }
-  }
-
-  let toastTimer;
-  function toast(msg){
-    const el = $('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
-  }
-  function vibrate(p){ if(navigator.vibrate) try{ navigator.vibrate(p||20); }catch(e){} }
-
-  // ============ QUẢN LÝ NHẠC ============
-  function loadTrack(index) {
-    currentTrackIndex = index;
-    bgMusic.src = PLAYLIST[currentTrackIndex];
-    bgMusic.play().then(() => {
-      musicBtn.classList.add('playing');
-    }).catch(e => console.log('Lỗi phát nhạc: ' + e.message));
-  }
-
-  // ============ TERMINAL LOGGER ============
-  function typeLog(message, type = 'white', delay = 0) {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        const time = new Date().toLocaleTimeString('vi-VN', { hour12: false });
-        const line = document.createElement('div');
-        line.className = 'term-line';
-        line.innerHTML = `<span class="term-time">[${time}]</span> <span class="term-text ${type}">${message}</span>`;
-        terminalBox.appendChild(line);
-        terminalBox.scrollTop = terminalBox.scrollHeight;
-        resolve();
-      }, delay);
-    });
-  }
-
-  async function runIALogLoading() {
-    terminalBox.innerHTML = '<div class="term-header">SECURE ENGINE V3.0</div>';
-    await typeLog('Đang khởi tạo kết nối...', 'white', 200);
-    await typeLog('Đăng nhập: [USER]', 'green', 400);
-    await typeLog('Thiết bị: ' + getDeviceId(), 'blue', 500);
-    const ip = await getIP();
-    await typeLog('IP: ' + ip, 'blue', 500);
-    await typeLog('Hệ thống sẵn sàng!', 'white', 300);
-  }
-
-  // ============ HÀM TẠO MÃ JSON ============
-  function generateFeatureCode(featureId) {
-    const code = Math.floor(Math.random()*16777215).toString(16).toUpperCase().padStart(6, '0');
-    const payload = { module: featureId, hash: "#" + code, status: "active", inject_type: "memory" };
-    return JSON.stringify(payload);
-  }
-  
-  function generateAimCode(part, x, y, top, bottom, left, right) {
-    const payload = { 
-      module: "aim_lock", 
-      target: part, 
-      offset_x: x, 
-      offset_y: y,
-      speed_top: top,
-      speed_bottom: bottom,
-      speed_left: left,
-      speed_right: right
-    };
-    return JSON.stringify(payload);
-  }
-
-  // ============ ID THIẾT BỊ THẬT ============
-  function getDeviceId(){
-    let id = Store.get('deviceId', null);
-    if(id) return id;
-    const raw = navigator.userAgent + screen.width + 'x' + screen.height + navigator.language;
-    let hash = 0;
-    for(let i=0;i<raw.length;i++){ hash = ((hash<<5)-hash) + raw.charCodeAt(i); hash |= 0; }
-    id = 'DEV-' + Math.abs(hash).toString(36).toUpperCase() + '-' + Date.now().toString(36).toUpperCase().slice(-4);
-    Store.set('deviceId', id);
-    return id;
-  }
-
-  // ============ LẤY IP THẬT ============
-  async function getIP(){
-    if (settings.stealth) return '***.***.***.***';
-    try{
-      const r = await fetch('https://api.ipify.org?format=json');
-      const d = await r.json();
-      return d.ip || 'Không rõ';
-    }catch(e){ return 'Không rõ'; }
-  }
-
-  // ============ HÀM CHECK THỜI HẠN KEY (3 NGÀY) ============
-  function getKeyTimeLeft(key) {
-    if (!keyUsage[key] || !keyUsage[key].usedAt) return "Không xác định";
-    const THREE_DAYS = 3 * 24 * 60 * 60 * 1000;
-    const now = Date.now();
-    const expireTime = keyUsage[key].usedAt + THREE_DAYS;
-    if (now >= expireTime) return "Đã hết hạn (0s)";
-    
-    const diff = expireTime - now;
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const mins = Math.floor((diff / 1000 / 60) % 60);
-    const secs = Math.floor((diff / 1000) % 60);
-    return `${days} ngày ${hours}h ${mins}m ${secs}s`;
-  }
-
-  // ============ HÀM CHECK VÀ XỬ LÝ HẾT HẠN ============
-  let expiryTimer;
-  function checkExpiry() {
-    if (!settings.activatedKey) return;
-    const usage = keyUsage[settings.activatedKey];
-    if (!usage) return;
-
-    const THREE_DAYS = 3 * 24 * 60 * 60 * 1000;
-    if (Date.now() >= usage.usedAt + THREE_DAYS) {
-      Store.set('expiredKeys', (Store.get('expiredKeys', [])).concat([settings.activatedKey]));
-      settings.activatedKey = null;
-      Store.set('settings', settings);
-      
-      bgMusic.pause();
-      musicBtn.classList.remove('playing');
-      mainScreen.classList.remove('active');
-      keyScreen.classList.add('active');
-      
-      keyMsg.textContent = '⚠️ Key của bạn đã hết hạn (3 ngày). Vui lòng nhập key mới!';
-      keyMsg.className = 'key-msg error';
-      speak("Key của bạn đã hết hạn sử dụng. Vui lòng nhập key mới.");
-      vibrate([100, 50, 100, 50, 100]);
-      clearInterval(expiryTimer);
-    } else {
-      const timeLeftEl = $('info-timeleft');
-      if (timeLeftEl) timeLeftEl.textContent = getKeyTimeLeft(settings.activatedKey);
-    }
-  }
-
-  // ============ CẬP NHẬT TAB THÔNG TIN ============
-  async function updateInfoTab() {
-    $('info-dev-id').textContent = settings.stealth ? '***-****-****' : getDeviceId();
-    const ip = await getIP();
-    $('info-ip').textContent = ip;
-    
-    if(settings.activatedKey) {
-      $('info-key').textContent = settings.activatedKey;
-      $('info-timeleft').textContent = getKeyTimeLeft(settings.activatedKey);
-    } else {
-      $('info-key').textContent = 'Chưa kích hoạt';
-      $('info-timeleft').textContent = '—';
-    }
-
-    if(currentFile) {
-      $('info-file').textContent = currentFile.name;
-      $('info-file-status').textContent = isFileRunning ? 'Đang chạy' : 'Đã dừng';
-      $('info-file-status').style.color = isFileRunning ? '#4ade80' : '#ff4444';
-    } else {
-      $('info-file').textContent = 'Chưa có';
-      $('info-file-status').textContent = 'Chưa chạy';
-      $('info-file-status').style.color = 'var(--text-sub)';
-    }
-    
-    let total = 0;
-    try { Object.keys(localStorage).forEach(k => { if(k.startsWith('fired_')) total += (localStorage.getItem(k)||'').length + k.length; }); } catch(e){}
-    const totalKB = (total / 1024).toFixed(2);
-    storageSizeText.textContent = totalKB + ' KB';
-    storageFillBar.style.width = Math.min((total / 1024) / 5 * 100, 100) + '%';
-  }
-
-  // ============ MÀN HÌNH CHỜ ============
-  function startLoading(){
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += Math.floor(Math.random()*5) + 2;
-      if(progress > 100) progress = 100;
-      
-      progressFill.style.width = progress + '%';
-      progressPercent.textContent = progress + '%';
-      
-      const circleLength = 2 * Math.PI * 78;
-      circleProgress.style.strokeDashoffset = circleLength - (progress / 100) * circleLength;
-      
-      if(progress < 30) progressText.textContent = 'Đang tối ưu hiệu năng...';
-      else if(progress < 70) progressText.textContent = 'Đang kết nối máy chủ...';
-      else if(progress < 100) progressText.textContent = 'Đang xác minh...';
-      else progressText.textContent = 'Hoàn tất!';
-
-      if(progress >= 100){
-        clearInterval(interval);
-        setTimeout(() => {
-          if(settings.activatedKey && validKeys.includes(settings.activatedKey)){
-            const usage = keyUsage[settings.activatedKey];
-            if(!usage || usage.deviceId === getDeviceId()){
-              const THREE_DAYS = 3 * 24 * 60 * 60 * 1000;
-              if (usage && (Date.now() - usage.usedAt >= THREE_DAYS)) {
-                 loadingScreen.classList.remove('active');
-                 keyScreen.classList.add('active');
-                 keyMsg.textContent = '⚠️ Key của bạn đã hết hạn. Vui lòng nhập key mới!';
-                 keyMsg.className = 'key-msg error';
-                 settings.activatedKey = null;
-                 Store.set('settings', settings);
-                 return;
-              }
-              loadingScreen.classList.remove('active');
-              mainScreen.classList.add('active');
-              initMain();
-              return;
-            }
-          }
-          loadingScreen.classList.remove('active');
-          keyScreen.classList.add('active');
-          $('device-info').innerHTML = `Mã thiết bị: ${getDeviceId()}`;
-        }, 400);
-      }
-    }, 80);
-  }
-
-  // ============ ĐỊNH DẠNG KEY ============
-  keyInput.addEventListener('input', function(){
-    let raw = this.value.replace(/-/g, '').toUpperCase();
-    if(raw.startsWith('FIRED')) raw = raw.substring(5);
-    raw = raw.replace(/[^A-Z0-9]/g, '').substring(0, 14);
-    let out = 'FIRED';
-    if(raw.length > 0) out += '-' + raw.substring(0, 6);
-    if(raw.length > 6) out += '-' + raw.substring(6, 11);
-    if(raw.length > 11) out += '-' + raw.substring(11, 14);
-    this.value = out;
+/* ================= SCREEN ROUTER ================= */
+function goToScreen(screenId) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active');
+    s.style.display = 'none';
   });
+  const target = document.getElementById(screenId);
+  if (target) {
+    target.classList.add('active');
+    target.style.display = (screenId === 'appScreen') ? 'block' : 'flex';
+  }
+  console.log('→ Chuyển sang:', screenId);
+}
 
-  // ============ KÍCH HOẠT THẬT ============
-  activateBtn.addEventListener('click', async () => {
-    playBeep();
-    const key = keyInput.value.trim().toUpperCase();
-    if(!key || key.length < 14){
-      keyMsg.textContent = 'Vui lòng nhập mã hợp lệ';
-      keyMsg.className = 'key-msg error';
-      vibrate(30);
-      speak("Vui lòng nhập mã hợp lệ");
+/* ================= SPLASH ================= */
+const bootSlider = document.getElementById('bootSlider');
+const bootVal = document.getElementById('bootVal');
+const bootStatus = document.getElementById('bootStatus');
+
+bootSlider.addEventListener('input', () => {
+  const val = parseInt(bootSlider.value);
+  bootVal.textContent = val;
+  if (val < 30)      bootStatus.textContent = 'Đang khởi tạo hệ thống...';
+  else if (val < 60) bootStatus.textContent = 'Đang nạp 11 engine...';
+  else if (val < 90) bootStatus.textContent = 'Đang kiểm tra bảo mật...';
+  else if (val < 100)bootStatus.textContent = 'Sắp xong...';
+  else               bootStatus.textContent = '✅ Hoàn tất! Đang chuyển trang...';
+
+  if (val === 100) {
+    setTimeout(() => goToScreen('keyScreen'), 800);
+  }
+});
+
+/* ================= KEY ================= */
+const keyInput = document.getElementById('keyInput');
+const keyBtn = document.getElementById('keyBtn');
+const keyMsg = document.getElementById('keyMsg');
+
+keyBtn.addEventListener('click', async () => {
+  const k = keyInput.value.trim().toUpperCase();
+  if (k.length < 12) {
+    keyMsg.className = '';
+    keyMsg.textContent = '❌ Key phải có ít nhất 12 ký tự';
+    return;
+  }
+  keyBtn.disabled = true;
+  keyMsg.className = '';
+  keyMsg.textContent = '⏳ Đang xác thực...';
+
+  try {
+    const r = await fetch('/api/verify-key', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: k })
+    });
+    const j = await r.json();
+    if (j.ok) {
+      keyMsg.className = 'ok';
+      keyMsg.textContent = `✅ ${j.message} • Còn ${j.daysLeft} ngày`;
+      state.key = k;
+      state.deviceId = j.deviceId;
+      state.expiresAt = j.expiresAt;
+      localStorage.setItem('titan_key', k);
+      localStorage.setItem('titan_exp', j.expiresAt);
+      localStorage.setItem('titan_device', j.deviceId);
+      setTimeout(() => {
+        goToScreen('appScreen');
+        startApp();
+        startSessionWatch(k);
+      }, 1000);
+    } else {
+      keyMsg.textContent = '❌ ' + j.message;
+      keyBtn.disabled = false;
+    }
+  } catch(e) {
+    keyMsg.textContent = '❌ Lỗi mạng: ' + e.message;
+    keyBtn.disabled = false;
+  }
+});
+
+keyInput.addEventListener('keypress', e => { if (e.key === 'Enter') keyBtn.click(); });
+
+/* ================= APP START ================= */
+function startApp() {
+  updateSessionTimer();
+  loadDeviceInfo();
+  loadUsageTime();
+  loadKeyInfo();
+  renderEngineList();
+}
+
+/* ================= SESSION TIMER ================= */
+function updateSessionTimer() {
+  const el = document.getElementById('session');
+  const tick = () => {
+    if (!state.expiresAt) return;
+    const ms = new Date(state.expiresAt).getTime() - Date.now();
+    if (ms <= 0) {
+      alert('⏰ Key đã hết hạn. Vui lòng nhập key mới.');
+      localStorage.clear();
+      location.reload();
       return;
     }
+    const d = Math.floor(ms/86400000);
+    const h = Math.floor(ms%86400000/3600000);
+    const m = Math.floor(ms%3600000/60000);
+    el.textContent = `🔑 ${d}d ${h}h ${m}m`;
+  };
+  tick();
+  setInterval(tick, 30000);
+}
 
-    activateBtn.disabled = true;
-    activateText.style.display = 'none';
-    activateSpinner.style.display = 'inline-block';
-    keyMsg.textContent = '';
-    
-    setTimeout(async () => {
-      const expiredKeys = Store.get('expiredKeys', []);
-      
-      if(!validKeys.includes(key)){
-        keyMsg.textContent = '🔒 Mã không hợp lệ!';
-        keyMsg.className = 'key-msg error';
-        vibrate([40,40]);
-        speak("Mã không hợp lệ");
-        activateBtn.disabled = false;
-        activateText.style.display = 'inline';
-        activateSpinner.style.display = 'none';
-        return;
-      }
-      
-      if(expiredKeys.includes(key)){
-        keyMsg.textContent = '🔒 Mã này đã hết hạn sử dụng!';
-        keyMsg.className = 'key-msg error';
-        vibrate([40,40]);
-        speak("Mã này đã hết hạn sử dụng");
-        activateBtn.disabled = false;
-        activateText.style.display = 'inline';
-        activateSpinner.style.display = 'none';
-        return;
-      }
-
-      const usage = keyUsage[key];
-      if(usage && usage.deviceId !== getDeviceId()){
-        keyMsg.textContent = '🔒 Mã đã dùng trên thiết bị khác!';
-        keyMsg.className = 'key-msg error';
-        vibrate([40,40]);
-        speak("Mã đã dùng trên thiết bị khác");
-        activateBtn.disabled = false;
-        activateText.style.display = 'inline';
-        activateSpinner.style.display = 'none';
-        return;
-      }
-
-      const ip = await getIP();
-      
-      if(!usage) {
-          keyUsage[key] = { deviceId: getDeviceId(), ip: ip, usedAt: Date.now() };
-          Store.set('keyUsage', keyUsage);
-      }
-
-      settings.activatedKey = key;
-      Store.set('settings', settings);
-
-      keyMsg.textContent = '✅ Kích hoạt thành công! (Hạn 3 ngày)';
-      keyMsg.className = 'key-msg success';
-      vibrate(80);
-      speak("Kích hoạt thành công. Key của bạn có hạn 3 ngày");
-
-      setTimeout(() => {
-        keyScreen.classList.remove('active');
-        mainScreen.classList.add('active');
-        initMain();
-        activateBtn.disabled = false;
-        activateText.style.display = 'inline';
-        activateSpinner.style.display = 'none';
-      }, 800);
-    }, 1000);
-  });
-
-  keyInput.addEventListener('keydown', e => { if(e.key === 'Enter') activateBtn.click(); });
-
-  // ============ KHỞI TẠO GIAO DIỆN CHÍNH ============
-  function initMain(){
-    loadTrack(0);
-
-    renderConfigs();
-    renderFPS();
-    renderTools();
-    updateDeviceInfo();
-    highlightPart(settings.aimPart);
-    resetIA();
-    updateInfoTab();
-    
-    // Load X, Y, Speed
-    $('input-x').value = settings.x || 0;
-    $('input-y').value = settings.y || 0;
-    $('input-top').value = settings.top || 1;
-    $('input-bottom').value = settings.bottom || 1;
-    $('input-left').value = settings.left || 1;
-    $('input-right').value = settings.right || 1;
-    
-    if (expiryTimer) clearInterval(expiryTimer);
-    expiryTimer = setInterval(checkExpiry, 1000);
-  }
-
-  // ============ NÚT NHẠC ============
-  musicBtn.addEventListener('click', () => {
-    playBeep();
-    if (bgMusic.paused) {
-      bgMusic.play().then(() => {
-        musicBtn.classList.add('playing');
-      }).catch(e => console.log(e));
-    } else {
-      currentTrackIndex = (currentTrackIndex + 1) % PLAYLIST.length;
-      bgMusic.src = PLAYLIST[currentTrackIndex];
-      bgMusic.play().then(() => {
-        musicBtn.classList.add('playing');
-        toast(`🎵 Đang phát bài hát số ${currentTrackIndex + 1}`);
-      }).catch(e => console.log(e));
-    }
-  });
-
-  // ============ ĐIỀU HƯỚNG TABS ============
-  const tabBtns = document.querySelectorAll('.tab-btn');
-  const tabPanes = document.querySelectorAll('.tab-pane');
-
-  tabBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      playBeep();
-      tabBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      
-      const target = btn.dataset.tab;
-      tabPanes.forEach(p => p.classList.remove('active'));
-      $('tab-' + target).classList.add('active');
-      vibrate(15);
-      
-      if(target === 'info') updateInfoTab();
-      if(target === 'ia') runIALogLoading();
-    });
-  });
-
-  // ============ TAB 1: NHÂN VẬT ============
-  const powerBtn = $('power-btn');
-  powerBtn.addEventListener('click', () => {
-    playBeep();
-    powerBtn.classList.toggle('active');
-    vibrate(30);
-    const isOn = powerBtn.classList.contains('active');
-    toast(isOn ? '🔥 Đã bật hệ thống' : '⛔ Đã tắt hệ thống');
-    speak(isOn ? "Đã bật hệ thống" : "Đã tắt hệ thống");
-  });
-
-  const partBtns = document.querySelectorAll('.btn-option');
-  function highlightPart(part){
-    document.querySelectorAll('.char-svg .part').forEach(el => el.classList.remove('highlight'));
-    partBtns.forEach(b => b.classList.remove('active'));
-
-    if(part){
-      document.querySelectorAll(`.char-svg .part[data-part="${part}"]`).forEach(el => el.classList.add('highlight'));
-      const btn = document.querySelector(`.btn-option[data-part="${part}"]`);
-      if(btn) btn.classList.add('active');
-    }
-    vibrate(20);
-  }
-
-  partBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      playBeep();
-      const part = btn.dataset.part;
-      settings.aimPart = part;
-      settings.aimCode = generateAimCode(part, settings.x, settings.y, settings.top, settings.bottom, settings.left, settings.right);
-      Store.set('settings', settings);
-      highlightPart(part);
-      
-      const partName = btn.innerText;
-      speak("Đã ghim mục tiêu vào " + partName);
-      addLog(`Aim Target: ${partName} (X: ${settings.x}, Y: ${settings.y})`, 'red');
-    });
-  });
-
-  // ============ TAB 2: CẤU HÌNH & TỌA ĐỘ & TỐC ĐỘ ============
-  const inputX = $('input-x');
-  const inputY = $('input-y');
-  const inputTop = $('input-top');
-  const inputBottom = $('input-bottom');
-  const inputLeft = $('input-left');
-  const inputRight = $('input-right');
-  
-  function saveSettings() {
-    settings.x = parseInt(inputX.value) || 0;
-    settings.y = parseInt(inputY.value) || 0;
-    settings.top = parseFloat(inputTop.value) || 1;
-    settings.bottom = parseFloat(inputBottom.value) || 1;
-    settings.left = parseFloat(inputLeft.value) || 1;
-    settings.right = parseFloat(inputRight.value) || 1;
-    
-    if(settings.aimPart) {
-      settings.aimCode = generateAimCode(settings.aimPart, settings.x, settings.y, settings.top, settings.bottom, settings.left, settings.right);
-    }
-    Store.set('settings', settings);
-    addLog(`Cập nhật cấu hình: X=${settings.x}, Y=${settings.y}, Speed L=${settings.left}, R=${settings.right}, U=${settings.top}, D=${settings.bottom}`, 'yellow');
-  }
-
-  inputX.addEventListener('change', saveSettings);
-  inputY.addEventListener('change', saveSettings);
-  inputTop.addEventListener('change', saveSettings);
-  inputBottom.addEventListener('change', saveSettings);
-  inputLeft.addEventListener('change', saveSettings);
-  inputRight.addEventListener('change', saveSettings);
-
-  const CONFIG_ITEMS = [
-    { id: 'forcar-sens', name: 'Ép Độ Nhạy' },
-    { id: 'toque-suave', name: 'Chạm Mượt' },
-    { id: 'sem-recuo', name: 'Không Giật' },
-    { id: 'aimbot-rage', name: 'Aimbot Rage' },
-    { id: 'aimlock', name: 'Khóa Tâm (Aimlock)' },
-    { id: 'no-recoil', name: 'Triệt Tiêu Độ Giật' }
-  ];
-
-  function renderConfigs(){
-    const list = $('config-list');
-    list.innerHTML = '';
-    CONFIG_ITEMS.forEach(item => {
-      const isOn = settings.configs[item.id] === true;
-      
-      if(!settings.codes) settings.codes = {};
-      if(!settings.codes[item.id]) {
-          settings.codes[item.id] = generateFeatureCode(item.id);
-          Store.set('settings', settings);
-      }
-
-      const el = document.createElement('div');
-      el.className = 'config-item' + (isOn ? ' on' : '');
-      el.innerHTML = `
-        <div class="config-left">
-          <div class="checkbox"></div>
-          <div class="config-info">
-            <div class="config-name">${item.name}</div>
-            <div class="config-code">JSON: ${settings.codes[item.id]}</div>
-          </div>
-        </div>
-        <div class="status-badge">${isOn ? 'BẬT' : 'TẮT'}</div>
-      `;
-      
-      el.addEventListener('click', () => {
-        playBeep();
-        const now = !settings.configs[item.id];
-        settings.configs[item.id] = now;
-        Store.set('settings', settings);
-        
-        el.classList.toggle('on', now);
-        el.querySelector('.status-badge').textContent = now ? 'BẬT' : 'TẮT';
-        vibrate(25);
-        
-        if(now) {
-           toast(`✅ Đã nạp mã JSON vào Game: ${item.name}`);
-           speak("Đã bật " + item.name);
-           addLog(`Module Loaded: ${item.name}`, 'green');
-        } else {
-           toast(`⛔ Đã gỡ bỏ mã JSON: ${item.name}`);
-           speak("Đã tắt " + item.name);
-           addLog(`Module Unloaded: ${item.name}`, 'red');
-        }
-      });
-      list.appendChild(el);
-    });
-  }
-
-  // ============ TAB 3: I.A ============
-  let currentFile = null;
-  let isFileRunning = false;
-  let fileContent = null;
-
-  function resetIA() {
-    iaFile.value = '';
-    iaFileInfo.classList.remove('show');
-    iaRunBtn.classList.remove('show', 'btn-stop');
-    iaRunBtn.classList.add('btn-run');
-    iaRunBtn.textContent = '▶ Chạy File';
-    iaGameBtn.classList.remove('show');
-    currentFile = null;
-    isFileRunning = false;
-    fileContent = null;
-    updateInfoTab();
-  }
-
-  iaClearBtn.addEventListener('click', () => {
-    playBeep();
-    terminalBox.innerHTML = '<div class="term-header">SECURE ENGINE V3.0</div>';
-    addLog('Đã xóa nhật ký.', 'white');
-    vibrate(15);
-  });
-
-  iaSelectBtn.addEventListener('click', () => {
-    playBeep();
-    iaFile.click();
-  });
-
-  iaFile.addEventListener('change', e => {
-    if(e.target.files.length > 0){
-      currentFile = e.target.files[0];
-      iaFileDetails.innerHTML = `${currentFile.name} <span>(${(currentFile.size/1024).toFixed(1)} KB)</span>`;
-      iaFileInfo.classList.add('show');
-      
-      iaRunBtn.classList.add('show');
-      iaGameBtn.classList.remove('show');
-      vibrate(30);
-      speak("Đã chọn tệp " + currentFile.name);
-      addLog(`Đã chọn tệp: ${currentFile.name}`, 'white');
-      updateInfoTab();
-
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        fileContent = evt.target.result;
-      };
-      if(currentFile.type.includes('text') || currentFile.name.endsWith('.json') || currentFile.name.endsWith('.js') || currentFile.name.endsWith('.txt') || currentFile.name.endsWith('.lua')) {
-        reader.readAsText(currentFile);
-      } else {
-        reader.readAsArrayBuffer(currentFile);
-      }
-    }
-  });
-
-  iaRunBtn.addEventListener('click', async () => {
-    playBeep();
-    if(!currentFile) return;
-
-    if(!isFileRunning) {
-      isFileRunning = true;
-      iaRunBtn.textContent = '⏹ Dừng File';
-      iaRunBtn.classList.remove('btn-run');
-      iaRunBtn.classList.add('btn-stop');
-      
-      vibrate(50);
-      speak("Đang nạp tệp");
-      
-      terminalBox.innerHTML = '<div class="term-header">SECURE ENGINE V3.0</div>';
-      await typeLog('Đang nạp tệp vào bộ nhớ...', 'white', 100);
-      await typeLog(`Kích thước: ${(currentFile.size/1024).toFixed(1)} KB`, 'white', 300);
-      await typeLog(`Nạp tệp thành công!`, 'green', 500);
-      
-      iaGameBtn.classList.add('show');
-      vibrate(80);
-      speak("Tệp đã sẵn sàng");
-      updateInfoTab();
-
-    } else {
-      isFileRunning = false;
-      iaRunBtn.textContent = '▶ Chạy File';
-      iaRunBtn.classList.remove('btn-stop');
-      iaRunBtn.classList.add('btn-run');
-      
-      iaGameBtn.classList.remove('show');
-      vibrate(30);
-      speak("Đã dừng tệp");
-      
-      terminalBox.innerHTML = '<div class="term-header">SECURE ENGINE V3.0</div>';
-      await typeLog('Đã dừng nạp tệp.', 'red', 100);
-      
-      updateInfoTab();
-    }
-  });
-
-  iaGameBtn.addEventListener('click', () => {
-    playBeep();
-    if(!isFileRunning) return;
-    gameModal.classList.add('show');
-    vibrate(20);
-  });
-
-  $('modal-cancel-btn').addEventListener('click', () => {
-    playBeep();
-    gameModal.classList.remove('show');
-  });
-
-  document.querySelectorAll('.game-opt-btn').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      playBeep();
-      const protocol = btn.dataset.game;
-      const gameName = btn.dataset.name;
-      const ign = $('game-ign').value.trim() || 'Người chơi ẩn danh';
-      
-      gameModal.classList.remove('show');
-      
-      const activeConfigs = Object.keys(settings.configs).filter(k => settings.configs[k] === true);
-      const codesArray = activeConfigs.map(k => settings.codes[k]);
-      const fpsSelected = settings.fps;
-      
-      vibrate([30, 50, 30]);
-      speak(`Đang nạp tệp và cấu hình vào ${gameName}`);
-      
-      terminalBox.innerHTML = '<div class="term-header">SECURE ENGINE V3.0</div>';
-      await typeLog(`Đang chuẩn bị vào ${gameName}...`, 'white', 100);
-      await typeLog(`- Tên Game: ${ign}`, 'white', 300);
-      await typeLog(`- Tệp: ${currentFile.name}`, 'white', 300);
-      await typeLog(`- Mods: ${activeConfigs.length} (JSON)`, 'white', 300);
-      await typeLog(`- Aim: ${settings.aimPart || 'Mặc định'} (X:${settings.x}, Y:${settings.y})`, 'white', 300);
-      await typeLog(`- Tốc độ: Trái ${settings.left}x, Phải ${settings.right}x, Lên ${settings.top}x, Xuống ${settings.bottom}x`, 'white', 300);
-      
-      await typeLog(`🚀 Đã nạp thành công vào ${gameName}!`, 'green', 1000);
-      
-      toast(`🎮 Đã vào ${gameName} thành công!`);
-      speak("Đã vào game thành công. Chúc bạn chơi vui vẻ");
-      
-      try {
-        window.location.href = protocol;
-      } catch(e) {}
-      
-      vibrate(100);
-    });
-  });
-
-  // ============ TAB 4: TỐI ƯU HÓA ============
-  function renderFPS(){
-    const rows = document.querySelectorAll('.fps-row');
-    rows.forEach(row => {
-      const fps = parseInt(row.dataset.fps);
-      row.classList.toggle('active', fps === settings.fps);
-      row.addEventListener('click', () => {
-        playBeep();
-        settings.fps = fps;
-        Store.set('settings', settings);
-        rows.forEach(r => r.classList.remove('active'));
-        row.classList.add('active');
-        vibrate(20);
-        toast('⚡ Đã set FPS: ' + fps);
-        speak("Đã chọn " + fps + " FPS");
-      });
-    });
-  }
-
-  const TOOLS = [
-    { id: 'reduce-lag', name: 'Giảm giật hình', icon: '⚡' },
-    { id: 'optimize-ram', name: 'Tối ưu RAM', icon: '⚙️' },
-    { id: 'clean-mem', name: 'Dọn dẹp bộ nhớ', icon: '🍃' }
-  ];
-
-  function renderTools(){
-    const list = $('tool-list');
-    list.innerHTML = '';
-    TOOLS.forEach(t => {
-      const isOn = settings.tools[t.id] === true;
-      const el = document.createElement('div');
-      el.className = 'tool-item';
-      el.innerHTML = `
-        <div class="tool-left">
-          <div class="tool-icon">${t.icon}</div>
-          <div class="tool-name">${t.name}</div>
-        </div>
-        <div class="toggle-btn ${isOn ? 'on' : ''}" data-id="${t.id}"></div>
-      `;
-      const tg = el.querySelector('.toggle-btn');
-      tg.addEventListener('click', () => {
-        playBeep();
-        const now = !settings.tools[t.id];
-        settings.tools[t.id] = now;
-        Store.set('settings', settings);
-        tg.classList.toggle('on', now);
-        vibrate(25);
-        toast((now?'✅ Bật: ':'⛔ Tắt: ') + t.name);
-        speak((now ? "Đã bật " : "Đã tắt ") + t.name);
-
-        if (now) {
-           if (t.id === 'clean-mem' && window.gc) window.gc();
-           if (t.id === 'optimize-ram') { let arr = new Array(10000).fill(1); arr = null; }
-        }
-      });
-      list.appendChild(el);
-    });
-  }
-
-  // BENCHMARK THẬT
-  benchmarkBtn.addEventListener('click', () => {
-    playBeep();
-    toast('⏳ Đang đo hiệu năng...');
-    
-    setTimeout(() => {
-      const t0 = performance.now();
-      let ops = 0;
-      for (let i = 0; i < 100000; i++) { ops += Math.sqrt(i); }
-      const t1 = performance.now();
-      const time = (t1 - t0).toFixed(2);
-      const score = Math.round(100000 / time * 10);
-      
-      let rating = score > 80000 ? 'Xuất sắc' : score > 40000 ? 'Tốt' : score > 20000 ? 'Trung bình' : 'Cần tối ưu';
-      
-      addLog(`--- KẾT QUẢ BENCHMARK ---`, 'yellow');
-      addLog(`Thời gian xử lý: ${time} ms`, 'white');
-      addLog(`Điểm hiệu năng: ${score.toLocaleString()}`, 'blue');
-      addLog(`Xếp hạng thiết bị: ${rating}`, score > 40000 ? 'green' : 'red');
-      
-      toast(`⚡ Điểm hiệu năng: ${score.toLocaleString()}`);
-      speak(`Điểm hiệu năng của bạn là ${score}`);
-      vibrate(50);
-    }, 100);
-  });
-
-  // HUD TOGGLE
-  let isHudOn = false;
-  let hudInterval;
-  toggleHudBtn.addEventListener('click', () => {
-    playBeep();
-    isHudOn = !isHudOn;
-    if(isHudOn) {
-      hudOverlay.classList.add('active');
-      startHUD();
-    } else {
-      hudOverlay.classList.remove('active');
-      clearInterval(hudInterval);
-    }
-  });
-
-  function startHUD() {
-    let lastTime = performance.now();
-    let frames = 0;
-    
-    function updateHud() {
-      const now = performance.now();
-      frames++;
-      if (now - lastTime >= 1000) {
-        const fps = Math.round((frames * 1000) / (now - lastTime));
-        $('hud-fps').textContent = fps;
-        
-        if (window.performance && window.performance.memory) {
-          const mem = (window.performance.memory.usedJSHeapSize / 1048576).toFixed(0);
-          $('hud-ram').textContent = mem + 'MB';
-        } else {
-          $('hud-ram').textContent = 'N/A';
-        }
-        
-        frames = 0;
-        lastTime = now;
-      }
-      if(isHudOn) requestAnimationFrame(updateHud);
-    }
-    requestAnimationFrame(updateHud);
-    
-    // Ping
-    hudInterval = setInterval(async () => {
-      const t = performance.now();
-      try {
-        await fetch('https://1.1.1.1', { mode: 'no-cors' });
-        $('hud-ping').textContent = Math.round(performance.now() - t) + 'ms';
-      } catch(e) { $('hud-ping').textContent = 'Lỗi'; }
-    }, 3000);
-  }
-
-  // ============ LẤY THÔNG TIN THẬT 100% ============
-  function updateDeviceInfo(){
-    let os = 'Không rõ';
-    let ver = '...';
-    const ua = navigator.userAgent;
-    
-    if(/android/i.test(ua)){ os = 'Android'; const m = ua.match(/Android\s([\d.]+)/); ver = m?m[1]:'--'; }
-    else if(/iPhone|iPad|iPod/i.test(ua)){ os = 'iOS'; const m = ua.match(/OS\s([\d_]+)/); ver = m?m[1].replace(/_/g,'.'):'--'; }
-    else if(/Windows/i.test(ua)){ os = 'Windows'; ver = '10/11'; }
-    else if(/Mac/i.test(ua)){ os = 'macOS'; ver = '--'; }
-    else if(/Linux/i.test(ua)){ os = 'Linux'; ver = '--'; }
-    
-    document.querySelector('.os-text span:first-child').textContent = os;
-    $('info-version').textContent = ver;
-
-    if(navigator.getBattery){
-      navigator.getBattery().then(b => {
-        const level = Math.round(b.level * 100);
-        $('info-battery').textContent = level + '%';
-        b.onlevelchange = () => {
-          $('info-battery').textContent = Math.round(b.level * 100) + '%';
-        };
-      }).catch(() => { $('info-battery').textContent = 'Bị chặn'; });
-    } else {
-      $('info-battery').textContent = 'Không hỗ trợ';
-    }
-  }
-
-  // ============ TAB 5: ĐĂNG XUẤT & XÓA CACHE ============
-  $('clear-cache-btn').addEventListener('click', () => {
-    playBeep();
+/* ================= SESSION WATCH ================= */
+let sessionTimer = null;
+function startSessionWatch(key) {
+  if (sessionTimer) clearInterval(sessionTimer);
+  sessionTimer = setInterval(async () => {
     try {
-      Object.keys(localStorage).forEach(key => {
-        if(key.includes('_logs') || key.includes('_cache')) {
-           localStorage.removeItem(key);
-        }
+      const r = await fetch('/api/session-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key })
       });
-      toast('🗑️ Đã dọn dẹp bộ nhớ tạm!');
-      speak("Đã dọn dẹp bộ nhớ tạm");
-      updateInfoTab();
-      vibrate(30);
-    } catch(e) {}
-  });
-
-  $('encrypt-key-btn').addEventListener('click', () => {
-    playBeep();
-    if(settings.activatedKey) {
-      let hash = 0;
-      for(let i=0; i<settings.activatedKey.length; i++) {
-        hash = ((hash<<5)-hash) + settings.activatedKey.charCodeAt(i);
-        hash |= 0;
+      const j = await r.json();
+      if (!j.ok) {
+        clearInterval(sessionTimer);
+        localStorage.clear();
+        alert('🔒 ' + (j.message || 'Phiên hết hạn'));
+        location.reload();
       }
-      const encrypted = 'ENC-' + Math.abs(hash).toString(16).toUpperCase();
-      $('info-key').textContent = encrypted;
-      $('info-key').style.color = '#4ade80';
-      toast('🔒 Đã mã hóa Key thành công!');
-      speak("Đã mã hóa Key");
-      vibrate(40);
+    } catch(e) {}
+  }, 60000);
+}
+
+/* ================= AUTO-LOGIN ================= */
+(async function autoLogin() {
+  const k = localStorage.getItem('titan_key');
+  const exp = localStorage.getItem('titan_exp');
+  if (!k || !exp) return;
+  if (Date.now() > new Date(exp).getTime()) { localStorage.clear(); return; }
+  try {
+    const r = await fetch('/api/session-check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: k })
+    });
+    const j = await r.json();
+    if (j.ok) {
+      state.key = k;
+      state.expiresAt = exp;
+      state.deviceId = localStorage.getItem('titan_device');
+      goToScreen('appScreen');
+      startApp();
+      startSessionWatch(k);
+    } else {
+      localStorage.clear();
     }
+  } catch(e) {}
+})();
+
+/* ================= TABS ================= */
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.tab-page').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('tab-' + t.dataset.tab).classList.add('active');
   });
+});
 
-  $('stealth-mode-btn').addEventListener('click', () => {
-    playBeep();
-    settings.stealth = !settings.stealth;
-    Store.set('settings', settings);
-    updateInfoTab();
-    toast(settings.stealth ? '🕵️ Đã bật Ẩn Danh' : '👁️ Đã tắt Ẩn Danh');
-    speak(settings.stealth ? "Đã bật chế độ ẩn danh" : "Đã tắt chế độ ẩn danh");
-    vibrate(30);
-  });
+/* ================= ENGINE LIST ================= */
+function renderEngineList() {
+  const el = document.getElementById('engineList');
+  if (!el) return;
+  el.innerHTML = Object.entries(ENGINE_MAP)
+    .filter(([ext, e]) => e.id)
+    .map(([ext, e]) => {
+      const code = getEngineCode(ext);
+      const ok = code ? '✅' : '⚠️';
+      return `<span class="engine-chip">${ok} ${e.name} <small>${ext}</small></span>`;
+    }).join('');
+}
+renderEngineList();
 
-  $('logout-btn').addEventListener('click', () => {
-    playBeep();
-    logoutModal.classList.add('show');
-    vibrate(20);
-  });
+/* ================= TAB 1: FILE ================= */
+const filePicker = document.getElementById('filePicker');
+const fileNameEl = document.getElementById('fileName');
+const fileLog = document.getElementById('fileLog');
 
-  $('logout-cancel-btn').addEventListener('click', () => {
-    playBeep();
-    logoutModal.classList.remove('show');
-  });
+filePicker.addEventListener('change', async (e) => {
+  const f = e.target.files[0];
+  if (!f) return;
+  fileNameEl.textContent = '📄 ' + f.name + ' (' + (f.size/1024).toFixed(1) + ' KB)';
+  const text = await f.text();
+  fileLog.textContent = '--- NỘI DUNG ---\n' + text.substring(0, 2000);
 
-  $('logout-confirm-btn').addEventListener('click', () => {
-    playBeep();
-    logoutModal.classList.remove('show');
-    
-    Store.clearAll();
-    vibrate([50, 50, 100]);
-    speak("Đã đăng xuất và xóa toàn bộ dữ liệu");
-    toast('Đã đăng xuất và xóa toàn bộ dữ liệu');
-    
-    setTimeout(() => { location.reload(); }, 1500);
-  });
+  const ext = '.' + f.name.split('.').pop().toLowerCase();
+  const eng = ENGINE_MAP[ext];
 
-  // Khởi chạy
-  startLoading();
-
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.getVoices();
+  if (eng) {
+    fileLog.textContent += `\n\n🔧 ENGINE: ${eng.name}`;
+    const embedded = getEngineCode(ext);
+    if (embedded) {
+      fileLog.textContent += `\n📦 Embedded engine: ${embedded.length} bytes`;
+    }
   }
 
+  try {
+    const r = await fetch('/api/run-file', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filename: f.name, content: text })
+    });
+    const j = await r.json();
+    if (j.ok) {
+      fileLog.textContent += `\n✅ STATUS: ${j.status} | ENGINE: ${j.engine}`;
+    } else {
+      fileLog.textContent += '\n⚠️ ' + j.message;
+    }
+  } catch(err) {
+    fileLog.textContent += '\n❌ Lỗi: ' + err.message;
+  }
+});
+
+/* ================= TAB 1: INJECT ================= */
+const injectBtn = document.getElementById('injectBtn');
+const injectScreen = document.getElementById('injectScreen');
+const injectConsole = document.getElementById('injectConsole');
+
+injectBtn.addEventListener('click', async () => {
+  injectScreen.classList.add('show');
+  injectConsole.textContent = '';
+  const params = collectParams();
+  let steps = [];
+  try {
+    const r = await fetch('/api/inject-game', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pkg: 'com.garena.game.kgvn', params })
+    });
+    const j = await r.json();
+    steps = j.steps || [];
+  } catch(e) {
+    steps = ['[ERR] ' + e.message];
+  }
+  typeLines(steps, () => {
+    setTimeout(() => {
+      injectConsole.textContent += '\n>>> Đang mở FFVN...';
+      setTimeout(() => {
+        injectScreen.classList.remove('show');
+        alert('✅ Đã tối ưu & khởi chạy FFVN!');
+      }, 1200);
+    }, 400);
+  });
+});
+
+function typeLines(lines, done) {
+  let i = 0;
+  const next = () => {
+    if (i >= lines.length) return done();
+    injectConsole.textContent += lines[i] + '\n';
+    injectConsole.scrollTop = injectConsole.scrollHeight;
+    i++;
+    setTimeout(next, 280);
+  };
+  next();
+}
+
+/* ================= TAB 2: PARAMS ================= */
+function bindRange(id, labelId, key) {
+  const el = document.getElementById(id);
+  const lb = document.getElementById(labelId);
+  el.addEventListener('input', () => {
+    lb.textContent = parseFloat(el.value).toFixed(1) + 'x';
+    state.params[key] = parseFloat(el.value);
+    saveParams();
+  });
+}
+bindRange('sens', 'vSens', 'sens');
+bindRange('speed', 'vSpeed', 'speed');
+
+document.getElementById('res').addEventListener('change', e => {
+  state.params.res = e.target.value;
+  saveParams();
+});
+
+['modeLight','modeTune','modePrecise'].forEach(id => {
+  document.getElementById(id).addEventListener('change', e => {
+    if (e.target.checked) {
+      ['modeLight','modeTune','modePrecise'].forEach(o => {
+        if (o !== id) document.getElementById(o).checked = false;
+      });
+    }
+    state.params[id] = e.target.checked;
+    saveParams();
+  });
+});
+
+function collectParams() {
+  return {
+    ...state.params,
+    mode: state.params.modeLight ? 'light'
+        : state.params.modeTune ? 'tune'
+        : state.params.modePrecise ? 'precise' : 'none'
+  };
+}
+
+function saveParams() {
+  localStorage.setItem('titan_params', JSON.stringify(state.params));
+  const el = document.getElementById('paramsLog');
+  const p = collectParams();
+  el.textContent = `⏳ Đang lưu...\n` +
+    `Sens: ${p.sens}x | Res: ${p.res} | Speed: ${p.speed}x | Mode: ${p.mode}\n` +
+    `✅ Đã lưu lúc ${new Date().toLocaleTimeString()}`;
+}
+
+(function loadParams() {
+  const saved = localStorage.getItem('titan_params');
+  if (saved) { try { Object.assign(state.params, JSON.parse(saved)); } catch(e){} }
+  document.getElementById('sens').value = state.params.sens;
+  document.getElementById('speed').value = state.params.speed;
+  document.getElementById('res').value = state.params.res;
+  ['modeLight','modeTune','modePrecise'].forEach(k => {
+    if (state.params[k]) document.getElementById(k).checked = true;
+  });
+  document.getElementById('vSens').textContent = state.params.sens.toFixed(1) + 'x';
+  document.getElementById('vSpeed').textContent = state.params.speed.toFixed(1) + 'x';
 })();
+
+/* ================= TAB 3: GAMES ================= */
+const gameData = {
+  'com.garena.game.kgvn': [
+    { name:'FPS Boost', tag:'HIGH' },
+    { name:'Touch Sensitivity +69%', tag:'REC' },
+    { name:'Anti-lag Buffer', tag:'MID' },
+    { name:'Aim Assist', tag:'HIGH' }
+  ],
+  'com.vng.pubgmobile': [
+    { name:'Gyro Tuning', tag:'REC' },
+    { name:'Recoil Control', tag:'MID' },
+    { name:'Graphics Smooth', tag:'HIGH' }
+  ],
+  'com.mobile.legends': [
+    { name:'Skill Cast Speed', tag:'HIGH' },
+    { name:'Map Awareness', tag:'REC' }
+  ],
+  'com.tencent.ig': [
+    { name:'Recoil Reducer', tag:'HIGH' },
+    { name:'Speed Hack', tag:'DANGER' }
+  ]
+};
+
+document.getElementById('gameSel').addEventListener('change', e => {
+  const box = document.getElementById('gameSupport');
+  const items = gameData[e.target.value] || [];
+  if (!items.length) {
+    box.innerHTML = '<div class="support-item">Vui lòng chọn game</div>';
+    return;
+  }
+  box.innerHTML = items.map(i => `
+    <label class="support-item">
+      <span>${i.name}</span>
+      <span class="tag">${i.tag}</span>
+      <input type="checkbox" data-name="${i.name}"/>
+    </label>
+  `).join('');
+});
+
+/* ================= TAB 4: DEVICE INFO ================= */
+async function loadDeviceInfo() {
+  try {
+    const r = await fetch('/api/device-info');
+    const j = await r.json();
+    document.getElementById('deviceInfo').textContent =
+      `Platform : ${j.platform}\n` +
+      `Arch     : ${j.arch}\n` +
+      `Hostname : ${j.hostname}\n` +
+      `CPU      : ${j.cpus} cores\n` +
+      `RAM      : ${(j.totalmem/1073741824).toFixed(1)} GB\n` +
+      `Free RAM : ${(j.freemem/1073741824).toFixed(2)} GB\n` +
+      `Uptime   : ${Math.floor(j.uptime/60)} phút\n` +
+      `Node.js  : ${j.nodeVersion}`;
+  } catch(e) {
+    document.getElementById('deviceInfo').textContent = 'Lỗi: ' + e.message;
+  }
+}
+
+function loadUsageTime() {
+  const start = localStorage.getItem('titan_first_open') || (() => {
+    const t = Date.now().toString();
+    localStorage.setItem('titan_first_open', t);
+    return t;
+  })();
+  const ms = Date.now() - parseInt(start);
+  const h = Math.floor(ms/3600000);
+  const m = Math.floor(ms%3600000/60000);
+  document.getElementById('usageTime').textContent =
+    `Lần đầu mở: ${new Date(parseInt(start)).toLocaleString()}\n` +
+    `Tổng dùng : ${h}h ${m}m`;
+}
+
+function loadKeyInfo() {
+  const k = localStorage.getItem('titan_key') || '—';
+  const dev = localStorage.getItem('titan_device') || '—';
+  const exp = localStorage.getItem('titan_exp');
+  document.getElementById('keyInfo').textContent =
+    `Key      : ${k}\n` +
+    `Device   : ${dev ? dev.substring(0, 16) + '...' : '—'}\n` +
+    `Hết hạn  : ${exp ? new Date(exp).toLocaleString() : '—'}`;
+}
+
+/* ================= TAB 4: RESTART ================= */
+document.getElementById('restartBtn').addEventListener('click', () => {
+  if (!confirm('Xóa toàn bộ dữ liệu & khởi chạy lại?')) return;
+  localStorage.clear();
+  sessionStorage.clear();
+  location.reload();
+});
+
+/* ================= LOG ================= */
+console.log('=== TITAN APP LOADED ===');
+Object.entries(ENGINE_MAP).forEach(([ext, eng]) => {
+  const code = getEngineCode(ext);
+  console.log(`${code ? '✅' : '⚠️'} ${eng.name.padEnd(10)} (${ext}) ${code ? code.length + ' bytes' : 'not embedded'}`);
+});
 </script>
+
 </body>
 </html>
